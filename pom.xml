@@ -8,9 +8,9 @@
     </parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.taobao.android</groupId>
-	<artifactId>hotpatch_sample</artifactId>
+	<artifactId>600000@hotpatch</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
-	<name>hotpatch_sample</name>
+	<name>600000@hotpatch</name>
 	<packaging>apk</packaging>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
