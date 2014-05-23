@@ -10,7 +10,7 @@
 	<groupId>com.taobao.android</groupId>
 	<artifactId>hotpatch</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
-	<name>600000@hotpatch</name>
+	<name>hotpatch</name>
 	<packaging>apk</packaging>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -66,6 +66,7 @@
 
 	<build>
 		<sourceDirectory>src</sourceDirectory>
+		<finalName>600000@hotpatch</finalName>
 		<plugins>
 
 			<plugin>
