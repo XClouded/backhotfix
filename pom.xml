@@ -46,24 +46,6 @@
         </dependency>
         <dependency>
             <groupId>com.taobao.android</groupId>
-            <artifactId>hotpatch</artifactId>
-            <version>1.0.1-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.taobao.android</groupId>
-            <artifactId>windvane</artifactId>
-            <version>4.5.0-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.taobao.android</groupId>
-            <artifactId>usertrack</artifactId>
-            <version>3.0.4-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.taobao.android</groupId>
             <artifactId>login4android_sdk</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <type>apklib</type>
@@ -119,12 +101,7 @@
             </exclusions>
         </dependency>
 	</dependencies>
-	<dependency>
-         <groupId>com.taobao.fireeye</groupId>
-         <artifactId>scanlib</artifactId>
-         <version>2.6.0.9-SNAPSHOT</version>
-         <scope>provided</scope>
-    </dependency> 
+
 
 	<build>
 		<sourceDirectory>src</sourceDirectory>
