@@ -23,7 +23,7 @@ public class HotPatchScanResultActivity implements IPatch {
 					.loadClass("com.taobao.tao.ScanResultActivity");
 			Log.d("Tag", "invoke ScanResultActivity class success");
 		} catch (ClassNotFoundException e) {
-			Log.e("Tag", "invoke ScanResultActivity class success failed", e);
+			Log.e("Tag", "invoke ScanResultActivity class failed", e);
 			e.printStackTrace();
 		}
 		XposedBridge.findAndHookMethod(cls, "onCreate", Bundle.class,
@@ -31,7 +31,7 @@ public class HotPatchScanResultActivity implements IPatch {
 					@Override
 					protected void beforeHookedMethod(MethodHookParam param)
 							throws Throwable {
-						Log.e("Tag", "start hotpatch ScanResultActivity onCreate");
+						Log.d("Tag", "start hotpatch ScanResultActivity onCreate");
 						Object main = (Object) param.thisObject;
 						try {
 							Activity a = (Activity) main;							
@@ -39,7 +39,7 @@ public class HotPatchScanResultActivity implements IPatch {
                             if (intent != null && intent.getStringExtra("code") == null); {
                             	intent.putExtra("code", "");
                             }
-                        Log.e("Tag", "hotpatch ScanResultActivity onCreate success");
+                        Log.d("Tag", "hotpatch ScanResultActivity onCreate success");
                         Properties bundle = new Properties();
                         bundle.put("desc", "patch success on ScanResultActivity");
                         TBS.Ext.commitEvent("hotpatch_pkg",bundle);

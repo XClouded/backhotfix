@@ -13,8 +13,8 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-        <meta-data android:name="patch_version" android:value="*" />
-        <meta-data android:name="patch_entry" android:value="com.taobao.hotpatch.HotPatchScanResultActivity" />
+        <meta-data android:name="patch_version" android:value="4.2.2.3" />
+        <meta-data android:name="patch_entry" android:value="com.taobao.hotpatch.HotPatchCookieUtils;com.taobao.hotpatch.HotPatchScanResultActivity" />
     </application>
 
 </manifest>
