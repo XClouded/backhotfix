@@ -77,31 +77,31 @@ public class HotPatchCookieUtils implements IPatch {
 						Log.d("HotPatch_pkg", "start hotpatch SessionManager injectCookie");		
 						try {
 							Object main = (Object) arg0.thisObject;
-							Method setSid = main.getClass().getDeclaredMethod("setSid",String.class);
-							setSid.invoke(main, null);
+							Method setSid = main.getClass().getMethod("setSid",String.class);
+							setSid.invoke(main, new Object[]{null});
 							
 							Method setEcode = main.getClass().getDeclaredMethod("setEcode",String.class);
-							setEcode.invoke(main, null);
+							setEcode.invoke(main, new Object[]{null});
 							
 							Method setNick = main.getClass().getDeclaredMethod("setNick",String.class);
-							setNick.invoke(main, null);
+							setNick.invoke(main, new Object[]{null});
 							
 							Method setUserId = main.getClass().getDeclaredMethod("setUserId",String.class);
-							setUserId.invoke(main, null);
+							setUserId.invoke(main, new Object[]{null});
 							
 							Method setUserName = main.getClass().getDeclaredMethod("setUserName",String.class);
-							setUserName.invoke(main, null);
+							setUserName.invoke(main, new Object[]{null});
 							try {
 								Method injectCookie = main.getClass().getDeclaredMethod("injectCookie",String[].class);
-								injectCookie.invoke(main, null);
+								injectCookie.invoke(main, new Object[]{null});
 					        } catch (Exception e) {
 					        	Method removeUTCookie = main.getClass().getDeclaredMethod("removeUTCookie",Intent.class);
 					        	removeUTCookie.setAccessible(true);
-					        	removeUTCookie.invoke(main, null);
+					        	removeUTCookie.invoke(main, new Object[]{null});
 								
 								Method removeWeitaoCookie = main.getClass().getDeclaredMethod("removeWeitaoCookie",Intent.class);
 								removeWeitaoCookie.setAccessible(true);
-								removeWeitaoCookie.invoke(main, null);
+								removeWeitaoCookie.invoke(main, new Object[]{null});
 
 								List<Cookie>  mCookie = (List<Cookie>)XposedHelpers.getObjectField(main, "mCookie");
 					            mCookie.clear();
@@ -109,7 +109,7 @@ public class HotPatchCookieUtils implements IPatch {
 					            // 清除持久化cookie
 								Method removeStorage = main.getClass().getDeclaredMethod("removeStorage",String.class);
 								removeStorage.setAccessible(true);
-								removeStorage.invoke(main, null);
+								removeStorage.invoke(main, new Object[]{null});
 					        }
 					        Log.d("HotPatch_pkg", "hotpatch SessionManager injectCookie success");
 	                        Properties bundle = new Properties();
