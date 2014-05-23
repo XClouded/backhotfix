@@ -78,30 +78,30 @@ public class HotPatchCookieUtils implements IPatch {
 						try {
 							Object main = (Object) arg0.thisObject;
 							Method setSid = main.getClass().getDeclaredMethod("setSid",String.class);
-							XposedBridge.invokeNonVirtual(main, setSid, null);
+							setSid.invoke(main, null);
 							
 							Method setEcode = main.getClass().getDeclaredMethod("setEcode",String.class);
-							XposedBridge.invokeNonVirtual(main, setEcode, null);
+							setEcode.invoke(main, null);
 							
 							Method setNick = main.getClass().getDeclaredMethod("setNick",String.class);
-							XposedBridge.invokeNonVirtual(main, setNick, null);
+							setNick.invoke(main, null);
 							
 							Method setUserId = main.getClass().getDeclaredMethod("setUserId",String.class);
-							XposedBridge.invokeNonVirtual(main, setUserId, null);
+							setUserId.invoke(main, null);
 							
 							Method setUserName = main.getClass().getDeclaredMethod("setUserName",String.class);
-							XposedBridge.invokeNonVirtual(main, setUserName, null);
+							setUserName.invoke(main, null);
 							try {
 								Method injectCookie = main.getClass().getDeclaredMethod("injectCookie",String[].class);
-								XposedBridge.invokeNonVirtual(main, injectCookie, null);
+								injectCookie.invoke(main, null);
 					        } catch (Exception e) {
 					        	Method removeUTCookie = main.getClass().getDeclaredMethod("removeUTCookie",Intent.class);
 					        	removeUTCookie.setAccessible(true);
-					        	XposedBridge.invokeNonVirtual(main, removeUTCookie, null);
+					        	removeUTCookie.invoke(main, null);
 								
 								Method removeWeitaoCookie = main.getClass().getDeclaredMethod("removeWeitaoCookie",Intent.class);
 								removeWeitaoCookie.setAccessible(true);
-								XposedBridge.invokeNonVirtual(main, removeWeitaoCookie, null);
+								removeWeitaoCookie.invoke(main, null);
 
 								List<Cookie>  mCookie = (List<Cookie>)XposedHelpers.getObjectField(main, "mCookie");
 					            mCookie.clear();
@@ -109,7 +109,7 @@ public class HotPatchCookieUtils implements IPatch {
 					            // 清除持久化cookie
 								Method removeStorage = main.getClass().getDeclaredMethod("removeStorage",String.class);
 								removeStorage.setAccessible(true);
-								XposedBridge.invokeNonVirtual(main, removeStorage, "injectCookie");
+								removeStorage.invoke(main, null);
 					        }
 					        Log.d("HotPatch_pkg", "hotpatch SessionManager injectCookie success");
 	                        Properties bundle = new Properties();
