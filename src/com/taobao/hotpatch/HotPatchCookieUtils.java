@@ -1,18 +1,7 @@
 package com.taobao.hotpatch;
 
-import java.lang.reflect.Method;
-import java.util.List;
-import java.util.Properties;
-
-import android.content.Intent;
-import android.text.TextUtils;
 import android.util.Log;
 
-import com.taobao.android.dexposed.XC_MethodReplacement;
-import com.taobao.android.dexposed.XposedBridge;
-import com.taobao.android.dexposed.XposedHelpers;
-import com.taobao.login4android.refactor.session.Cookie;
-import com.taobao.statistic.TBS;
 import com.taobao.updatecenter.hotpatch.IPatch;
 import com.taobao.updatecenter.hotpatch.PatchCallback.PatchParam;
 
