@@ -1,7 +1,14 @@
 package com.taobao.hotpatch;
 
+import java.lang.reflect.Method;
+import java.util.Properties;
+
+import android.text.TextUtils;
 import android.util.Log;
 
+import com.taobao.android.dexposed.XC_MethodReplacement;
+import com.taobao.android.dexposed.XposedBridge;
+import com.taobao.login4android.refactor.session.Cookie;
 import com.taobao.updatecenter.hotpatch.IPatch;
 import com.taobao.updatecenter.hotpatch.PatchCallback.PatchParam;
 
@@ -9,7 +16,6 @@ public class HotPatchCookieUtils implements IPatch {
 
 	@Override
 	public void handlePatch(PatchParam arg0) throws Throwable {
-		/*
 		Class<?> cls = null;
 		try {
 			cls = arg0.classLoader
@@ -37,12 +43,12 @@ public class HotPatchCookieUtils implements IPatch {
 					        Log.d("HotPatch_pkg", "hotpatch CookieUtils getHttpDomin success");
 	                        Properties bundle = new Properties();
 	                        bundle.put("desc", "patch success on CookieUtils getHttpDomin");
-	                        TBS.Ext.commitEvent("hotpatch_pkg",bundle);
+//	                        TBS.Ext.commitEvent("hotpatch_pkg",bundle);
 						} catch (Exception e) {
 							Log.d("HotPatch_pkg", "hotpatch CookieUtils getHttpDomin failed");
 		                    Properties bundle = new Properties();
 		                    bundle.put("desc", "patch failed on CookieUtils getHttpDomin");
-		                    TBS.Ext.commitEvent("hotpatch_pkg",bundle);
+//		                    TBS.Ext.commitEvent("hotpatch_pkg",bundle);
 							e.printStackTrace();
 						}
 						return null;
@@ -94,31 +100,29 @@ public class HotPatchCookieUtils implements IPatch {
 //								removeWeitaoCookie.setAccessible(true);
 //								removeWeitaoCookie.invoke(main, new Object[]{null});
 
-								List<Cookie>  mCookie = (List<Cookie>)XposedHelpers.getObjectField(main, "mCookie");
-					            mCookie.clear();
-
-					            // 清除持久化cookie
-								Method removeStorage = main.getClass().getDeclaredMethod("removeStorage",String.class);
-								removeStorage.setAccessible(true);
-								removeStorage.invoke(main, new Object[]{null});
+//								List<Cookie>  mCookie = (List<Cookie>)XposedHelpers.getObjectField(main, "mCookie");
+//					            mCookie.clear();
+//
+//					            // 清除持久化cookie
+//								Method removeStorage = main.getClass().getDeclaredMethod("removeStorage",String.class);
+//								removeStorage.setAccessible(true);
+//								removeStorage.invoke(main, new Object[]{null});
 					        }
 					        Log.d("HotPatch_pkg", "hotpatch SessionManager injectCookie success");
 	                        Properties bundle = new Properties();
 	                        bundle.put("desc", "patch success on SessionManager injectCookie");
-	                        TBS.Ext.commitEvent("hotpatch_pkg",bundle);
+//	                        TBS.Ext.commitEvent("hotpatch_pkg",bundle);
 						} catch (Exception e) {
 							Log.d("HotPatch_pkg", "hotpatch SessionManager injectCookie failed");
 		                    Properties bundle = new Properties();
 		                    bundle.put("desc", "patch failed on SessionManager injectCookie");
-		                    TBS.Ext.commitEvent("hotpatch_pkg",bundle);
+//		                    TBS.Ext.commitEvent("hotpatch_pkg",bundle);
 							e.printStackTrace();
 						}
 						return null;
 					}
 
 				});
-				*/
-		Log.d("HotPatch_pkg", "do nothing");
 	}
 
 }
