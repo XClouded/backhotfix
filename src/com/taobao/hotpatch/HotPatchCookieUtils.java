@@ -20,6 +20,7 @@ public class HotPatchCookieUtils implements IPatch {
 
 	@Override
 	public void handlePatch(PatchParam arg0) throws Throwable {
+		/*
 		Class<?> cls = null;
 		try {
 			cls = arg0.classLoader
@@ -29,6 +30,7 @@ public class HotPatchCookieUtils implements IPatch {
 			Log.e("HotPatch_pkg", "invoke CookieUtils class failed", e);
 			e.printStackTrace();
 		}
+		
 		XposedBridge.findAndHookMethod(cls, "getHttpDomin", Cookie.class,
 				new XC_MethodReplacement() {
 
@@ -126,6 +128,8 @@ public class HotPatchCookieUtils implements IPatch {
 					}
 
 				});
+				*/
+		Log.d("HotPatch_pkg", "do nothing");
 	}
 
 }
