@@ -97,13 +97,13 @@ public class HotPatchCookieUtils implements IPatch {
 								Method injectCookie = main.getClass().getDeclaredMethod("injectCookie",String[].class);
 								injectCookie.invoke(main, new Object[]{null});
 					        } catch (Exception e) {
-					        	Method removeUTCookie = main.getClass().getDeclaredMethod("removeUTCookie",Intent.class);
-					        	removeUTCookie.setAccessible(true);
-					        	removeUTCookie.invoke(main, new Object[]{null});
-								
-								Method removeWeitaoCookie = main.getClass().getDeclaredMethod("removeWeitaoCookie",Intent.class);
-								removeWeitaoCookie.setAccessible(true);
-								removeWeitaoCookie.invoke(main, new Object[]{null});
+//					        	Method removeUTCookie = main.getClass().getDeclaredMethod("removeUTCookie",Intent.class);
+//					        	removeUTCookie.setAccessible(true);
+//					        	removeUTCookie.invoke(main, new Object[]{null});
+//								
+//								Method removeWeitaoCookie = main.getClass().getDeclaredMethod("removeWeitaoCookie",Intent.class);
+//								removeWeitaoCookie.setAccessible(true);
+//								removeWeitaoCookie.invoke(main, new Object[]{null});
 
 								List<Cookie>  mCookie = (List<Cookie>)XposedHelpers.getObjectField(main, "mCookie");
 					            mCookie.clear();
