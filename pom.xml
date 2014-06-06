@@ -51,7 +51,6 @@
             <artifactId>taobaocompat</artifactId>
             <type>apklib</type>
             <version>1.0.8-SNAPSHOT</version>
-            <scope>provided</scope>
             <exclusions>
                 <exclusion>
                     <groupId>com.taobao.android</groupId>
