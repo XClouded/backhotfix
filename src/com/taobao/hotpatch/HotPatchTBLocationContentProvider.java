@@ -7,8 +7,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.taobao.util.TaoLog;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.taobao.android.dexposed.XC_MethodReplacement;
 import com.taobao.android.dexposed.XposedBridge;
@@ -29,10 +29,9 @@ public class HotPatchTBLocationContentProvider implements IPatch {
 		try {
 			TBLocationContentProvider = arg0.classLoader
 					.loadClass("com.taobao.passivelocation.contentprovider.TBLocationContentProvider");
-			Log.d("HotPatch_pkg", "invoke TBLocationContentProvider class success");
+			TaoLog.Logd("HotPatch_pkg", "invoke TBLocationContentProvider class success");
 		} catch (ClassNotFoundException e) {
-			Log.e("HotPatch_pkg", "invoke TBLocationContentProvider class failed", e);
-			e.printStackTrace();
+			TaoLog.Loge("HotPatch_pkg", "invoke TBLocationContentProvider class failed" + e.toString());
 		}
 
 		XposedBridge.findAndHookMethod(TBLocationContentProvider, "query",
@@ -42,7 +41,7 @@ public class HotPatchTBLocationContentProvider implements IPatch {
 					@Override
 					protected Object replaceHookedMethod(MethodHookParam args0)
 							throws Throwable {
-						Log.d("HotPatch_pkg", "start hotpatch TBLocationContentProvider query");
+						TaoLog.Logd("HotPatch_pkg", "start hotpatch TBLocationContentProvider query");
 
 						// replace start
 						Uri uri = (Uri) args0.args[0];
@@ -92,7 +91,7 @@ public class HotPatchTBLocationContentProvider implements IPatch {
 							c.setNotificationUri(arg0.context.getContentResolver(), uri);
 						} catch (Exception ex)
 						{
-//							TaoLog.Loge("HotPatch_pkg", "query data error: " + ex.getMessage());
+							TaoLog.Loge("HotPatch_pkg", "query data error: " + ex.getMessage());
 							catched = true;
 						}
 
@@ -101,7 +100,7 @@ public class HotPatchTBLocationContentProvider implements IPatch {
 						bundle.put("desc",	"patch success on TBLocationContentProvider query, and isCatched " + catched);
 						TBS.Ext.commitEvent("hotpatch_pkg", bundle);
 						// Return a cursor to the query result.
-//						Log.d("HotPatch_pkg", "end hotpatch TBLocationContentProvider query");
+						TaoLog.Logd("HotPatch_pkg", "end hotpatch TBLocationContentProvider query");
 						return c;
 					}
 
