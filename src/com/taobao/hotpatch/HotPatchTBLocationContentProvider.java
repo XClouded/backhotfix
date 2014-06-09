@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.taobao.util.TaoLog;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.taobao.android.dexposed.XC_MethodReplacement;
 import com.taobao.android.dexposed.XposedBridge;
@@ -29,9 +30,9 @@ public class HotPatchTBLocationContentProvider implements IPatch {
 		try {
 			TBLocationContentProvider = arg0.classLoader
 					.loadClass("com.taobao.passivelocation.contentprovider.TBLocationContentProvider");
-			TaoLog.Logd("HotPatch_pkg", "invoke TBLocationContentProvider class success");
+			Log.d("HotPatch_pkg", "invoke TBLocationContentProvider class success");
 		} catch (ClassNotFoundException e) {
-			TaoLog.Loge("HotPatch_pkg", "invoke TBLocationContentProvider class failed" + e.toString());
+			Log.e("HotPatch_pkg", "invoke TBLocationContentProvider class failed" + e.toString());
 		}
 
 		XposedBridge.findAndHookMethod(TBLocationContentProvider, "query",
@@ -91,7 +92,7 @@ public class HotPatchTBLocationContentProvider implements IPatch {
 							c.setNotificationUri(arg0.context.getContentResolver(), uri);
 						} catch (Exception ex)
 						{
-							TaoLog.Loge("HotPatch_pkg", "query data error: " + ex.getMessage());
+							Log.e("HotPatch_pkg", "query data error: " + ex.getMessage());
 							catched = true;
 						}
 
@@ -100,7 +101,7 @@ public class HotPatchTBLocationContentProvider implements IPatch {
 						bundle.put("desc",	"patch success on TBLocationContentProvider query, and isCatched " + catched);
 						TBS.Ext.commitEvent("hotpatch_pkg", bundle);
 						// Return a cursor to the query result.
-						TaoLog.Logd("HotPatch_pkg", "end hotpatch TBLocationContentProvider query");
+						Log.d("HotPatch_pkg", "end hotpatch TBLocationContentProvider query");
 						return c;
 					}
 
