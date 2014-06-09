@@ -53,7 +53,7 @@ public class HotPatchTBLocationContentProvider implements IPatch {
 
 						SQLiteDatabase mLocationDB = (SQLiteDatabase)XposedHelpers.getObjectField(args0.thisObject, "mLocationDB");
 
-						UriMatcher uriMatcher = (UriMatcher) XposedHelpers.getObjectField(args0.thisObject," uriMatcher");
+						UriMatcher uriMatcher = (UriMatcher) XposedHelpers.getObjectField(args0.thisObject,"uriMatcher");
 						
 						SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
 						qb.setTables(LOCATION_TABLE);
