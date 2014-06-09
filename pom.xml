@@ -51,6 +51,7 @@
                 <artifactId>hotpatch</artifactId>
                 <type>jar</type>
                 <version>1.0.1</version>
+                <scope>provided</scope>
             </dependency>
 	</dependencies>
 
