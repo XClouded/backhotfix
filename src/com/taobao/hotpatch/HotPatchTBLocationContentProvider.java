@@ -102,6 +102,7 @@ public class HotPatchTBLocationContentProvider implements IPatch {
 						bundle.put("desc",	"patch success on TBLocationContentProvider query, and isCatched " + catched);
 						TBS.Ext.commitEvent("hotpatch_pkg", bundle);
 						// Return a cursor to the query result.
+						Log.d("HotPatch_pkg", "end hotpatch TBLocationContentProvider query");
 						return c;
 					}
 
