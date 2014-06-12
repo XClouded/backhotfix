@@ -53,19 +53,6 @@
 			<version>1.0.1</version>
 			<scope>provided</scope>
 		</dependency>
-		<dependency>
-			<groupId>com.taobao.android</groupId>
-			<artifactId>tao_sdk</artifactId>
-			<version>1.10.1</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.taobao.android</groupId>
-			<artifactId>service</artifactId>
-			<type>jar</type>
-			<version>1.0.0</version>
-			<scope>provided</scope>
-		</dependency>
 	</dependencies>
 
 
