@@ -36,16 +36,6 @@ public class HotPatchPuti implements IPatch {
 			
 				// replace start
 				Context context = (Context) args0.args[0];
-				
-				Class<?> LoadableResources  = null;
-				try {
-					LoadableResources = arg0.classLoader
-							.loadClass("com.taobao.tao.homepage.puti.Puti");
-					Log.d("HotPatch_pkg", "invoke Puti class success");
-				} catch (ClassNotFoundException e) {
-					Log.e("HotPatch_pkg", "invoke Puti class failed" + e.toString());
-				}
-
 				Object mLoadableResources = XposedHelpers.getObjectField(args0.thisObject, "mLoadableResources");
 				FileDir mTempleteDir = (FileDir) XposedHelpers.getObjectField(args0.thisObject, "mTempleteDir");
 				if (mLoadableResources == null && (mTempleteDir == null || mTempleteDir.isInSdcard())) {
@@ -54,6 +44,14 @@ public class HotPatchPuti implements IPatch {
 						mTempleteDir = FileCache.getInsatance((Application) context.getApplicationContext()).getFileDirInstance(folder, false);
 						if (mTempleteDir != null) {
 							XposedHelpers.setBooleanField(args0.thisObject, "mWake", mTempleteDir.init(null, null));
+						}						
+						Class<?> LoadableResources  = null;
+						try {
+							LoadableResources = arg0.classLoader
+									.loadClass("com.taobao.tao.homepage.puti.LoadableResources");
+							Log.d("HotPatch_pkg", "invoke LoadableResources class success");
+						} catch (ClassNotFoundException e) {
+							Log.e("HotPatch_pkg", "invoke LoadableResources class failed" + e.toString());
 						}
 						Object loadObj = XposedHelpers.newInstance(LoadableResources, mTempleteDir.getDirPath());
 						XposedHelpers.setObjectField(args0.thisObject, "mLoadableResources", loadObj);
