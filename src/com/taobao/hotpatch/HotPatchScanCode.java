@@ -1,5 +1,6 @@
 package com.taobao.hotpatch;
 
+import android.app.Fragment;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
@@ -10,7 +11,6 @@ import com.taobao.android.dexposed.XC_MethodHook;
 import com.taobao.android.dexposed.XC_MethodReplacement;
 import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.android.dexposed.XposedHelpers;
-import com.taobao.taobao.scancode.gateway.activity.CaptureCodeFragment;
 import com.taobao.updatecenter.hotpatch.IPatch;
 import com.taobao.updatecenter.hotpatch.PatchCallback.PatchParam;
 
@@ -30,12 +30,12 @@ public class HotPatchScanCode implements IPatch{
             @Override
             protected Object replaceHookedMethod(MethodHookParam arg0) throws Throwable {
                 Log.d("ScanFragment", "replaceHookedMethod 0 ");
-                final CaptureCodeFragment main = (CaptureCodeFragment) arg0.thisObject;
+                final Fragment main = (Fragment)arg0.thisObject;
                 final Boolean successed = (Boolean) arg0.args[0];
-
+                final Object changeCameraFacingCallback = XposedHelpers.callMethod(main, "getChangeCameraFacingCallback");
                 Log.d("ScanFragment", "replaceHookedMethod 1 " + main.getClass().getSuperclass());                
                 Log.d("ScanFragment", "startNewCameraFinish=" + successed);
-                Log.d("ScanFragment", "startNewCameraFinish changeCameraFacingCallback=" + main.getChangeCameraFacingCallback());
+                Log.d("ScanFragment", "startNewCameraFinish changeCameraFacingCallback=" + changeCameraFacingCallback);
                 Log.d("ScanFragment", "startNewCameraFinish getActivity() != null =" + (main.getActivity() != null));
 
                 main.getActivity().runOnUiThread(new Runnable() {
@@ -46,7 +46,7 @@ public class HotPatchScanCode implements IPatch{
                         if (successed) {
                             XposedHelpers.callMethod(main, "setInnerScanViewVisibility", View.VISIBLE);
                             if (KaKaLibConfig.isNeedZoom()) {
-                                main.setInitZoom();
+                                XposedHelpers.callMethod(main, "setInitZoom");
                                 if (XposedHelpers.getBooleanField(main, "needShowZoomAtFirst")) {
                                     Handler seekBarHandeler = (Handler)XposedHelpers.getObjectField(main, "seekBarHandeler");
                                     seekBarHandeler.removeMessages(XposedHelpers.getStaticIntField(main.getClass(), "WHAT_SEEKBAR_HIDE"));
@@ -62,12 +62,12 @@ public class HotPatchScanCode implements IPatch{
                         }
                     }
                 });
-                if (main.getChangeCameraFacingCallback() != null && main.getActivity() != null) {
+                if (changeCameraFacingCallback != null && main.getActivity() != null) {
                     main.getActivity().runOnUiThread(new Runnable() {
 
                         @Override
                         public void run() {
-                            main.getChangeCameraFacingCallback().startNewCameraFinish(successed);
+                            XposedHelpers.callMethod(changeCameraFacingCallback, "startNewCameraFinish", successed);
                         }
                     });
                 }
