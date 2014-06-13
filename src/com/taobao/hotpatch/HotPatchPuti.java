@@ -1,5 +1,6 @@
 package com.taobao.hotpatch;
 
+import java.io.File;
 import java.util.Properties;
 
 import android.app.Application;
@@ -33,12 +34,14 @@ public class HotPatchPuti implements IPatch {
 			@Override
 			protected void afterHookedMethod(MethodHookParam args0)
 					throws Throwable {
-				Log.d("HotPatch_pkg", "start hotpatch Puti init");
+				Log.d("HotPatch_pkg", "start hotpatch Puti init" );
 			
 				// replace start
 				Context context = (Context) args0.args[0];
 				Object mLoadableResources = XposedHelpers.getObjectField(args0.thisObject, "mLoadableResources");
 				FileDir mTempleteDir = (FileDir) XposedHelpers.getObjectField(args0.thisObject, "mTempleteDir");
+                Log.d("HotPatch_pkg", "before loadableResource " +  mLoadableResources + "mTempleteDir " + mTempleteDir
+                      + " " + mTempleteDir.getDirPath() + "  " + new File(mTempleteDir.getDirPath()).canWrite());
 				if (mLoadableResources == null && (mTempleteDir == null || mTempleteDir.isInSdcard())) {
 					try {
 						String folder = "home_puti_data_backup";
@@ -68,7 +71,8 @@ public class HotPatchPuti implements IPatch {
 									"LoadableResourcesErrorHotFixed", 402);
 					}					
 				}
-				
+                Log.d("HotPatch_pkg", "end loadableResource " +  mLoadableResources + "mTempleteDir " + mTempleteDir
+                              + " " + mTempleteDir.getDirPath() + "  " + new File(mTempleteDir.getDirPath()).canWrite());
 				Properties bundle = new Properties();
 				bundle.put("desc",	"patch success on Puti init");
 				TBS.Ext.commitEvent("hotpatch_pkg", bundle);
