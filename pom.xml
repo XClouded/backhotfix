@@ -63,12 +63,14 @@
             <groupId>com.taobao.fireeye</groupId>
             <artifactId>scanlib</artifactId>
             <version>2.6.0.9-SNAPSHOT</version>
+            <type>jar</type>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.taobao.android</groupId>
             <artifactId>taobao_scancode</artifactId>
             <version>1.0.7-SNAPSHOT</version>
+            <type>jar</type>
             <scope>provided</scope>
         </dependency>    
 	</dependencies>
