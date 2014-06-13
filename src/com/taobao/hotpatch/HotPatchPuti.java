@@ -24,7 +24,7 @@ public class HotPatchPuti implements IPatch {
 		try {
 			Puti  = arg0.classLoader
 					.loadClass("com.taobao.tao.homepage.puti.Puti");
-			Log.d("HotPatch_pkg", "invoke Puti class success");
+//			Log.d("HotPatch_pkg", "invoke Puti class success");
 		} catch (ClassNotFoundException e) {
 			Log.e("HotPatch_pkg", "invoke Puti class failed" + e.toString());
 		}
@@ -34,14 +34,14 @@ public class HotPatchPuti implements IPatch {
 			@Override
 			protected void afterHookedMethod(MethodHookParam args0)
 					throws Throwable {
-				Log.d("HotPatch_pkg", "start hotpatch Puti init" );
+//				Log.d("HotPatch_pkg", "start hotpatch Puti init" );
 			
 				// replace start
 				Context context = (Context) args0.args[0];
 				Object mLoadableResources = XposedHelpers.getObjectField(args0.thisObject, "mLoadableResources");
 				FileDir mTempleteDir = (FileDir) XposedHelpers.getObjectField(args0.thisObject, "mTempleteDir");
-                Log.d("HotPatch_pkg", "before loadableResource " +  mLoadableResources + "mTempleteDir " + mTempleteDir
-                      + " " + mTempleteDir.getDirPath() + "  " + new File(mTempleteDir.getDirPath()).canWrite());
+//                Log.d("HotPatch_pkg", "before loadableResource " +  mLoadableResources + "mTempleteDir " + mTempleteDir
+//                      + " " + mTempleteDir.getDirPath() + "  " + new File(mTempleteDir.getDirPath()).canWrite());
                         
                 boolean needReoad = false;
                 if(mLoadableResources == null || mTempleteDir == null){
@@ -54,7 +54,7 @@ public class HotPatchPuti implements IPatch {
                 }
                 
              
-                Log.d("HotPatch_pkg", "before loadableResource " + needReoad);
+//                Log.d("HotPatch_pkg", "before loadableResource " + needReoad);
                         
 				if (needReoad) {
 					try {
@@ -67,7 +67,7 @@ public class HotPatchPuti implements IPatch {
 						try {
 							LoadableResources = arg0.classLoader
 									.loadClass("com.taobao.tao.homepage.puti.LoadableResources");
-							Log.d("HotPatch_pkg", "invoke LoadableResources class success");
+//							Log.d("HotPatch_pkg", "invoke LoadableResources class success");
 						} catch (ClassNotFoundException e) {
 							Log.e("HotPatch_pkg", "invoke LoadableResources class failed" + e.toString());
 						}
@@ -86,12 +86,12 @@ public class HotPatchPuti implements IPatch {
 									"LoadableResourcesErrorHotFixed", 402);
 					}					
 				}
-                Log.d("HotPatch_pkg", "end loadableResource " +  mLoadableResources + "mTempleteDir " + mTempleteDir
-                              + " " + mTempleteDir.getDirPath() + "  " + new File(mTempleteDir.getDirPath()).canWrite());
+//                Log.d("HotPatch_pkg", "end loadableResource " +  mLoadableResources + "mTempleteDir " + mTempleteDir
+//                              + " " + mTempleteDir.getDirPath() + "  " + new File(mTempleteDir.getDirPath()).canWrite());
 				Properties bundle = new Properties();
 				bundle.put("desc",	"patch success on Puti init");
 				TBS.Ext.commitEvent("hotpatch_pkg", bundle);
-				Log.d("HotPatch_pkg", "end hotpatch Puti init");
+				Log.d("HotPatch_pkg", "end hotpatch Puti init " + needReoad);
 			}
 
 		});
