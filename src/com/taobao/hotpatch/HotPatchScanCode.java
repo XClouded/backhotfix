@@ -9,6 +9,7 @@ import com.etao.kakalib.util.KaKaLibConfig;
 import com.taobao.android.dexposed.XC_MethodHook;
 import com.taobao.android.dexposed.XC_MethodReplacement;
 import com.taobao.android.dexposed.XposedBridge;
+import com.taobao.android.dexposed.XposedHelpers;
 import com.taobao.taobao.scancode.gateway.activity.CaptureCodeFragment;
 import com.taobao.updatecenter.hotpatch.IPatch;
 import com.taobao.updatecenter.hotpatch.PatchCallback.PatchParam;
