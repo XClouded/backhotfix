@@ -1,6 +1,5 @@
 package com.taobao.hotpatch;
 
-import java.io.File;
 import java.util.Properties;
 
 import android.app.Application;
@@ -45,13 +44,14 @@ public class HotPatchPuti implements IPatch {
                         
                 boolean needReoad = false;
                 if(mLoadableResources == null || mTempleteDir == null){
-                    needReoad = true;
-                } else {
-                    File file  =new File(mTempleteDir.getDirPath());
-                    if(!file.canWrite()){
-                       needReoad = true;
-                    }
-                }                
+                   needReoad = true;
+                } else{
+                   File file  =new File(mTempleteDir.getDirPath());
+                   if(!file.canWrite()){
+                      needReoad = true;
+                   }
+                }
+                
              
                 Log.d("HotPatch_pkg", "before loadableResource " + needReoad);
                         
@@ -70,8 +70,9 @@ public class HotPatchPuti implements IPatch {
 						} catch (ClassNotFoundException e) {
 							Log.e("HotPatch_pkg", "invoke LoadableResources class failed" + e.toString());
 						}
-						Object loadObj = XposedHelpers.newInstance(LoadableResources, mTempleteDir.getDirPath());
-						XposedHelpers.setObjectField(args0.thisObject, "mLoadableResources", loadObj);
+						mLoadableResources = XposedHelpers.newInstance(LoadableResources, mTempleteDir.getDirPath());
+						XposedHelpers.setObjectField(args0.thisObject, "mLoadableResources", mLoadableResources);
+                        XposedHelpers.setObjectField(args0.thisObject, "mTempleteDir", mTempleteDir);
 					} catch (Throwable e) {
 						TBS.Ext.commitEvent("Home", 4, "Puti",
 								"LoadableResourcesErrorHotFixFailed", 401);
