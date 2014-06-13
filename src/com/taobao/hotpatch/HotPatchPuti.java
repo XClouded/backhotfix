@@ -1,5 +1,6 @@
 package com.taobao.hotpatch;
 
+import java.io.File;
 import java.util.Properties;
 
 import android.app.Application;
