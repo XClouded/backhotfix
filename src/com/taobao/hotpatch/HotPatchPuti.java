@@ -1,6 +1,5 @@
 package com.taobao.hotpatch;
 
-import java.io.File;
 import java.util.Properties;
 
 import android.app.Application;
@@ -42,7 +41,20 @@ public class HotPatchPuti implements IPatch {
 				FileDir mTempleteDir = (FileDir) XposedHelpers.getObjectField(args0.thisObject, "mTempleteDir");
                 Log.d("HotPatch_pkg", "before loadableResource " +  mLoadableResources + "mTempleteDir " + mTempleteDir
                       + " " + mTempleteDir.getDirPath() + "  " + new File(mTempleteDir.getDirPath()).canWrite());
-				if (mLoadableResources == null && (mTempleteDir == null || mTempleteDir.isInSdcard())) {
+                        
+                boolean needReoad = false;
+                 if(mLoadableResources == null || mTempleteDir == null){
+                     needReoad = true;
+                 }
+                 if(mTempleteDir != null && mTempleteDir.isInSdcard()){
+                     if(!new File(mTempleteDir.getDirPath()).canWrite()){
+                         needReoad = true;
+                     }
+                 }
+             
+                Log.d("HotPatch_pkg", "before loadableResource " + needReoad);
+                        
+				if (needReoad) {
 					try {
 						String folder = "home_puti_data_backup";
 						mTempleteDir = FileCache.getInsatance((Application) context.getApplicationContext()).getFileDirInstance(folder, false);
