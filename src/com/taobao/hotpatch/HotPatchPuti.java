@@ -44,14 +44,14 @@ public class HotPatchPuti implements IPatch {
                       + " " + mTempleteDir.getDirPath() + "  " + new File(mTempleteDir.getDirPath()).canWrite());
                         
                 boolean needReoad = false;
-                 if(mLoadableResources == null || mTempleteDir == null){
-                     needReoad = true;
-                 }
-                 if(mTempleteDir != null && mTempleteDir.isInSdcard()){
-                     if(!new File(mTempleteDir.getDirPath()).canWrite()){
-                         needReoad = true;
-                     }
-                 }
+                if(mLoadableResources == null || mTempleteDir == null){
+                    needReoad = true;
+                } else {
+                    File file  =new File(mTempleteDir.getDirPath());
+                    if(!file.canWrite()){
+                       needReoad = true;
+                    }
+                }                
              
                 Log.d("HotPatch_pkg", "before loadableResource " + needReoad);
                         
