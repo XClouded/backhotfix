@@ -1,10 +1,11 @@
 package com.taobao.hotpatch;
 
+import android.support.v4.app.Fragment;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.SeekBar;
-import android.support.v4.app.Fragment;
+
 import com.etao.kakalib.util.KaKaLibConfig;
 import com.taobao.android.dexposed.XC_MethodHook;
 import com.taobao.android.dexposed.XC_MethodReplacement;
@@ -12,7 +13,6 @@ import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.android.dexposed.XposedHelpers;
 import com.taobao.updatecenter.hotpatch.IPatch;
 import com.taobao.updatecenter.hotpatch.PatchCallback.PatchParam;
-import com.taobao.taobao.scancode.gateway.activity.CaptureCodeFragment;
 
 public class HotPatchScanCode implements IPatch{
     
@@ -28,15 +28,14 @@ public class HotPatchScanCode implements IPatch{
         XposedBridge.findAndHookMethod(cls, "startNewCameraFinish",  boolean.class, new XC_MethodReplacement() {
 
             @Override
-            protected Object replaceHookedMethod(MethodHookParam arg0) throws Throwable {
+            protected Object replaceHookedMethod(final MethodHookParam arg0) throws Throwable {
                 Log.d("ScanFragment", "replaceHookedMethod 0 ");
-                final CaptureCodeFragment main = (CaptureCodeFragment)arg0.thisObject;
                 final Boolean successed = (Boolean) arg0.args[0];
-                final Object changeCameraFacingCallback = XposedHelpers.callMethod(main, "getChangeCameraFacingCallback");
-                Log.d("ScanFragment", "replaceHookedMethod 1 " + main.getClass().getSuperclass());                
+                final Fragment main = (Fragment)arg0.thisObject;
+                final Object changeCameraFacingCallback = XposedHelpers.callMethod(arg0.thisObject, "getChangeCameraFacingCallback");
+                Log.d("ScanFragment", "replaceHookedMethod 1 " + arg0.thisObject.getClass().getSuperclass());                
                 Log.d("ScanFragment", "startNewCameraFinish=" + successed);
                 Log.d("ScanFragment", "startNewCameraFinish changeCameraFacingCallback=" + changeCameraFacingCallback);
-                Log.d("ScanFragment", "startNewCameraFinish getActivity() != null =" + (main.getActivity() != null));
 
                 main.getActivity().runOnUiThread(new Runnable() {
 
@@ -45,23 +44,23 @@ public class HotPatchScanCode implements IPatch{
 
                         if (successed) {
                             Log.d("ScanFragment", "setInnerScanViewVisibility invoked.");
-                            XposedHelpers.callMethod(main, "setInnerScanViewVisibility", View.VISIBLE);
+                            XposedHelpers.callMethod(arg0.thisObject, "setInnerScanViewVisibility", View.VISIBLE);
                             if (KaKaLibConfig.isNeedZoom()) {
                                 Log.d("ScanFragment", "setInitZoom invoked.");
-                                XposedHelpers.callMethod(main, "setInitZoom");
-                                if (XposedHelpers.getBooleanField(main, "needShowZoomAtFirst")) {
+                                XposedHelpers.callMethod(arg0.thisObject, "setInitZoom");
+                                if (XposedHelpers.getBooleanField(arg0.thisObject, "needShowZoomAtFirst")) {
                                     Log.d("ScanFragment", "needShowZoomAtFirst invoked.");
-                                    Handler seekBarHandeler = (Handler)XposedHelpers.getObjectField(main, "seekBarHandeler");
-                                    seekBarHandeler.removeMessages(XposedHelpers.getStaticIntField(main.getClass(), "WHAT_SEEKBAR_HIDE"));
-                                    seekBarHandeler.removeMessages(XposedHelpers.getStaticIntField(main.getClass(), "WHAT_SEEKBAR_SHOW"));
-                                    seekBarHandeler.sendEmptyMessage(XposedHelpers.getStaticIntField(main.getClass(), "WHAT_SEEKBAR_SHOW"));
-                                    seekBarHandeler.sendEmptyMessageDelayed(XposedHelpers.getStaticIntField(main.getClass(),
-                                            "WHAT_SEEKBAR_HIDE"), XposedHelpers.getStaticIntField(main.getClass(), "ZOOMBAR_HIDE_DELY"));
+                                    Handler seekBarHandeler = (Handler)XposedHelpers.getObjectField(arg0.thisObject, "seekBarHandeler");
+                                    seekBarHandeler.removeMessages(XposedHelpers.getStaticIntField(arg0.thisObject.getClass(), "WHAT_SEEKBAR_HIDE"));
+                                    seekBarHandeler.removeMessages(XposedHelpers.getStaticIntField(arg0.thisObject.getClass(), "WHAT_SEEKBAR_SHOW"));
+                                    seekBarHandeler.sendEmptyMessage(XposedHelpers.getStaticIntField(arg0.thisObject.getClass(), "WHAT_SEEKBAR_SHOW"));
+                                    seekBarHandeler.sendEmptyMessageDelayed(XposedHelpers.getStaticIntField(arg0.thisObject.getClass(),
+                                            "WHAT_SEEKBAR_HIDE"), XposedHelpers.getStaticIntField(arg0.thisObject.getClass(), "ZOOMBAR_HIDE_DELY"));
                                 }
                             }
                         } else {
                             Log.d("ScanFragment", "zoomSeekBar setEnabled.");
-                            SeekBar zoomSeekBar = (SeekBar)XposedHelpers.getObjectField(main, "zoomSeekBar");
+                            SeekBar zoomSeekBar = (SeekBar)XposedHelpers.getObjectField(arg0.thisObject, "zoomSeekBar");
                             zoomSeekBar.setEnabled(false);
                         }
                     }
