@@ -66,14 +66,13 @@
             <type>jar</type>
             <scope>provided</scope>
         </dependency>  
-	</dependencies>
         <dependency>
             <groupId>com.taobao.android</groupId>
             <artifactId>taobao_scancode</artifactId>
             <type>jar</type>
             <scope>provided</scope>
         </dependency>
-
+	</dependencies>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 		<finalName>600000@hotpatch</finalName>
