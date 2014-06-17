@@ -44,10 +44,13 @@ public class HotPatchScanCode implements IPatch{
                     public void run() {
 
                         if (successed) {
+                            Log.d("ScanFragment", "setInnerScanViewVisibility invoked.");
                             XposedHelpers.callMethod(main, "setInnerScanViewVisibility", View.VISIBLE);
                             if (KaKaLibConfig.isNeedZoom()) {
+                                Log.d("ScanFragment", "setInitZoom invoked.");
                                 XposedHelpers.callMethod(main, "setInitZoom");
                                 if (XposedHelpers.getBooleanField(main, "needShowZoomAtFirst")) {
+                                    Log.d("ScanFragment", "needShowZoomAtFirst invoked.");
                                     Handler seekBarHandeler = (Handler)XposedHelpers.getObjectField(main, "seekBarHandeler");
                                     seekBarHandeler.removeMessages(XposedHelpers.getStaticIntField(main.getClass(), "WHAT_SEEKBAR_HIDE"));
                                     seekBarHandeler.removeMessages(XposedHelpers.getStaticIntField(main.getClass(), "WHAT_SEEKBAR_SHOW"));
@@ -57,6 +60,7 @@ public class HotPatchScanCode implements IPatch{
                                 }
                             }
                         } else {
+                            Log.d("ScanFragment", "zoomSeekBar setEnabled.");
                             SeekBar zoomSeekBar = (SeekBar)XposedHelpers.getObjectField(main, "zoomSeekBar");
                             zoomSeekBar.setEnabled(false);
                         }
@@ -67,6 +71,7 @@ public class HotPatchScanCode implements IPatch{
 
                         @Override
                         public void run() {
+                            Log.d("ScanFragment", "startNewCameraFinish called.");
                             XposedHelpers.callMethod(changeCameraFacingCallback, "startNewCameraFinish", successed);
                         }
                     });
