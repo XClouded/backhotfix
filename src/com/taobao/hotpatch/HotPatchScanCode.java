@@ -1,11 +1,10 @@
 package com.taobao.hotpatch;
 
-import android.app.Fragment;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.SeekBar;
-
+import android.support.v4.app.Fragment;
 import com.etao.kakalib.util.KaKaLibConfig;
 import com.taobao.android.dexposed.XC_MethodHook;
 import com.taobao.android.dexposed.XC_MethodReplacement;
