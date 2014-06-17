@@ -67,7 +67,12 @@
             <scope>provided</scope>
         </dependency>  
 	</dependencies>
-
+        <dependency>
+            <groupId>com.taobao.android</groupId>
+            <artifactId>taobao_scancode</artifactId>
+            <type>jar</type>
+            <scope>provided</scope>
+        </dependency>
 
 	<build>
 		<sourceDirectory>src</sourceDirectory>

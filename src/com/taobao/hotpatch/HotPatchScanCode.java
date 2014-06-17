@@ -12,6 +12,7 @@ import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.android.dexposed.XposedHelpers;
 import com.taobao.updatecenter.hotpatch.IPatch;
 import com.taobao.updatecenter.hotpatch.PatchCallback.PatchParam;
+import com.taobao.taobao.scancode.gateway.activity.CaptureCodeFragment;
 
 public class HotPatchScanCode implements IPatch{
     
@@ -29,7 +30,7 @@ public class HotPatchScanCode implements IPatch{
             @Override
             protected Object replaceHookedMethod(MethodHookParam arg0) throws Throwable {
                 Log.d("ScanFragment", "replaceHookedMethod 0 ");
-                final Fragment main = (Fragment)arg0.thisObject;
+                final CaptureCodeFragment main = (CaptureCodeFragment)arg0.thisObject;
                 final Boolean successed = (Boolean) arg0.args[0];
                 final Object changeCameraFacingCallback = XposedHelpers.callMethod(main, "getChangeCameraFacingCallback");
                 Log.d("ScanFragment", "replaceHookedMethod 1 " + main.getClass().getSuperclass());                
