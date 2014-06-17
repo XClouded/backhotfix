@@ -25,7 +25,7 @@ public class HotPatchScanCode implements IPatch{
             Log.e("handlePatch", "invoke class CaptureCodeFragment", e);
             e.printStackTrace();
         }
-        XposedBridge.findAndHookMethod(cls, "startNewCameraFinish",  new XC_MethodReplacement() {
+        XposedBridge.findAndHookMethod(cls, "startNewCameraFinish",  Boolean.class, new XC_MethodReplacement() {
 
             @Override
             protected Object replaceHookedMethod(MethodHookParam arg0) throws Throwable {
