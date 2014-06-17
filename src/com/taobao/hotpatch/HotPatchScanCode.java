@@ -5,7 +5,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.SeekBar;
-
+import android.os.Bundle;
 import com.etao.kakalib.util.KaKaLibConfig;
 import com.taobao.android.dexposed.XC_MethodHook;
 import com.taobao.android.dexposed.XC_MethodReplacement;
@@ -78,7 +78,7 @@ public class HotPatchScanCode implements IPatch{
                 return null;
             }            
         });
-        XposedBridge.findAndHookMethod(cls, "onCreate", new XC_MethodHook() {
+        XposedBridge.findAndHookMethod(cls, "onCreate", Bundle.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 Log.e("ScanFragment", "after onCreate, set need zoom to false.");
