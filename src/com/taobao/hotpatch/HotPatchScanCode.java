@@ -44,7 +44,7 @@ public class HotPatchScanCode implements IPatch{
 
                         if (successed) {
                             Log.d("ScanFragment", "setInnerScanViewVisibility invoked.");
-                            XposedHelpers.callMethod(arg0.thisObject, "setInnerScanViewVisibility", View.VISIBLE);
+                            XposedHelpers.callMethod(arg0.thisObject, "setInnerScanViewVisibility", 0);
                             if (KaKaLibConfig.isNeedZoom()) {
                                 Log.d("ScanFragment", "setInitZoom invoked.");
                                 XposedHelpers.callMethod(arg0.thisObject, "setInitZoom");
