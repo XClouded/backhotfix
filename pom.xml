@@ -76,8 +76,9 @@
         <dependency>
             <groupId>com.google.android</groupId>
             <artifactId>support-v4</artifactId>
+            <version>r18</version>
             <type>jar</type>
-            <scope>provided</scope>            
+            <scope>provided</scope>
         </dependency>        
 	</dependencies>
 	<build>
