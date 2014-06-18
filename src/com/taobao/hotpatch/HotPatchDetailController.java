@@ -32,7 +32,7 @@ public class HotPatchDetailController implements IPatch{
 	    cxt =arg0.context;
 		try {
 			DetailController  = arg0.classLoader
-					.loadClass("com.taobao.tao.detail.activity.detail.controller.DetailController");
+					.loadClass("cc");
 			Log.d("HotPatch_pkg", "invoke DetailController class success ");
 		} catch (ClassNotFoundException e) {
 			Log.e("HotPatch_pkg", "invoke DetailController class failed" + e.toString());
@@ -48,7 +48,7 @@ public class HotPatchDetailController implements IPatch{
 			            	Bundle bund = new Bundle();
 			        		bund.putString("url", url);
 			        		bund.putString("ItemIdForceH5", itemId);
-			        		Handler mHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
+			        		Handler mHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "k");
 			        		Nav.from(cxt).withCategory("com.taobao.intent.category.HYBRID_UI").toUri(url);
 			        		mHandler.sendEmptyMessage(103);
 			        		Log.d("HotPatch_pkg", "invoke DetailController class success");
