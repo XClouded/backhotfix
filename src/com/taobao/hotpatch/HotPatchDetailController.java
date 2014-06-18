@@ -42,6 +42,8 @@ public class HotPatchDetailController implements IPatch{
 		            @Override
 		            protected Object replaceHookedMethod(MethodHookParam param) throws Throwable {
 	
+		        		Log.d("HotPatch_pkg", " DetailController Nav class begin");
+
 		            	try{
 			            	String itemId =  (String)param.args[0];
 			            	String url = (String)param.args[1];
