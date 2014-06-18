@@ -37,7 +37,7 @@ public class HotPatchDetailController implements IPatch{
 			DetailController  = arg0.classLoader
 					.loadClass("cc");
 
-			Method [] arry = DetailController.getClass().getMethods(); 
+			Method [] arry = DetailController.getMethods(); 
 			for(Method m :arry )
 				Log.d("HotPatch_pkg", "DetailController 11111 m"+m.getName());
 
