@@ -35,7 +35,7 @@ public class HotPatchDetailController implements IPatch{
 					.loadClass("cc");
 			Log.d("HotPatch_pkg", "invoke DetailController class success ");
 		} catch (ClassNotFoundException e) {
-			Log.e("HotPatch_pkg", "invoke DetailController CC class failed", e);
+			Log.e("HotPatch_pkg", "invoke DetailController class failed" + e.toString());
 		}
 	
     XposedBridge.findAndHookMethod(DetailController, "openBrowser", String.class, String.class,new XC_MethodReplacement() {
@@ -49,7 +49,7 @@ public class HotPatchDetailController implements IPatch{
 			        		bund.putString("url", url);
 			        		bund.putString("ItemIdForceH5", itemId);
 			        		Handler mHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "k");
-			        		Nav.from(cxt).withCategory("com.taobao.intent.category.HYBRID_UI").toUri(url);
+			        		Nav.from(cxt).withCategory("com.taobao.intent.category.HYBRID_UI").withExtras(bund).toUri(url);
 			        		mHandler.sendEmptyMessage(103);
 			        		Log.d("HotPatch_pkg", " DetailController Nav class "+url);
 		            	}catch ( Exception e) {
