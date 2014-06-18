@@ -35,7 +35,7 @@ public class HotPatchDetailController implements IPatch{
 					.loadClass("cc");
 			Log.d("HotPatch_pkg", "invoke DetailController class success ");
 		} catch (ClassNotFoundException e) {
-			Log.e("HotPatch_pkg", "invoke DetailController class failed" + e.toString());
+			Log.e("HotPatch_pkg", "invoke DetailController CC class failed", e);
 		}
 	
     XposedBridge.findAndHookMethod(DetailController, "openBrowser", String.class, String.class,new XC_MethodReplacement() {
