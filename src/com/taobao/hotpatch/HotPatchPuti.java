@@ -26,7 +26,7 @@ public class HotPatchPuti implements IPatch {
 		try {
 			Puti  = arg0.classLoader
 					.loadClass("com.taobao.tao.homepage.puti.Puti");
-			Log.d("HotPatch_pkg", "invoke Puti class success");
+			//Log.d("HotPatch_pkg", "invoke Puti class success");
 		} catch (ClassNotFoundException e) {
 			Log.e("HotPatch_pkg", "invoke Puti class failed" + e.toString());
 		}
@@ -36,33 +36,33 @@ public class HotPatchPuti implements IPatch {
 			@Override
 			protected void afterHookedMethod(MethodHookParam args0)
 					throws Throwable {
-				Log.d("HotPatch_pkg", "start hotpatch Puti getTemplate" );
+				//Log.d("HotPatch_pkg", "start hotpatch Puti getTemplate" );
 				Object view = args0.getResult();
 				if(view == null && args0.args[1] != null){
 					try{
 						Context context = (Context) args0.args[0];
 						String name = (String) args0.args[1];
 						ViewGroup root = (ViewGroup) args0.args[4];
-						Log.d("HotPatch_pkg", "start hotpatch Puti getTemplate" + name );
+						//Log.d("HotPatch_pkg", "start hotpatch Puti getTemplate" + name );
 						TBS.Ext.commitEvent("Home", 4, "Puti", "getTemplateTryFixInflateError", 402);
 						Object presetTemplate =  presetTemplates.get(name);
-						Log.d("HotPatch_pkg", "start hotpatch Puti getTemplate" + presetTemplate);
+						//Log.d("HotPatch_pkg", "start hotpatch Puti getTemplate" + presetTemplate);
 						
 						if(presetTemplate != null){
 								int presetTemplateId = (Integer) XposedHelpers.getObjectField(presetTemplate, "presetId");
-								Log.d("HotPatch_pkg", "start hotpatch Puti getTemplate" + presetTemplateId);
+								//Log.d("HotPatch_pkg", "start hotpatch Puti getTemplate" + presetTemplateId);
 								
 								if(presetTemplateId  > 0){
 									 view  = LayoutInflater.from(context).inflate(presetTemplateId , root);
 									 args0.setResult(view);
-									 Log.d("HotPatch_pkg", "start hotpatch Puti getTemplate" +  view);
+									 //Log.d("HotPatch_pkg", "start hotpatch Puti getTemplate" +  view);
 								     TBS.Ext.commitEvent("Home", 4, "Puti", "getTemplateErrorHotFixed", 402);
 								}
 						}
 						Properties bundle = new Properties();
 						bundle.put("desc",	"patch success on Puti getTemplate");
 						TBS.Ext.commitEvent("hotpatch_pkg", bundle);
-						Log.d("HotPatch_pkg", "end hotpatch Puti getTemplate ");
+						//Log.d("HotPatch_pkg", "end hotpatch Puti getTemplate ");
 					}catch(Exception e){
 						Log.e("HotPatch_pkg", "hotpatch Puti getTemplet Error", e);
 						TBS.Ext.commitEvent("Home", 4, "Puti", "getTemplateErrorHotError", 402, e.getMessage());
@@ -76,14 +76,14 @@ public class HotPatchPuti implements IPatch {
 			XposedBridge.findAndHookMethod(Puti, "addTemplet", templateClass, boolean.class, new XC_MethodHook() {
 				@Override
 				protected void beforeHookedMethod(MethodHookParam args0)  throws Throwable {
-					Log.d("HotPatch_pkg", "start hotpatch Puti addTemplet" );
+					//Log.d("HotPatch_pkg", "start hotpatch Puti addTemplet" );
 					try{
 						Object template =  args0.args[0];
 						boolean isPreset = (Boolean) args0.args[1];
 						if(template != null && isPreset){
 							String templateName = (String) XposedHelpers.getObjectField(template, "name");
 							presetTemplates.put(templateName, template);
-							Log.d("HotPatch_pkg", "start hotpatch Puti " + templateName);
+							//Log.d("HotPatch_pkg", "start hotpatch Puti " + templateName);
 						}
 					}catch(Exception e){
 						Log.e("HotPatch_pkg", "hotpatch Puti addTemplet Update PresetId Error", e);
