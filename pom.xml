@@ -72,7 +72,14 @@
             <version>r18</version>
             <type>jar</type>
             <scope>provided</scope>
-        </dependency>        
+        </dependency>
+        <dependency>
+			<groupId>com.taobao.android</groupId>
+			<artifactId>service</artifactId>
+			<type>jar</type>
+			<version>1.0.0</version>
+			<scope>provided</scope>
+		</dependency>        
 	</dependencies>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
