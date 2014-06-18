@@ -9,6 +9,8 @@ import java.lang.reflect.Method;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.taobao.atlas.framework.Atlas;
+import android.taobao.atlas.framework.BundleImpl;
 import android.util.Log;
 
 import com.taobao.android.dexposed.XC_MethodReplacement;
@@ -34,14 +36,13 @@ public class HotPatchDetailController implements IPatch{
 		Class<?> DetailController  = null;
 		cxt =arg0.context;
 		try {
-			DetailController  = arg0.classLoader
-					.loadClass("cc");
-
+//			DetailController  = arg0.classLoader
+//					.loadClass("cc");
+			BundleImpl trade = (BundleImpl) Atlas.getInstance().getBundle("com.taobao.android.trade");
+			DetailController =	trade.getClassLoader().loadClass("cc");
 			Method [] arry = DetailController.getDeclaredMethods(); 
 			for(Method m :arry )
 				Log.d("HotPatch_pkg", "DetailController 11111 m"+m.getName());
-
-
 			Log.d("HotPatch_pkg", "invoke DetailController class success ");
 		} catch (ClassNotFoundException e) {
 			Log.e("HotPatch_pkg", "invoke DetailController class failed" + e.toString());
