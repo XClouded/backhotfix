@@ -46,8 +46,12 @@ public class HotPatchPuti implements IPatch {
 						Log.d("HotPatch_pkg", "start hotpatch Puti getTemplate" + name );
 						TBS.Ext.commitEvent("Home", 4, "Puti", "getTemplateTryFixInflateError", 402);
 						Object presetTemplate =  presetTemplates.get(name);
+						Log.d("HotPatch_pkg", "start hotpatch Puti getTemplate" + presetTemplate);
+						
 						if(presetTemplate != null){
 								int presetTemplateId = (Integer) XposedHelpers.getObjectField(presetTemplate, "presetId");
+								Log.d("HotPatch_pkg", "start hotpatch Puti getTemplate" + presetTemplateId);
+								
 								if(presetTemplateId  > 0){
 									 view  = LayoutInflater.from(context).inflate(presetTemplateId , root);
 									 args0.setResult(view);
@@ -78,7 +82,7 @@ public class HotPatchPuti implements IPatch {
 						boolean isPreset = (Boolean) args0.args[1];
 						if(template != null && isPreset){
 							String templateName = (String) XposedHelpers.getObjectField(template, "name");
-							presetTemplates.put(templateName, templateName);
+							presetTemplates.put(templateName, template);
 							Log.d("HotPatch_pkg", "start hotpatch Puti " + templateName);
 						}
 					}catch(Exception e){
