@@ -51,10 +51,10 @@ public class HotPatchDetailController implements IPatch{
 			        		Handler mHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "k");
 			        		Nav.from(cxt).withCategory("com.taobao.intent.category.HYBRID_UI").toUri(url);
 			        		mHandler.sendEmptyMessage(103);
-			        		Log.d("HotPatch_pkg", "invoke DetailController class success");
+			        		Log.d("HotPatch_pkg", " DetailController Nav class "+url);
 		            	}catch ( Exception e) {
 		            		
-		            		Log.e("HotPatch_pkg", "invoke DetailController class failed" + e.toString());
+		            		Log.e("HotPatch_pkg", "DetailController NAV failed");
 		            	}
 		            	  return null;
 
