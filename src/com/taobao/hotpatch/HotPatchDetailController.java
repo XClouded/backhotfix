@@ -36,14 +36,11 @@ public class HotPatchDetailController implements IPatch{
 		Class<?> DetailController  = null;
 		cxt =arg0.context;
 		try {
-//			DetailController  = arg0.classLoader
-//					.loadClass("cc");
+
 			BundleImpl trade = (BundleImpl) Atlas.getInstance().getBundle("com.taobao.android.trade");
 			DetailController =	trade.getClassLoader().loadClass("cc");
-			Method [] arry = DetailController.getDeclaredMethods(); 
-			for(Method m :arry )
-				Log.d("HotPatch_pkg", "DetailController 11111 m"+m.getName());
-			Log.d("HotPatch_pkg", "invoke DetailController class success ");
+//			Method [] arry = DetailController.getDeclaredMethods(); 
+			
 		} catch (ClassNotFoundException e) {
 			Log.e("HotPatch_pkg", "invoke DetailController class failed" + e.toString());
 		}
@@ -52,7 +49,6 @@ public class HotPatchDetailController implements IPatch{
 			@Override
 			protected Object replaceHookedMethod(MethodHookParam param) throws Throwable {
 
-				Log.d("HotPatch_pkg", " DetailController Nav class begin");
 
 				try{
 					String itemId =  (String)param.args[0];
@@ -63,7 +59,7 @@ public class HotPatchDetailController implements IPatch{
 					Handler mHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "k");
 					Nav.from(cxt).withCategory("com.taobao.intent.category.HYBRID_UI").withExtras(bund).toUri(url);
 					mHandler.sendEmptyMessage(103);
-					Log.d("HotPatch_pkg", " DetailController Nav class "+url);
+					Log.d("HotPatch_pkg", " DetailController Nav class ");
 				}catch ( Exception e) {
 
 					Log.e("HotPatch_pkg", "DetailController NAV failed");
