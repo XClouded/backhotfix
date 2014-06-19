@@ -20,7 +20,8 @@ public class HotPatchFromWangxinActivity  implements IPatch {
 	Context cxt;
 	@Override
 	public void handlePatch(final PatchParam arg0) throws Throwable {
-		
+		Log.d("HotPatch_pkg", "FromWangxinActivity hotpatch begin" );
+
 		Class<?> FromWangxinActivity  = null;
 		cxt =arg0.context;
 		try {
