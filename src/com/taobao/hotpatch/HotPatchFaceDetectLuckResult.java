@@ -50,10 +50,10 @@ public class HotPatchFaceDetectLuckResult implements IPatch {
 
                                                    FaceDetectLuckRequest request = new FaceDetectLuckRequest();
                                                    request.setChannelId((String) XposedHelpers.getObjectField(ids,
-                                                                                                              "sChannelId"));
-                                                   request.setEname((String) XposedHelpers.getObjectField(ids, "sEname"));
+                                                                                                              "channelId"));
+                                                   request.setEname((String) XposedHelpers.getObjectField(ids, "ename"));
                                                    request.setEventId((String) XposedHelpers.getObjectField(ids,
-                                                                                                            "sEventId"));
+                                                                                                            "eventId"));
                                                    request.setSid(sid);
 
                                                    String appkey = (String) XposedHelpers.getStaticObjectField(constants,
