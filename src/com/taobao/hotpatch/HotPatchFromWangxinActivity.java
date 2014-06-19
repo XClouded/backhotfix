@@ -1,5 +1,7 @@
 package com.taobao.hotpatch;
 
+import java.lang.reflect.Method;
+
 import android.content.Context;
 import android.content.Intent;
 import android.taobao.atlas.framework.Atlas;
@@ -44,8 +46,9 @@ public class HotPatchFromWangxinActivity  implements IPatch {
 	            @Override
 	            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
 	    			Log.e("HotPatch_pkg", "wangxin invoke method  success 111" );
-
-	            	Intent intent = (Intent) XposedHelpers.callMethod(param.thisObject, "getIntent");
+	    			Method method = param.thisObject.getClass().getSuperclass().getDeclaredMethod("getIntent");
+	                method.setAccessible(true);
+		            Intent intent =(Intent) method.invoke(param.thisObject,new Object[]{null});
 	    			Log.e("HotPatch_pkg", "wangxin invoke method  success  2222" );
 	    			Log.e("HotPatch_pkg", "wangxin invoke method  success  :"+intent.getAction() );
 
