@@ -48,16 +48,11 @@ public class HotPatchFromWangxinActivity  implements IPatch {
 	            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
 	    			Log.e("HotPatch_pkg", "wangxin invoke method  success 11133 " );
 	    			Intent intent = (Intent)XposedHelpers.getObjectField(param.thisObject, "mIntent");
+          
 
-//	    			Method method = param.thisObject.getClass().getMethod("getIntent",null);
-//	                method.setAccessible(true);
-//		            Intent intent =(Intent) method.invoke(param.thisObject,new Object[]{null});
-	    			Log.e("HotPatch_pkg", "wangxin invoke method  success  :"+intent.getAction() );
-
-	            	if("action_start_tb_shop".equals(intent.getAction())){		
+	            	if(intent!=null && "action_start_tb_shop".equals(intent.getAction())){		
 	        			Nav.from(arg0.context).withExtras(intent.getExtras()).toUri("http://shop.m.taobao.com/shop/shop_index.htm");
 	         		}
-	    			Log.d("HotPatch_pkg", "FromWangxinActivity hotpatch" );
 
 	            }
 
