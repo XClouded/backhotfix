@@ -76,14 +76,14 @@ public class HotPatchPuti implements IPatch {
 			XposedBridge.findAndHookMethod(Puti, "addTemplet", templateClass, boolean.class, new XC_MethodHook() {
 				@Override
 				protected void beforeHookedMethod(MethodHookParam args0)  throws Throwable {
-					Log.d("HotPatch_pkg", "start hotpatch Puti addTemplet" );
+//					Log.d("HotPatch_pkg", "start hotpatch Puti addTemplet" );
 					try{
 						Object template =  args0.args[0];
 						boolean isPreset = (Boolean) args0.args[1];
 						if(template != null && isPreset){
 							String templateName = (String) XposedHelpers.getObjectField(template, "name");
 							presetTemplates.put(templateName, template);
-							Log.d("HotPatch_pkg", "start hotpatch Puti " + templateName);
+//							Log.d("HotPatch_pkg", "start hotpatch Puti " + templateName);
 						}
 					}catch(Exception e){
 						Log.e("HotPatch_pkg", "hotpatch Puti addTemplet Update PresetId Error", e);
