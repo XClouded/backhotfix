@@ -86,6 +86,27 @@
                 <version>2.0.1</version>
                 <scope>provided</scope>
             </dependency>  
+
+            <dependency>
+                <groupId>com.taobao.android</groupId>
+                <artifactId>login4android_api</artifactId>
+                <version>1.0.2</version>
+				<scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.taobao.android</groupId>
+                <artifactId>windvane</artifactId>
+                <version>4.5.1</version>
+				<scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.taobao.android</groupId>
+                <artifactId>windvane-extra</artifactId>
+                <version>1.0.1</version>
+				<scope>provided</scope>
+            </dependency>
+
 	</dependencies>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
