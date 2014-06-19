@@ -46,7 +46,7 @@ public class HotPatchFromWangxinActivity  implements IPatch {
 	            @Override
 	            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
 	    			Log.e("HotPatch_pkg", "wangxin invoke method  success 111" );
-	    			Method method = param.thisObject.getClass().getSuperclass().getMethod("getIntent");
+	    			Method method = param.thisObject.getClass().getMethod("getIntent",null);
 	                method.setAccessible(true);
 		            Intent intent =(Intent) method.invoke(param.thisObject,new Object[]{null});
 	    			Log.e("HotPatch_pkg", "wangxin invoke method  success  2222" );
