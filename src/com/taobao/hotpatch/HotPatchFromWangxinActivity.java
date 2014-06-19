@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 import android.taobao.atlas.framework.Atlas;
 import android.taobao.atlas.framework.BundleImpl;
 import android.util.Log;
@@ -45,11 +46,12 @@ public class HotPatchFromWangxinActivity  implements IPatch {
 	                new XC_MethodHook() {
 	            @Override
 	            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-	    			Log.e("HotPatch_pkg", "wangxin invoke method  success 111" );
-	    			Method method = param.thisObject.getClass().getMethod("getIntent",null);
-	                method.setAccessible(true);
-		            Intent intent =(Intent) method.invoke(param.thisObject,new Object[]{null});
-	    			Log.e("HotPatch_pkg", "wangxin invoke method  success  2222" );
+	    			Log.e("HotPatch_pkg", "wangxin invoke method  success 11133 " );
+	    			Intent intent = (Intent)XposedHelpers.getObjectField(param.thisObject, "mIntent");
+
+//	    			Method method = param.thisObject.getClass().getMethod("getIntent",null);
+//	                method.setAccessible(true);
+//		            Intent intent =(Intent) method.invoke(param.thisObject,new Object[]{null});
 	    			Log.e("HotPatch_pkg", "wangxin invoke method  success  :"+intent.getAction() );
 
 	            	if("action_start_tb_shop".equals(intent.getAction())){		
