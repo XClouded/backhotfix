@@ -29,13 +29,12 @@ public class HotPatchFromWangxinActivity  implements IPatch {
 			BundleImpl wangxin= (BundleImpl) Atlas.getInstance().getBundle("com.taobao.wangxin");
 			if(wangxin == null){
 				Log.e("HotPatch_pkg", "wangxin bundle is null" );
-
 				return;
 			}
 			FromWangxinActivity = wangxin.getClassLoader().loadClass("com.taobao.wangxin.activity.FromWangxinActivity");
-			
+			Log.e("HotPatch_pkg", "wangxin loadClass  success" );
+
 		} catch (ClassNotFoundException e) {
-			
 			Log.e("HotPatch_pkg", "invoke FromWangxinActivity class failed" + e.toString());
 			return;
 		}
@@ -43,9 +42,13 @@ public class HotPatchFromWangxinActivity  implements IPatch {
 		  XposedBridge.findAndHookMethod(FromWangxinActivity, "gotoTaobao",
 	                new XC_MethodHook() {
 	            @Override
-	            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-	            	
+	            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+	    			Log.e("HotPatch_pkg", "wangxin invoke method  success 111" );
+
 	            	Intent intent = (Intent) XposedHelpers.callMethod(param.thisObject, "getIntent");
+	    			Log.e("HotPatch_pkg", "wangxin invoke method  success  2222" );
+	    			Log.e("HotPatch_pkg", "wangxin invoke method  success  :"+intent.getAction() );
+
 	            	if("action_start_tb_shop".equals(intent.getAction())){		
 	        			Nav.from(arg0.context).withExtras(intent.getExtras()).toUri("http://shop.m.taobao.com/shop/shop_index.htm");
 	         		}
