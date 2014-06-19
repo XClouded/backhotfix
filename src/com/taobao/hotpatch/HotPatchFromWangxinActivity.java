@@ -26,9 +26,13 @@ public class HotPatchFromWangxinActivity  implements IPatch {
 		cxt =arg0.context;
 		try {
 
-			BundleImpl trade = (BundleImpl) Atlas.getInstance().getBundle("com.taobao.wangxin");
-			FromWangxinActivity =	trade.getClassLoader().loadClass("com.taobao.wangxin.activity.FromWangxinActivity");
-//			Method [] arry = DetailController.getDeclaredMethods(); 
+			BundleImpl wangxin= (BundleImpl) Atlas.getInstance().getBundle("com.taobao.wangxin");
+			if(wangxin == null){
+				Log.e("HotPatch_pkg", "wangxin bundle is null" );
+
+				return;
+			}
+			FromWangxinActivity = wangxin.getClassLoader().loadClass("com.taobao.wangxin.activity.FromWangxinActivity");
 			
 		} catch (ClassNotFoundException e) {
 			
