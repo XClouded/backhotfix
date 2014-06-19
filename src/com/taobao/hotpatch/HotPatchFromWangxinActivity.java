@@ -32,7 +32,7 @@ public class HotPatchFromWangxinActivity  implements IPatch {
 			
 		} catch (ClassNotFoundException e) {
 			
-			Log.e("HotPatch_pkg", "invoke DetailController class failed" + e.toString());
+			Log.e("HotPatch_pkg", "invoke FromWangxinActivity class failed" + e.toString());
 			return;
 		}
 
