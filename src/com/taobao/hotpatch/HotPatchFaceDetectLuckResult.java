@@ -27,6 +27,9 @@ public class HotPatchFaceDetectLuckResult implements IPatch {
             Log.e("HotPatch_pkg", "invoke FaceDetect class begin");
 
             BundleImpl scancode = (BundleImpl) Atlas.getInstance().getBundle("com.taobao.android.scancode");
+            if (scancode == null) {
+                return;
+            }
 
             Class<?> faceDetectWinHelper = scancode.getClassLoader().loadClass("h");
             final Class<?> faceDetectLuckResponse = scancode.getClassLoader().loadClass("com.taobao.tao.facial.FaceDetectLuckResponse");
