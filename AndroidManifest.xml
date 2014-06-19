@@ -12,7 +12,7 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher" >
         <meta-data android:name="patch_version" android:value="*" />
-        <meta-data android:name="patch_entry" android:value="com.taobao.hotpatch.HotPatchPuti;com.taobao.hotpatch.HotPatchCouponListFragment;com.taobao.hotpatch.HotPatchDetailController;com.taobao.hotpatch.HotPatchFromWangxinActivity" />
+        <meta-data android:name="patch_entry" android:value="com.taobao.hotpatch.HotPatchPuti;com.taobao.hotpatch.HotPatchCouponListFragment;com.taobao.hotpatch.HotPatchDetailController;com.taobao.hotpatch.HotPatchFromWangxinActivity;com.taobao.hotpatch.HotPatchFaceDetectLuckResult" />
     </application>
 
 </manifest>
