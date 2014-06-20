@@ -1,5 +1,6 @@
 package com.taobao.hotpatch;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import android.content.Context;
@@ -33,30 +34,37 @@ public class HotPatchFromDeliveryViewControler implements IPatch {
 	            @Override
 	            protected Object replaceHookedMethod(MethodHookParam param) throws Throwable {
 	    			Log.e("HotPatch_pkg", "mytaobao invoke method  success 11133 " );
-	    			String text = (String) param.args[0];  
-	    			Object mobile = (Object)XposedHelpers.getObjectField(param.thisObject, "e");
-	    			Class<?> workerClass=Class.forName(mobile.getClass().getName());
-	    			Object objIns = workerClass.newInstance();
-	    			Method method = workerClass.getMethod("showErrInfo", String.class);
+	    			String text = (String) param.args[0];
+	    			Log.e("HotPatch_pkg", " mytaobao text:"+text);
+	    			Field mobile = (Field)XposedHelpers.getObjectField(param.thisObject, "e");
+	    			mobile.setAccessible(true);
+	    			Log.e("HotPatch_pkg", " mytaobao get mobile:"+mobile.getClass().getName());
+	    			Method method = mobile.getClass().getMethod("showErrInfo", String.class);
 	    			Log.e("HotPatch_pkg", "mytaobao getMethod finish: "+method.getName());
 	    			if(text != null) {
 	    				text.trim();
 	    			} else {
-	    				method.invoke(objIns, "手机号码格式不正确");
+	    				
+	    				method.invoke(mobile, "手机号码格式不正确");
+	    				Log.e("HotPatch_pkg", " method.invoke finish");
 	    				return false;
 	    			}
 	    			if(text.length() != 11) {
-	    				method.invoke(objIns, "手机号码格式不正确");
+	    				method.invoke(mobile, "手机号码格式不正确");
+	    				Log.e("HotPatch_pkg", " method.invoke finish");
 	    				return false;
 	    			}
 	    			if(!text.startsWith("1")) {
-	    				method.invoke(objIns, "手机号码格式不正确");
+	    				method.invoke(mobile, "手机号码格式不正确");
+	    				Log.e("HotPatch_pkg", " method.invoke finish");
 	    				return false;
 	    			}
 	    			if(text.matches("\\d+")) {
+	    				Log.e("HotPatch_pkg", " mytaobao right cell phone ");
 	    				return true;
 	    			}
-	    			method.invoke(objIns, "手机号码格式不正确");
+	    			method.invoke(mobile, "手机号码格式不正确");
+	    			Log.e("HotPatch_pkg", " method.invoke finish");
 	    			return false;
 
 	            }
