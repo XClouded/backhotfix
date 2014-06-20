@@ -28,7 +28,7 @@ public class HotPatchFromDeliveryViewControler implements IPatch {
 			}
 			Class<?> FromDeliveryViewControler = mytaobao.getClassLoader().loadClass("com.taobao.tao.address.DeliveryViewControler");
 			Log.e("HotPatch_pkg", "mytaobao loadClass  success" );
-		  XposedBridge.findAndHookMethod(FromDeliveryViewControler, "a", String.class,
+			XposedBridge.findAndHookMethod(FromDeliveryViewControler, "a", String.class,
 	                new XC_MethodReplacement() {
 	            @Override
 	            protected Object replaceHookedMethod(MethodHookParam param) throws Throwable {
@@ -40,7 +40,7 @@ public class HotPatchFromDeliveryViewControler implements IPatch {
 	    			Object mobile = mobileField.get(param.thisObject);
 	    			Method method = mobile.getClass().getMethod("showErrInfo", String.class);
 	    			if(text != null) {
-	    				text.trim();
+	    				text=text.trim();
 	    			} else {
 	    				method.invoke(mobile, "手机号码格式不正确");
 	    				return false;
