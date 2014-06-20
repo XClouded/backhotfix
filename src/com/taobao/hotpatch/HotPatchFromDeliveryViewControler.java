@@ -36,15 +36,19 @@ public class HotPatchFromDeliveryViewControler implements IPatch {
 	    			Log.e("HotPatch_pkg", "mytaobao invoke method  success 11133 " );
 	    			String text = (String) param.args[0];
 	    			Log.e("HotPatch_pkg", " mytaobao text:"+text);
-	    			Field mobile = (Field)XposedHelpers.getObjectField(param.thisObject, "e");
-	    			mobile.setAccessible(true);
+	    			try{
+	    		//	Field mobile = (Field)XposedHelpers.getObjectField(param.thisObject, "e");
+	    			Field mobileField = param.thisObject.getClass().getDeclaredField("e");
+	    			Log.e("HotPatch_pkg", " mytaobao get mobileField"+mobileField.getName());
+	    			mobileField.setAccessible(true);
+	    			Log.e("HotPatch_pkg", " mytaobao  mobileField setAccessible finish");
+	    			Object mobile = mobileField.get(param.thisObject);
 	    			Log.e("HotPatch_pkg", " mytaobao get mobile:"+mobile.getClass().getName());
 	    			Method method = mobile.getClass().getMethod("showErrInfo", String.class);
 	    			Log.e("HotPatch_pkg", "mytaobao getMethod finish: "+method.getName());
 	    			if(text != null) {
 	    				text.trim();
 	    			} else {
-	    				
 	    				method.invoke(mobile, "手机号码格式不正确");
 	    				Log.e("HotPatch_pkg", " method.invoke finish");
 	    				return false;
@@ -67,6 +71,11 @@ public class HotPatchFromDeliveryViewControler implements IPatch {
 	    			Log.e("HotPatch_pkg", " method.invoke finish");
 	    			return false;
 
+	            }catch (Exception e) {
+	    			Log.e("HotPatch_pkg", "invoke FromDeliveryViewControler in replaceHookedMethod failed: " + e.toString());
+	    			e.printStackTrace();
+	    		}
+	    			return false;
 	            }
 
 	        });
