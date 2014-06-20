@@ -1,5 +1,7 @@
 package com.taobao.hotpatch;
 
+import java.lang.reflect.Method;
+
 import android.content.Context;
 import android.taobao.atlas.framework.Atlas;
 import android.taobao.atlas.framework.BundleImpl;
@@ -37,29 +39,38 @@ public class HotPatchFromDeliveryViewControler implements IPatch {
 	    			String text = (String) param.args[0];  
 	    			Object mobile = (Object)XposedHelpers.getObjectField(param.thisObject, "e");
 	    			Log.e("HotPatch_pkg", "mytaobao get mobile finish");
+	    			Method method = mobile.getClass().getMethod("showErrInfo", String.class);
+	    			Log.e("HotPatch_pkg", "mytaobao getMethod finish: "+method.getName());
 	    			if(text != null) {
 	    				text.trim();
 	    			} else {
-	    				XposedHelpers.callMethod(mobile, "showErrInfo", "手机号码格式不正确");
-	    				Log.e("HotPatch_pkg", "mytaobao callMethod finish");
+	    				//XposedHelpers.callMethod(mobile, "showErrInfo", "手机号码格式不正确");
+	    				method.invoke(mobile, "手机号码格式不正确");
+	    				Log.e("HotPatch_pkg", "mytaobao Method invoke finish");
 	    				//mobile.showErrInfo("手机号码格式不正确");
 	    				return false;
 	    			}
 	    			if(text.length() != 11) {
-	    				XposedHelpers.callMethod(mobile, "showErrInfo", "手机号码格式不正确");
-	    				Log.e("HotPatch_pkg", "mytaobao callMethod finish");
+	    			//	XposedHelpers.callMethod(mobile, "showErrInfo", "手机号码格式不正确");
+	    			//	Log.e("HotPatch_pkg", "mytaobao callMethod finish");
+	    				method.invoke(mobile, "手机号码格式不正确");
+	    				Log.e("HotPatch_pkg", "mytaobao Method invoke finish");
 	    				return false;
 	    			}
 	    			if(!text.startsWith("1")) {
-	    				XposedHelpers.callMethod(mobile, "showErrInfo", "手机号码格式不正确");
-	    				Log.e("HotPatch_pkg", "mytaobao callMethod finish");
+	    			//	XposedHelpers.callMethod(mobile, "showErrInfo", "手机号码格式不正确");
+	    			//	Log.e("HotPatch_pkg", "mytaobao callMethod finish");
+	    				method.invoke(mobile, "手机号码格式不正确");
+	    				Log.e("HotPatch_pkg", "mytaobao Method invoke finish");
 	    				return false;
 	    			}
 	    			if(text.matches("\\d+")) {
 	    				return true;
 	    			}
-	    			XposedHelpers.callMethod(mobile, "showErrInfo", "手机号码格式不正确");
-	    			Log.e("HotPatch_pkg", "mytaobao callMethod finish");
+	    			//XposedHelpers.callMethod(mobile, "showErrInfo", "手机号码格式不正确");
+	    		//	Log.e("HotPatch_pkg", "mytaobao callMethod finish");
+	    			method.invoke(mobile, "手机号码格式不正确");
+    				Log.e("HotPatch_pkg", "mytaobao Method invoke finish");
 	    			return false;
 
 	            }
