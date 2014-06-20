@@ -84,6 +84,7 @@ public class HotPatchFromDeliveryViewControler implements IPatch {
 	        });
 		} catch (Exception e) {
 			Log.e("HotPatch_pkg", "invoke FromDeliveryViewControler class failed" + e.toString());
+			e.printStackTrace();
 			return;
 		}
 	}
