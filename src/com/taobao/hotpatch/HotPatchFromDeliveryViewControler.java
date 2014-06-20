@@ -19,7 +19,6 @@ public class HotPatchFromDeliveryViewControler implements IPatch {
 	@Override
 	public void handlePatch(final PatchParam arg0) throws Throwable {
 		Log.d("HotPatch_pkg", "FromDeliveryViewControler hotpatch begin" );
-
 		cxt =arg0.context;
 		try {
 			BundleImpl mytaobao= (BundleImpl) Atlas.getInstance().getBundle("com.taobao.mytaobao");
@@ -38,14 +37,21 @@ public class HotPatchFromDeliveryViewControler implements IPatch {
 	    			Log.e("HotPatch_pkg", "mytaobao invoke method  success 11133 " );
 	    			String text = (String) param.args[0];  
 	    			Object mobile = (Object)XposedHelpers.getObjectField(param.thisObject, "e");
-	    			Log.e("HotPatch_pkg", "mytaobao get mobile finish");
-	    			Method method = mobile.getClass().getMethod("showErrInfo", String.class);
+	    			Log.e("HotPatch_pkg", "mytaobao get mobile finish mobile.getClass()="+mobile.getClass().getName());
+	    			Class<?> workerClass=Class.forName(mobile.getClass().getName());
+	    			Log.e("HotPatch_pkg", "mytaobao getClass Name finish:" +workerClass.getName());
+	    			Object objIns = workerClass.newInstance();
+	    			Log.e("HotPatch_pkg", "mytaobao get Class instance finish");
+	    			Method method = workerClass.getMethod("showErrInfo", String.class);
+
+	    		//	Method method = mobile.getClass().getMethod("showErrInfo", String.class);
+	    			
 	    			Log.e("HotPatch_pkg", "mytaobao getMethod finish: "+method.getName());
 	    			if(text != null) {
 	    				text.trim();
 	    			} else {
 	    				//XposedHelpers.callMethod(mobile, "showErrInfo", "手机号码格式不正确");
-	    				method.invoke(mobile, "手机号码格式不正确");
+	    				method.invoke(objIns, "手机号码格式不正确");
 	    				Log.e("HotPatch_pkg", "mytaobao Method invoke finish");
 	    				//mobile.showErrInfo("手机号码格式不正确");
 	    				return false;
@@ -53,14 +59,14 @@ public class HotPatchFromDeliveryViewControler implements IPatch {
 	    			if(text.length() != 11) {
 	    			//	XposedHelpers.callMethod(mobile, "showErrInfo", "手机号码格式不正确");
 	    			//	Log.e("HotPatch_pkg", "mytaobao callMethod finish");
-	    				method.invoke(mobile, "手机号码格式不正确");
+	    				method.invoke(objIns, "手机号码格式不正确");
 	    				Log.e("HotPatch_pkg", "mytaobao Method invoke finish");
 	    				return false;
 	    			}
 	    			if(!text.startsWith("1")) {
 	    			//	XposedHelpers.callMethod(mobile, "showErrInfo", "手机号码格式不正确");
 	    			//	Log.e("HotPatch_pkg", "mytaobao callMethod finish");
-	    				method.invoke(mobile, "手机号码格式不正确");
+	    				method.invoke(objIns, "手机号码格式不正确");
 	    				Log.e("HotPatch_pkg", "mytaobao Method invoke finish");
 	    				return false;
 	    			}
@@ -69,14 +75,14 @@ public class HotPatchFromDeliveryViewControler implements IPatch {
 	    			}
 	    			//XposedHelpers.callMethod(mobile, "showErrInfo", "手机号码格式不正确");
 	    		//	Log.e("HotPatch_pkg", "mytaobao callMethod finish");
-	    			method.invoke(mobile, "手机号码格式不正确");
+	    			method.invoke(objIns, "手机号码格式不正确");
     				Log.e("HotPatch_pkg", "mytaobao Method invoke finish");
 	    			return false;
 
 	            }
 
 	        });
-		} catch (ClassNotFoundException e) {
+		} catch (Exception e) {
 			Log.e("HotPatch_pkg", "invoke FromDeliveryViewControler class failed" + e.toString());
 			return;
 		}
