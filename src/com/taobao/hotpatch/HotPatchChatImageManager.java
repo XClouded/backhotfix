@@ -12,7 +12,6 @@ import android.taobao.atlas.framework.BundleImpl;
 import android.util.Log;
 
 import com.taobao.android.dexposed.XC_MethodHook;
-import com.taobao.android.dexposed.XC_MethodHook.MethodHookParam;
 import com.taobao.android.dexposed.XC_MethodReplacement;
 import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.updatecenter.hotpatch.IPatch;
@@ -99,7 +98,7 @@ public class HotPatchChatImageManager implements IPatch {
                             Log.e("HotPatch_pkg", "ChatImageManager invoke method 4 isKitKat="+isKitKat);
                             if(isKitKat&&"content".equalsIgnoreCase(uri.getScheme())&&(picturePath==null||"".equals(picturePath))){
                                 Log.e("HotPatch_pkg", "ChatImageManager invoke method 5 isKitKat action");
-                                Class<?> DocumentsContract = wangxin.getClassLoader().loadClass("android.provider.DocumentsContract");
+                                Class<?> DocumentsContract = this.getClass().getClassLoader().loadClass("android.provider.DocumentsContract");
                                 if(DocumentsContract==null){
                                     Log.e("HotPatch_pkg", "ChatImageManager invoke method xxxxxxx");
                                 }
