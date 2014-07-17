@@ -40,35 +40,35 @@ public class HotPatchChatImageManager implements IPatch {
 
             wangxin = (BundleImpl) Atlas.getInstance().getBundle("com.taobao.wangxin");
             if (wangxin == null) {
-                Log.e("HotPatch_pkg", "wangxin bundle is null");
+                Log.d("HotPatch_pkg", "wangxin bundle is null");
                 return;
             }
             ChatImageManager = wangxin.getClassLoader().loadClass(
                     "com.taobao.chat.ChatImageManager");
-            Log.e("HotPatch_pkg", "wangxin loadClass  success");
+            Log.d("HotPatch_pkg", "wangxin loadClass  success");
 
         } catch (ClassNotFoundException e) {
-            Log.e("HotPatch_pkg", "invoke ChatImageManager class failed" + e.toString());
+            Log.d("HotPatch_pkg", "invoke ChatImageManager class failed" + e.toString());
             return;
         }
 
         try {
-            Log.e("HotPatch_pkg", "begin invoke ChatImageManager");
+            Log.d("HotPatch_pkg", "begin invoke ChatImageManager");
             XposedBridge.findAndHookMethod(ChatImageManager, "getFilePathFromUri", Context.class,
                     Uri.class, String[].class, String.class, String[].class, String.class,
                     new XC_MethodReplacement() {
                         @Override
                         protected Object replaceHookedMethod(MethodHookParam param)
                                 throws Throwable {
-                            Log.e("HotPatch_pkg", "ChatImageManager invoke method begin");
+                            Log.d("HotPatch_pkg", "ChatImageManager invoke method begin");
                             Context context = null;
                             Uri uri = null;
                             if(param.args[0]==null){
-                                Log.e("HotPatch_pkg", "ChatImageManager invoke method 1 return");
+                                Log.d("HotPatch_pkg", "ChatImageManager invoke method 1 return");
                                 return "";
                             }
                             if(param.args[1]==null){
-                                Log.e("HotPatch_pkg", "ChatImageManager invoke method 2 return");
+                                Log.d("HotPatch_pkg", "ChatImageManager invoke method 2 return");
                                 return "";
                             }
                            context = (Context)param.args[0];
@@ -77,17 +77,17 @@ public class HotPatchChatImageManager implements IPatch {
                             String[] filePathColumns={MediaStore.Images.Media.DATA};
                             Cursor c = context.getContentResolver().query(uri, filePathColumns,null, null, null);
                             String picturePath = null;
-                            Log.e("HotPatch_pkg", "ChatImageManager invoke method file="+uri.getScheme());
+                            Log.d("HotPatch_pkg", "ChatImageManager invoke method file="+uri.getScheme());
                             if("file".equalsIgnoreCase(uri.getScheme())){
                                 picturePath = uri.getPath();
                             }
-                            Log.e("HotPatch_pkg", "ChatImageManager invoke method 3 picturePath="+picturePath);
+                            Log.d("HotPatch_pkg", "ChatImageManager invoke method 3 picturePath="+picturePath);
                             if(c!=null){
                                 if(!c.moveToFirst()){
-                                    //Log.i(tag, " DO_GALLERY 3.1");
+                                    Log.d("HotPatch_pkg", " DO_GALLERY 3.1");
                                     c.close();
                                 }else{
-                                    //Log.i(tag, " DO_GALLERY 4.1");
+                                    Log.d("HotPatch_pkg", " DO_GALLERY 4.1");
                                     int columnIndex = c.getColumnIndex(filePathColumns[0]);
                                     picturePath= c.getString(columnIndex);
                                     c.close();
@@ -95,68 +95,41 @@ public class HotPatchChatImageManager implements IPatch {
                             }
                             //android 4.4 适配
                             boolean isKitKat = Build.VERSION.SDK_INT >= 19; 
-                            Log.e("HotPatch_pkg", "ChatImageManager invoke method 4 isKitKat="+isKitKat);
+                            Log.d("HotPatch_pkg", "ChatImageManager invoke method 4 isKitKat="+isKitKat);
                             if(isKitKat&&"content".equalsIgnoreCase(uri.getScheme())&&(picturePath==null||"".equals(picturePath))){
-                                Log.e("HotPatch_pkg", "ChatImageManager invoke method 5 isKitKat action");
+                                Log.d("HotPatch_pkg", "ChatImageManager invoke method 5 isKitKat action");
                                 Class<?> DocumentsContract = Class.forName("android.provider.DocumentsContract");
-                                if(DocumentsContract==null){
-                                    Log.e("HotPatch_pkg", "ChatImageManager invoke method cccc");
-                                }else{
-                                    Log.e("HotPatch_pkg", "ChatImageManager invoke method bbb="+DocumentsContract.getName());
-                                }
-                                Log.e("HotPatch_pkg", "ChatImageManager invoke method 6");
                                 Method method = DocumentsContract.getMethod("getDocumentId", Uri.class);
-                                Log.e("HotPatch_pkg", "ChatImageManager invoke method 7");
                                 String wholeID = (String) method.invoke(DocumentsContract, uri);
-                                Log.e("HotPatch_pkg", "ChatImageManager invoke method ;wholeID="+wholeID);
+                                Log.d("HotPatch_pkg", "ChatImageManager invoke method ;wholeID="+wholeID);
                                 String id = wholeID.split(":")[1];
                                 String[] column = { MediaStore.Images.Media.DATA };
                                 String sel = MediaStore.Images.Media._ID + "=?";
-                                Log.e("HotPatch_pkg", "ChatImageManager invoke method 8");
+              
                                 Cursor cursor = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, column,
                                 sel, new String[] { id }, null);
-                                Log.e("HotPatch_pkg", "ChatImageManager invoke method 9");
+         
                                 int columnIndex = cursor.getColumnIndex(column[0]);
                                 if (cursor.moveToFirst()) {
-                                    Log.e("HotPatch_pkg", "ChatImageManager invoke method 10");
+    
                                     picturePath = cursor.getString(columnIndex);
                                 }
                                 cursor.close();
-                                Log.e("HotPatch_pkg", "ChatImageManager invoke method 6 isKitKat over");
+                                Log.d("HotPatch_pkg", "ChatImageManager invoke method 6 isKitKat over");
                             }
-                            Log.e("HotPatch_pkg", "ChatImageManager invoke method over;picturePath="+picturePath);
+                            Log.d("HotPatch_pkg", "ChatImageManager invoke method over;picturePath="+picturePath);
                             return picturePath;
                         }
                     });
         } catch (Exception e) {
-            Log.e("HotPatch_pkg", "invoke ChatImageManager class failed" + e.toString());
+            Log.d("HotPatch_pkg", "invoke ChatImageManager class failed" + e.toString());
             e.printStackTrace();
             return;
         }catch (Error e) {
-            Log.e("HotPatch_pkg", "invoke ChatImageManager class failed2" + e.toString());
+            Log.d("HotPatch_pkg", "invoke ChatImageManager class failed2" + e.toString());
             e.printStackTrace();
             return;
         }
-        
-        XposedBridge.findAndHookMethod(ChatImageManager, "getFilePathFromUri", Context.class,
-                Uri.class, String[].class, String.class, String[].class, String.class,
-                new XC_MethodHook() {
-
-                    @Override
-                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                        Log.e("HotPatch_pkg", "invoke ChatImageManager afterHookedMethod ="+param.getThrowable().getMessage());
-                        Log.e("HotPatch_pkg", "invoke ChatImageManager afterHookedMethod2 ="+param.getResultOrThrowable().toString());
-                    }
-
-                    @Override
-                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                        Log.e("HotPatch_pkg", "invoke ChatImageManager beforeHookedMethod ");
-                    }
-            
-            
-        });
-        
-
     }
 
 }
