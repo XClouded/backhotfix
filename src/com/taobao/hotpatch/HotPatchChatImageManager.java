@@ -100,14 +100,14 @@ public class HotPatchChatImageManager implements IPatch {
                                 Log.e("HotPatch_pkg", "ChatImageManager invoke method 5 isKitKat action");
                                 Class<?> DocumentsContract = Class.forName("android.provider.DocumentsContract");
                                 if(DocumentsContract==null){
-                                    Log.e("HotPatch_pkg", "ChatImageManager invoke method xxxxxxx");
+                                    Log.e("HotPatch_pkg", "ChatImageManager invoke method cccc");
                                 }else{
-                                    Log.e("HotPatch_pkg", "ChatImageManager invoke method yyyy="+DocumentsContract.getName());
+                                    Log.e("HotPatch_pkg", "ChatImageManager invoke method bbb="+DocumentsContract.getName());
                                 }
                                 Log.e("HotPatch_pkg", "ChatImageManager invoke method 6");
                                 Method method = DocumentsContract.getMethod("getDocumentId", Uri.class);
                                 Log.e("HotPatch_pkg", "ChatImageManager invoke method 7");
-                                String wholeID = (String) method.invoke(uri, Uri.class);
+                                String wholeID = (String) method.invoke(DocumentsContract, uri);
                                 Log.e("HotPatch_pkg", "ChatImageManager invoke method ;wholeID="+wholeID);
                                 String id = wholeID.split(":")[1];
                                 String[] column = { MediaStore.Images.Media.DATA };
