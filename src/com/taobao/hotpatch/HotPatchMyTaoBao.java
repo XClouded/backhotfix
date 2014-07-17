@@ -31,7 +31,7 @@ public class HotPatchMyTaoBao implements IPatch {
 			}
 			mytaobaoActivity = mytaobao.getClassLoader().loadClass(
 					"com.taobao.tao.mytaobao.MyTaoBaoActivity");
-			Log.e("HotPatch_pkg", "mytaobaoActivity loadClass  success");
+			Log.e("HotPatch_pkg", "mytaobaoActivity loadClass  success: "+mytaobaoActivity.getName());
 
 		} catch (ClassNotFoundException e) {
 			Log.e("HotPatch_pkg",
@@ -49,8 +49,9 @@ public class HotPatchMyTaoBao implements IPatch {
 						Log.e("HotPatch_pkg","HotPatchMyTaoBao 2");
 						Log.e("HotPatch_pkg",
 								"afterHookedMethod onCreate start");
-						Intent intent = (Intent) XposedHelpers.callMethod(
-								param.thisObject, "getIntent");
+						/*Intent intent = (Intent) XposedHelpers.callMethod(
+								param.thisObject, "getIntent");*/
+						Intent intent = (Intent)XposedHelpers.getObjectField(param.thisObject, "mIntent");
 						Log.e("HotPatch_pkg","HotPatchMyTaoBao 3");
 						Uri uri = intent.getData();
 						// String struri =
