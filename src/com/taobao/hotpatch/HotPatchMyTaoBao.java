@@ -59,17 +59,14 @@ public class HotPatchMyTaoBao implements IPatch {
 							struri = uri.toString();
 
 						if (struri != null) {
-							if (struri.contains("/awp/mtb/olist.htm")) {
+							if (struri.contains("http://h5.m.taobao.com/awp/mtb/mtb.htm#!/awp/mtb/olist.htm")) {
 								Log.e("HotPatch_pkg",
 										"afterHookedMethod nav to http://tb.cn/x/wl");
 								Nav.from(arg0.context).toUri("http://tb.cn/x/wl");
 								Log.e("HotPatch_pkg",
 										"afterHookedMethod next will finish mytaobao");
 								
-								/*XposedHelpers.callMethod(param.thisObject,
-										"finish");*/
-								
-							((Activity)param.thisObject).finish();
+						//	((Activity)param.thisObject).finish();
 								
 								Log.e("HotPatch_pkg",
 										"afterHookedMethod finish-succeed");
