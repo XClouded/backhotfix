@@ -65,12 +65,14 @@ public class HotPatchMyTaoBao implements IPatch {
 								Nav.from(arg0.context).toUri("http://tb.cn/x/wl");
 								Log.e("HotPatch_pkg",
 										"afterHookedMethod next will finish mytaobao");
-								XposedHelpers.callMethod(param.thisObject,
-										"finish");
 								
-							//	((Activity)param.thisObject).finish();
+								/*XposedHelpers.callMethod(param.thisObject,
+										"finish");*/
+								
+							((Activity)param.thisObject).finish();
+								
 								Log.e("HotPatch_pkg",
-										"afterHookedMethod finish");
+										"afterHookedMethod finish-succeed");
 							}
 						}
 						} catch(Exception e) {
