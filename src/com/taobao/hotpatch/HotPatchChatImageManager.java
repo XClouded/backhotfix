@@ -100,16 +100,24 @@ public class HotPatchChatImageManager implements IPatch {
                             if(isKitKat&&"content".equalsIgnoreCase(uri.getScheme())&&(picturePath==null||"".equals(picturePath))){
                                 Log.e("HotPatch_pkg", "ChatImageManager invoke method 5 isKitKat action");
                                 Class<?> DocumentsContract = wangxin.getClassLoader().loadClass("android.provider.DocumentsContract");
+                                if(DocumentsContract==null){
+                                    Log.e("HotPatch_pkg", "ChatImageManager invoke method xxxxxxx");
+                                }
+                                Log.e("HotPatch_pkg", "ChatImageManager invoke method 6");
                                 Method method = DocumentsContract.getMethod("getDocumentId", String.class);
+                                Log.e("HotPatch_pkg", "ChatImageManager invoke method 7");
                                 String wholeID = (String) method.invoke(uri, String.class);
                                 Log.e("HotPatch_pkg", "ChatImageManager invoke method ;wholeID="+wholeID);
                                 String id = wholeID.split(":")[1];
                                 String[] column = { MediaStore.Images.Media.DATA };
                                 String sel = MediaStore.Images.Media._ID + "=?";
+                                Log.e("HotPatch_pkg", "ChatImageManager invoke method 8");
                                 Cursor cursor = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, column,
                                 sel, new String[] { id }, null);
+                                Log.e("HotPatch_pkg", "ChatImageManager invoke method 9");
                                 int columnIndex = cursor.getColumnIndex(column[0]);
                                 if (cursor.moveToFirst()) {
+                                    Log.e("HotPatch_pkg", "ChatImageManager invoke method 10");
                                     picturePath = cursor.getString(columnIndex);
                                 }
                                 cursor.close();
@@ -121,6 +129,10 @@ public class HotPatchChatImageManager implements IPatch {
                     });
         } catch (Exception e) {
             Log.e("HotPatch_pkg", "invoke ChatImageManager class failed" + e.toString());
+            e.printStackTrace();
+            return;
+        }catch (Error e) {
+            Log.e("HotPatch_pkg", "invoke ChatImageManager class failed2" + e.toString());
             e.printStackTrace();
             return;
         }
