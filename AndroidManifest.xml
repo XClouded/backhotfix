@@ -6,13 +6,13 @@
 
     <uses-sdk
         android:minSdkVersion="9"
-        android:targetSdkVersion="18" />
+        android:targetSdkVersion="19" />
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher" >
         <meta-data android:name="patch_version" android:value="*" />
-        <meta-data android:name="patch_entry" android:value="" />
+        <meta-data android:name="patch_entry" android:value="com.taobao.hotpatch.HotPatchChatImageManager" />
     </application>
 
 </manifest>
