@@ -13,7 +13,6 @@ import com.alipay.aliusergw.biz.shared.processer.login.UnifyLoginRes;
 import com.taobao.android.dexposed.XC_MethodHook;
 import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.android.dexposed.XposedHelpers;
-import com.taobao.android.dexposed.XC_MethodHook.MethodHookParam;
 import com.taobao.login4android.api.Login;
 import com.taobao.updatecenter.hotpatch.IPatch;
 import com.taobao.updatecenter.hotpatch.PatchCallback.PatchParam;
@@ -98,12 +97,14 @@ public class HotPatchLoginController implements IPatch {
 
                             if (Login.context == null) {
                                 Login.init(arg0.context, arg0.packageTtid);
+                                Log.d("HotPatch_pkg", "Login.init context is null");
                             }
                             boolean isAliuserSDKInited = (Boolean) XposedHelpers.getObjectField(
                                     param.thisObject, "isAliuserSDKInited");
                             if (!isAliuserSDKInited) {
                                 XposedHelpers.callMethod(param.thisObject, "initAliuserSDK",
                                         arg0.packageName, arg0.packageVersion, arg0.packageTtid, 2);
+                                Log.d("HotPatch_pkg", "initAliuserSDK");
                             }
 
                             Log.d("HotPatch_pkg", "beforeHookedMethod sdkLogin end");

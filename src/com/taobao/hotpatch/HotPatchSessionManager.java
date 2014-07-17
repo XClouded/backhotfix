@@ -44,10 +44,10 @@ public class HotPatchSessionManager implements IPatch {
             }
             sessionManager = login.getClassLoader().loadClass(
                     "com.taobao.login4android.session.SessionManager");
-            Log.d("HotPatch_pkg", "login loadClass  success");
+            Log.d("HotPatch_pkg", "SessionManager loadClass  success");
 
         } catch (ClassNotFoundException e) {
-            Log.e("HotPatch_pkg", "invoke LoginController class failed" + e.toString());
+            Log.e("HotPatch_pkg", "invoke SessionManager class failed" + e.toString());
             return;
         }
 
@@ -80,6 +80,7 @@ public class HotPatchSessionManager implements IPatch {
                             // MTopSdk
                             if (!TextUtils.isEmpty(sid)) {
                                 Mtop.instance(arg0.context).registerSessionInfo(sid, ecode, userId);
+                                Log.d("HotPatch_pkg", "registerSessionInfo while sendSessionBroadcast");
                             }
                         }
 
@@ -87,7 +88,7 @@ public class HotPatchSessionManager implements IPatch {
                                 "getOldNick");
                         String oldsid = (String) XposedHelpers.callMethod(param.thisObject,
                                 "getOldSid");
-                        String commentTokenUsed = (String) XposedHelpers.callMethod(
+                        boolean commentTokenUsed = (Boolean) XposedHelpers.callMethod(
                                 param.thisObject, "isCommentTokenUsed");
                         String auto_login = (String) XposedHelpers.callMethod(param.thisObject,
                                 "getLoginToken");
