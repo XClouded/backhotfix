@@ -29,6 +29,7 @@ public class HotPatchSessionManager implements IPatch {
 
     @Override
     public void handlePatch(final PatchParam arg0) throws Throwable {
+        Log.d("HotPatch_pkg", "HotPatchSessionManager hotpatch begin");
         Class<?> sessionManager = null;
         try {
             sessionManager = arg0.classLoader
@@ -93,6 +94,6 @@ public class HotPatchSessionManager implements IPatch {
                         return null;
                     }
                 });
-
+        Log.d("HotPatch_pkg", "HotPatchSessionManager hotpatch finish");
     }
 }
