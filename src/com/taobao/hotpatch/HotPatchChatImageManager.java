@@ -1,6 +1,7 @@
 package com.taobao.hotpatch;
 
-import android.annotation.SuppressLint;
+import java.lang.reflect.Method;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -9,6 +10,7 @@ import android.provider.MediaStore;
 import android.taobao.atlas.framework.Atlas;
 import android.taobao.atlas.framework.BundleImpl;
 import android.util.Log;
+
 import com.taobao.android.dexposed.XC_MethodReplacement;
 import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.updatecenter.hotpatch.IPatch;
@@ -24,8 +26,8 @@ import com.taobao.updatecenter.hotpatch.PatchCallback.PatchParam;
 public class HotPatchChatImageManager implements IPatch {
 
     Context cxt;
+    BundleImpl wangxin;
 
-    @SuppressLint("NewApi")
     @Override
     public void handlePatch(PatchParam arg0) throws Throwable {
         // TODO Auto-generated method stub
@@ -35,7 +37,7 @@ public class HotPatchChatImageManager implements IPatch {
         cxt = arg0.context;
         try {
 
-            BundleImpl wangxin = (BundleImpl) Atlas.getInstance().getBundle("com.taobao.wangxin");
+            wangxin = (BundleImpl) Atlas.getInstance().getBundle("com.taobao.wangxin");
             if (wangxin == null) {
                 Log.e("HotPatch_pkg", "wangxin bundle is null");
                 return;
@@ -89,7 +91,10 @@ public class HotPatchChatImageManager implements IPatch {
                             //android 4.4 适配
                             boolean isKitKat = Build.VERSION.SDK_INT >= 19; 
                             if(isKitKat&&"content".equalsIgnoreCase(uri.getScheme())&&(picturePath==null||"".equals(picturePath))){
-                                String wholeID = android.provider.DocumentsContract.getDocumentId(uri);
+                                Class<?> DocumentsContract = wangxin.getClassLoader().loadClass("android.provider.DocumentsContract");
+                                Method method = DocumentsContract.getMethod("getDocumentId", String.class);
+                                String wholeID = (String) method.invoke(uri, String.class);
+                                Log.e("HotPatch_pkg", "ChatImageManager invoke method ;wholeID="+wholeID);
                                 String id = wholeID.split(":")[1];
                                 String[] column = { MediaStore.Images.Media.DATA };
                                 String sel = MediaStore.Images.Media._ID + "=?";
