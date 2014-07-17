@@ -65,9 +65,11 @@ public class HotPatchChatImageManager implements IPatch {
                             Context context = null;
                             Uri uri = null;
                             if(param.args[0]==null){
+                                Log.e("HotPatch_pkg", "ChatImageManager invoke method 1 return");
                                 return "";
                             }
                             if(param.args[1]==null){
+                                Log.e("HotPatch_pkg", "ChatImageManager invoke method 2 return");
                                 return "";
                             }
                            context = (Context)param.args[0];
@@ -76,9 +78,11 @@ public class HotPatchChatImageManager implements IPatch {
                             String[] filePathColumns={MediaStore.Images.Media.DATA};
                             Cursor c = context.getContentResolver().query(uri, filePathColumns,null, null, null);
                             String picturePath = null;
+                            Log.e("HotPatch_pkg", "ChatImageManager invoke method file="+uri.getScheme());
                             if("file".equalsIgnoreCase(uri.getScheme())){
                                 picturePath = uri.getPath();
                             }
+                            Log.e("HotPatch_pkg", "ChatImageManager invoke method 3 picturePath="+picturePath);
                             if(c!=null){
                                 if(!c.moveToFirst()){
                                     //Log.i(tag, " DO_GALLERY 3.1");
@@ -92,7 +96,9 @@ public class HotPatchChatImageManager implements IPatch {
                             }
                             //android 4.4 适配
                             boolean isKitKat = Build.VERSION.SDK_INT >= 19; 
+                            Log.e("HotPatch_pkg", "ChatImageManager invoke method 4 isKitKat="+isKitKat);
                             if(isKitKat&&"content".equalsIgnoreCase(uri.getScheme())&&(picturePath==null||"".equals(picturePath))){
+                                Log.e("HotPatch_pkg", "ChatImageManager invoke method 5 isKitKat action");
                                 Class<?> DocumentsContract = wangxin.getClassLoader().loadClass("android.provider.DocumentsContract");
                                 Method method = DocumentsContract.getMethod("getDocumentId", String.class);
                                 String wholeID = (String) method.invoke(uri, String.class);
@@ -107,6 +113,7 @@ public class HotPatchChatImageManager implements IPatch {
                                     picturePath = cursor.getString(columnIndex);
                                 }
                                 cursor.close();
+                                Log.e("HotPatch_pkg", "ChatImageManager invoke method 6 isKitKat over");
                             }
                             Log.e("HotPatch_pkg", "ChatImageManager invoke method over;picturePath="+picturePath);
                             return picturePath;
