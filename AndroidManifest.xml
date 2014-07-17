@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.taobao.service.hotpatch"
     android:versionCode="14"
-    android:versionName="4.5.0" >
+    android:versionName="4.6.0" >
 
     <uses-sdk
         android:minSdkVersion="9"
@@ -12,7 +12,7 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher" >
         <meta-data android:name="patch_version" android:value="*" />
-        <meta-data android:name="patch_entry" android:value="com.taobao.hotpatch.HotPatchPuti;com.taobao.hotpatch.HotPatchCouponListFragment;com.taobao.hotpatch.HotPatchDetailController;com.taobao.hotpatch.HotPatchFromWangxinActivity;com.taobao.hotpatch.HotPatchFaceDetectLuckResult;com.taobao.hotpatch.HotPatchFromDeliveryViewControler" />
+        <meta-data android:name="patch_entry" android:value="" />
     </application>
 
 </manifest>
