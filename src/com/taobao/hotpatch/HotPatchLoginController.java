@@ -25,10 +25,10 @@ import com.taobao.updatecenter.hotpatch.PatchCallback.PatchParam;
  * @author fangsheng@taobao.com
  * @version
  */
-public class HotPatchLoginController implements IPatch{
+public class HotPatchLoginController implements IPatch {
 
     Context cxt;
-    
+
     @Override
     public void handlePatch(final PatchParam arg0) throws Throwable {
         Log.d("HotPatch_pkg", "LoginController hotpatch begin");
@@ -37,7 +37,8 @@ public class HotPatchLoginController implements IPatch{
         cxt = arg0.context;
         try {
 
-            BundleImpl login = (BundleImpl) Atlas.getInstance().getBundle("com.taobao.login4android");
+            BundleImpl login = (BundleImpl) Atlas.getInstance().getBundle(
+                    "com.taobao.login4android");
             if (login == null) {
                 Log.e("HotPatch_pkg", "login bundle is null");
                 return;
@@ -50,42 +51,44 @@ public class HotPatchLoginController implements IPatch{
             Log.e("HotPatch_pkg", "invoke LoginController class failed" + e.toString());
             return;
         }
-        
+
         try {
             Log.e("HotPatch_pkg", "begin invoke LoginController beforeHookedMethod");
             XposedBridge.findAndHookMethod(LoginController, "onLoginSuccess", Context.class,
-                    UnifyLoginRes.class,
-                    new XC_MethodHook() {
+                    UnifyLoginRes.class, new XC_MethodHook() {
                         @Override
                         protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                             Log.d("HotPatch_pkg", "LoginController invoke method begin");
-                            
-                            UnifyLoginRes unifyLoginRes = (UnifyLoginRes)param.args[1];
-                            Context c = (Context)param.args[0];                           
-                            
+
+                            UnifyLoginRes unifyLoginRes = (UnifyLoginRes) param.args[1];
+                            Context c = (Context) param.args[0];
+
                             // 登陆成功
                             if (unifyLoginRes != null && unifyLoginRes.data != null) {
                                 AliUserResponseData data = JSON.parseObject(unifyLoginRes.data,
                                         AliUserResponseData.class);
-                                
+
                                 //写入ssoToken
                                 //session.setSsoToken(data.ssoToken);
-                                try{
-                                    Field sessionField = param.thisObject.getClass().getDeclaredField("session");
+                                try {
+                                    Field sessionField = param.thisObject.getClass()
+                                            .getDeclaredField("session");
                                     sessionField.setAccessible(true);
                                     Object session = sessionField.get(param.thisObject);
-                                    Method method = session.getClass().getMethod("setSsoToken", String.class);
+                                    Method method = session.getClass().getMethod("setSsoToken",
+                                            String.class);
                                     method.invoke(session, data.ssoToken);
-                                }catch (Exception e) {
-                                    Log.e("HotPatch_pkg", "invoke session class failed" + e.toString());
+                                } catch (Exception e) {
+                                    Log.e("HotPatch_pkg",
+                                            "invoke session class failed" + e.toString());
                                     e.printStackTrace();
                                 }
-               
+
                             }
                             Log.d("HotPatch_pkg", "LoginController invoke method over");
                         }
                     });
-            
+
             XposedBridge.findAndHookMethod(LoginController, "sdkLogin", Boolean.class,
                     new XC_MethodHook() {
 
@@ -104,6 +107,13 @@ public class HotPatchLoginController implements IPatch{
                             }
 
                             Log.d("HotPatch_pkg", "beforeHookedMethod sdkLogin end");
+                        }
+
+                        @Override
+                        protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                            if (param.hasThrowable()) {
+                                Log.d("HotPatch_pkg", param.getThrowable().getMessage());
+                            }
                         }
 
                     });

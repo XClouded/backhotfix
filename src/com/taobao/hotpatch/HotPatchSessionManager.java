@@ -11,6 +11,8 @@ package com.taobao.hotpatch;
 
 import mtopsdk.mtop.intf.Mtop;
 import android.content.Intent;
+import android.taobao.atlas.framework.Atlas;
+import android.taobao.atlas.framework.BundleImpl;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -31,13 +33,24 @@ public class HotPatchSessionManager implements IPatch {
     public void handlePatch(final PatchParam arg0) throws Throwable {
         Log.d("HotPatch_pkg", "HotPatchSessionManager hotpatch begin");
         Class<?> sessionManager = null;
+
         try {
-            sessionManager = arg0.classLoader
-                    .loadClass("com.taobao.login4android.session.SessionManager");
+
+            BundleImpl login = (BundleImpl) Atlas.getInstance().getBundle(
+                    "com.taobao.login4android");
+            if (login == null) {
+                Log.e("HotPatch_pkg", "login bundle is null");
+                return;
+            }
+            sessionManager = login.getClassLoader().loadClass(
+                    "com.taobao.login4android.session.SessionManager");
+            Log.d("HotPatch_pkg", "login loadClass  success");
 
         } catch (ClassNotFoundException e) {
-            Log.e("HotPatch_pkg", "invoke SessionManager class failed" + e.toString());
+            Log.e("HotPatch_pkg", "invoke LoginController class failed" + e.toString());
+            return;
         }
+
         XposedBridge.findAndHookMethod(sessionManager, "sendSessionBroadcast", Boolean.class,
                 new XC_MethodReplacement() {
                     @Override
