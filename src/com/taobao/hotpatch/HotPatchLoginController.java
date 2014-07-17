@@ -89,7 +89,7 @@ public class HotPatchLoginController implements IPatch {
                         }
                     });
 
-            XposedBridge.findAndHookMethod(LoginController, "sdkLogin", Boolean.class,
+            XposedBridge.findAndHookMethod(LoginController, "sdkLogin", boolean.class,
                     new XC_MethodHook() {
 
                         @Override
