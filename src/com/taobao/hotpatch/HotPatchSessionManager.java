@@ -51,7 +51,7 @@ public class HotPatchSessionManager implements IPatch {
             return;
         }
 
-        XposedBridge.findAndHookMethod(sessionManager, "sendSessionBroadcast", Boolean.class,
+        XposedBridge.findAndHookMethod(sessionManager, "sendSessionBroadcast", boolean.class,
                 new XC_MethodReplacement() {
                     @Override
                     protected Object replaceHookedMethod(MethodHookParam param) throws Throwable {
