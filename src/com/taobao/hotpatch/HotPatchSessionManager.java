@@ -56,55 +56,61 @@ public class HotPatchSessionManager implements IPatch {
                     @Override
                     protected Object replaceHookedMethod(MethodHookParam param) throws Throwable {
                         Log.d("HotPatch_pkg", "replaceHookedMethod sendSessionBroadcast start");
+                        try {
+                            boolean isClear = (Boolean) param.args[0];
 
-                        boolean isClear = (Boolean) param.args[0];
-
-                        Intent intent = new Intent();
-                        intent.setAction("NOTIFY_SESSION_INFO");
-                        if (!isClear) {
-                            String sid = (String) XposedHelpers.callMethod(param.thisObject,
-                                    "getSid");
-                            String ecode = (String) XposedHelpers.callMethod(param.thisObject,
-                                    "getEcode");
-                            String nick = (String) XposedHelpers.callMethod(param.thisObject,
-                                    "getNick");
-                            String userName = (String) XposedHelpers.callMethod(param.thisObject,
-                                    "getUserName");
-                            String userId = (String) XposedHelpers.callMethod(param.thisObject,
-                                    "getUserId");
-                            intent.putExtra("sid", sid);
-                            intent.putExtra("ecode", ecode);
-                            intent.putExtra("nick", nick);
-                            intent.putExtra("username", userName);
-                            intent.putExtra("userId", userId);
-                            // MTopSdk
-                            if (!TextUtils.isEmpty(sid)) {
-                                Mtop.instance(arg0.context).registerSessionInfo(sid, ecode, userId);
-                                Log.d("HotPatch_pkg", "registerSessionInfo while sendSessionBroadcast");
+                            Intent intent = new Intent();
+                            intent.setAction("NOTIFY_SESSION_INFO");
+                            if (!isClear) {
+                                String sid = (String) XposedHelpers.callMethod(param.thisObject,
+                                        "getSid");
+                                String ecode = (String) XposedHelpers.callMethod(param.thisObject,
+                                        "getEcode");
+                                String nick = (String) XposedHelpers.callMethod(param.thisObject,
+                                        "getNick");
+                                String userName = (String) XposedHelpers.callMethod(
+                                        param.thisObject, "getUserName");
+                                String userId = (String) XposedHelpers.callMethod(param.thisObject,
+                                        "getUserId");
+                                intent.putExtra("sid", sid);
+                                intent.putExtra("ecode", ecode);
+                                intent.putExtra("nick", nick);
+                                intent.putExtra("username", userName);
+                                intent.putExtra("userId", userId);
+                                // MTopSdk
+                                if (!TextUtils.isEmpty(sid)) {
+                                    Mtop.instance(arg0.context).registerSessionInfo(sid, ecode,
+                                            userId);
+                                    Log.d("HotPatch_pkg",
+                                            "registerSessionInfo while sendSessionBroadcast");
+                                }
                             }
+
+                            String oldnick = (String) XposedHelpers.callMethod(param.thisObject,
+                                    "getOldNick");
+                            String oldsid = (String) XposedHelpers.callMethod(param.thisObject,
+                                    "getOldSid");
+                            boolean commentTokenUsed = (Boolean) XposedHelpers.callMethod(
+                                    param.thisObject, "isCommentTokenUsed");
+                            String auto_login = (String) XposedHelpers.callMethod(param.thisObject,
+                                    "getLoginToken");
+                            String ssoToken = (String) XposedHelpers.callMethod(param.thisObject,
+                                    "getSsoToken");
+
+                            intent.putExtra("oldnick", oldnick);
+                            intent.putExtra("oldsid", oldsid);
+                            intent.putExtra("commentTokenUsed", commentTokenUsed);
+                            intent.putExtra("auto_login", auto_login);
+                            intent.putExtra("ssoToken", ssoToken);
+
+                            //改为普通广播
+                            arg0.context.sendBroadcast(intent);
+
+                            Log.d("HotPatch_pkg", "replaceHookedMethod sendSessionBroadcast end");
+                        } catch (Exception e) {
+                            Log.e("HotPatch_pkg",
+                                    "invoke mytaobaoActivity class failed2: " + e.toString());
                         }
-
-                        String oldnick = (String) XposedHelpers.callMethod(param.thisObject,
-                                "getOldNick");
-                        String oldsid = (String) XposedHelpers.callMethod(param.thisObject,
-                                "getOldSid");
-                        boolean commentTokenUsed = (Boolean) XposedHelpers.callMethod(
-                                param.thisObject, "isCommentTokenUsed");
-                        String auto_login = (String) XposedHelpers.callMethod(param.thisObject,
-                                "getLoginToken");
-                        String ssoToken = (String) XposedHelpers.callMethod(param.thisObject,
-                                "getSsoToken");
-
-                        intent.putExtra("oldnick", oldnick);
-                        intent.putExtra("oldsid", oldsid);
-                        intent.putExtra("commentTokenUsed", commentTokenUsed);
-                        intent.putExtra("auto_login", auto_login);
-                        intent.putExtra("ssoToken", ssoToken);
-
-                        //改为普通广播
-                        arg0.context.sendBroadcast(intent);
-
-                        Log.d("HotPatch_pkg", "replaceHookedMethod sendSessionBroadcast end");
                         return null;
                     }
                 });
