@@ -101,9 +101,11 @@ public class HotPatchChatImageManager implements IPatch {
                                 Class<?> DocumentsContract = Class.forName("android.provider.DocumentsContract");
                                 if(DocumentsContract==null){
                                     Log.e("HotPatch_pkg", "ChatImageManager invoke method xxxxxxx");
+                                }else{
+                                    Log.e("HotPatch_pkg", "ChatImageManager invoke method yyyy="+DocumentsContract.getName());
                                 }
                                 Log.e("HotPatch_pkg", "ChatImageManager invoke method 6");
-                                Method method = DocumentsContract.getMethod("getDocumentId", String.class);
+                                Method method = DocumentsContract.getMethod("getDocumentId", Uri.class);
                                 Log.e("HotPatch_pkg", "ChatImageManager invoke method 7");
                                 String wholeID = (String) method.invoke(uri, String.class);
                                 Log.e("HotPatch_pkg", "ChatImageManager invoke method ;wholeID="+wholeID);
@@ -142,7 +144,8 @@ public class HotPatchChatImageManager implements IPatch {
 
                     @Override
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                        Log.e("HotPatch_pkg", "invoke ChatImageManager afterHookedMethod ");
+                        Log.e("HotPatch_pkg", "invoke ChatImageManager afterHookedMethod ="+param.getThrowable().getMessage());
+                        Log.e("HotPatch_pkg", "invoke ChatImageManager afterHookedMethod2 ="+param.getResultOrThrowable().toString());
                     }
 
                     @Override
