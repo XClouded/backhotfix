@@ -50,49 +50,27 @@ public class HotPatchMyTaoBao implements IPatch {
 							throws Throwable {
 						try {
 						Log.e("HotPatch_pkg","HotPatchMyTaoBao 2");
-						Log.e("HotPatch_pkg",
-								"afterHookedMethod onCreate start");
 						/*Intent intent = (Intent) XposedHelpers.callMethod(
 								param.thisObject, "getIntent");*/
 						Intent intent = (Intent)XposedHelpers.getObjectField(param.thisObject, "mIntent");
-						Log.e("HotPatch_pkg","HotPatchMyTaoBao 3");
 						Uri uri = intent.getData();
-						// String struri =
-						// "http://h5.m.taobao.com/awp/mtb/mtb.htm#!/awp/mtb/olist.htm";
 						String struri = null;
-						Log.e("HotPatch_pkg","HotPatchMyTaoBao 4");
 						if (uri != null)
 							struri = uri.toString();
-						Log.e("HotPatch_pkg","HotPatchMyTaoBao 5 struri="+struri);
 
 						if (struri != null) {
-							Log.e("HotPatch_pkg","HotPatchMyTaoBao 6");
 							if (struri.contains("/awp/mtb/olist.htm")) {
 								Log.e("HotPatch_pkg",
-										"afterHookedMethod nav to NAV_URL_LOGISTIC_DETAIL");
-								Intent intent1 = new Intent();
-								Log.e("HotPatch_pkg","HotPatchMyTaoBao 7");
-								intent1.setAction("android.intent.action.VIEW");
-								Log.e("HotPatch_pkg","HotPatchMyTaoBao 8");
-								intent1.setData(Uri.parse("http://tb.cn/x/wl"));
-								intent1.setClassName(arg0.context,
-										"com.taobao.tao.logistic.LogisticListActivity");
-								Log.e("HotPatch_pkg",
-										"afterHookedMethod start LogisticListActivity by Nav");
-								//((Activity)param.thisObject).startActivity(intent1);
-								/*XposedHelpers.callMethod(param.thisObject,
-										"startActivity", intent1);*/
+										"afterHookedMethod nav to http://tb.cn/x/wl");
 								Nav.from(arg0.context).toUri("http://tb.cn/x/wl");
 								Log.e("HotPatch_pkg",
-										"afterHookedMethod finish mytaobao");
-								/*XposedHelpers.callMethod(param.thisObject,
-										"finish");*/
+										"afterHookedMethod next will finish mytaobao");
+								XposedHelpers.callMethod(param.thisObject,
+										"finish");
 								
 							//	((Activity)param.thisObject).finish();
 								Log.e("HotPatch_pkg",
 										"afterHookedMethod finish");
-								// startActivity(intent1);
-								// finish();
 							}
 						}
 						} catch(Exception e) {
