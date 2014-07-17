@@ -1,13 +1,11 @@
 package com.taobao.hotpatch;
 
-import mtopsdk.mtop.intf.Mtop;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.taobao.atlas.framework.Atlas;
 import android.taobao.atlas.framework.BundleImpl;
 import android.taobao.util.TaoLog;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.taobao.android.dexposed.XC_MethodHook;
@@ -24,6 +22,7 @@ public class HotPatchMyTaoBao implements IPatch {
 	@Override
 	public void handlePatch(final PatchParam arg0) throws Throwable {
 		// TODO Auto-generated method stub
+		Log.d("HotPatch_pkg", "start HotPatchMyTaoBao handlePatch");
 		try {
 			mytaobao = (BundleImpl) Atlas.getInstance().getBundle(
 					"com.taobao.mytaobao");
@@ -40,6 +39,7 @@ public class HotPatchMyTaoBao implements IPatch {
 					"invoke mytaobaoActivity class failed" + e.toString());
 			return;
 		}
+		try {
 		XposedBridge.findAndHookMethod(mytaobaoActivity, "onCreate",
 				Bundle.class, new XC_MethodHook() {
 
@@ -84,6 +84,10 @@ public class HotPatchMyTaoBao implements IPatch {
 						}
 					}
 				});
+		} catch(Exception e) {
+			Log.d("HotPatch_pkg",
+					"invoke mytaobaoActivity class failed2: " + e.toString());
+		}
 		Log.d("HotPatch_pkg", "HotPatchSessionManager hotpatch finish");
 	}
 
