@@ -12,6 +12,9 @@ import com.alibaba.fastjson.JSON;
 import com.alipay.aliusergw.biz.shared.processer.login.UnifyLoginRes;
 import com.taobao.android.dexposed.XC_MethodHook;
 import com.taobao.android.dexposed.XposedBridge;
+import com.taobao.android.dexposed.XposedHelpers;
+import com.taobao.android.dexposed.XC_MethodHook.MethodHookParam;
+import com.taobao.login4android.api.Login;
 import com.taobao.updatecenter.hotpatch.IPatch;
 import com.taobao.updatecenter.hotpatch.PatchCallback.PatchParam;
 
@@ -27,7 +30,7 @@ public class HotPatchLoginController implements IPatch{
     Context cxt;
     
     @Override
-    public void handlePatch(PatchParam arg0) throws Throwable {
+    public void handlePatch(final PatchParam arg0) throws Throwable {
         Log.d("HotPatch_pkg", "LoginController hotpatch begin");
 
         Class<?> LoginController = null;
@@ -81,6 +84,28 @@ public class HotPatchLoginController implements IPatch{
                             }
                             Log.d("HotPatch_pkg", "LoginController invoke method over");
                         }
+                    });
+            
+            XposedBridge.findAndHookMethod(LoginController, "sdkLogin", Boolean.class,
+                    new XC_MethodHook() {
+
+                        @Override
+                        protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                            Log.d("HotPatch_pkg", "beforeHookedMethod sdkLogin start");
+
+                            if (Login.context == null) {
+                                Login.init(arg0.context, arg0.packageTtid);
+                            }
+                            boolean isAliuserSDKInited = (Boolean) XposedHelpers.getObjectField(
+                                    param.thisObject, "isAliuserSDKInited");
+                            if (!isAliuserSDKInited) {
+                                XposedHelpers.callMethod(param.thisObject, "initAliuserSDK",
+                                        arg0.packageName, arg0.packageVersion, arg0.packageTtid, 2);
+                            }
+
+                            Log.d("HotPatch_pkg", "beforeHookedMethod sdkLogin end");
+                        }
+
                     });
         } catch (Exception e) {
             Log.e("HotPatch_pkg", "invoke LoginController class failed" + e.toString());
