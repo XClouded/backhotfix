@@ -98,7 +98,7 @@ public class HotPatchChatImageManager implements IPatch {
                             Log.e("HotPatch_pkg", "ChatImageManager invoke method 4 isKitKat="+isKitKat);
                             if(isKitKat&&"content".equalsIgnoreCase(uri.getScheme())&&(picturePath==null||"".equals(picturePath))){
                                 Log.e("HotPatch_pkg", "ChatImageManager invoke method 5 isKitKat action");
-                                Class<?> DocumentsContract = this.getClass().getClassLoader().loadClass("android.provider.DocumentsContract");
+                                Class<?> DocumentsContract = Class.forName("android.provider.DocumentsContract");
                                 if(DocumentsContract==null){
                                     Log.e("HotPatch_pkg", "ChatImageManager invoke method xxxxxxx");
                                 }
