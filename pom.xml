@@ -110,11 +110,13 @@
 				<groupId>com.ali.user.sdk</groupId>
 				<artifactId>aliusersdkbiz</artifactId>
 				<version>1.0.1</version>
+				<scope>provided</scope>
 			</dependency>
 			<dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>fastjson</artifactId>
                 <version>1.1.40</version>
+                <scope>provided</scope>
             </dependency>
 
 	</dependencies>
