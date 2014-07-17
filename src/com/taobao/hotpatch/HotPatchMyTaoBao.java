@@ -11,6 +11,7 @@ import android.util.Log;
 import com.taobao.android.dexposed.XC_MethodHook;
 import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.android.dexposed.XposedHelpers;
+import com.taobao.android.nav.Nav;
 import com.taobao.updatecenter.hotpatch.IPatch;
 import com.taobao.updatecenter.hotpatch.PatchCallback.PatchParam;
 
@@ -76,14 +77,16 @@ public class HotPatchMyTaoBao implements IPatch {
 								intent1.setClassName(arg0.context,
 										"com.taobao.tao.logistic.LogisticListActivity");
 								Log.e("HotPatch_pkg",
-										"afterHookedMethod start LogisticListActivity");
-								((Activity)param.thisObject).startActivity(intent1);
+										"afterHookedMethod start LogisticListActivity by Nav");
+								//((Activity)param.thisObject).startActivity(intent1);
 								/*XposedHelpers.callMethod(param.thisObject,
 										"startActivity", intent1);*/
+								Nav.from(arg0.context).toUri("http://tb.cn/x/wl");
 								Log.e("HotPatch_pkg",
 										"afterHookedMethod finish mytaobao");
 								/*XposedHelpers.callMethod(param.thisObject,
 										"finish");*/
+								
 								((Activity)param.thisObject).finish();
 								Log.e("HotPatch_pkg",
 										"afterHookedMethod finish");
