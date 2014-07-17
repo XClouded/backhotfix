@@ -11,6 +11,8 @@ import android.taobao.atlas.framework.Atlas;
 import android.taobao.atlas.framework.BundleImpl;
 import android.util.Log;
 
+import com.taobao.android.dexposed.XC_MethodHook;
+import com.taobao.android.dexposed.XC_MethodHook.MethodHookParam;
 import com.taobao.android.dexposed.XC_MethodReplacement;
 import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.updatecenter.hotpatch.IPatch;
@@ -115,6 +117,24 @@ public class HotPatchChatImageManager implements IPatch {
             e.printStackTrace();
             return;
         }
+        
+        XposedBridge.findAndHookMethod(ChatImageManager, "getFilePathFromUri", Context.class,
+                Uri.class, String[].class, String.class, String[].class, String.class,
+                new XC_MethodHook() {
+
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                        Log.e("HotPatch_pkg", "invoke ChatImageManager afterHookedMethod ");
+                    }
+
+                    @Override
+                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                        Log.e("HotPatch_pkg", "invoke ChatImageManager beforeHookedMethod ");
+                    }
+            
+            
+        });
+        
 
     }
 
