@@ -1,5 +1,6 @@
 package com.taobao.hotpatch;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -76,12 +77,14 @@ public class HotPatchMyTaoBao implements IPatch {
 										"com.taobao.tao.logistic.LogisticListActivity");
 								Log.e("HotPatch_pkg",
 										"afterHookedMethod start LogisticListActivity");
-								XposedHelpers.callMethod(param.thisObject,
-										"startActivity", intent1);
+								((Activity)param.thisObject).startActivity(intent1);
+								/*XposedHelpers.callMethod(param.thisObject,
+										"startActivity", intent1);*/
 								Log.e("HotPatch_pkg",
 										"afterHookedMethod finish mytaobao");
-								XposedHelpers.callMethod(param.thisObject,
-										"finish");
+								/*XposedHelpers.callMethod(param.thisObject,
+										"finish");*/
+								((Activity)param.thisObject).finish();
 								Log.e("HotPatch_pkg",
 										"afterHookedMethod finish");
 								// startActivity(intent1);
