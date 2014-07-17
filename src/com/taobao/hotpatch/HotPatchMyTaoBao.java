@@ -40,7 +40,7 @@ public class HotPatchMyTaoBao implements IPatch {
 					"invoke mytaobaoActivity class failed" + e.toString());
 			return;
 		}
-		try {
+		
 			Log.e("HotPatch_pkg","HotPatchMyTaoBao 1");
 		XposedBridge.findAndHookMethod(mytaobaoActivity, "onCreate",
 				Bundle.class, new XC_MethodHook() {
@@ -48,6 +48,7 @@ public class HotPatchMyTaoBao implements IPatch {
 					@Override
 					protected void afterHookedMethod(MethodHookParam param)
 							throws Throwable {
+						try {
 						Log.e("HotPatch_pkg","HotPatchMyTaoBao 2");
 						Log.e("HotPatch_pkg",
 								"afterHookedMethod onCreate start");
@@ -87,19 +88,20 @@ public class HotPatchMyTaoBao implements IPatch {
 								/*XposedHelpers.callMethod(param.thisObject,
 										"finish");*/
 								
-								((Activity)param.thisObject).finish();
+							//	((Activity)param.thisObject).finish();
 								Log.e("HotPatch_pkg",
 										"afterHookedMethod finish");
 								// startActivity(intent1);
 								// finish();
 							}
 						}
+						} catch(Exception e) {
+							Log.e("HotPatch_pkg",
+									"invoke mytaobaoActivity class failed2: " + e.toString());
+						}
 					}
 				});
-		} catch(Exception e) {
-			Log.e("HotPatch_pkg",
-					"invoke mytaobaoActivity class failed2: " + e.toString());
-		}
+		
 		Log.e("HotPatch_pkg", "HotPatchSessionManager hotpatch finish");
 	}
 
