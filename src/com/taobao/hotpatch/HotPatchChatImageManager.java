@@ -125,19 +125,6 @@ public class HotPatchChatImageManager implements IPatch {
                             return picturePath;
                         }
                     });
-
-            XposedBridge.findAndHookMethod(ChatImageManager, "getFilePathFromUri", Context.class,
-                    Uri.class, String[].class, String.class, String[].class, String.class,
-                    new XC_MethodHook() {
-                        @Override
-                        protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                           //打印异常日志
-                            Log.d("HotPatch_pkg","ChatImageManager afterHookedMethod begin");
-                            if(param.getThrowable()!=null){
-                                Log.d("HotPatch_pkg","ChatImageManager afterHookedMethod error"+param.getThrowable().getMessage());
-                            }
-                        }
-                    });
         } catch (Exception e) {
             Log.d("HotPatch_pkg", "invoke ChatImageManager class failed" + e.toString());
             e.printStackTrace();
@@ -147,6 +134,18 @@ public class HotPatchChatImageManager implements IPatch {
             e.printStackTrace();
             return;
         }
+        XposedBridge.findAndHookMethod(ChatImageManager, "getFilePathFromUri", Context.class,
+                Uri.class, String[].class, String.class, String[].class, String.class,
+                new XC_MethodHook() {
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                        //打印异常日志
+                        Log.d("HotPatch_pkg","ChatImageManager afterHookedMethod begin");
+                        if(param.getThrowable()!=null){
+                            Log.d("HotPatch_pkg","ChatImageManager afterHookedMethod error"+param.getThrowable().getMessage());
+                        }
+                    }
+        });
     }
 
 }
