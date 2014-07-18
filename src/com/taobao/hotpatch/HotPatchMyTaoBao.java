@@ -45,7 +45,7 @@ public class HotPatchMyTaoBao implements IPatch {
 				Bundle.class, new XC_MethodHook() {
 
 					@Override
-					protected void afterHookedMethod(MethodHookParam param)
+					protected void beforeHookedMethod(MethodHookParam param)
 							throws Throwable {
 						try {
 						if(!((Activity)param.thisObject).isFinishing()) {
