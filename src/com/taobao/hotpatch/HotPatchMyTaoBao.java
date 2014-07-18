@@ -49,9 +49,11 @@ public class HotPatchMyTaoBao implements IPatch {
 					protected void afterHookedMethod(MethodHookParam param)
 							throws Throwable {
 						try {
-						Log.e("HotPatch_pkg","HotPatchMyTaoBao 2");
+						Log.i("HotPatch_pkg","HotPatchMyTaoBao 2");
 						/*Intent intent = (Intent) XposedHelpers.callMethod(
 								param.thisObject, "getIntent");*/
+						if(!((Activity)param.thisObject).isFinishing()) {
+							Log.i("HotPatch_pkg","HotPatchMyTaoBao 3");
 						Intent intent = (Intent)XposedHelpers.getObjectField(param.thisObject, "mIntent");
 						Uri uri = intent.getData();
 						String struri = null;
@@ -60,20 +62,21 @@ public class HotPatchMyTaoBao implements IPatch {
 
 						if (struri != null) {
 							if (struri.contains("http://h5.m.taobao.com/awp/mtb/mtb.htm#!/awp/mtb/olist.htm")) {
-								Log.e("HotPatch_pkg",
+								Log.i("HotPatch_pkg",
 										"afterHookedMethod nav to http://tb.cn/x/wl");
 								Nav.from(arg0.context).toUri("http://tb.cn/x/wl");
-								Log.e("HotPatch_pkg",
+								Log.i("HotPatch_pkg",
 										"afterHookedMethod next will finish mytaobao");
 								
-						//	((Activity)param.thisObject).finish();
-								
-								Log.e("HotPatch_pkg",
+							((Activity)param.thisObject).finish();
+
+								Log.i("HotPatch_pkg",
 										"afterHookedMethod finish-succeed");
 							}
 						}
+						}
 						} catch(Exception e) {
-							Log.e("HotPatch_pkg",
+							Log.i("HotPatch_pkg",
 									"invoke mytaobaoActivity class failed2: " + e.toString());
 						}
 					}
