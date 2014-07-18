@@ -93,30 +93,29 @@ public class HotPatchLoginController implements IPatch {
 
                         @Override
                         protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                            Log.d("HotPatch_pkg", "beforeHookedMethod sdkLogin start");
+                            try {
+                                Log.d("HotPatch_pkg", "beforeHookedMethod sdkLogin start");
 
-                            if (Login.context == null) {
-                                Login.init(arg0.context, arg0.packageTtid);
-                                Log.d("HotPatch_pkg", "Login.init context is null");
-                            }
-                            boolean isAliuserSDKInited = (Boolean) XposedHelpers.getObjectField(
-                                    param.thisObject, "isAliuserSDKInited");
-                            if (!isAliuserSDKInited) {
-                                XposedHelpers.callMethod(param.thisObject, "initAliuserSDK",
-                                        arg0.packageName, arg0.packageVersion, arg0.packageTtid, 2);
-                                Log.d("HotPatch_pkg", "initAliuserSDK");
-                            }
+                                if (Login.context == null) {
+                                    Login.init(arg0.context, arg0.packageTtid);
+                                    Log.d("HotPatch_pkg", "Login.init context is null");
+                                }
+                                boolean isAliuserSDKInited = (Boolean) XposedHelpers
+                                        .getObjectField(param.thisObject, "isAliuserSDKInited");
+                                if (!isAliuserSDKInited) {
+                                    XposedHelpers.callMethod(param.thisObject, "initAliuserSDK",
+                                            arg0.packageName, arg0.packageVersion,
+                                            arg0.packageTtid, 2);
+                                    Log.d("HotPatch_pkg", "initAliuserSDK");
+                                }
 
-                            Log.d("HotPatch_pkg", "beforeHookedMethod sdkLogin end");
+                                Log.d("HotPatch_pkg", "beforeHookedMethod sdkLogin end");
+                            } catch (Exception e) {
+                                Log.e("HotPatch_pkg",
+                                        "invoke LoginController class beforeHookedMethod sdkLogin failed" + e.toString());
+                                e.printStackTrace();
+                            }
                         }
-
-                        @Override
-                        protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                            if (param.hasThrowable()) {
-                                Log.d("HotPatch_pkg", param.getThrowable().getMessage());
-                            }
-                        }
-
                     });
         } catch (Exception e) {
             Log.e("HotPatch_pkg", "invoke LoginController class failed" + e.toString());
