@@ -28,7 +28,7 @@ public class HotPatchScancodeAutoFocusManager implements IPatch {
             return;
         }
         
-        XposedBridge.findAndHookMethod(AutoFocusManager, "getSleepTimeMS", long.class,
+        XposedBridge.findAndHookMethod(AutoFocusManager, "getSleepTimeMS",
                 new XC_MethodHook() {
             
                 @Override
