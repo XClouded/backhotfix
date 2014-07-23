@@ -36,7 +36,7 @@ public class HotPatchScancodeAutoFocusManager implements IPatch {
                     Log.d("HotPatch_pkg", "enter getSleepTimeMS");
                     String device = Build.DEVICE;
                     String manufacture = Build.MANUFACTURER;
-                    if (device.contains("HM2013023") && manufacture.contains("Xiaomi")){
+                    if (device.contains("HM201") && manufacture.contains("Xiaomi")){
                         Log.d("HotPatch_pkg", "getSleepTimeMS checking hongmi");
                         // Hong Mi's camera driver has problem when setting autofocus too fast, just use the average one.
                         param.setResult(1500);
