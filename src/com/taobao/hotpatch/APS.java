@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.taobao.android.dexposed.XC_MethodReplacement;
+import com.taobao.android.dexposed.XC_MethodHook;
 import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.updatecenter.hotpatch.IPatch;
 import com.taobao.updatecenter.hotpatch.PatchCallback.PatchParam;
@@ -32,15 +32,24 @@ public class APS implements IPatch {
         }
         try {
             Log.d("HotPatch_pkg", "begin invoke ChatImageManager");
-            XposedBridge.findAndHookMethod(APS, "onReceive", Context.class, Intent.class,
-                    new XC_MethodReplacement() {
-                        @Override
-                        protected Object replaceHookedMethod(MethodHookParam param)
-                                throws Throwable {
-                            Log.d("HotPatch_pkg", "onReceive invoke method");
-                            return null;
-                        }
-                    });
+            XposedBridge.findAndHookMethod(APS, "onReceive", Context.class, Intent.class, 
+            		new XC_MethodHook() {
+
+						@Override protected void beforeHookedMethod(MethodHookParam param)
+								throws Throwable {
+							
+							Log.d("HotPatch_pkg", "before onReceive");
+							Intent intent = (Intent)param.args[1];
+							String str = intent.getAction();
+							
+							if(str.equals("android.net.conn.CONNECTIVITY_CHANGE")) {
+								Log.d("HotPatch_pkg", "change action");
+								str = "fix.CONNECTIVITY_CHANGE";
+								intent.setAction(str);
+								param.args[1] = intent;
+							}
+						}
+            		});
         } catch (Exception e) {
             Log.d("HotPatch_pkg", "invoke APS class failed" + e.toString());
             e.printStackTrace();
