@@ -56,7 +56,7 @@ public class JumpControllerHook implements IPatch {
                         if (itemId != null && itemId.length() > 0) {
                             Log.d(TAG, "nav gotoUrl:" + url);
                             Nav.from(context).toUri(url);
-                            param.args[0]=null;//设置url为空，下面就无法执行了
+                            param.setResult(true);//直接返回结果，不执行后续的了
                         }
                     }
 
