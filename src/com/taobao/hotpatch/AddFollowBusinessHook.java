@@ -1,4 +1,5 @@
 package com.taobao.hotpatch;
+import mtopsdk.mtop.domain.BaseOutDo;
 import android.os.RemoteException;
 import android.taobao.apirequest.ApiID;
 import android.taobao.atlas.framework.Atlas;
@@ -16,8 +17,6 @@ import com.taobao.business.BaseRemoteBusiness;
 import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchCallback.PatchParam;
 import com.taobao.tao.Globals;
-import com.taobao.tao.allspark.feed.mtop.favorite.AddResponse;
-import com.taobao.tao.allspark.service.IAllSparkAddFollowListener;
 import com.taobao.we.BasicParam;
 import com.taobao.we.data.request.BasicSingleBusiness;
 import com.taobao.we.data.request.BasicSingleRequest;
@@ -59,7 +58,7 @@ public class AddFollowBusinessHook implements IPatch {
 					param.putExtParam("pubAccountId", pubAccountId.longValue());
 				param.putExtParam("origin", origin);
 				BasicSingleBusiness business=new BasicSingleBusiness(Globals.getApplication(), param);
-				final IAllSparkAddFollowListener listener=(IAllSparkAddFollowListener) XposedHelpers.getObjectField(methodParam.thisObject, "mListener");
+				final Object listener=XposedHelpers.getObjectField(methodParam.thisObject, "mListener");
 				business.setRemoteBusinessRequestListener(new IRemoteBusinessRequestListener() {
 					
 					@Override
@@ -68,12 +67,11 @@ public class AddFollowBusinessHook implements IPatch {
 							Object context, int requestType, Object data) {
 						if(listener!=null) {
 							try {
-								listener.onSuccess();
-							} catch (RemoteException e) {
+								XposedHelpers.callMethod(listener, "onSuccess");
+							} catch (Exception e) {
 								e.printStackTrace();
 							}
-						}
-						
+						}	
 					}
 					
 					@Override
@@ -81,15 +79,15 @@ public class AddFollowBusinessHook implements IPatch {
 							Object context, int requestType, ApiID apiId, ApiResult apiResult) {
 						if(listener!=null) {
 							try {
-								listener.onError(apiResult.errDescription);
-							} catch (RemoteException e) {
+								XposedHelpers.callMethod(listener, "onError", apiResult.errDescription);
+							} catch (Exception e) {
 								e.printStackTrace();
 							}
 						}
 						
 					}
 				});
-				business.sendRequest(request, null, AddResponse.class, param.getExtParams());
+				business.sendRequest(request, null, BaseOutDo.class, param.getExtParams());
 				return null;
 			}
 		});
