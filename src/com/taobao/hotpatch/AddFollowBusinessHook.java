@@ -76,10 +76,7 @@ public class AddFollowBusinessHook implements IPatch {
 								Method method=thisObj.getClass().getDeclaredMethod("onSuccess", BaseRemoteBusiness.class,
 														 Object.class,int.class,Object.class);
 								method.invoke(thisObj, business,context,1,data);
-								Context ctx=getApplication(thisObj);
-								if(ctx!=null)
-									Toast.makeText(ctx, "收藏成功！", Toast.LENGTH_SHORT).show();
-								TaoLog.d("hotpach", "toast ok!");
+								
 							}catch(Error e) {
 								e.printStackTrace();
 							}catch(Exception e) {
@@ -91,7 +88,7 @@ public class AddFollowBusinessHook implements IPatch {
 						public void onError(BaseRemoteBusiness business,
 								Object context, int requestType, ApiID apiId, ApiResult apiResult) {
 							try {
-								Context ctx=getApplication(thisObj);
+								Context ctx=Globals.getApplication();
 								if(ctx!=null)
 									Toast.makeText(ctx, "收藏失败！", Toast.LENGTH_SHORT).show();
 							}catch(Error e) {
@@ -119,19 +116,19 @@ public class AddFollowBusinessHook implements IPatch {
 			
 	}
 	
-	private Application getApplication(Object thisObj) {
-		Object business=XposedHelpers.getObjectField(thisObj, "mBusiness");
-		if(business==null)
-			return null;
-		try {
-			Class clazz=business.getClass().getSuperclass();
-			Field app=clazz.getDeclaredField("mApplication");
-			app.setAccessible(true);
-			return (Application) app.get(business);
-		}catch(Exception e) {
-			
-		}
-		return null;
-	}
+//	private Application getApplication(Object thisObj) {
+//		Object business=XposedHelpers.getObjectField(thisObj, "mBusiness");
+//		if(business==null)
+//			return null;
+//		try {
+//			Class clazz=business.getClass().getSuperclass();
+//			Field app=clazz.getDeclaredField("mApplication");
+//			app.setAccessible(true);
+//			return (Application) app.get(business);
+//		}catch(Exception e) {
+//			
+//		}
+//		return null;
+//	}
 
 }
