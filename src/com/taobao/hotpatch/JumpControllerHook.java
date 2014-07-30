@@ -11,7 +11,6 @@ import com.taobao.android.dexposed.XC_MethodHook;
 import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.android.dexposed.XposedHelpers;
 import com.taobao.android.nav.Nav;
-import com.taobao.tao.Globals;
 import com.taobao.tao.util.ItemUrlUtil;
 import com.taobao.updatecenter.hotpatch.IPatch;
 import com.taobao.updatecenter.hotpatch.PatchCallback.PatchParam;
@@ -53,6 +52,7 @@ public class JumpControllerHook implements IPatch {
                     if (!TextUtils.isEmpty(url)) {
                         Log.d(TAG, "beforeHookedMethod url:"+url);
                         Context context = (Context) XposedHelpers.getObjectField(param.thisObject, "mContext");
+
                         String itemId = ItemUrlUtil.getInstance().getItemidFromUrl(url);
                         Log.d(TAG, "beforeHookedMethod itemId:"+itemId);
                         if (itemId != null && itemId.length() > 0) {
