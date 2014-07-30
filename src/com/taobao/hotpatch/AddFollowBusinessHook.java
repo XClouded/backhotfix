@@ -64,13 +64,13 @@ public class AddFollowBusinessHook implements IPatch {
 						public void onSuccess(
 								BaseRemoteBusiness business,
 								Object context, int requestType, Object data) {
-							XposedHelpers.callMethod(thisObj, "onSuccess", business,context,1,data);
+							XposedHelpers.callMethod(thisObj, "onSuccess", business,"",1,data);
 						}
 						
 						@Override
 						public void onError(BaseRemoteBusiness business,
 								Object context, int requestType, ApiID apiId, ApiResult apiResult) {
-							XposedHelpers.callMethod(thisObj, "onError", business,context,1,apiId,apiResult);
+							XposedHelpers.callMethod(thisObj, "onError", business,"",1,apiId,apiResult);
 							
 						}
 					});
