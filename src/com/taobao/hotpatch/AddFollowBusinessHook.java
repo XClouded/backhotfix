@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 
 import mtopsdk.mtop.domain.BaseOutDo;
 import android.content.Context;
+import android.os.Looper;
 import android.taobao.atlas.framework.Atlas;
 import android.taobao.atlas.framework.BundleImpl;
 import android.util.Log;
@@ -74,7 +75,9 @@ public class AddFollowBusinessHook implements IPatch {
 														 Object.class,int.class,Object.class);
 								method.invoke(thisObj, business,context,1,data);
 								Context ctx=Globals.getApplication();
+								Looper.prepare(); 
 								Toast.makeText(ctx, "收藏成功！", Toast.LENGTH_SHORT).show();
+								Looper.loop(); 
 								TaoLog.d("hotpach", "toast ok!");
 							}catch(Error e) {
 								e.printStackTrace();
@@ -87,7 +90,9 @@ public class AddFollowBusinessHook implements IPatch {
 						public void onError(BaseRemoteBusiness business,
 								Object context, int requestType, ApiID apiId, ApiResult apiResult) {
 							try {
+								Looper.prepare(); 
 								Toast.makeText(Globals.getApplication().getApplicationContext(), "收藏失败！", Toast.LENGTH_SHORT).show();
+								Looper.loop(); 
 							}catch(Error e) {
 								e.printStackTrace();
 							}catch(Exception e){
