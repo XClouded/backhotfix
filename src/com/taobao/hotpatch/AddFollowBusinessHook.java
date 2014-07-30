@@ -57,33 +57,20 @@ public class AddFollowBusinessHook implements IPatch {
 					param.putExtParam("pubAccountId", pubAccountId);
 					param.putExtParam("origin", origin);
 					BasicSingleBusiness business=new BasicSingleBusiness(Globals.getApplication(), param);
-					final Object listener=XposedHelpers.getObjectField(methodParam.thisObject, "mListener");
-					
+					final Object thisObj=methodParam.thisObject;
 					business.setRemoteBusinessRequestListener(new IRemoteBusinessRequestListener() {
 						
 						@Override
 						public void onSuccess(
 								BaseRemoteBusiness business,
 								Object context, int requestType, Object data) {
-							if(listener!=null) {
-								try {
-									XposedHelpers.callMethod(listener, "onSuccess");
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-							}	
+							XposedHelpers.callMethod(thisObj, "onSuccess", business,context,1,data);
 						}
 						
 						@Override
 						public void onError(BaseRemoteBusiness business,
 								Object context, int requestType, ApiID apiId, ApiResult apiResult) {
-							if(listener!=null) {
-								try {
-									XposedHelpers.callMethod(listener, "onError", apiResult.errDescription);
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-							}
+							XposedHelpers.callMethod(thisObj, "onError", business,context,1,apiId,apiResult);
 							
 						}
 					});
