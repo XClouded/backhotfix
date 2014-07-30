@@ -1,28 +1,24 @@
 package com.taobao.hotpatch;
+
 import mtopsdk.mtop.domain.BaseOutDo;
-import android.os.RemoteException;
-import android.taobao.apirequest.ApiID;
 import android.taobao.atlas.framework.Atlas;
 import android.taobao.atlas.framework.BundleImpl;
 import android.util.Log;
+import android.taobao.apirequest.ApiID;
 
 import com.taobao.we.mtop.adapter.ApiResult;
-import com.taobao.android.dexposed.XC_MethodHook.MethodHookParam;
-import com.taobao.android.dexposed.XC_MethodHook.Unhook;
-import com.taobao.android.dexposed.XC_MethodHook;
 import com.taobao.android.dexposed.XC_MethodReplacement;
 import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.android.dexposed.XposedHelpers;
-import com.taobao.business.BaseRemoteBusiness;
-import com.taobao.hotpatch.patch.IPatch;
-import com.taobao.hotpatch.patch.PatchCallback.PatchParam;
 import com.taobao.tao.Globals;
+import com.taobao.updatecenter.hotpatch.IPatch;
+import com.taobao.updatecenter.hotpatch.PatchCallback.PatchParam;
 import com.taobao.we.BasicParam;
 import com.taobao.we.data.request.BasicSingleBusiness;
 import com.taobao.we.data.request.BasicSingleRequest;
 import com.taobao.we.mtop.adapter.IRemoteBusinessRequestListener;
 
-public class AddFollowBusinessHook implements IPatch {
+public class AddFollowBusinessHook implements IPatch { 
 	
 	@Override
 	public void handlePatch(PatchParam param) throws Throwable {
