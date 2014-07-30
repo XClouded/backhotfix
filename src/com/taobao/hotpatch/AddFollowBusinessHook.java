@@ -4,6 +4,7 @@ import mtopsdk.mtop.domain.BaseOutDo;
 import android.taobao.atlas.framework.Atlas;
 import android.taobao.atlas.framework.BundleImpl;
 import android.util.Log;
+import android.widget.Toast;
 import android.taobao.apirequest.ApiID;
 import android.taobao.windvane.util.TaoLog;
 
@@ -62,16 +63,19 @@ public class AddFollowBusinessHook implements IPatch {
 						
 						@Override
 						public void onSuccess(
-								BaseRemoteBusiness business,
+								BaseRemoteBusiness biz,
 								Object context, int requestType, Object data) {
-							XposedHelpers.callMethod(thisObj, "onSuccess", business,"",1,data);
+							try {
+								XposedHelpers.callMethod(thisObj, "onSuccess", biz,"",1,"");
+							}catch(Error e) {
+								e.printStackTrace();
+							}
 						}
 						
 						@Override
 						public void onError(BaseRemoteBusiness business,
 								Object context, int requestType, ApiID apiId, ApiResult apiResult) {
-							XposedHelpers.callMethod(thisObj, "onError", business,"",1,apiId,apiResult);
-							
+							Toast.makeText(Globals.getApplication(), "收藏失败！", Toast.LENGTH_SHORT).show();	
 						}
 					});
 					business.sendRequest(request, null, BaseOutDo.class, param.getExtParams());
