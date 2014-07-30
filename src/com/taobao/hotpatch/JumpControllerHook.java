@@ -53,7 +53,6 @@ public class JumpControllerHook implements IPatch {
                     if (!TextUtils.isEmpty(url)) {
                         Log.d(TAG, "beforeHookedMethod url:"+url);
                         Context context = (Context) XposedHelpers.getObjectField(param.thisObject, "mContext");
-                        Toast.makeText(Globals.getApplication(), "测试 url:"+url, Toast.LENGTH_SHORT).show();
                         String itemId = ItemUrlUtil.getInstance().getItemidFromUrl(url);
                         Log.d(TAG, "beforeHookedMethod itemId:"+itemId);
                         if (itemId != null && itemId.length() > 0) {
