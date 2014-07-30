@@ -45,12 +45,13 @@ public class AddFollowBusinessHook implements IPatch {
             Log.d("HotPatch_pkg", "invoke AddFollowBusiness class failed" + e.toString());
             return;
         }
+		 Log.d("HotPatch_pkg", "AddFollow begin patch");
 		try {
 			XposedBridge.findAndHookMethod(clazz, "execute", String.class,long.class,String.class,    //修复execute方法
 					new XC_MethodReplacement() {
 				@Override
 				protected Object replaceHookedMethod(MethodHookParam methodParam) throws Throwable {
-					TaoLog.d("hotpatch", "begin call");
+					Log.d("hotpatch", "begin call");
 					String MTOP_FOLLOW_ADD="mtop.cybertron.follow.add";
 					String sid=(String) methodParam.args[0];
 					long   pubAccountId=(Long) methodParam.args[1];
@@ -102,17 +103,16 @@ public class AddFollowBusinessHook implements IPatch {
 					return null;
 				}
 			});
+			Log.d("HotPatch_pkg", "AddFollow hook succeed");
 		}catch (Exception e) {
-            TaoLog.d("HotPatch_pkg", "invoke ChatImageManager class failed" + e.toString());
+            Log.d("HotPatch_pkg", "invoke ChatImageManager class failed" + e.toString());
             e.printStackTrace();
             return;
         } catch (Error e) {
-            TaoLog.d("HotPatch_pkg", "invoke ChatImageManager class failed2" + e.toString());
+            Log.d("HotPatch_pkg", "invoke ChatImageManager class failed2" + e.toString());
             e.printStackTrace();
             return;
         }
-		
-		TaoLog.d("hotpach", "hook succeed");
 			
 	}
 	
