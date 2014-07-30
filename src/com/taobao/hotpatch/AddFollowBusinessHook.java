@@ -1,11 +1,30 @@
 package com.taobao.hotpatch;
+import android.os.RemoteException;
+import android.taobao.apirequest.ApiID;
+import android.taobao.atlas.framework.Atlas;
+import android.taobao.atlas.framework.BundleImpl;
+import android.util.Log;
 
-public class AddFollowBusinessHook{
-    
-}
-/**
-public class AddFollowBusinessHook implements IPatch{
+import com.taobao.we.mtop.adapter.ApiResult;
+import com.taobao.android.dexposed.XC_MethodHook.MethodHookParam;
+import com.taobao.android.dexposed.XC_MethodHook.Unhook;
+import com.taobao.android.dexposed.XC_MethodHook;
+import com.taobao.android.dexposed.XC_MethodReplacement;
+import com.taobao.android.dexposed.XposedBridge;
+import com.taobao.android.dexposed.XposedHelpers;
+import com.taobao.business.BaseRemoteBusiness;
+import com.taobao.hotpatch.patch.IPatch;
+import com.taobao.hotpatch.patch.PatchCallback.PatchParam;
+import com.taobao.tao.Globals;
+import com.taobao.tao.allspark.feed.mtop.favorite.AddResponse;
+import com.taobao.tao.allspark.service.IAllSparkAddFollowListener;
+import com.taobao.we.BasicParam;
+import com.taobao.we.data.request.BasicSingleBusiness;
+import com.taobao.we.data.request.BasicSingleRequest;
+import com.taobao.we.mtop.adapter.IRemoteBusinessRequestListener;
 
+public class AddFollowBusinessHook implements IPatch {
+	
 	@Override
 	public void handlePatch(PatchParam param) throws Throwable {
 		Class clazz;
@@ -59,7 +78,7 @@ public class AddFollowBusinessHook implements IPatch{
 					
 					@Override
 					public void onError(com.taobao.we.mtop.adapter.BaseRemoteBusiness business,
-							Object context, int requestType, ApiID apiId, com.taobao.we.mtop.adapter.ApiResult apiResult) {
+							Object context, int requestType, ApiID apiId, ApiResult apiResult) {
 						if(listener!=null) {
 							try {
 								listener.onError(apiResult.errDescription);
@@ -69,18 +88,12 @@ public class AddFollowBusinessHook implements IPatch{
 						}
 						
 					}
-
 				});
 				business.sendRequest(request, null, AddResponse.class, param.getExtParams());
 				return null;
 			}
 		});
-		
-		
-		
 			
-		
 	}
-	}
-**/
 
+}
