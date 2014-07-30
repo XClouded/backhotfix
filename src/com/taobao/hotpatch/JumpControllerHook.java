@@ -5,6 +5,7 @@ import android.taobao.atlas.framework.Atlas;
 import android.taobao.atlas.framework.BundleImpl;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.taobao.android.dexposed.XC_MethodHook;
 import com.taobao.android.dexposed.XposedBridge;
@@ -51,6 +52,7 @@ public class JumpControllerHook implements IPatch {
                     if (!TextUtils.isEmpty(url)) {
                         Log.d(TAG, "beforeHookedMethod url:"+url);
                         Context context = (Context) XposedHelpers.getObjectField(param.thisObject, "mContext");
+                        Toast.makeText(context, "测试 url:"+url, Toast.LENGTH_SHORT).show();
                         String itemId = ItemUrlUtil.getInstance().getItemidFromUrl(url);
                         Log.d(TAG, "beforeHookedMethod itemId:"+itemId);
                         if (itemId != null && itemId.length() > 0) {
