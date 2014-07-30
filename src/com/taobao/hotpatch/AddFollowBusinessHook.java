@@ -37,15 +37,14 @@ public class AddFollowBusinessHook implements IPatch {
             return;
         }
 		try {
-			XposedBridge.findAndHookMethod(clazz, "execute", String.class,Long.class,String.class,    //修复execute方法
+			XposedBridge.findAndHookMethod(clazz, "execute", String.class,long.class,String.class,    //修复execute方法
 					new XC_MethodReplacement() {
-				
 				@Override
 				protected Object replaceHookedMethod(MethodHookParam methodParam) throws Throwable {
 					TaoLog.d("hotpatch", "begin call");
 					String MTOP_FOLLOW_ADD="mtop.cybertron.follow.add";
 					String sid=(String) methodParam.args[0];
-					Long   pubAccountId=(Long) methodParam.args[1];
+					long   pubAccountId=(Long) methodParam.args[1];
 					String origin=(String) methodParam.args[2];
 					BasicParam param=new BasicParam();
 					BasicSingleRequest request=new BasicSingleRequest(param);
@@ -53,8 +52,8 @@ public class AddFollowBusinessHook implements IPatch {
 					request.setNEED_ECODE(true);
 					request.setSid(sid);
 					request.setVERSION("1.0");
-					if(pubAccountId!=null)
-						param.putExtParam("pubAccountId", pubAccountId.longValue());
+				
+					param.putExtParam("pubAccountId", pubAccountId);
 					param.putExtParam("origin", origin);
 					BasicSingleBusiness business=new BasicSingleBusiness(Globals.getApplication(), param);
 					final Object listener=XposedHelpers.getObjectField(methodParam.thisObject, "mListener");
