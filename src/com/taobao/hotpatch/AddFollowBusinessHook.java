@@ -66,8 +66,9 @@ public class AddFollowBusinessHook implements IPatch {
 								BaseRemoteBusiness business,
 								Object context, int requestType, Object data) {
 							try {
-								BaseRemoteBusiness biz=new BaseRemoteBusiness(Globals.getApplication());
-								XposedHelpers.callMethod(thisObj, "onSuccess", biz,"",1,"");
+								XposedHelpers.callMethod(thisObj,"onSuccess",new Class[]{BaseRemoteBusiness.class,
+														 Object.class,int.class,Object.class},business,
+														 context,1,data);
 								Toast.makeText(Globals.getApplication(), "收藏成功！", Toast.LENGTH_SHORT).show();	
 							}catch(Error e) {
 								e.printStackTrace();
@@ -77,7 +78,13 @@ public class AddFollowBusinessHook implements IPatch {
 						@Override
 						public void onError(BaseRemoteBusiness business,
 								Object context, int requestType, ApiID apiId, ApiResult apiResult) {
-							Toast.makeText(Globals.getApplication(), "收藏失败！", Toast.LENGTH_SHORT).show();	
+							try {
+								Toast.makeText(Globals.getApplication(), "收藏失败！", Toast.LENGTH_SHORT).show();	
+							}catch(Error e) {
+								e.printStackTrace();
+							}catch(Exception e){
+								e.printStackTrace();
+							}
 						}
 					});
 					business.sendRequest(request, null, BaseOutDo.class, param.getExtParams());
