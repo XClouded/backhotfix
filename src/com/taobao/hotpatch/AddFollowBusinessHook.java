@@ -62,7 +62,7 @@ public class AddFollowBusinessHook implements IPatch {
 					param.putExtParam("pubAccountId", pubAccountId);
 					param.putExtParam("origin", origin);
 					BasicSingleBusiness business=new BasicSingleBusiness(Globals.getApplication(), param);
-					final Object thisObj=methodParam.thisObject;
+					final Object thisObj=methodParam.thisObject;	
 					business.setRemoteBusinessRequestListener(new IRemoteBusinessRequestListener() {
 						
 						@Override
@@ -75,6 +75,7 @@ public class AddFollowBusinessHook implements IPatch {
 								method.invoke(thisObj, business,context,1,data);
 								Context ctx=Globals.getApplication();
 								Toast.makeText(ctx, "收藏成功！", Toast.LENGTH_SHORT).show();
+								TaoLog.d("hotpach", "toast ok!");
 							}catch(Error e) {
 								e.printStackTrace();
 							}catch(Exception e) {
