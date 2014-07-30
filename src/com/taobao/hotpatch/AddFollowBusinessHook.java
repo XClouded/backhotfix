@@ -1,5 +1,7 @@
 package com.taobao.hotpatch;
 
+import java.lang.reflect.Method;
+
 import mtopsdk.mtop.domain.BaseOutDo;
 import android.taobao.atlas.framework.Atlas;
 import android.taobao.atlas.framework.BundleImpl;
@@ -20,7 +22,7 @@ import com.taobao.we.BasicParam;
 import com.taobao.we.data.request.BasicSingleBusiness;
 import com.taobao.we.data.request.BasicSingleRequest;
 import com.taobao.we.mtop.adapter.IRemoteBusinessRequestListener;
-import com.taobao.weapp.utils.ViewUtils;
+
 
 public class AddFollowBusinessHook implements IPatch { 
 	
@@ -67,20 +69,21 @@ public class AddFollowBusinessHook implements IPatch {
 								BaseRemoteBusiness business,
 								Object context, int requestType, Object data) {
 							try {
-								XposedHelpers.callMethod(thisObj,"onSuccess",new Class[]{BaseRemoteBusiness.class,
-														 Object.class,int.class,Object.class},business,
-														 context,1,data);
-								ViewUtils.showToast("收藏成功!");
+								Method method=thisObj.getClass().getDeclaredMethod("onSuccess", BaseRemoteBusiness.class,
+														 Object.class,int.class,Object.class);
+								method.invoke(thisObj, business,context,1,data);
 							}catch(Error e) {
 								e.printStackTrace();
-							} 
+							}catch(Exception e) {
+								e.printStackTrace();
+							}
 						}
 						
 						@Override
 						public void onError(BaseRemoteBusiness business,
 								Object context, int requestType, ApiID apiId, ApiResult apiResult) {
 							try {
-								ViewUtils.showToast("收藏失败!");
+								
 							}catch(Error e) {
 								e.printStackTrace();
 							}catch(Exception e){
