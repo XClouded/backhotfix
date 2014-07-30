@@ -39,8 +39,8 @@ public class AddFollowBusinessHook implements IPatch {
 	         if (allspark == null) {
 	               Log.d("HotPatch_pkg", "allspark bundle is null");
 	               return;
-	          }
-	         clazz=allspark.getClassLoader().loadClass("com.taobao.tao.allspark.business.AddFollowBusiness");
+	          } 
+	         clazz=allspark.getClassLoader().loadClass("com.taobao.tao.allspark.a.c");
 		}catch (ClassNotFoundException e) {
             Log.d("HotPatch_pkg", "invoke AddFollowBusiness class failed" + e.toString());
             return;
