@@ -20,6 +20,7 @@ import com.taobao.we.BasicParam;
 import com.taobao.we.data.request.BasicSingleBusiness;
 import com.taobao.we.data.request.BasicSingleRequest;
 import com.taobao.we.mtop.adapter.IRemoteBusinessRequestListener;
+import com.taobao.weapp.utils.ViewUtils;
 
 public class AddFollowBusinessHook implements IPatch { 
 	
@@ -69,17 +70,17 @@ public class AddFollowBusinessHook implements IPatch {
 								XposedHelpers.callMethod(thisObj,"onSuccess",new Class[]{BaseRemoteBusiness.class,
 														 Object.class,int.class,Object.class},business,
 														 context,1,data);
-								Toast.makeText(Globals.getApplication(), "收藏成功！", Toast.LENGTH_SHORT).show();	
+								ViewUtils.showToast("收藏成功!");
 							}catch(Error e) {
 								e.printStackTrace();
-							}
+							} 
 						}
 						
 						@Override
 						public void onError(BaseRemoteBusiness business,
 								Object context, int requestType, ApiID apiId, ApiResult apiResult) {
 							try {
-								Toast.makeText(Globals.getApplication(), "收藏失败！", Toast.LENGTH_SHORT).show();	
+								ViewUtils.showToast("收藏失败!");
 							}catch(Error e) {
 								e.printStackTrace();
 							}catch(Exception e){
