@@ -8,6 +8,7 @@ import android.taobao.apirequest.ApiID;
 import android.taobao.windvane.util.TaoLog;
 
 import com.taobao.we.mtop.adapter.ApiResult;
+import com.taobao.we.mtop.adapter.BaseRemoteBusiness;
 import com.taobao.android.dexposed.XC_MethodReplacement;
 import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.android.dexposed.XposedHelpers;
@@ -57,11 +58,12 @@ public class AddFollowBusinessHook implements IPatch {
 					param.putExtParam("origin", origin);
 					BasicSingleBusiness business=new BasicSingleBusiness(Globals.getApplication(), param);
 					final Object listener=XposedHelpers.getObjectField(methodParam.thisObject, "mListener");
+					
 					business.setRemoteBusinessRequestListener(new IRemoteBusinessRequestListener() {
 						
 						@Override
 						public void onSuccess(
-								com.taobao.we.mtop.adapter.BaseRemoteBusiness business,
+								BaseRemoteBusiness business,
 								Object context, int requestType, Object data) {
 							if(listener!=null) {
 								try {
@@ -73,7 +75,7 @@ public class AddFollowBusinessHook implements IPatch {
 						}
 						
 						@Override
-						public void onError(com.taobao.we.mtop.adapter.BaseRemoteBusiness business,
+						public void onError(BaseRemoteBusiness business,
 								Object context, int requestType, ApiID apiId, ApiResult apiResult) {
 							if(listener!=null) {
 								try {
