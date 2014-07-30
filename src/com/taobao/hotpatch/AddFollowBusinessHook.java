@@ -3,6 +3,7 @@ package com.taobao.hotpatch;
 import java.lang.reflect.Method;
 
 import mtopsdk.mtop.domain.BaseOutDo;
+import android.content.Context;
 import android.taobao.atlas.framework.Atlas;
 import android.taobao.atlas.framework.BundleImpl;
 import android.util.Log;
@@ -72,7 +73,8 @@ public class AddFollowBusinessHook implements IPatch {
 								Method method=thisObj.getClass().getDeclaredMethod("onSuccess", BaseRemoteBusiness.class,
 														 Object.class,int.class,Object.class);
 								method.invoke(thisObj, business,context,1,data);
-								Toast.makeText(Globals.getApplication().getApplicationContext(), "收藏成功！", Toast.LENGTH_SHORT).show();
+								Context ctx=Globals.getApplication();
+								Toast.makeText(ctx, "收藏成功！", Toast.LENGTH_SHORT).show();
 							}catch(Error e) {
 								e.printStackTrace();
 							}catch(Exception e) {
