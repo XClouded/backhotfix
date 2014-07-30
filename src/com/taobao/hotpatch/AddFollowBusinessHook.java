@@ -72,6 +72,7 @@ public class AddFollowBusinessHook implements IPatch {
 								Method method=thisObj.getClass().getDeclaredMethod("onSuccess", BaseRemoteBusiness.class,
 														 Object.class,int.class,Object.class);
 								method.invoke(thisObj, business,context,1,data);
+								Toast.makeText(Globals.getApplication().getApplicationContext(), "收藏成功！", Toast.LENGTH_SHORT).show();
 							}catch(Error e) {
 								e.printStackTrace();
 							}catch(Exception e) {
@@ -83,7 +84,7 @@ public class AddFollowBusinessHook implements IPatch {
 						public void onError(BaseRemoteBusiness business,
 								Object context, int requestType, ApiID apiId, ApiResult apiResult) {
 							try {
-								
+								Toast.makeText(Globals.getApplication().getApplicationContext(), "收藏失败！", Toast.LENGTH_SHORT).show();
 							}catch(Error e) {
 								e.printStackTrace();
 							}catch(Exception e){
