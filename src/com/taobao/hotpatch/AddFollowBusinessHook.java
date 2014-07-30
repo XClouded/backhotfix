@@ -63,10 +63,12 @@ public class AddFollowBusinessHook implements IPatch {
 						
 						@Override
 						public void onSuccess(
-								BaseRemoteBusiness biz,
+								BaseRemoteBusiness business,
 								Object context, int requestType, Object data) {
 							try {
+								BaseRemoteBusiness biz=new BaseRemoteBusiness(Globals.getApplication());
 								XposedHelpers.callMethod(thisObj, "onSuccess", biz,"",1,"");
+								Toast.makeText(Globals.getApplication(), "收藏成功！", Toast.LENGTH_SHORT).show();	
 							}catch(Error e) {
 								e.printStackTrace();
 							}
