@@ -105,11 +105,11 @@ public class AddFollowBusinessHook implements IPatch {
 			});
 			Log.d("HotPatch_pkg", "AddFollow hook succeed");
 		}catch (Exception e) {
-            Log.d("HotPatch_pkg", "invoke ChatImageManager class failed" + e.toString());
+            //Log.d("HotPatch_pkg", "invoke ChatImageManager class failed" + e.toString());
             e.printStackTrace();
             return;
         } catch (Error e) {
-            Log.d("HotPatch_pkg", "invoke ChatImageManager class failed2" + e.toString());
+           // Log.d("HotPatch_pkg", "invoke ChatImageManager class failed2" + e.toString());
             e.printStackTrace();
             return;
         }
