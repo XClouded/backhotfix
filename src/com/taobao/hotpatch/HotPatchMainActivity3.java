@@ -6,13 +6,13 @@ import android.util.Log;
 
 import com.taobao.android.dexposed.XC_MethodHook;
 import com.taobao.android.dexposed.XposedBridge;
-import com.taobao.updatecenter.hotpatch.IPatch;
-import com.taobao.updatecenter.hotpatch.PatchCallback.PatchParam;
+import com.taobao.hotpatch.patch.IPatch;
+import com.taobao.hotpatch.patch.PatchCallback.PatchParam;
 
 public class HotPatchMainActivity3 implements IPatch {
 
 	BundleImpl homePage;
-	Class<?> MainActivity = null;
+	Class<?> MainActivity = null; 
 	@Override
 	public void handlePatch(final PatchParam arg0) throws Throwable {
 		Log.d("HotPatch_pkg", "start HotPatchMainActivity3 handlePatch");
