@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.taobao.service.hotpatch"
     android:versionCode="18"
-    android:versionName="4.6.0" >
+    android:versionName="4.6.0。0" >
 
     <uses-sdk
         android:minSdkVersion="9"
@@ -12,7 +12,6 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher" >
         <meta-data android:name="patch_version" android:value="*" />
-        <meta-data android:name="patch_entry" android:value="com.taobao.hotpatch.APS;com.taobao.hotpatch.HotPatchChatImageManager;com.taobao.hotpatch.HotPatchLoginController;com.taobao.hotpatch.HotPatchSessionManager;com.taobao.hotpatch.HotPatchMyTaoBao;com.taobao.hotpatch.HotPatchScancodeAutoFocusManager;com.taobao.hotpatch.JumpControllerHook;com.taobao.hotpatch.AddFollowBusinessHook" />
     </application>
 
 </manifest>
