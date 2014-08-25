@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-<parent>
-	    <groupId>com.taobao.android</groupId>
-        <artifactId>parent-pom</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
-	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.taobao.android</groupId>
 	<artifactId>hotpatch</artifactId>
@@ -152,7 +147,6 @@
 		<sourceDirectory>src</sourceDirectory>
 		<finalName>600000@hotpatch</finalName>
 		<plugins>
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -164,47 +158,38 @@
 			</plugin>
 
 			<plugin>
-				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
-				<artifactId>android-maven-plugin</artifactId>
-				<extensions>true</extensions>
-				<configuration>
-					<sdk>
-						<path>${env.ANDROID_HOME}</path>
-						<platform>${android.compile.apilevel}</platform>
-					</sdk>
-					<sign><debug>false</debug></sign>
-				</configuration>
-			</plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jarsigner-plugin</artifactId>
-                <version>1.2</version>
-                <executions>
-                    <execution>
-                        <id>signing</id>
-                        <goals>
-                            <goal>sign</goal>
-                            <goal>verify</goal>
-                        </goals>
-                        <phase>package</phase>
-                        <inherited>true</inherited>
-                        <configuration>
-                            <skip>true</skip>
-                            <removeExistingSignatures>true</removeExistingSignatures>
-                            <archiveDirectory />
-                            <includes>
-                                <include>${project.build.directory}/${project.artifactId}.apk
-                                </include>
-                            </includes>
-                            <keystore>${sign.keystore}</keystore>
-                            <alias>${sign.alias}</alias>
-                            <storepass>${sign.storepass}</storepass>
-                            <!-- <keypass>${sign.keypass}</keypass> -->
-                            <verbose>true</verbose>
-                            <!--<arguments> <argument>${sign.arguments}</argument> </arguments> -->
-                        </configuration>
-                    </execution>
-                </executions>
+                <groupId>com.taobao.maven.plugins.android</groupId>
+                <artifactId>android-maven-plugin</artifactId>
+                <configuration>
+                    <undeployBeforeDeploy>true</undeployBeforeDeploy>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <encoding>${project.build.Encoding}</encoding>
+                    <sdk>
+                        <path>${env.ANDROID_HOME}</path>
+                        <platform>${android.compile.apilevel}</platform>
+                    </sdk>
+                    <addJarResources>true</addJarResources>
+                    <secprocess>true</secprocess>
+                    <signOnline>true</signOnline>
+                    <jarsign>
+                        <skip>true</skip>
+                        <archiveDirectory/>
+                        <includes>
+                            <include>${project.build.directory}/${project.artifactId}.apk</include>
+                        </includes>
+                        <keystore>${sign.keystore}</keystore>
+                        <alias>${sign.alias}</alias>
+                        <storepass>${sign.storepass}</storepass>
+                        <verbose>false</verbose>
+                        <sigfile>TAOBAO</sigfile>
+                    </jarsign>
+                    <androidManifestFile>
+                        ${project.basedir}/AndroidManifest.xml
+                    </androidManifestFile>
+                    <release>true</release>
+                </configuration>
+                <extensions>true</extensions>
             </plugin>
 
 			<plugin>
