@@ -56,7 +56,7 @@ public class MemoryMonitor {
 		Log.d(TAG, "totalUsedMemory = " + totalUsedMemory/ONE_MB + ";freeMemory = " + freeMemory/ONE_MB);
 		int rate = ConfigContainer.getInstance().getConfig(CONFIG_GROUP_SYSTEM, "memory_trigger_rate", 8);
 		long triggerMem = mMaxMemory/rate;
-		int maxTriggerMem = ConfigContainer.getInstance().getConfig(CONFIG_GROUP_SYSTEM, "max_trigger_memory", 10);
+		int maxTriggerMem = ConfigContainer.getInstance().getConfig(CONFIG_GROUP_SYSTEM, "max_trigger_memory", 8);
 		if (triggerMem > maxTriggerMem * ONE_MB) {
 			triggerMem = maxTriggerMem * ONE_MB;
 		}
