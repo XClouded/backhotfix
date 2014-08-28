@@ -55,12 +55,23 @@ public class MemoryMonitor {
 		long totalUsedMemory = Runtime.getRuntime().totalMemory();
 		long freeMemory = Runtime.getRuntime().freeMemory();
 		Log.d(TAG, "totalUsedMemory = " + totalUsedMemory/ONE_MB + ";freeMemory = " + freeMemory/ONE_MB);
-		int rate = ConfigContainer.getInstance().getConfig(CONFIG_GROUP_SYSTEM, "memory_trigger_rate", 8);
-		long triggerMem = mMaxMemory/rate;
-		int maxTriggerMem = ConfigContainer.getInstance().getConfig(CONFIG_GROUP_SYSTEM, "max_trigger_memory", 8);
-		if (triggerMem > maxTriggerMem * ONE_MB) {
-			triggerMem = maxTriggerMem * ONE_MB;
+		String rate = ConfigContainer.getInstance().getConfig(CONFIG_GROUP_SYSTEM, "memory_trigger_rate", "8");
+		long triggerMem;
+		try {
+			triggerMem = mMaxMemory / Integer.parseInt(rate);
+		} catch (NumberFormatException e) {
+			return;
 		}
+		String maxTriggerMem = ConfigContainer.getInstance().getConfig(CONFIG_GROUP_SYSTEM, "memory_trigger_max", "8");
+		int maxTriggerMemI;
+		try {
+			maxTriggerMemI= Integer.parseInt(maxTriggerMem);
+		} catch (NumberFormatException e) {
+			return;
+		}
+		if (triggerMem > maxTriggerMemI * ONE_MB) {
+			triggerMem = maxTriggerMemI * ONE_MB;
+		} 
 		if ((mMaxMemory - totalUsedMemory + freeMemory) < triggerMem) {
 			// In main thread, make sure the memory release in first.
 			mApp.onLowMemory();
