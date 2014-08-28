@@ -8,6 +8,7 @@ import android.content.Context;
 import android.os.Build;
 import android.util.Log;
 
+import com.taobao.statistic.TBS;
 import com.taobao.wswitch.business.ConfigContainer;
 
 public class MemoryMonitor {
@@ -65,6 +66,7 @@ public class MemoryMonitor {
 			mApp.onLowMemory();
 			mApp.onTrimMemory(ComponentCallbacks2.TRIM_MEMORY_COMPLETE);
 			Log.d(TAG, "triggerMem = " + triggerMem/ONE_MB);
+			TBS.Ext.commitEvent(22064, "memorytrigger", "", "triggerMem = " + triggerMem/ONE_MB);
 		}
 	}
 }
