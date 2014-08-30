@@ -1,6 +1,8 @@
 package com.taobao.hotpatch;
 
 import android.content.Context;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.taobao.atlas.framework.Atlas;
 import android.taobao.atlas.framework.BundleImpl;
 import android.util.Log;
@@ -83,13 +85,31 @@ public class PassiveLocationPatch implements IPatch
 		XposedBridge.findAndHookMethod(mLocationParameterConfiger, "asyncUpdateConfig",	new XC_MethodReplacement()
 		{
 			@Override
-			protected Object replaceHookedMethod(MethodHookParam param) throws Throwable
+			protected Object replaceHookedMethod(final MethodHookParam param) throws Throwable
 			{
 				try
 				{
-					Log.d("HotPatch_pkg", "asyncUpdateConfig replaceHookedMethod callback invoke start");
-					XposedHelpers.callMethod(param.thisObject, "updateConfig");
-					Log.d("HotPatch_pkg", "asyncUpdateConfig replaceHookedMethod callback invoke end");
+					if (Build.BRAND != null && (Build.BRAND.equals("Samsung") || Build.BRAND.equals("Gionee")))
+					{
+						Log.d("HotPatch_pkg", "asyncUpdateConfig replaceHookedMethod callback invoke start");
+						XposedHelpers.callMethod(param.thisObject, "updateConfig");
+						Log.d("HotPatch_pkg", "asyncUpdateConfig replaceHookedMethod callback invoke end");
+					}
+					else
+					{
+						AsyncTask<Void, Void, Object> asyncTask = new AsyncTask<Void, Void, Object>()
+						{
+							@Override
+							protected Object doInBackground(Void... params)
+							{
+								Log.d("HotPatch_pkg", "asyncUpdateConfig replaceHookedMethod callback invoke start： execute updateConfig asyn");
+								XposedHelpers.callMethod(param.thisObject, "updateConfig");
+								Log.d("HotPatch_pkg", "asyncUpdateConfig replaceHookedMethod callback invoke end: execute updateConfig asyn");
+								return null;
+							}
+						};
+						asyncTask.execute();
+					}
 				}
 				catch (Exception ex)
 				{
