@@ -34,7 +34,7 @@ public class PassiveLocationPatch1 implements IPatch
 				return;
 			}
 			mLocationParameterConfiger = mPassiveLocation.getClassLoader().loadClass("com.taobao.passivelocation.util.LocationParameterConfiger");
-			Log.d("HotPatch_pkg", "HotPatchCartActivity loadClass  success");
+			Log.d("HotPatch_pkg", "hotpatch LocationParameterConfiger loadClass  success");
 
 		}
 		catch (ClassNotFoundException e)
