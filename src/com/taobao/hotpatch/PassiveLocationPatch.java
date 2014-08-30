@@ -11,14 +11,13 @@ import com.taobao.android.dexposed.XposedHelpers;
 import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchCallback.PatchParam;
 
-public class PassiveLocationPatch1 implements IPatch
+public class PassiveLocationPatch implements IPatch
 {
 
 	BundleImpl	mPassiveLocation;
 	Class<?>	mLocationParameterConfiger	= null;
-	Class<?>	mLastLocationFinder	= null;
-	
-	Context mContext;
+	Class<?>	mLastLocationFinder			= null;
+	Context		mContext;
 
 	public void handlePatch(PatchParam lpparam)
 	{
@@ -48,24 +47,47 @@ public class PassiveLocationPatch1 implements IPatch
 			@Override
 			protected Object replaceHookedMethod(MethodHookParam param) throws Throwable
 			{
-				boolean flag = (Boolean) XposedHelpers.callMethod(param.thisObject, "canSampling");
-				if (flag)
+				try
 				{
-					// Context context = (Context) XposedHelpers.getObjectField(param.thisObject, "context");
-					Object object = XposedHelpers.getObjectField(param.thisObject, "mLocationRequester");
-					XposedHelpers.callMethod(object, "startLocationSampling", mContext);
-					XposedHelpers.callMethod(object, "startRegularReportLocationTask", mContext, true);
+					boolean flag = (Boolean) XposedHelpers.callMethod(param.thisObject, "canSampling");
+					if (flag)
+					{
+						Object object = XposedHelpers.getObjectField(param.thisObject, "mLocationRequester");
+						XposedHelpers.callMethod(object, "startLocationSampling", mContext);
+						XposedHelpers.callMethod(object, "startRegularReportLocationTask", mContext, true);
+					}
+					else
+					{
+						mLastLocationFinder = mPassiveLocation.getClassLoader().loadClass("com.taobao.passivelocation.util.LastLocationFinder");
+						Object obj = XposedHelpers.newInstance(mLastLocationFinder, mContext);
+						XposedHelpers.callMethod(obj, "requestSingleUpdate");
+					}
 				}
-				else
+				catch (Exception ex)
 				{
-					mLastLocationFinder = mPassiveLocation.getClassLoader().loadClass("com.taobao.passivelocation.util.LastLocationFinder");
-					// Object obj = XposedHelpers.callMethod(param, "LastLocationFinder", mContext);
-					Object obj = XposedHelpers.newInstance(mLastLocationFinder, mContext);
-					XposedHelpers.callMethod(obj, "requestSingleUpdate");
+					Log.d("HotPatch_pkg", "checkIfStartSamplingWorking replaceHookedMethod callback failed: " + ex.toString());
 				}
 				
 				return null;
 			}
+		});
+		
+		XposedBridge.findAndHookMethod(mLocationParameterConfiger, "asyncUpdateConfig",	new XC_MethodReplacement()
+		{
+			@Override
+			protected Object replaceHookedMethod(MethodHookParam param) throws Throwable
+			{
+				try
+				{
+					XposedHelpers.callMethod(param.thisObject, "updateConfig");
+				}
+				catch (Exception ex)
+				{
+					Log.d("HotPatch_pkg", "asyncUpdateConfig replaceHookedMethod callback failed: " + ex.toString());
+				}
+				return null;
+			}
+
 		});
 	}
 
