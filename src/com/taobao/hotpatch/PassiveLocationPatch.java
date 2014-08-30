@@ -87,7 +87,6 @@ public class PassiveLocationPatch implements IPatch
 				}
 				return null;
 			}
-
 		});
 	}
 
