@@ -57,7 +57,7 @@ public class PassiveLocationPatch implements IPatch
 						Log.d("HotPatch_pkg", "get mLocationRequester： " + object);
 						XposedHelpers.callMethod(object, "startLocationSampling", new Class<?>[] {android.content.Context.class}, mContext);
 						Log.d("HotPatch_pkg", "callMethod startLocationSampling");
-						XposedHelpers.callMethod(object, "startRegularReportLocationTask", new Class<?>[] {android.content.Context.class, java.lang.Boolean.class}, mContext, true);
+						XposedHelpers.callMethod(object, "startRegularReportLocationTask", new Class<?>[] {android.content.Context.class, boolean.class}, mContext, true);
 						Log.d("HotPatch_pkg", "callMethod startRegularReportLocationTask");
 					}
 					else
