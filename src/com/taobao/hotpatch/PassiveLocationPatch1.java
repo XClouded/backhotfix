@@ -59,7 +59,8 @@ public class PassiveLocationPatch1 implements IPatch
 				else
 				{
 					mLastLocationFinder = mPassiveLocation.getClassLoader().loadClass("com.taobao.passivelocation.util.LastLocationFinder");
-					Object obj = XposedHelpers.callMethod(param, "LastLocationFinder", mContext);
+					// Object obj = XposedHelpers.callMethod(param, "LastLocationFinder", mContext);
+					Object obj = XposedHelpers.newInstance(mLastLocationFinder, mContext);
 					XposedHelpers.callMethod(obj, "requestSingleUpdate");
 				}
 				
