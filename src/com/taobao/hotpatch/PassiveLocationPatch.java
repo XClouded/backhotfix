@@ -55,16 +55,16 @@ public class PassiveLocationPatch implements IPatch
 					{
 						Object object = XposedHelpers.getObjectField(param.thisObject, "mLocationRequester");
 						Log.d("HotPatch_pkg", "get mLocationRequester： " + object);
-						XposedHelpers.callMethod(object, "startLocationSampling", mContext);
+						XposedHelpers.callMethod(object, "startLocationSampling", new Class<?>[] {android.content.Context.class}, mContext);
 						Log.d("HotPatch_pkg", "callMethod startLocationSampling");
-						XposedHelpers.callMethod(object, "startRegularReportLocationTask", mContext, true);
+						XposedHelpers.callMethod(object, "startRegularReportLocationTask", new Class<?>[] {android.content.Context.class, java.lang.Boolean.class}, mContext, true);
 						Log.d("HotPatch_pkg", "callMethod startRegularReportLocationTask");
 					}
 					else
 					{
 						mLastLocationFinder = mPassiveLocation.getClassLoader().loadClass("com.taobao.passivelocation.util.LastLocationFinder");
 						Log.d("HotPatch_pkg", "get LastLocationFinder class: " + mLastLocationFinder);
-						Object obj = XposedHelpers.newInstance(mLastLocationFinder, mContext);
+						Object obj = XposedHelpers.newInstance(mLastLocationFinder, new Class<?>[] {android.content.Context.class}, mContext);
 						Log.d("HotPatch_pkg", "newInstance LastLocationFinder: " + obj);
 						XposedHelpers.callMethod(obj, "requestSingleUpdate");
 						Log.d("HotPatch_pkg", "callMethod requestSingleUpdate");
