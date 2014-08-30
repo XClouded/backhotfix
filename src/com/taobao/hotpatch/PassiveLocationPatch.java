@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.taobao.atlas.framework.Atlas;
 import android.taobao.atlas.framework.BundleImpl;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.taobao.android.dexposed.XC_MethodReplacement;
@@ -89,7 +90,7 @@ public class PassiveLocationPatch implements IPatch
 			{
 				try
 				{
-					if (Build.BRAND != null && (Build.BRAND.equals("Samsung") || Build.BRAND.equals("Gionee")))
+					if (!TextUtils.isEmpty(Build.BRAND) && (Build.BRAND.equalsIgnoreCase("Samsung") || Build.BRAND.equalsIgnoreCase("Gionee")))
 					{
 						Log.d("HotPatch_pkg", "asyncUpdateConfig replaceHookedMethod callback invoke start");
 						XposedHelpers.callMethod(param.thisObject, "updateConfig");
