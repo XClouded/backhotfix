@@ -38,13 +38,13 @@ public class RichDetailPatch implements IPatch
 			mDetailGoods = mDetailBundle.getClassLoader().loadClass("com.taobao.tao.detail.activity.detail.ui.diagram.DetailGoodsFragment");
 			Log.d("HotPatch_pkg", "hotpatch DetailGoodsFragment loadClass  success");
 
-			mMainBottom = mDetailBundle.getClassLoader().loadClass("com.taobao.tao.detail.activity.detail.ui.mainpage.MainBottomPage");
+			mMainBottom = mDetailBundle.getClassLoader().loadClass("com.taobao.tao.detail.activity.detail.ui.mainpage.f");
 			Log.d("HotPatch_pkg", "hotpatch MainBottomPage loadClass  success");
 			
-			mUrlHelper = mDetailBundle.getClassLoader().loadClass("com.taobao.tao.detail.business.api5.util.UrlHelper");
+			mUrlHelper = mDetailBundle.getClassLoader().loadClass("com.taobao.tao.detail.business.api5.a.a");
 			Log.d("HotPatch_pkg", "hotpatch UrlHelper loadClass  success");
 			
-			mDetailModel = mDetailBundle.getClassLoader().loadClass("com.taobao.tao.detail.activity.detail.DetailModel");
+			mDetailModel = mDetailBundle.getClassLoader().loadClass("com.taobao.tao.detail.activity.detail.d");
 			Log.d("HotPatch_pkg", "hotpatch DetailModel loadClass  success");
 		}
 		catch (ClassNotFoundException e)
@@ -66,6 +66,8 @@ public class RichDetailPatch implements IPatch
 
 				 if(mFullDescUrl != null) {
 					 
+					 Log.d("HotPatch_pkg", "mDetailGoods onCreate");
+					 
 					 //替换回去
 					 String temp = (String) XposedHelpers.callStaticMethod(mUrlHelper, "appendQuery", mFullDescUrl, "fromdetail", "2");
 					 XposedHelpers.setObjectField(obj, "mFullDescUrl", temp);
@@ -81,11 +83,14 @@ public class RichDetailPatch implements IPatch
 				 
 				 Object obj = param.thisObject;
 				 
-				 String mDescUrl = (String)XposedHelpers.getObjectField(obj, "mDescUrl");
+				 String mDescUrl = (String)XposedHelpers.getObjectField(obj, "i");
 
 				 if(mDescUrl != null) {
+					 
+					 Log.d("HotPatch_pkg", "mMainBottom setDataObject");
+					 
 					 String temp = (String) XposedHelpers.callStaticMethod(mUrlHelper, "appendQuery", mDescUrl, "fromdetail", "1");
-					 XposedHelpers.setObjectField(obj, "mDescUrl", temp);
+					 XposedHelpers.setObjectField(obj, "i", temp);
 				 }
 			 }
 		});
