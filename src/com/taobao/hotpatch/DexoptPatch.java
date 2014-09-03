@@ -4,6 +4,7 @@ import org.osgi.framework.Bundle;
 
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.taobao.atlas.framework.Atlas;
 import android.taobao.atlas.framework.BundleImpl;
 import android.util.Log;
@@ -20,13 +21,24 @@ public class DexoptPatch implements IPatch {
 		
 		String processName = getProcessName(patchParam.context);
 		if("com.taobao.taobao".equals(processName)){
-			Log.d(TAG, "DexOpt start ... ");
+			
+			Log.d(TAG, "DexOpt start detecting ... ");
+			
+            SharedPreferences prefs = patchParam.context.getSharedPreferences("atlas_configs", patchParam.context.MODE_PRIVATE);
+            boolean dexopted = prefs.getBoolean("dexopted", false);
+            
+            if(!dexopted){
+            	return;
+            }
+            
+            Log.d(TAG, "DexOpt start doing ... ");
 			
 			long start = System.currentTimeMillis();
 	        for(Bundle b: Atlas.getInstance().getBundles()){
 	        	BundleImpl bundle = (BundleImpl) b;
 	        	if(!bundle.getArchive().isDexOpted()){
 					try {
+						Log.d(TAG, "DexOpt start : " + bundle.getLocation());
 						bundle.optDexFile();
 					} catch (Exception e) {
 						try{
