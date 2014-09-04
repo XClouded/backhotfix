@@ -114,12 +114,17 @@
                 <scope>provided</scope>
             </dependency>
             <dependency>
-            <groupId>com.taobao.android</groupId>
-            <artifactId>mtopsdk_mtop</artifactId>
-            <version>1.3.7.2</version>
-            <scope>provided</scope>
-            
-        </dependency>
+	            <groupId>com.taobao.android</groupId>
+	            <artifactId>mtopsdk_mtop</artifactId>
+	            <version>1.4.1</version>
+	            <scope>provided</scope>
+	        </dependency>
+	        <dependency>
+                <groupId>com.taobao.android</groupId>
+                <artifactId>tnet-jni</artifactId>
+                <version>1.0.3</version>
+	            <scope>provided</scope>
+            </dependency>
 			<dependency>
             <groupId>com.taobao.android</groupId>
             <artifactId>taobaocompat</artifactId>
