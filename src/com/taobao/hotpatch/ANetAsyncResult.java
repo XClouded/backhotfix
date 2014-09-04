@@ -3,10 +3,10 @@ package com.taobao.hotpatch;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import mtopsdk.common.util.TBSdkLog;
-
 import org.android.spdy.SpdySession;
 
+import android.util.Log;
+import anetwork.channel.aidl.DefaultFinishEvent;
 import anetwork.channel.anet.AsyncResult;
 import anetwork.channel.anet.ResponseHelper;
 import anetwork.channel.entity.RequestConfig;
@@ -47,28 +47,21 @@ public class ANetAsyncResult extends AsyncResult {
             try {
                 tmpStream.write(out);
             } catch (IOException e) {
-                TBSdkLog.e(TAG, "tmpStream.write(out) error", e);
+                Log.e(TAG, "tmpStream.write(out) error", e);
             }
             if (fin) {
                 try {
                     tmpStream.flush();
                     byte[] t = tmpStream.toByteArray();
                     ret = ResponseHelper.unGZip(t);
-                    if (TBSdkLog.isPrintLog()) {
-                        TBSdkLog.d(TAG, "before:gzip:" + (t == null ? "" : new String(t)));
-                        TBSdkLog.d(TAG, "after:gzip:" + (ret == null ? "" : new String(ret)));
+                    if (Log.isLoggable(TAG, Log.DEBUG)) {
+                        Log.d(TAG, "before:gzip:" + (t == null ? "" : new String(t)));
+                        Log.d(TAG, "after:gzip:" + (ret == null ? "" : new String(ret)));
                     }
                 } catch (IOException e) {
-                    TBSdkLog.e(TAG, "tmpStream.flush() error", e);
+                    Log.e(TAG, "tmpStream.flush() error", e);
                 } finally {
-                    if (tmpStream != null) {
-                        try {
-                            tmpStream.close();
-                        } catch (IOException e1) {
-                            TBSdkLog.e(TAG, "tmpStream.close() error", e1);
-                        }
-                        tmpStream = null;
-                    }
+                    closeStream();
                 }
                 if (ret != null) {
                     length = ret.length;
@@ -81,6 +74,36 @@ public class ANetAsyncResult extends AsyncResult {
             mIndex++;
             mForward.onDataReceiveSize(mIndex, length, mTotalLenght, ret);
             onDataReceiveSize(mIndex, length, mTotalLenght, ret);
+        }
+    }
+
+    private void sendOnFinishCallback(int errorCode) {
+        Log.d(TAG, "[sendOnFinishCallback]");
+        closeStream();
+        synchronized (bFinish) {
+            if (!bFinish) {
+                DefaultFinishEvent event = new DefaultFinishEvent(errorCode, mStatistcs.getStatisticData());
+                mStatistcs.onFinish(event);
+                mForward.onFinish(event);
+            }
+            bFinish = true;
+        }
+    }
+
+    @Override
+    public void doFinish() {
+        closeStream();
+        super.doFinish();
+    }
+
+    private void closeStream() {
+        if (tmpStream != null) {
+            try {
+                tmpStream.close();
+            } catch (IOException e1) {
+                Log.e(TAG, "tmpStream.close() error", e1);
+            }
+            tmpStream = null;
         }
     }
 }
