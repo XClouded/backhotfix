@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 
 import org.android.spdy.SpdySession;
+import org.android.spdy.SpdyStatusCode;
+import org.android.spdy.SuperviseData;
 
 import android.util.Log;
 import anetwork.channel.aidl.DefaultFinishEvent;
@@ -122,12 +124,33 @@ public class ANetAsyncResult extends AsyncResult {
         super.doFinish();
     }
 
+    @Override
+    protected void doCancel() {
+        closeStream();
+        super.doCancel();
+    }
+
+    @Override
+    public synchronized void spdySessionFailedError(SpdySession session, int error, Object sessionUserData) {
+        closeStream();
+        super.spdySessionFailedError(session, error, sessionUserData);
+    }
+
+    @Override
+    public synchronized void spdyStreamCloseCallback(SpdySession session, long streamId, SpdyStatusCode code,
+                                                     Object streamUserData, SuperviseData data) {
+        closeStream();
+        super.spdyStreamCloseCallback(session, streamId, code, streamUserData, data);
+    }
+
     private void closeStream() {
         if (tmpStream != null) {
             try {
                 tmpStream.close();
-            } catch (IOException e1) {
-                Log.e(TAG, "tmpStream.close() error", e1);
+            } catch (IOException e) {
+                Log.e(TAG, "tmpStream.close() error", e);
+            } catch (Throwable e) {
+                Log.e(TAG, "tmpStream.close() error", e);
             }
             tmpStream = null;
         }
