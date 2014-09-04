@@ -30,14 +30,35 @@ public class ANetAsyncResult extends AsyncResult {
     @Override
     public void spdyDataChunkRecvCB(SpdySession session, boolean fin, long streamId, byte[] data, int len,
                                     Object streamUserData) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[spdyDataChunkRecvCB] : streamId=")
+          .append(streamId)
+          .append(";session=")
+          .append(session)
+          .append(";len=")
+          .append(len)
+          .append(";fin=")
+          .append(fin)
+          .append(";bGzip=")
+          .append(bGzip)
+          .append(";index=")
+          .append(mIndex)
+          .append(";")
+          .append(System.getProperty("line.separator"));
+        if (data != null) {
+            sb.append("data=").append(new String(data));
+        } else {
+            sb.append("data=null");
+        }
+        Log.i(TAG, sb.toString());
 
-        byte[] ret = data;
         if (bFinish) {
             return;
         }
         if (mIndex == 0) {
             mStatistcs.onDataFirstReceiveed();
         }
+        byte[] ret = data;
         byte[] out = data;
         int length = len;
         if (bGzip) {
@@ -54,10 +75,8 @@ public class ANetAsyncResult extends AsyncResult {
                     tmpStream.flush();
                     byte[] t = tmpStream.toByteArray();
                     ret = ResponseHelper.unGZip(t);
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "before:gzip:" + (t == null ? "" : new String(t)));
-                        Log.d(TAG, "after:gzip:" + (ret == null ? "" : new String(ret)));
-                    }
+                    Log.d(TAG, "before:gzip:" + (t == null ? "" : new String(t)));
+                    Log.d(TAG, "after:gzip:" + (ret == null ? "" : new String(ret)));
                 } catch (IOException e) {
                     Log.e(TAG, "tmpStream.flush() error", e);
                 } finally {
