@@ -154,7 +154,6 @@ public class ANetAsyncResult extends AsyncResult {
             return;
         }
         try {
-            field.setAccessible(true);
             field.setInt(this, value);
         } catch (IllegalArgumentException e) {
             Log.e(TAG, "set field value error.", e);
@@ -199,7 +198,6 @@ public class ANetAsyncResult extends AsyncResult {
             return;
         }
         try {
-            field.setAccessible(true);
             field.set(this, value);
         } catch (IllegalArgumentException e) {
             Log.e(TAG, "get field value error.", e);
@@ -209,8 +207,14 @@ public class ANetAsyncResult extends AsyncResult {
     }
 
     private Field getField(String fieldName) {
+        Field field = null;
         try {
-            return ACallback.class.getDeclaredField(fieldName);
+            field = ACallback.class.getDeclaredField(fieldName);
+            if (field == null) {
+                return null;
+            }
+            field.setAccessible(true);
+            return field;
         } catch (NoSuchFieldException e) {
             Log.e(TAG, "get field error.", e);
         }
