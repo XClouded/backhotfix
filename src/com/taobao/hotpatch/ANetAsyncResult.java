@@ -2,11 +2,13 @@ package com.taobao.hotpatch;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Field;
 
 import org.android.spdy.SpdySession;
 
 import android.util.Log;
 import anetwork.channel.aidl.DefaultFinishEvent;
+import anetwork.channel.anet.ACallback;
 import anetwork.channel.anet.AsyncResult;
 import anetwork.channel.anet.ResponseHelper;
 import anetwork.channel.entity.RequestConfig;
@@ -16,10 +18,6 @@ import anetwork.channel.statist.Statistics;
 public class ANetAsyncResult extends AsyncResult {
 
     private static final String   TAG       = "ANet.ANetAsyncResult";
-
-    private int                   mIndex;
-    private boolean               bGzip     = false;
-    private volatile Boolean      bFinish   = false;
 
     private ByteArrayOutputStream tmpStream = null;
 
@@ -31,6 +29,8 @@ public class ANetAsyncResult extends AsyncResult {
     @Override
     public void spdyDataChunkRecvCB(SpdySession session, boolean fin, long streamId, byte[] data, int len,
                                     Object streamUserData) {
+        int mIndex = getIntField("mIndex");
+        boolean bGzip = getBooleanField("bGzip");
         StringBuilder sb = new StringBuilder();
         sb.append("[spdyDataChunkRecvCB] : streamId=")
           .append(streamId)
@@ -53,9 +53,11 @@ public class ANetAsyncResult extends AsyncResult {
         }
         Log.i(TAG, sb.toString());
 
+        boolean bFinish = getBooleanField("bFinish");
         if (bFinish) {
             return;
         }
+
         if (mIndex == 0) {
             mStatistcs.onDataFirstReceiveed();
         }
@@ -87,11 +89,13 @@ public class ANetAsyncResult extends AsyncResult {
                     length = ret.length;
                 }
                 mIndex++;
+                setIntField("mIndex", mIndex);
                 mForward.onDataReceiveSize(mIndex, length, mTotalLenght, ret);
                 onDataReceiveSize(mIndex, length, mTotalLenght, ret);
             }
         } else {
             mIndex++;
+            setIntField("mIndex", mIndex);
             mForward.onDataReceiveSize(mIndex, length, mTotalLenght, ret);
             onDataReceiveSize(mIndex, length, mTotalLenght, ret);
         }
@@ -100,6 +104,7 @@ public class ANetAsyncResult extends AsyncResult {
     private void sendOnFinishCallback(int errorCode) {
         Log.d(TAG, "[sendOnFinishCallback]");
         closeStream();
+        Boolean bFinish = getBooleanField("bFinish");
         synchronized (bFinish) {
             if (!bFinish) {
                 DefaultFinishEvent event = new DefaultFinishEvent(errorCode, mStatistcs.getStatisticData());
@@ -107,6 +112,7 @@ public class ANetAsyncResult extends AsyncResult {
                 mForward.onFinish(event);
             }
             bFinish = true;
+            setBooleanField("bFinish", bFinish);
         }
     }
 
@@ -124,6 +130,80 @@ public class ANetAsyncResult extends AsyncResult {
                 Log.e(TAG, "tmpStream.close() error", e1);
             }
             tmpStream = null;
+        }
+    }
+
+    private int getIntField(String fieldName) {
+        Field field = null;
+        try {
+            field = ACallback.class.getDeclaredField(fieldName);
+            if (field == null) {
+                return 0;
+            }
+            field.setAccessible(true);
+            return field.getInt(this);
+        } catch (NoSuchFieldException e) {
+            Log.e(TAG, "get field value error.", e);
+        } catch (IllegalArgumentException e) {
+            Log.e(TAG, "get field value error.", e);
+        } catch (IllegalAccessException e) {
+            Log.e(TAG, "get field value error.", e);
+        }
+        return 0;
+    }
+
+    private void setIntField(String fieldName, int value) {
+        Field field = null;
+        try {
+            field = ACallback.class.getDeclaredField(fieldName);
+            if (field == null) {
+                return;
+            }
+            field.setAccessible(true);
+            field.setInt(this, value);
+        } catch (NoSuchFieldException e) {
+            Log.e(TAG, "get field value error.", e);
+        } catch (IllegalArgumentException e) {
+            Log.e(TAG, "get field value error.", e);
+        } catch (IllegalAccessException e) {
+            Log.e(TAG, "get field value error.", e);
+        }
+    }
+
+    private boolean getBooleanField(String fieldName) {
+        Field field = null;
+        try {
+            field = ACallback.class.getDeclaredField(fieldName);
+            if (field == null) {
+                return false;
+            }
+            field.setAccessible(true);
+            return field.getBoolean(this);
+        } catch (NoSuchFieldException e) {
+            Log.e(TAG, "get field value error.", e);
+        } catch (IllegalArgumentException e) {
+            Log.e(TAG, "get field value error.", e);
+        } catch (IllegalAccessException e) {
+            Log.e(TAG, "get field value error.", e);
+        }
+        return false;
+    }
+
+    private void setBooleanField(String fieldName, boolean value) {
+        Field field = null;
+        try {
+            field = ACallback.class.getDeclaredField(fieldName);
+            if (field == null) {
+                return;
+            }
+            field.setAccessible(true);
+            field.setBoolean(this, value);
+        } catch (NoSuchFieldException e) {
+            Log.e(TAG, "get field value error.", e);
+        } catch (IllegalArgumentException e) {
+            Log.e(TAG, "get field value error.", e);
+        } catch (IllegalAccessException e) {
+            Log.e(TAG, "get field value error.", e);
         }
     }
 }
