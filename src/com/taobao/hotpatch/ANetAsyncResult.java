@@ -25,6 +25,7 @@ public class ANetAsyncResult extends AsyncResult {
 
     public ANetAsyncResult(RequestConfig config, Repeater forward, Statistics statistcs) {
         super(config, forward, statistcs);
+        Log.i(TAG, " new ANetAsyncResult=================");
     }
 
     @Override
