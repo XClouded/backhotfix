@@ -53,7 +53,7 @@ public class ANetAsyncResult extends AsyncResult {
         }
         Log.i(TAG, sb.toString());
 
-        boolean bFinish = getBooleanField("bFinish");
+        Boolean bFinish = (Boolean) getObjectField("bFinish");
         if (bFinish) {
             return;
         }
@@ -104,7 +104,7 @@ public class ANetAsyncResult extends AsyncResult {
     private void sendOnFinishCallback(int errorCode) {
         Log.d(TAG, "[sendOnFinishCallback]");
         closeStream();
-        Boolean bFinish = getBooleanField("bFinish");
+        Boolean bFinish = (Boolean) getObjectField("bFinish");
         synchronized (bFinish) {
             if (!bFinish) {
                 DefaultFinishEvent event = new DefaultFinishEvent(errorCode, mStatistcs.getStatisticData());
@@ -112,7 +112,7 @@ public class ANetAsyncResult extends AsyncResult {
                 mForward.onFinish(event);
             }
             bFinish = true;
-            setBooleanField("bFinish", bFinish);
+            setObjectField("bFinish", bFinish);
         }
     }
 
@@ -134,16 +134,12 @@ public class ANetAsyncResult extends AsyncResult {
     }
 
     private int getIntField(String fieldName) {
-        Field field = null;
+        Field field = getField(fieldName);
+        if (field == null) {
+            return 0;
+        }
         try {
-            field = ACallback.class.getDeclaredField(fieldName);
-            if (field == null) {
-                return 0;
-            }
-            field.setAccessible(true);
             return field.getInt(this);
-        } catch (NoSuchFieldException e) {
-            Log.e(TAG, "get field value error.", e);
         } catch (IllegalArgumentException e) {
             Log.e(TAG, "get field value error.", e);
         } catch (IllegalAccessException e) {
@@ -153,34 +149,27 @@ public class ANetAsyncResult extends AsyncResult {
     }
 
     private void setIntField(String fieldName, int value) {
-        Field field = null;
+        Field field = getField(fieldName);
+        if (field == null) {
+            return;
+        }
         try {
-            field = ACallback.class.getDeclaredField(fieldName);
-            if (field == null) {
-                return;
-            }
             field.setAccessible(true);
             field.setInt(this, value);
-        } catch (NoSuchFieldException e) {
-            Log.e(TAG, "get field value error.", e);
         } catch (IllegalArgumentException e) {
-            Log.e(TAG, "get field value error.", e);
+            Log.e(TAG, "set field value error.", e);
         } catch (IllegalAccessException e) {
-            Log.e(TAG, "get field value error.", e);
+            Log.e(TAG, "set field value error.", e);
         }
     }
 
     private boolean getBooleanField(String fieldName) {
-        Field field = null;
+        Field field = getField(fieldName);
+        if (field == null) {
+            return false;
+        }
         try {
-            field = ACallback.class.getDeclaredField(fieldName);
-            if (field == null) {
-                return false;
-            }
-            field.setAccessible(true);
             return field.getBoolean(this);
-        } catch (NoSuchFieldException e) {
-            Log.e(TAG, "get field value error.", e);
         } catch (IllegalArgumentException e) {
             Log.e(TAG, "get field value error.", e);
         } catch (IllegalAccessException e) {
@@ -189,21 +178,42 @@ public class ANetAsyncResult extends AsyncResult {
         return false;
     }
 
-    private void setBooleanField(String fieldName, boolean value) {
-        Field field = null;
+    private Object getObjectField(String fieldName) {
+        Field field = getField(fieldName);
+        if (field == null) {
+            return null;
+        }
         try {
-            field = ACallback.class.getDeclaredField(fieldName);
-            if (field == null) {
-                return;
-            }
-            field.setAccessible(true);
-            field.setBoolean(this, value);
-        } catch (NoSuchFieldException e) {
-            Log.e(TAG, "get field value error.", e);
+            return field.get(this);
         } catch (IllegalArgumentException e) {
             Log.e(TAG, "get field value error.", e);
         } catch (IllegalAccessException e) {
             Log.e(TAG, "get field value error.", e);
         }
+        return null;
+    }
+
+    private void setObjectField(String fieldName, Object value) {
+        Field field = getField(fieldName);
+        if (field == null) {
+            return;
+        }
+        try {
+            field.setAccessible(true);
+            field.set(this, value);
+        } catch (IllegalArgumentException e) {
+            Log.e(TAG, "get field value error.", e);
+        } catch (IllegalAccessException e) {
+            Log.e(TAG, "get field value error.", e);
+        }
+    }
+
+    private Field getField(String fieldName) {
+        try {
+            return ACallback.class.getDeclaredField(fieldName);
+        } catch (NoSuchFieldException e) {
+            Log.e(TAG, "get field error.", e);
+        }
+        return null;
     }
 }
