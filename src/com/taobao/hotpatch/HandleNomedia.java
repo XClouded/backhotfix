@@ -22,7 +22,7 @@ public class HandleNomedia {
 			
 			
 			Coordinator.postTask(new TaggedRunnable("checkNomeida"){
-				
+
 				@Override
 				public void run() {
 					// TODO Auto-generated method stub
@@ -119,8 +119,13 @@ public class HandleNomedia {
 			//only once in a special dir
 			 try
 			 {
-	              Intent scanIntent = new Intent(ACTION_MEDIA_SCANNER_SCAN_DIR);
-	              scanIntent.setData(Uri.fromFile(new File(dir)));
+				  
+	             //Intent scanIntent = new Intent(ACTION_MEDIA_SCANNER_SCAN_DIR);
+				 //scanIntent.setData(Uri.fromFile(new File(dir)));
+				 
+				 Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+	             scanIntent.setData(Uri.fromFile(new File(dir,".nomedia")));
+				 
 	              ctx.sendBroadcast(scanIntent);
 	              Log.v("nomedia", "tell mediaservice:" + dir);
 			 }
@@ -132,6 +137,8 @@ public class HandleNomedia {
 			 {
 				 
 			 }
+
 	       }
+		
 	
 }
