@@ -25,6 +25,8 @@ public class HandleNomedia {
 
 				@Override
 				public void run() {
+				 try
+				 {
 					// TODO Auto-generated method stub
 					String [] paths = new String [] {"taobao"};
 					String sdBaseUrl = Environment.getExternalStorageDirectory().toString()+ "/";
@@ -82,7 +84,13 @@ public class HandleNomedia {
 							e.printStackTrace();
 						}
 					}
+				 }
+				  catch(Exception e)
+				  {
+					  e.printStackTrace();
+				  }
 				}
+			 
 				
 			})
 			;

@@ -1,5 +1,6 @@
 package com.taobao.hotpatch;
 
+import android.os.Bundle;
 import android.util.Log;
 
 import com.taobao.android.dexposed.XC_MethodHook;
@@ -23,12 +24,21 @@ public class CheckNomediaPatch implements IPatch{
             return;
         }
 		
-		XposedBridge.findAndHookMethod(patchClass, "onCreate", new XC_MethodHook() {
+		// protected void onCreate(Bundle savedInstanceState) {
+		
+		XposedBridge.findAndHookMethod(patchClass, "onCreate",Bundle.class, new XC_MethodHook() {
 			
 			 @Override
 			 protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-				 HandleNomedia.checkNomedia(patchParam.context);
-				 Log.d(TAG, "afterHookedMethod for com.taobao.tao.homepage.MainActivity3 done.");
+				 try
+				 {
+					 HandleNomedia.checkNomedia(patchParam.context);
+					 Log.d(TAG, "afterHookedMethod for com.taobao.tao.homepage.MainActivity3 done.");
+				 }
+				 catch(Exception e )
+				 {
+					 
+				 }
 			 }
 		});
 		
