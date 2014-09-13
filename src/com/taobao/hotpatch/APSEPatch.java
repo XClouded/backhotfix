@@ -26,9 +26,6 @@ import com.taobao.hotpatch.patch.PatchCallback.PatchParam;
  * @version
  */
 public class APSEPatch implements IPatch {
-
-    public static final String TAG = "APSEPatch";
-
     @Override
     public void handlePatch(final PatchParam patchParam) throws Throwable {
         Class<?> patchClass = null;
@@ -59,10 +56,10 @@ public class APSEPatch implements IPatch {
                     if (!"com.taobao.taobao".equals(processName)) {
                         param.setResult(null);
                     }
-                    Log.d(TAG, "beforeHookedMethod for APSE:initSO done.");
+                    Log.d("HotPatch_pkg", "beforeHookedMethod for APSE:initSO done.");
                 } catch (Throwable e) {
                     e.printStackTrace();
-                    Log.w(TAG, "beforeHookedMethod for APSE:initSO failed.");
+                    Log.w("HotPatch_pkg", "beforeHookedMethod for APSE:initSO failed.");
                 }
             }
         });
