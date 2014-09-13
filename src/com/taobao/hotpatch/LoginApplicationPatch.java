@@ -17,8 +17,9 @@ import android.util.Log;
 
 import com.taobao.android.dexposed.XC_MethodHook;
 import com.taobao.android.dexposed.XposedBridge;
-import com.taobao.updatecenter.hotpatch.IPatch;
-import com.taobao.updatecenter.hotpatch.PatchCallback.PatchParam;
+import com.taobao.hotpatch.patch.IPatch;
+import com.taobao.hotpatch.patch.PatchCallback.PatchParam;
+import com.taobao.login4android.api.Login;
 
 /**
  * @create 2014年9月13日 上午11:53:06
@@ -58,6 +59,7 @@ public class LoginApplicationPatch implements IPatch {
                 try {
                     String processName = getProcessName(patchParam.context);
                     if (!"com.taobao.taobao".equals(processName)) {
+                        Login.init(patchParam.context, patchParam.packageTtid);
                         param.setResult(null);
                     }
                     Log.d(TAG, "beforeHookedMethod for LoginApplication:onCreate done.");
