@@ -19,21 +19,20 @@ import com.taobao.android.dexposed.XC_MethodHook;
 import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchCallback.PatchParam;
-import com.taobao.login4android.api.Login;
 
 /**
  * @create 2014年9月13日 上午11:53:06
  * @author jojo
  * @version
  */
-public class LoginApplicationPatch implements IPatch {
+public class APSEPatch implements IPatch {
 
-    public static final String TAG = "LoginApplicationPatch";
+    public static final String TAG = "APSEPatch";
 
     @Override
     public void handlePatch(final PatchParam patchParam) throws Throwable {
         Class<?> patchClass = null;
-        Log.d("HotPatch_pkg", "LoginController hotpatch begin");
+        Log.d("HotPatch_pkg", "APSEPatch hotpatch begin");
 
         try {
             BundleImpl login = (BundleImpl) Atlas.getInstance().getBundle(
@@ -43,28 +42,27 @@ public class LoginApplicationPatch implements IPatch {
                 return;
             }
             patchClass = login.getClassLoader().loadClass(
-                    "com.taobao.login4android.LoginApplication");
-            Log.d("HotPatch_pkg", "com.taobao.login4android.LoginApplication  success");
+                    "com.alipay.mobile.security.senative.APSE");
+            Log.d("HotPatch_pkg", "load com.alipay.mobile.security.senative.APSE success");
 
         } catch (ClassNotFoundException e) {
-            Log.w("HotPatch_pkg", "invoke LoginApplication class failed" + e.toString());
+            Log.w("HotPatch_pkg", "invoke APSE class failed" + e.toString());
             return;
         }
 
-        Log.d("HotPatch_pkg", "begin invoke LoginApplication beforeHookedMethod");
-        XposedBridge.findAndHookMethod(patchClass, "onCreate", new XC_MethodHook() {
-
+        Log.d("HotPatch_pkg", "begin invoke APSE beforeHookedMethod");
+        XposedBridge.findAndHookMethod(patchClass, "initSO", Context.class, new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 try {
                     String processName = getProcessName(patchParam.context);
                     if (!"com.taobao.taobao".equals(processName)) {
-                        Login.init(patchParam.context, patchParam.packageTtid);
                         param.setResult(null);
                     }
-                    Log.d(TAG, "beforeHookedMethod for LoginApplication:onCreate done.");
-                } catch (Exception e) {
-                    Log.w(TAG, "beforeHookedMethod for LoginApplication:onCreate failed.");
+                    Log.d(TAG, "beforeHookedMethod for APSE:initSO done.");
+                } catch (Throwable e) {
+                    e.printStackTrace();
+                    Log.w(TAG, "beforeHookedMethod for APSE:initSO failed.");
                 }
             }
         });
