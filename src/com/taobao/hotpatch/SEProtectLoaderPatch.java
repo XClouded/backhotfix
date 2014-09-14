@@ -46,12 +46,13 @@ public class SEProtectLoaderPatch implements IPatch {
         Log.d("hotpatch", "is old so delte" + isDeled);
 		if (patchParam.context.getFilesDir() != null) {
 			File oldLibSE = new File(patchParam.context.getFilesDir() + File.separator + Old_SolibName);
-			if (oldLibSE != null && oldLibSE.exists() && isDeled) {
+			if (oldLibSE != null && oldLibSE.exists() && !isDeled) {
 				try {
 					Log.d("hotpatch", "old so find");
 					oldLibSE.delete();
 					Editor edit = settings.edit();
 					edit.putBoolean(IS_DEL_OLD, true);
+					edit.commit();
 					Log.d("hotpatch", "old so delete");
 				} catch (Exception e) {
 					try {
