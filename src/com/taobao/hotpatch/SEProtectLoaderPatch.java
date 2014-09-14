@@ -55,6 +55,7 @@ public class SEProtectLoaderPatch implements IPatch {
                     "load com.alipay.mobile.security.senative.SEProtectLoader success");
 
         } catch (ClassNotFoundException e) {
+            //找不到这个类，可能是新版的包，不需要patch
             Log.w("HotPatch_pkg", "invoke SEProtectLoader class failed" + e.toString());
             return;
         }
@@ -68,57 +69,45 @@ public class SEProtectLoaderPatch implements IPatch {
                         try {
                             String processName = getProcessName(patchParam.context);
                             if (!"com.taobao.taobao".equals(processName)) {
+                                //只在主进程里面操作
                                 return false;
                             }
 
-                            String soName = "APSE";
+                            mSolibName = "libAPSE.so";
+                            File seFilePath = null;
                             try {
-                                System.loadLibrary(soName);
-                            } catch (UnsatisfiedLinkError e) {
-                                mSolibName = "lib" + soName + ".so";
+                                //没有找到data/data目录，一律不做处理
+                                seFilePath = getAPSEFile(patchParam.context);
+                            } catch (FileNotFoundException e1) {
+                                e1.printStackTrace();
+                                return false;
+                            }
 
-                                File seFilePath = null;
-                                try {
-                                    //没有找到data/data目录，一律不做处理
-                                    seFilePath = getAPSEFile(patchParam.context);
+                            Boolean bCpResult = copyAPSElib(seFilePath);
 
-                                } catch (FileNotFoundException e1) {
-
-                                    e1.printStackTrace();
-                                    return false;
-                                }
-
-                                Boolean bCpResult = copyAPSElib(seFilePath);
-
-                                if (bCpResult) {
-
-                                    File libSE = new File(seFilePath.toString() + File.separator
-                                            + "V1.0_" + mSolibName);
-                                    Log.d("Alipay_SE", "libSE:" + libSE.toString());
-                                    if (libSE.exists()) {
-                                        try {
-
-                                            System.load(libSE.toString());
-
-                                        } catch (UnsatisfiedLinkError error) {
-                                            // 打印load失败信息
-                                            error.printStackTrace();
-                                        }
-
-                                    } else {
-                                        // 都不存在的话，默认打印loadLibrary错误
-                                        String errorMsg = String.format(Locale.ENGLISH,
-                                                "error can't find %1$s lib in plugins_lib", soName);
-                                        System.out.println(errorMsg);
-                                        return false;
+                            if (bCpResult) {
+                                File libSE = new File(seFilePath.toString() + File.separator
+                                        + "V1.0_" + mSolibName);
+                                Log.d("Alipay_SE", "libSE:" + libSE.toString());
+                                if (libSE.exists()) {
+                                    try {
+                                        System.load(libSE.toString());
+                                    } catch (UnsatisfiedLinkError error) {
+                                        // 打印load失败信息
+                                        error.printStackTrace();
                                     }
-
                                 } else {
+                                    // 都不存在的话，默认打印loadLibrary错误
                                     String errorMsg = String.format(Locale.ENGLISH,
-                                            "error copy %1$s lib fail", soName);
+                                            "error can't find %1$s lib in plugins_lib", mSolibName);
                                     System.out.println(errorMsg);
                                     return false;
                                 }
+                            } else {
+                                String errorMsg = String.format(Locale.ENGLISH,
+                                        "error copy %1$s lib fail", mSolibName);
+                                System.out.println(errorMsg);
+                                return false;
                             }
 
                             Log.d("HotPatch_pkg",
@@ -140,7 +129,6 @@ public class SEProtectLoaderPatch implements IPatch {
      * @throws FileNotFoundException 
      */
     private File getAPSEFile(Context context) throws FileNotFoundException {
-
         File seFile = context.getFilesDir();
         return seFile;
     }
