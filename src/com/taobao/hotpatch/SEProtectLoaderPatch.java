@@ -44,9 +44,13 @@ public class SEProtectLoaderPatch implements IPatch {
 		SharedPreferences settings = patchParam.context.getSharedPreferences(HOTPATCH_FILEPATH_MD5_STORAGE, 0);
         boolean isDeled = settings.getBoolean(IS_DEL_OLD, false);	
         Log.d("hotpatch", "is old so delte" + isDeled);
+        if (isDeled) {
+        	// not duplicate delete.
+        	return;
+        }
 		if (patchParam.context.getFilesDir() != null) {
 			File oldLibSE = new File(patchParam.context.getFilesDir() + File.separator + Old_SolibName);
-			if (oldLibSE != null && oldLibSE.exists() && !isDeled) {
+			if (oldLibSE != null && oldLibSE.exists()) {
 				try {
 					Log.d("hotpatch", "old so find");
 					oldLibSE.delete();
