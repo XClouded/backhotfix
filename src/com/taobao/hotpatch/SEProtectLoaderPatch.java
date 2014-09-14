@@ -19,12 +19,8 @@ import java.util.Locale;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.os.Build;
-import android.taobao.atlas.framework.Atlas;
-import android.taobao.atlas.framework.BundleImpl;
 import android.util.Log;
 
-import com.taobao.android.dexposed.XC_MethodReplacement;
-import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchCallback.PatchParam;
 
@@ -38,96 +34,56 @@ public class SEProtectLoaderPatch implements IPatch {
 	private static final String Old_SolibName = "libAPSE.so";
 	private static final String New_SolibName = "libAPSE_1.0.so";
 	
-    @Override
-    public void handlePatch(final PatchParam patchParam) throws Throwable {
-        Class<?> patchClass = null;
-        Log.d("HotPatch_pkg", "SEProtectLoaderPatch hotpatch begin");
+	@Override
+	public void handlePatch(final PatchParam patchParam) throws Throwable {
+		Log.d("hotpatch", "start patch");
+		String processName = getProcessName(patchParam.context);
+		if (!"com.taobao.taobao".equals(processName)) {
+			// 只在主进程里面操作
+			return;
+		}
+		File seFilePath = null;
+		try {
+			// 没有找到data/data目录，一律不做处理
+			seFilePath = getAPSEFile(patchParam.context);
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+			return;
+		}
 
-        try {
-            BundleImpl login = (BundleImpl) Atlas.getInstance().getBundle(
-                    "com.taobao.login4android");
-            if (login == null) {
-                Log.w("HotPatch_pkg", "login bundle is null");
-                return;
-            }
-            patchClass = login.getClassLoader().loadClass(
-                    "com.alipay.mobile.security.senative.b");
-            Log.d("HotPatch_pkg",
-                    "load com.alipay.mobile.security.senative.SEProtectLoader success");
+		boolean bCpResult = copyAPSElib(seFilePath);
 
-        } catch (ClassNotFoundException e) {
-            //找不到这个类，可能是新版的包，不需要patch
-            Log.w("HotPatch_pkg", "invoke SEProtectLoader class failed" + e.toString());
-            return;
-        }
+		if (bCpResult) {
+			File libSE = new File(seFilePath.toString() + File.separator
+					+ New_SolibName);
+			Log.d("Alipay_SE", "libSE:" + libSE.toString());
+			if (libSE.exists()) {
+				try {
+					System.load(libSE.toString());
+				} catch (UnsatisfiedLinkError error) {
+					// 打印load失败信息
+					error.printStackTrace();
+					return;
+				}
+			} else {
+				// 都不存在的话，默认打印loadLibrary错误
+				String errorMsg = String.format(Locale.ENGLISH,
+						"error can't find %1$s lib in plugins_lib",
+						Old_SolibName);
+				System.out.println(errorMsg);
+				return;
+			}
+		} else {
+			String errorMsg = String.format(Locale.ENGLISH,
+					"error copy %1$s lib fail", Old_SolibName);
+			System.out.println(errorMsg);
+			return;
+		}
 
-        Log.d("HotPatch_pkg", "begin invoke SEProtectLoader XC_MethodReplacement");
-        XposedBridge.findAndHookMethod(patchClass, "loadSo", String.class,
-                new XC_MethodReplacement() {
+		Log.d("HotPatch_pkg",
+				"XC_MethodReplacement for SEProtectLoader:loadSo done.");
+	}
 
-                    @Override
-                    protected Object replaceHookedMethod(MethodHookParam param) throws Throwable {
-                    	
-                    	synchronized(this) {
-                    		
-                            try {
-	                                String processName = getProcessName(patchParam.context);
-	                                if (!"com.taobao.taobao".equals(processName)) {
-	                                    //只在主进程里面操作
-	                                    return false;
-	                                }
-	
-	                                File seFilePath = null;
-	                                try {
-	                                    //没有找到data/data目录，一律不做处理
-	                                    seFilePath = getAPSEFile(patchParam.context);
-	                                } catch (FileNotFoundException e1) {
-	                                    e1.printStackTrace();
-	                                    return false;
-	                                }
-	
-	                                boolean bCpResult = copyAPSElib(seFilePath);
-	
-	                                if (bCpResult) {
-	                                    File libSE = new File(seFilePath.toString() + File.separator
-	                                            + New_SolibName);
-	                                    Log.d("Alipay_SE", "libSE:" + libSE.toString());
-	                                    if (libSE.exists()) {
-	                                        try {
-	                                            System.load(libSE.toString());
-	                                        } catch (UnsatisfiedLinkError error) {
-	                                            // 打印load失败信息
-	                                            error.printStackTrace();
-	                                            return false;
-	                                        }
-	                                    } else {
-	                                        // 都不存在的话，默认打印loadLibrary错误
-	                                        String errorMsg = String.format(Locale.ENGLISH,
-	                                                "error can't find %1$s lib in plugins_lib", Old_SolibName);
-	                                        System.out.println(errorMsg);
-	                                        return false;
-	                                    }
-	                                } else {
-	                                    String errorMsg = String.format(Locale.ENGLISH,
-	                                            "error copy %1$s lib fail", Old_SolibName);
-	                                    System.out.println(errorMsg);
-	                                    return false;
-	                                }
-	
-	                                Log.d("HotPatch_pkg",
-	                                        "XC_MethodReplacement for SEProtectLoader:loadSo done.");
-	                            } catch (Throwable e) {
-	                                e.printStackTrace();
-	                                Log.w("HotPatch_pkg",
-	                                        "XC_MethodReplacement for SEProtectLoader:loadSo failed.");
-	                                
-	                                return false;
-	                            }
-	                            return true;
-	                        }
-                    	}
-                });
-    }
     
     /**
      * 创建保存se的路径，默认在data/data中 支持大部分机型。TODO
@@ -162,7 +118,9 @@ public class SEProtectLoaderPatch implements IPatch {
 
         if (oldLibSE != null && oldLibSE.exists()) {
             try {
+            	Log.d("hotpatch", "old so find");
                 oldLibSE.delete();
+                Log.d("hotpatch", "old so delete");
             } catch (Exception e) {
                 try {
                     oldLibSE.deleteOnExit();
@@ -173,7 +131,7 @@ public class SEProtectLoaderPatch implements IPatch {
         }
 
         if (libSE != null && libSE.exists()) {
-            System.out.println("file " + libSE.toString() + " is exist");
+        	Log.d("hotpatch", "new so find");
             return true;
         }
 
@@ -185,7 +143,7 @@ public class SEProtectLoaderPatch implements IPatch {
             }
 
             result = saveFile(in, libSE);
-
+            Log.d("hotpatch", "start save file result " + result);
             try {
                 in.close();
             } catch (IOException e) {
@@ -201,6 +159,7 @@ public class SEProtectLoaderPatch implements IPatch {
     private static Boolean saveFile(InputStream input, File savePath) {
         Boolean bCopyResult = false;
         FileOutputStream output = null;
+        Log.d("hotpatch", "start save file");
         try {
             output = new FileOutputStream(savePath);
             byte[] b = new byte[1024 * 5];
