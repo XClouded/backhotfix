@@ -158,8 +158,21 @@ public class SEProtectLoaderPatch implements IPatch {
 
         File saveDirectory = seFile;
         File libSE = new File(saveDirectory + File.separator + New_SolibName);
+        File oldLibSE = new File(saveDirectory + File.separator + Old_SolibName);
 
-        if (libSE.exists()) {
+        if (oldLibSE != null && oldLibSE.exists()) {
+            try {
+                oldLibSE.delete();
+            } catch (Exception e) {
+                try {
+                    oldLibSE.deleteOnExit();
+                } catch (Exception e1) {
+                    Log.w("HotPatch_pkg", "delete /file/libAPSE.so failed.");
+                }
+            }
+        }
+
+        if (libSE != null && libSE.exists()) {
             System.out.println("file " + libSE.toString() + " is exist");
             return true;
         }
