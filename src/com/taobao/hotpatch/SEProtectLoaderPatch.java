@@ -51,7 +51,7 @@ public class SEProtectLoaderPatch implements IPatch {
                 return;
             }
             patchClass = login.getClassLoader().loadClass(
-                    "com.alipay.mobile.security.senative.SEProtectLoader");
+                    "com.alipay.mobile.security.senative.b");
             Log.d("HotPatch_pkg",
                     "load com.alipay.mobile.security.senative.SEProtectLoader success");
 
