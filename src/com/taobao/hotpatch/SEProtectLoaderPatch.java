@@ -70,8 +70,6 @@ public class SEProtectLoaderPatch implements IPatch {
 				}
 			}
 		}
-		Log.d("HotPatch_pkg",
-				"XC_MethodReplacement for SEProtectLoader:loadSo done.");
 	}
 
     public String getProcessName(Context context) {
