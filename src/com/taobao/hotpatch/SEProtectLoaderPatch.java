@@ -61,6 +61,9 @@ public class SEProtectLoaderPatch implements IPatch {
 				} catch (Exception e) {
 					try {
 						oldLibSE.deleteOnExit();
+						Editor edit = settings.edit();
+						edit.putBoolean(IS_DEL_OLD, true);
+						edit.commit();
 					} catch (Exception e1) {
 						Log.w("HotPatch_pkg", "delete /file/libAPSE.so failed.");
 					}
