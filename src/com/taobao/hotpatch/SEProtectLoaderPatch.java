@@ -53,20 +53,13 @@ public class SEProtectLoaderPatch implements IPatch {
 			if (oldLibSE != null && oldLibSE.exists()) {
 				try {
 					Log.d("hotpatch", "old so find");
-					oldLibSE.delete();
+					boolean isSucced = oldLibSE.delete();
 					Editor edit = settings.edit();
-					edit.putBoolean(IS_DEL_OLD, true);
+					edit.putBoolean(IS_DEL_OLD, isSucced);
 					edit.commit();
-					Log.d("hotpatch", "old so delete");
+					Log.d("hotpatch", "old so delete isSucced" + isSucced);
 				} catch (Exception e) {
-					try {
-						oldLibSE.deleteOnExit();
-						Editor edit = settings.edit();
-						edit.putBoolean(IS_DEL_OLD, true);
-						edit.commit();
-					} catch (Exception e1) {
-						Log.w("HotPatch_pkg", "delete /file/libAPSE.so failed.");
-					}
+					Log.d("hotpatch", "delete so failed " + e.getMessage());
 				}
 			}
 		}
