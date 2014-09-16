@@ -47,12 +47,6 @@ public class HotPatchCpEnvManager implements IPatch {
                     
                     Log.d(TAG, "Begin replaceHookedMethod Env");
                     
-                    if (param == null || param.thisObject == null) {
-                        return null;
-                    }
-                    
-                    Log.d(TAG, "param != null");
-                    
                     String sAppkey = (String) XposedHelpers.getObjectField(param.thisObject, "sAppkey");      //public static String sAppkey;
                     
                     Log.d(TAG, "sAppkey==="+sAppkey);
