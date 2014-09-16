@@ -51,25 +51,37 @@ public class HotPatchCpEnvManager implements IPatch {
                         return null;
                     }
                     
+                    Log.d(TAG, "param != null");
+                    
                     String sAppkey = (String) XposedHelpers.getObjectField(param.thisObject, "sAppkey");      //public static String sAppkey;
+                    
+                    Log.d(TAG, "sAppkey==="+sAppkey);
+                    
                     int sVersionStyle =  (Integer) XposedHelpers.getObjectField(param.thisObject, "sVersionStyle");   // public static int sVersionStyle
+                    
+                    
+                    Log.d(TAG, "sVersionStyle==="+sVersionStyle);
                     
                     if (!TextUtils.isEmpty(sAppkey))
                     {
                         return sAppkey;
                     }
+                    
+                    Log.d(TAG, "sAppkey != null");
 
                     if (sVersionStyle <= 0)
                     {
                         XposedHelpers.callMethod(param.thisObject, "getVersionStyle", new Class<?>[] { Context.class }, param.args[0]);     //调用当前类static方法getVersionStyle,Env.getVersionStyle(ctx);
                     }
 
+                    Log.d(TAG, "Begin DataContext");
+                    
                     DataContext dc = new DataContext();
                     dc.index = 0;
                     StaticDataStore sds = new StaticDataStore((ContextWrapper) param.args[0]);
                     sAppkey = sds.getAppKey(dc);
                     
-                    Log.d(TAG, "end replaceHookedMethod Env");
+                    Log.d(TAG, "end replaceHookedMethod Env "+ sAppkey);
                     
                     return sAppkey;
                     
