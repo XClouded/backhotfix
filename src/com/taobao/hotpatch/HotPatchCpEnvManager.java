@@ -45,14 +45,13 @@ public class HotPatchCpEnvManager implements IPatch {
                 @Override
                 protected Object replaceHookedMethod(MethodHookParam param) throws Throwable {
                     
-                    Log.d(TAG, "Begin replaceHookedMethod Env");
+                    Log.d(TAG, "1Begin replaceHookedMethod Env");
                     
-                    String sAppkey = (String) XposedHelpers.getObjectField(param.thisObject, "sAppkey");      //public static String sAppkey;
+                    String sAppkey = (String) XposedHelpers.getStaticObjectField(param.thisObject.getClass(), "sAppkey");      //public static String sAppkey;
                     
                     Log.d(TAG, "sAppkey==="+sAppkey);
                     
-                    int sVersionStyle =  (Integer) XposedHelpers.getObjectField(param.thisObject, "sVersionStyle");   // public static int sVersionStyle
-                    
+                    int sVersionStyle =  (Integer) XposedHelpers.getStaticObjectField(param.thisObject.getClass(), "sVersionStyle");   // public static int sVersionStyle
                     
                     Log.d(TAG, "sVersionStyle==="+sVersionStyle);
                     
