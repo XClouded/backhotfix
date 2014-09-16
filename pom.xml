@@ -156,6 +156,12 @@
 		  <version>2.1.0</version>
 		  <scope>provided</scope>
 		</dependency>
+		<dependency>
+		  <groupId>com.taobao.android</groupId>
+		  <artifactId>securityguard</artifactId>
+		  <version>2.1.15</version>
+		  <scope>provided</scope>
+		</dependency>
 	</dependencies>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
