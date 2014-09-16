@@ -45,6 +45,8 @@ public class HotPatchCpEnvManager implements IPatch {
                 @Override
                 protected Object replaceHookedMethod(MethodHookParam param) throws Throwable {
                     
+                    Log.d(TAG, "Begin replaceHookedMethod Env");
+                    
                     if (param == null || param.thisObject == null) {
                         return null;
                     }
@@ -67,7 +69,7 @@ public class HotPatchCpEnvManager implements IPatch {
                     StaticDataStore sds = new StaticDataStore((ContextWrapper) param.args[0]);
                     sAppkey = sds.getAppKey(dc);
                     
-                    Log.d(TAG, " HotPatchCpEnvManager " + sAppkey);
+                    Log.d(TAG, "end replaceHookedMethod Env");
                     
                     return sAppkey;
                     
