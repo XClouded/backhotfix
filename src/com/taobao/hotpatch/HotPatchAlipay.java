@@ -1,5 +1,7 @@
 package com.taobao.hotpatch;
 
+import java.lang.reflect.Method;
+
 import android.app.Activity;
 import android.os.Build;
 import android.taobao.atlas.framework.Atlas;
@@ -122,7 +124,8 @@ public class HotPatchAlipay implements IPatch {
 				Log.d(TAG, "loadClass UIInput setData after in.");
 				Object obj = param.thisObject;
 				try {
-					XposedHelpers.callMethod(obj, "clearText");
+					Method mm = obj.getClass().getDeclaredMethod("clearText");
+					mm.invoke(obj);
 				} catch (Throwable e) {
 					Log.d(TAG, "loadClass UIInput setData after ", e);
 				}
@@ -137,7 +140,10 @@ public class HotPatchAlipay implements IPatch {
 			protected void afterHookedMethod(MethodHookParam param)
 					throws Throwable {
 				Object obj = param.thisObject;
-				XposedHelpers.callMethod(obj, "clearText");
+				
+				Method mm = obj.getClass().getDeclaredMethod("clearText");
+				mm.invoke(obj);
+//				XposedHelpers.callMethod(obj, "clearText");
 				
 				Log.d(TAG, "loadClass UISimplePassword setData after success.");
 			}
