@@ -118,23 +118,11 @@ public class HotPatchAlipay implements IPatch {
         XposedBridge.findAndHookMethod(UIInput, "a", Activity.class, LinearLayout.class,
                 new XC_MethodHook() {
         	
-        	@Override
-    		protected void beforeHookedMethod(MethodHookParam param)
-				throws Throwable {
-    			
-    			Log.d(TAG, "loadClass UIInput setData before success.");
-    		}
-        	
 			@Override
 			protected void afterHookedMethod(MethodHookParam param)
 					throws Throwable {
-				Log.d(TAG, "loadClass UIInput setData after in.");
 				Object obj = param.thisObject;
-				try {
-					mUIInputClearText.invoke(obj);
-				} catch (Throwable e) {
-					Log.d(TAG, "loadClass UIInput setData after ", e);
-				}
+				mUIInputClearText.invoke(obj);
 				Log.d(TAG, "loadClass UIInput setData after success.");
 			}
         });
@@ -148,7 +136,6 @@ public class HotPatchAlipay implements IPatch {
 				Object obj = param.thisObject;
 				
 				mUISimplePasswordClearText.invoke(obj);
-//				XposedHelpers.callMethod(obj, "clearText");
 				
 				Log.d(TAG, "loadClass UISimplePassword setData after success.");
 			}
