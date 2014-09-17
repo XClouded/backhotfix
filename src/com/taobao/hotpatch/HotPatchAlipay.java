@@ -1,12 +1,9 @@
 package com.taobao.hotpatch;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.ContextWrapper;
 import android.os.Build;
 import android.taobao.atlas.framework.Atlas;
 import android.taobao.atlas.framework.BundleImpl;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -14,14 +11,10 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.taobao.android.dexposed.XC_MethodHook;
-import com.taobao.android.dexposed.XC_MethodHook.MethodHookParam;
-import com.taobao.android.dexposed.XC_MethodReplacement;
 import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.android.dexposed.XposedHelpers;
 import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchCallback.PatchParam;
-import com.taobao.securityjni.StaticDataStore;
-import com.taobao.securityjni.tools.DataContext;
 
 public class HotPatchAlipay implements IPatch {
 
