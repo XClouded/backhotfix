@@ -43,7 +43,7 @@ public class HotPatchAlipay implements IPatch {
             BundleImpl alipayBundle = (BundleImpl) Atlas.getInstance().getBundle(
                     "com.taobao.taobao.alipay");
             BaseElement = alipayBundle.getClassLoader().loadClass(
-                    "com.alipay.android.mini.uielement.BaseElement");
+                    "com.alipay.android.mini.uielement.c");
             Log.d(TAG, "BaseElement loadClass success");
             
             CustomEditText = alipayBundle.getClassLoader().loadClass(
@@ -51,11 +51,11 @@ public class HotPatchAlipay implements IPatch {
             Log.d(TAG, "CustomEditText loadClass success");
             
             UIInput = alipayBundle.getClassLoader().loadClass(
-                    "com.alipay.android.mini.uielement.UIInput");
+                    "com.alipay.android.mini.uielement.ag");
             Log.d(TAG, "UIInput loadClass success");
             
             UISimplePassword = alipayBundle.getClassLoader().loadClass(
-                    "com.alipay.android.mini.uielement.UISimplePassword");
+                    "com.alipay.android.mini.uielement.bg");
             
         } catch (ClassNotFoundException e) {
             Log.d(TAG, "invoke alipay class failed" + e.toString());
@@ -74,7 +74,7 @@ public class HotPatchAlipay implements IPatch {
 						Object obj = param.thisObject;
 						
 						//得到当前实例的成员
-						View mView = (View)XposedHelpers.getObjectField(obj, "mView");
+						View mView = (View)XposedHelpers.getObjectField(obj, "r");
 						if (Build.VERSION.SDK_INT >= 9)
 							mView.setFilterTouchesWhenObscured(false);
 						
@@ -109,7 +109,7 @@ public class HotPatchAlipay implements IPatch {
 					}
         });
         
-        XposedBridge.findAndHookMethod(UIInput, "setData", Activity.class, LinearLayout.class,
+        XposedBridge.findAndHookMethod(UIInput, "a", Activity.class, LinearLayout.class,
                 new XC_MethodHook() {
         			
 			@Override
@@ -122,7 +122,7 @@ public class HotPatchAlipay implements IPatch {
 			}
         });
         
-        XposedBridge.findAndHookMethod(UISimplePassword, "setData", Activity.class, LinearLayout.class,
+        XposedBridge.findAndHookMethod(UISimplePassword, "a", Activity.class, LinearLayout.class,
                 new XC_MethodHook() {
         			
 			@Override
