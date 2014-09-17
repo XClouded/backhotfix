@@ -22,6 +22,8 @@ public class HotPatchAlipay implements IPatch {
 
     private final static String TAG = "HotpatchAlipay";
     
+    private Method mUIInputClearText = null;
+    private Method mUISimplePasswordClearText = null;
     @Override
     public void handlePatch(PatchParam arg0) throws Throwable {
         
@@ -49,12 +51,17 @@ public class HotPatchAlipay implements IPatch {
                     "com.alipay.android.mini.uielement.ag");
             Log.d(TAG, "UIInput loadClass success");
             
+            mUIInputClearText = UIInput.getDeclaredMethod("clearText");
+            
             UISimplePassword = alipayBundle.getClassLoader().loadClass(
                     "com.alipay.android.mini.uielement.bg");
             
+            
+            mUISimplePasswordClearText = UISimplePassword.getDeclaredMethod("clearText");
+            
             Log.d(TAG, "UISimplePassword loadClass success");
             
-        } catch (ClassNotFoundException e) {
+        } catch (Exception e) {
             Log.d(TAG, "invoke alipay class failed" + e.toString());
             return;
         }
@@ -124,8 +131,7 @@ public class HotPatchAlipay implements IPatch {
 				Log.d(TAG, "loadClass UIInput setData after in.");
 				Object obj = param.thisObject;
 				try {
-					Method mm = obj.getClass().getDeclaredMethod("clearText");
-					mm.invoke(obj);
+					mUIInputClearText.invoke(obj);
 				} catch (Throwable e) {
 					Log.d(TAG, "loadClass UIInput setData after ", e);
 				}
@@ -141,8 +147,7 @@ public class HotPatchAlipay implements IPatch {
 					throws Throwable {
 				Object obj = param.thisObject;
 				
-				Method mm = obj.getClass().getDeclaredMethod("clearText");
-				mm.invoke(obj);
+				mUISimplePasswordClearText.invoke(obj);
 //				XposedHelpers.callMethod(obj, "clearText");
 				
 				Log.d(TAG, "loadClass UISimplePassword setData after success.");
