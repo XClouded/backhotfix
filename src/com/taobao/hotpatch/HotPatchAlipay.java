@@ -109,7 +109,8 @@ public class HotPatchAlipay implements IPatch {
 					protected void afterHookedMethod(MethodHookParam param)
 							throws Throwable {
 						Object obj = param.thisObject;
-						XposedHelpers.setObjectField(obj, "mTouchListener", mTouchListener);
+						if(mTouchListener != null)
+							XposedHelpers.setObjectField(obj, "mTouchListener", mTouchListener);
 						mTouchListener = null;
 						Log.d(TAG, "loadClass CustomEditText onTouchEvent after success.");
 					}
