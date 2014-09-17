@@ -106,28 +106,6 @@ public class HotPatchAlipay implements IPatch {
 					}
         });
         
-        XposedBridge.findAndHookMethod(UIInput, "a", Activity.class, View.class,
-                new XC_MethodHook() {
-        	
-        	@Override
-    		protected void beforeHookedMethod(MethodHookParam param)
-				throws Throwable {
-    			
-        		
-    			Log.d(TAG, "loadClass UIInput  super setData before success.");
-    		}
-        	
-			@Override
-			protected void afterHookedMethod(MethodHookParam param)
-					throws Throwable {
-				Log.d(TAG, "loadClass UIInput super setData after in.");
-				Object obj = param.thisObject;
-				XposedHelpers.callMethod(obj, "clearText");
-				
-				Log.d(TAG, "loadClass UIInput super setData view after success.");
-			}
-        });
-        
         XposedBridge.findAndHookMethod(UIInput, "a", Activity.class, LinearLayout.class,
                 new XC_MethodHook() {
         	
@@ -143,8 +121,11 @@ public class HotPatchAlipay implements IPatch {
 					throws Throwable {
 				Log.d(TAG, "loadClass UIInput setData after in.");
 				Object obj = param.thisObject;
-				XposedHelpers.callMethod(obj, "clearText");
-				
+				try {
+					XposedHelpers.callMethod(obj, "clearText");
+				} catch (Throwable e) {
+					Log.d(TAG, "loadClass UIInput setData after ", e);
+				}
 				Log.d(TAG, "loadClass UIInput setData after success.");
 			}
         });
