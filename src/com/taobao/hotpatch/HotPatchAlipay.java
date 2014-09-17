@@ -23,7 +23,7 @@ public class HotPatchAlipay implements IPatch {
     @Override
     public void handlePatch(PatchParam arg0) throws Throwable {
         
-        Log.d(TAG, "HotPatchCpEnvManager start detecting ... ");
+        Log.d(TAG, "HotPatchAlipay start detecting ... ");
         
         Class<?> BaseElement = null;
         
@@ -49,6 +49,8 @@ public class HotPatchAlipay implements IPatch {
             
             UISimplePassword = alipayBundle.getClassLoader().loadClass(
                     "com.alipay.android.mini.uielement.bg");
+            
+            Log.d(TAG, "UISimplePassword loadClass success");
             
         } catch (ClassNotFoundException e) {
             Log.d(TAG, "invoke alipay class failed" + e.toString());
@@ -86,7 +88,9 @@ public class HotPatchAlipay implements IPatch {
 						throws Throwable {
 	        			
 	        			Object obj = param.thisObject;
-	        			mTouchListener = (Object)XposedHelpers.getObjectField(obj, "mTouchListener");
+	        			
+	        			if(mTouchListener == null)
+	        				mTouchListener = (Object)XposedHelpers.getObjectField(obj, "mTouchListener");
 	        			XposedHelpers.setObjectField(obj, "mTouchListener", null);
 	        			
 	        			Log.d(TAG, "loadClass CustomEditText onTouchEvent before success.");
@@ -97,9 +101,22 @@ public class HotPatchAlipay implements IPatch {
 							throws Throwable {
 						Object obj = param.thisObject;
 						XposedHelpers.setObjectField(obj, "mTouchListener", mTouchListener);
-						
+						mTouchListener = null;
 						Log.d(TAG, "loadClass CustomEditText onTouchEvent after success.");
 					}
+        });
+        
+        XposedBridge.findAndHookMethod(UIInput, "a", Activity.class, View.class,
+                new XC_MethodHook() {
+        			
+			@Override
+			protected void afterHookedMethod(MethodHookParam param)
+					throws Throwable {
+				Object obj = param.thisObject;
+				XposedHelpers.callMethod(obj, "clearText");
+				
+				Log.d(TAG, "loadClass UIInput setData view after success.");
+			}
         });
         
         XposedBridge.findAndHookMethod(UIInput, "a", Activity.class, LinearLayout.class,
