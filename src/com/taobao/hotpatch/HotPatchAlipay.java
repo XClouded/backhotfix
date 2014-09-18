@@ -26,6 +26,8 @@ public class HotPatchAlipay implements IPatch {
     
     private Method mUIInputClearText = null;
     private Method mUISimplePasswordClearText = null;
+    
+    private static boolean mIsGetViewCalling = false;
     @Override
     public void handlePatch(PatchParam arg0) throws Throwable {
         
@@ -70,24 +72,20 @@ public class HotPatchAlipay implements IPatch {
         
         Log.d(TAG, "loadClass alipay Env success.");
         
-//        XposedBridge.findAndHookMethod(BaseElement, "getView", Activity.class, ViewGroup.class, boolean.class,
-//                new XC_MethodHook() {
-//
-//					@Override
-//					protected void afterHookedMethod(MethodHookParam param)
-//							throws Throwable {
-//						
-//						Object obj = param.thisObject;
-//						
-//						//得到当前实例的成员
-//						View mView = (View)XposedHelpers.getObjectField(obj, "r");
-//						if (Build.VERSION.SDK_INT >= 9 && mView != null) {
-//							mView.setFilterTouchesWhenObscured(false);
-//						}
-//						param.setResult(mView);		
-//						Log.d(TAG, "loadClass BaseElement getView setresult success.");
-//					}
-//        });
+		XposedBridge.findAndHookMethod(BaseElement, "getView", Activity.class,
+				ViewGroup.class, boolean.class, new XC_MethodHook() {
+
+					protected void beforeHookedMethod(MethodHookParam param)
+							throws Throwable {
+						mIsGetViewCalling = true;
+					}
+
+					@Override
+					protected void afterHookedMethod(MethodHookParam param)
+							throws Throwable {
+						mIsGetViewCalling = false;
+					}
+				});
         
 		XposedBridge.findAndHookMethod(View.class,
 				"setFilterTouchesWhenObscured", boolean.class,
@@ -95,19 +93,22 @@ public class HotPatchAlipay implements IPatch {
 					@Override
 					protected void beforeHookedMethod(MethodHookParam param)
 							throws Throwable {
-						StackTraceElement[] stackTraceElements = Thread
-								.currentThread().getStackTrace();
-						Log.d(TAG, "setFilterTouchesWhenObscured before success， stack = " +   Thread
-								.currentThread().getStackTrace().toString());
-						Log.d(TAG, "setFilterTouchesWhenObscured before success， last satck is " + stackTraceElements[stackTraceElements.length - 1]
-								.getClassName());
-						if (stackTraceElements != null
-								&& stackTraceElements[stackTraceElements.length - 1]
-										.getClassName().equals("com.alipay.android.mini.uielement.c")) {
-							Log.d(TAG, "setFilterTouchesWhenObscured before success， not do" );
+//						StackTraceElement[] stackTraceElements = Thread
+//								.currentThread().getStackTrace();
+//						Log.d(TAG, "setFilterTouchesWhenObscured before success， stack = " +   Thread
+//								.currentThread().getStackTrace().toString());
+//						Log.d(TAG, "setFilterTouchesWhenObscured before success， last satck is " + stackTraceElements[stackTraceElements.length - 1]
+//								.getClassName());
+//						if (stackTraceElements != null
+//								&& stackTraceElements[stackTraceElements.length - 1]
+//										.getClassName().equals("com.alipay.android.mini.uielement.c")) {
+//							Log.d(TAG, "setFilterTouchesWhenObscured before success， not do" );
+//							param.setResult(null);
+//						}
+						if (mIsGetViewCalling) {
 							param.setResult(null);
 						}
-						Log.d(TAG, "setFilterTouchesWhenObscured before success， do" );
+						Log.d(TAG, "setFilterTouchesWhenObscured before success mIsGetViewCalling = " + mIsGetViewCalling);
 					}
 				});
         
