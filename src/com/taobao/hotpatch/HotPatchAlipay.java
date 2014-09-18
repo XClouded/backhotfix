@@ -79,11 +79,11 @@ public class HotPatchAlipay implements IPatch {
 						
 						//得到当前实例的成员
 						View mView = (View)XposedHelpers.getObjectField(obj, "r");
-						if (Build.VERSION.SDK_INT >= 9)
+						if (Build.VERSION.SDK_INT >= 9 && mView != null) {
 							mView.setFilterTouchesWhenObscured(false);
-						
-						Log.d(TAG, "loadClass BaseElement getView success.");
-				        
+						}
+						param.setResult(mView);		
+						Log.d(TAG, "loadClass BaseElement getView setresult success.");
 					}
         });
         
