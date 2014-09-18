@@ -12,7 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+
 import com.taobao.android.dexposed.XC_MethodHook;
+import com.taobao.android.dexposed.XC_MethodReplacement;
 import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.android.dexposed.XposedHelpers;
 import com.taobao.hotpatch.patch.IPatch;
@@ -68,22 +70,32 @@ public class HotPatchAlipay implements IPatch {
         
         Log.d(TAG, "loadClass alipay Env success.");
         
-        XposedBridge.findAndHookMethod(BaseElement, "getView", Activity.class, ViewGroup.class, boolean.class,
-                new XC_MethodHook() {
+//        XposedBridge.findAndHookMethod(BaseElement, "getView", Activity.class, ViewGroup.class, boolean.class,
+//                new XC_MethodHook() {
+//
+//					@Override
+//					protected void afterHookedMethod(MethodHookParam param)
+//							throws Throwable {
+//						
+//						Object obj = param.thisObject;
+//						
+//						//得到当前实例的成员
+//						View mView = (View)XposedHelpers.getObjectField(obj, "r");
+//						if (Build.VERSION.SDK_INT >= 9 && mView != null) {
+//							mView.setFilterTouchesWhenObscured(false);
+//						}
+//						param.setResult(mView);		
+//						Log.d(TAG, "loadClass BaseElement getView setresult success.");
+//					}
+//        });
+        
+        XposedBridge.findAndHookMethod(View.class, "setFilterTouchesWhenObscured", boolean.class,
+                new XC_MethodReplacement() {
 
 					@Override
-					protected void afterHookedMethod(MethodHookParam param)
+					protected Object replaceHookedMethod(MethodHookParam param)
 							throws Throwable {
-						
-						Object obj = param.thisObject;
-						
-						//得到当前实例的成员
-						View mView = (View)XposedHelpers.getObjectField(obj, "r");
-						if (Build.VERSION.SDK_INT >= 9 && mView != null) {
-							mView.setFilterTouchesWhenObscured(false);
-						}
-						param.setResult(mView);		
-						Log.d(TAG, "loadClass BaseElement getView setresult success.");
+						return null;
 					}
         });
         
