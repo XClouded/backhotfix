@@ -89,15 +89,27 @@ public class HotPatchAlipay implements IPatch {
 //					}
 //        });
         
-        XposedBridge.findAndHookMethod(View.class, "setFilterTouchesWhenObscured", boolean.class,
-                new XC_MethodReplacement() {
-
+		XposedBridge.findAndHookMethod(View.class,
+				"setFilterTouchesWhenObscured", boolean.class,
+				new XC_MethodHook() {
 					@Override
-					protected Object replaceHookedMethod(MethodHookParam param)
+					protected void beforeHookedMethod(MethodHookParam param)
 							throws Throwable {
-						return null;
+						StackTraceElement[] stackTraceElements = Thread
+								.currentThread().getStackTrace();
+						Log.d(TAG, "setFilterTouchesWhenObscured before success， stack = " +   Thread
+								.currentThread().getStackTrace().toString());
+						Log.d(TAG, "setFilterTouchesWhenObscured before success， last satck is " + stackTraceElements[stackTraceElements.length - 1]
+								.getClassName());
+						if (stackTraceElements != null
+								&& stackTraceElements[stackTraceElements.length - 1]
+										.getClassName().equals("com.alipay.android.mini.uielement.c")) {
+							Log.d(TAG, "setFilterTouchesWhenObscured before success， not do" );
+							param.setResult(null);
+						}
+						Log.d(TAG, "setFilterTouchesWhenObscured before success， do" );
 					}
-        });
+				});
         
         XposedBridge.findAndHookMethod(CustomEditText, "onTouchEvent", MotionEvent.class,
                 new XC_MethodHook() {
