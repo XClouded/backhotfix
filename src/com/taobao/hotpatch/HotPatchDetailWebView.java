@@ -170,7 +170,7 @@ public class HotPatchDetailWebView implements IPatch
 					Log.d(TAG, "mWebview replaced success.");
 
 			    	XposedBridge.invokeNonVirtual(obj,
-			    			mDetailGoodsFragment.getSuperclass().getDeclaredMethod("onDestroy"));
+			    			mDetailGoodsFragment.getSuperclass().getSuperclass().getDeclaredMethod("onDestroy"));
 					Log.d(TAG, "super.onDestroy() replaced success.");
 				} catch (Exception e) {
 					Log.d(TAG, "DetailGoodsFragment::onDestroy() replaceHookedMethod callback failed: " + e.toString());
