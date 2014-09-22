@@ -76,13 +76,13 @@ public class HotPatchDetailWebView implements IPatch
 						method = XposedHelpers.findMethodBestMatch(mContainer.getClass().getSuperclass(), "getChildCount");
 						Log.d(TAG, "mContainer::getChildCount() got success.");
 						method.setAccessible(true);
-						int childCount = (Integer)method.invoke(mContainer, new Object[] {});
+						int childCount = (Integer)method.invoke(mContainer);
 						View child;
 
 						method = XposedHelpers.findMethodBestMatch(mContainer.getClass().getSuperclass(), "getChildAt");
 						method.setAccessible(true);
 						for (int i = 0; i < childCount; i++) {
-			    			child = (View)method.invoke(mContainer, new Object[] { i });
+			    			child = (View)method.invoke(mContainer, i);
 			    			if (child instanceof LinearLayout) {
 			    				title = (LinearLayout)child;
 			    				break;
@@ -97,7 +97,7 @@ public class HotPatchDetailWebView implements IPatch
 
 						method = XposedHelpers.findMethodBestMatch(mContainer.getClass().getSuperclass(), "removeAllViews");
 						method.setAccessible(true);
-						method.invoke(mContainer, new Object[] {});
+						method.invoke(mContainer);
 			    		XposedHelpers.setObjectField(obj, "f", null);
 					}
 					Log.d(TAG, "mContainer replaced success.");
@@ -137,13 +137,13 @@ public class HotPatchDetailWebView implements IPatch
 						method = XposedHelpers.findMethodBestMatch(mWebviewContainer.getClass().getSuperclass(), "getChildCount");
 						Log.d(TAG, "mWebviewContainer::getChildCount() got success.");
 						method.setAccessible(true);
-						int childCount = (Integer)method.invoke(mWebviewContainer, new Object[] {});
+						int childCount = (Integer)method.invoke(mWebviewContainer);
 						View child;
 
 						method = XposedHelpers.findMethodBestMatch(mWebviewContainer.getClass().getSuperclass(), "getChildAt");
 						method.setAccessible(true);
 			    		for (int i = 0; i < childCount; i++) {
-			    			child = (View)method.invoke(mWebviewContainer, new Object[] { i });
+			    			child = (View)method.invoke(mWebviewContainer, i);
 			    			if (child instanceof LinearLayout) {
 			    				title = (LinearLayout)child;
 			    				break;
@@ -158,7 +158,7 @@ public class HotPatchDetailWebView implements IPatch
 
 						method = XposedHelpers.findMethodBestMatch(mWebviewContainer.getClass().getSuperclass(), "removeAllViews");
 						method.setAccessible(true);
-						method.invoke(mWebviewContainer, new Object[] {});
+						method.invoke(mWebviewContainer);
 			    		XposedHelpers.setObjectField(obj, "mWebviewContainer", null);
 					}
 					Log.d(TAG, "mWebviewContainer replaced success.");
