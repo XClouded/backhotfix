@@ -79,7 +79,7 @@ public class HotPatchDetailWebView implements IPatch
 						int childCount = (Integer)method.invoke(mContainer, new Object[] {});
 						View child;
 
-						method = XposedHelpers.findMethodBestMatch(mContainer.getClass().getSuperclass(), "getChildAt");
+						method = XposedHelpers.findMethodBestMatch(mContainer.getClass().getSuperclass(), "getChildAt", Integer.class);
 						method.setAccessible(true);
 						for (int i = 0; i < childCount; i++) {
 			    			child = (View)method.invoke(mContainer, new Object[] { i });
@@ -140,7 +140,7 @@ public class HotPatchDetailWebView implements IPatch
 						int childCount = (Integer)method.invoke(mWebviewContainer, new Object[] {});
 						View child;
 
-						method = XposedHelpers.findMethodBestMatch(mWebviewContainer.getClass().getSuperclass(), "getChildAt");
+						method = XposedHelpers.findMethodBestMatch(mWebviewContainer.getClass().getSuperclass(), "getChildAt", Integer.class);
 						method.setAccessible(true);
 			    		for (int i = 0; i < childCount; i++) {
 			    			child = (View)method.invoke(mWebviewContainer, new Object[] { i });
