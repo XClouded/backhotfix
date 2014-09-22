@@ -1,5 +1,7 @@
 package com.taobao.hotpatch;
 
+import java.lang.reflect.Method;
+
 import android.taobao.atlas.framework.Atlas;
 import android.taobao.atlas.framework.BundleImpl;
 import android.util.Log;
@@ -62,18 +64,25 @@ public class HotPatchDetailWebView implements IPatch
 					throws Throwable {
 				try {
 					Object obj = param.thisObject;
+					Method method;
 
 					XposedHelpers.setObjectField(obj, "e", null);	// mContext = null;
 					Log.d(TAG, "mContext replaced success.");
 
-					ViewGroup mContainer = (ViewGroup)XposedHelpers.getObjectField(obj, "f");
-					Log.d(TAG, "mContainer got success.");
+					RelativeLayout mContainer = (RelativeLayout)XposedHelpers.getObjectField(obj, "f");
 					if (null != mContainer) {
 						LinearLayout title = null;
-						int childCount = (Integer)XposedHelpers.callMethod(mContainer, "getChildCount");
+
+						method = XposedHelpers.findMethodBestMatch(mContainer.getClass().getSuperclass(), "getChildCount");
+						Log.d(TAG, "mContainer::getChildCount() got success.");
+						method.setAccessible(true);
+						int childCount = (Integer)method.invoke(mContainer, new Object[] { null });
 						View child;
-			    		for (int i = 0; i < childCount; i++) {
-			    			child = (View)XposedHelpers.callMethod(mContainer, "getChildAt", i);
+
+						method = XposedHelpers.findMethodBestMatch(mContainer.getClass().getSuperclass(), "getChildAt");
+						method.setAccessible(true);
+						for (int i = 0; i < childCount; i++) {
+			    			child = (View)method.invoke(mContainer, new Object[] { i });
 			    			if (child instanceof LinearLayout) {
 			    				title = (LinearLayout)child;
 			    				break;
@@ -86,7 +95,9 @@ public class HotPatchDetailWebView implements IPatch
 			    			title.removeAllViews();
 			    		}
 
-			    		XposedHelpers.callMethod(mContainer, "removeAllViews");
+						method = XposedHelpers.findMethodBestMatch(mContainer.getClass().getSuperclass(), "removeAllViews");
+						method.setAccessible(true);
+						method.invoke(mContainer, new Object[] { null });
 			    		XposedHelpers.setObjectField(obj, "f", null);
 					}
 					Log.d(TAG, "mContainer replaced success.");
@@ -117,14 +128,22 @@ public class HotPatchDetailWebView implements IPatch
 					throws Throwable {
 				try {
 					Object obj = param.thisObject;
+					Method method;
 
-					ViewGroup mWebviewContainer = (ViewGroup)XposedHelpers.getObjectField(obj, "mWebviewContainer");
+					RelativeLayout mWebviewContainer = (RelativeLayout)XposedHelpers.getObjectField(obj, "mWebviewContainer");
 					if (null != mWebviewContainer) {
 						LinearLayout title = null;
-						int childCount = (Integer)XposedHelpers.callMethod(mWebviewContainer, "getChildCount");
+
+						method = XposedHelpers.findMethodBestMatch(mWebviewContainer.getClass().getSuperclass(), "getChildCount");
+						Log.d(TAG, "mWebviewContainer::getChildCount() got success.");
+						method.setAccessible(true);
+						int childCount = (Integer)method.invoke(mWebviewContainer, new Object[] { null });
 						View child;
+
+						method = XposedHelpers.findMethodBestMatch(mWebviewContainer.getClass().getSuperclass(), "getChildAt");
+						method.setAccessible(true);
 			    		for (int i = 0; i < childCount; i++) {
-			    			child = (View)XposedHelpers.callMethod(mWebviewContainer, "getChildAt", i);
+			    			child = (View)method.invoke(mWebviewContainer, new Object[] { i });
 			    			if (child instanceof LinearLayout) {
 			    				title = (LinearLayout)child;
 			    				break;
@@ -137,7 +156,9 @@ public class HotPatchDetailWebView implements IPatch
 			    			title.removeAllViews();
 			    		}
 
-			    		XposedHelpers.callMethod(mWebviewContainer, "removeAllViews");
+						method = XposedHelpers.findMethodBestMatch(mWebviewContainer.getClass().getSuperclass(), "removeAllViews");
+						method.setAccessible(true);
+						method.invoke(mWebviewContainer, new Object[] { null });
 			    		XposedHelpers.setObjectField(obj, "mWebviewContainer", null);
 					}
 					Log.d(TAG, "mWebviewContainer replaced success.");
