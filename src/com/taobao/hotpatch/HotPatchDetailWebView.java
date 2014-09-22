@@ -4,6 +4,7 @@ import android.taobao.atlas.framework.Atlas;
 import android.taobao.atlas.framework.BundleImpl;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
@@ -35,7 +36,7 @@ public class HotPatchDetailWebView implements IPatch
 				Log.d(TAG, "detail bundle is null");
 				return;
 			}
-			
+
 			//获取需要用到的类名
 			mMainBottomPage = mDetailBundle.getClassLoader().loadClass("com.taobao.tao.detail.activity.detail.ui.mainpage.f");
 			Log.d(TAG, "hotpatch MainBottomPage loadClass success");
@@ -65,7 +66,7 @@ public class HotPatchDetailWebView implements IPatch
 					XposedHelpers.setObjectField(obj, "e", null);	// mContext = null;
 					Log.d(TAG, "mContext replaced success.");
 
-					RelativeLayout mContainer = (RelativeLayout)XposedHelpers.getObjectField(obj, "f");
+					ViewGroup mContainer = (ViewGroup)XposedHelpers.getObjectField(obj, "f");
 					if (null != mContainer) {
 						LinearLayout title = null;
 						int childCount = (Integer)XposedHelpers.callMethod(mContainer, "getChildCount");
@@ -116,7 +117,7 @@ public class HotPatchDetailWebView implements IPatch
 				try {
 					Object obj = param.thisObject;
 
-					RelativeLayout mWebviewContainer = (RelativeLayout)XposedHelpers.getObjectField(obj, "mWebviewContainer");
+					ViewGroup mWebviewContainer = (ViewGroup)XposedHelpers.getObjectField(obj, "mWebviewContainer");
 					if (null != mWebviewContainer) {
 						LinearLayout title = null;
 						int childCount = (Integer)XposedHelpers.callMethod(mWebviewContainer, "getChildCount");
