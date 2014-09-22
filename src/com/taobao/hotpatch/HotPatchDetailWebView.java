@@ -67,6 +67,7 @@ public class HotPatchDetailWebView implements IPatch
 					Log.d(TAG, "mContext replaced success.");
 
 					ViewGroup mContainer = (ViewGroup)XposedHelpers.getObjectField(obj, "f");
+					Log.d(TAG, "mContainer got success.");
 					if (null != mContainer) {
 						LinearLayout title = null;
 						int childCount = (Integer)XposedHelpers.callMethod(mContainer, "getChildCount");
