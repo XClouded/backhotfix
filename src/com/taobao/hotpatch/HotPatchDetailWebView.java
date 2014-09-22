@@ -15,36 +15,41 @@ import com.taobao.hotpatch.patch.PatchCallback.PatchParam;
 
 public class HotPatchDetailWebView implements IPatch
 {
+	private static final String TAG = "HotPatchDetailWebView";
 
 	BundleImpl	mDetailBundle;
 	Class<?>	mMainBottomPage	= null;
-	Class<?>	mDetailHybridWebViewHelper = null;
 	Class<?>	mDetailGoodsFragment = null;
+	Class<?>	mDetailHybridWebViewHelper = null;
+	Class<?>	mDetailHybridWebView = null;
 
 	public void handlePatch(PatchParam lpparam)
 	{
-		Log.d("HotPatch_pkg", "start DetailBottomPatch handlePatch");
+		Log.d(TAG, "start DetailBottomPatch handlePatch");
 		try
 		{
 			//获取 bundle
 			mDetailBundle = (BundleImpl) Atlas.getInstance().getBundle("com.taobao.android.trade");
 			if (mDetailBundle == null)
 			{
-				Log.d("HotPatch_pkg", "detail bundle is null");
+				Log.d(TAG, "detail bundle is null");
 				return;
 			}
 			
 			//获取需要用到的类名
 			mMainBottomPage = mDetailBundle.getClassLoader().loadClass("com.taobao.tao.detail.activity.detail.ui.mainpage.f");
-			Log.d("HotPatch_pkg", "hotpatch MainBottomPage loadClass success");
-
-			mDetailHybridWebViewHelper = mDetailBundle.getClassLoader().loadClass("com.taobao.tao.detail.activity.detail.ui.hybrid.DetailHybridWebViewHelper");
-			Log.d("HotPatch_pkg", "hotpatch DetailHybridWebView loadClass success");
+			Log.d(TAG, "hotpatch MainBottomPage loadClass success");
 
 			mDetailGoodsFragment = mDetailBundle.getClassLoader().loadClass("com.taobao.tao.detail.activity.detail.ui.diagram.DetailGoodsFragment");
-			Log.d("HotPatch_pkg", "hotpatch DetailGoodsFragment loadClass success");
+			Log.d(TAG, "hotpatch DetailGoodsFragment loadClass success");
+
+			mDetailHybridWebViewHelper = mDetailBundle.getClassLoader().loadClass("com.taobao.tao.detail.activity.detail.ui.hybrid.DetailHybridWebViewHelper");
+			Log.d(TAG, "hotpatch DetailHybridWebViewHelper loadClass success");
+
+			mDetailHybridWebView = mDetailBundle.getClassLoader().loadClass("com.taobao.tao.detail.activity.detail.ui.hybrid.DetailHybridWebView");
+			Log.d(TAG, "hotpatch DetailHybridWebView loadClass success");
 		} catch (ClassNotFoundException e) {
-			Log.d("HotPatch_pkg", "invoke classes failed" + e.toString());
+			Log.d(TAG, "invoke classes failed" + e.toString());
 			return;
 		}
 		
@@ -58,6 +63,7 @@ public class HotPatchDetailWebView implements IPatch
 					Object obj = param.thisObject;
 
 					XposedHelpers.setObjectField(obj, "e", null);	// mContext = null;
+					Log.d(TAG, "mContext replaced success.");
 
 					RelativeLayout mContainer = (RelativeLayout)XposedHelpers.getObjectField(obj, "f");
 					if (null != mContainer) {
@@ -81,17 +87,20 @@ public class HotPatchDetailWebView implements IPatch
 			    		XposedHelpers.callMethod(mContainer, "removeAllViews");
 			    		XposedHelpers.setObjectField(obj, "f", null);
 					}
+					Log.d(TAG, "mContainer replaced success.");
 
 					Object mDesc = (Object)XposedHelpers.getObjectField(obj, "g");
 			    	if (null != mDesc) {
-			    		XposedHelpers.callStaticMethod(mDetailHybridWebViewHelper, "onWebViewDestroy", mDesc);
+			    		XposedHelpers.callStaticMethod(mDetailHybridWebViewHelper, "onWebViewDestroy", new Class<?>[] { mDetailHybridWebView }, mDesc);
 			    		XposedHelpers.setObjectField(obj, "g", null);
 			    	}
+					Log.d(TAG, "mDesc replaced success.");
 
 			    	XposedBridge.invokeNonVirtual(obj,
 			    			mMainBottomPage.getSuperclass().getDeclaredMethod("destroy"));
+					Log.d(TAG, "super.destroy() replaced success.");
 				} catch (Exception e) {
-					Log.d("HotPatch_pkg", "MainBottomPage::destroy() replaceHookedMethod callback failed: " + e.toString());
+					Log.d(TAG, "MainBottomPage::destroy() replaceHookedMethod callback failed: " + e.toString());
 				}
 
 		    	return null;
@@ -129,17 +138,20 @@ public class HotPatchDetailWebView implements IPatch
 			    		XposedHelpers.callMethod(mWebviewContainer, "removeAllViews");
 			    		XposedHelpers.setObjectField(obj, "mWebviewContainer", null);
 					}
+					Log.d(TAG, "mWebviewContainer replaced success.");
 
 					Object mWebview = (Object)XposedHelpers.getObjectField(obj, "mWebview");
 			    	if (null != mWebview) {
-			    		XposedHelpers.callStaticMethod(mDetailHybridWebViewHelper, "onWebViewDestroy", mWebview);
+			    		XposedHelpers.callStaticMethod(mDetailHybridWebViewHelper, "onWebViewDestroy", new Class<?>[] { mDetailHybridWebView }, mWebview);
 			    		XposedHelpers.setObjectField(obj, "mWebview", null);
 			    	}
+					Log.d(TAG, "mWebview replaced success.");
 
 			    	XposedBridge.invokeNonVirtual(obj,
 			    			mDetailGoodsFragment.getSuperclass().getDeclaredMethod("onDestroy"));
+					Log.d(TAG, "super.onDestroy() replaced success.");
 				} catch (Exception e) {
-					Log.d("HotPatch_pkg", "DetailGoodsFragment::onDestroy() replaceHookedMethod callback failed: " + e.toString());
+					Log.d(TAG, "DetailGoodsFragment::onDestroy() replaceHookedMethod callback failed: " + e.toString());
 				}
 
 		    	return null;
