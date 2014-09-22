@@ -141,13 +141,6 @@
 		</dependency>
 		
 		<dependency>
-            <groupId>com.taobao.wireless</groupId>
-            <artifactId>locate</artifactId>
-            <version>2.1.3</version>
-            <scope>provided</scope>
-        </dependency>
-		
-		<dependency>
             <groupId>com.taobao.android</groupId>
             <artifactId>taobaocompat</artifactId>
             <version>2.0.0-SNAPSHOT</version>
