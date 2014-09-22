@@ -6,7 +6,6 @@ import android.taobao.atlas.framework.Atlas;
 import android.taobao.atlas.framework.BundleImpl;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
@@ -79,7 +78,7 @@ public class HotPatchDetailWebView implements IPatch
 						int childCount = (Integer)method.invoke(mContainer);
 						View child;
 
-						method = XposedHelpers.findMethodBestMatch(mContainer.getClass().getSuperclass(), "getChildAt", Integer.class);
+						method = XposedHelpers.findMethodBestMatch(mContainer.getClass().getSuperclass(), "getChildAt", int.class);
 						method.setAccessible(true);
 						for (int i = 0; i < childCount; i++) {
 			    			child = (View)method.invoke(mContainer, i);
@@ -140,7 +139,7 @@ public class HotPatchDetailWebView implements IPatch
 						int childCount = (Integer)method.invoke(mWebviewContainer);
 						View child;
 
-						method = XposedHelpers.findMethodBestMatch(mWebviewContainer.getClass().getSuperclass(), "getChildAt", Integer.class);
+						method = XposedHelpers.findMethodBestMatch(mWebviewContainer.getClass().getSuperclass(), "getChildAt", int.class);
 						method.setAccessible(true);
 			    		for (int i = 0; i < childCount; i++) {
 			    			child = (View)method.invoke(mWebviewContainer, i);
