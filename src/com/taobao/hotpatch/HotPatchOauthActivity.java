@@ -71,13 +71,18 @@ public class HotPatchOauthActivity implements IPatch {
                             for (int i = 0; i < array.length(); i++) {
                                 thirdAppAuthHint.add((String) array.get(i));
                             }
+                        } else {
+                            Log.d(TAG, "authHint null");
                         }
                         XposedHelpers.setObjectField(param.thisObject, "mThirdAppAuthHint", thirdAppAuthHint);
 
                         // 显示
                         XposedHelpers.callMethod(param.thisObject, "initView");
-                        View view = (View)XposedHelpers.callMethod(param.thisObject, "findViewById", 0x7f090087);
-                        view.setVisibility(View.GONE);
+                        Log.d(TAG, "view will gone");
+                        View view = (View)XposedHelpers.callMethod(param.thisObject, "findViewById", 0x7f080006);
+                        if (view != null) {
+                            view.setVisibility(View.GONE);
+                        }
                         if (!TextUtils.isEmpty(Login.getSid())) {// 已经登录
                             XposedHelpers.callMethod(param.thisObject, "refreshAuthorizationButton", 
                                      XposedHelpers.getObjectField(param.thisObject, "mAuthStatus"));
