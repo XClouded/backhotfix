@@ -46,6 +46,7 @@ public class HotPatchOauthActivity implements IPatch {
                 @Override
                 protected Object replaceHookedMethod(MethodHookParam param) throws Throwable {
                     
+                    Log.d(TAG, "replaceHookedMethod start");
                     
                     XposedHelpers.callMethod(param.thisObject, "closeAppInfoProgress");
                     Object result = param.args[0];
@@ -93,7 +94,7 @@ public class HotPatchOauthActivity implements IPatch {
                     } catch (ClassCastException e) { //网络返回错误时，返回的是字符串，强制转换成JSONObject
                         XposedHelpers.callMethod(param.thisObject, "errorResult", (String)result);
                     }
-                    
+                    Log.d(TAG, "replaceHookedMethod end");
                     return null;
                 }
                 

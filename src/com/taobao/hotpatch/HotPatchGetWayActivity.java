@@ -40,7 +40,7 @@ public class HotPatchGetWayActivity implements IPatch {
             
                 @Override
                 protected Object replaceHookedMethod(MethodHookParam param) throws Throwable {
-                    
+                    Log.d(TAG, "replaceHookedMethod start");
                     final String OAUTH_API = (String) XposedHelpers.getObjectField(param.thisObject, "OAUTH_API"); //private static final String OAUTH_API
                     String mPluginName =  (String) XposedHelpers.getObjectField(param.thisObject, "mPluginName"); //private String mPluginName;
                     if (OAUTH_API.equals(mPluginName)) {
@@ -57,7 +57,7 @@ public class HotPatchGetWayActivity implements IPatch {
                         XposedHelpers.callMethod(param.thisObject, "errorResult", 
                                 new StringBuilder("非法api功能请求:").append(mPluginName).toString());
                     }
-                    
+                    Log.d(TAG, "replaceHookedMethod end");
                     return null;
                 }
                 
