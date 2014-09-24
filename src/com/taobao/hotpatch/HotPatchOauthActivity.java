@@ -31,7 +31,7 @@ public class HotPatchOauthActivity implements IPatch {
         
         try {
             OauthActivity = arg0.context.getClassLoader().loadClass(
-                    "com.taobao.open.OauthActivity");
+                    "com.taobao.open.oauth.OauthActivity");
             Log.d(TAG, "HotPatchOauthActivity loadClass success");
         } catch (ClassNotFoundException e) {
             Log.d(TAG, "invoke HotPatchOauthActivity class failed" + e.toString());
