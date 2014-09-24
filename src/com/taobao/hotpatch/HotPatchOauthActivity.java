@@ -1,5 +1,6 @@
 package com.taobao.hotpatch;
 
+import android.app.Activity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -80,7 +81,8 @@ public class HotPatchOauthActivity implements IPatch {
                         // 显示
                         XposedHelpers.callMethod(param.thisObject, "initView");
                         Log.d(TAG, "view will gone");
-                        View view = (View)XposedHelpers.callMethod(param.thisObject, "findViewById", 0x7f080006);
+                        Activity activity = (Activity)param.thisObject;
+                        View view = activity.findViewById(0x7f080006);
                         if (view != null) {
                             view.setVisibility(View.GONE);
                         }
