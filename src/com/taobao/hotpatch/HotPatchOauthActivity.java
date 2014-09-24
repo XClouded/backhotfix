@@ -10,7 +10,6 @@ import com.taobao.android.dexposed.XposedHelpers;
 import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchCallback.PatchParam;
 import com.taobao.login4android.api.Login;
-import com.taobao.open.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
