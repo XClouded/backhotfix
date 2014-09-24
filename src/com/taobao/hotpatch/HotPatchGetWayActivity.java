@@ -45,6 +45,7 @@ public class HotPatchGetWayActivity implements IPatch {
                     String mPluginName =  (String) XposedHelpers.getObjectField(param.thisObject, "mPluginName"); //private String mPluginName;
                     if (OAUTH_API.equals(mPluginName)) {
                         if (!TextUtils.isEmpty(Login.getSid()) && Login.checkSessionValid()) {//非空有效
+                            Log.d(TAG, "loadClass HotPatchGetWayActivity 非空有效:" + Login.getSid() + ":" + Login.checkSessionValid());
                             XposedHelpers.callMethod(param.thisObject, "startOauth");
                         } else {
                             XposedHelpers.setObjectField(param.thisObject, "mLoginStart", true);

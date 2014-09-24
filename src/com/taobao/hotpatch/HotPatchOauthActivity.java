@@ -2,6 +2,7 @@ package com.taobao.hotpatch;
 
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 
 import com.taobao.android.dexposed.XC_MethodReplacement;
 import com.taobao.android.dexposed.XposedBridge;
@@ -9,6 +10,7 @@ import com.taobao.android.dexposed.XposedHelpers;
 import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchCallback.PatchParam;
 import com.taobao.login4android.api.Login;
+import com.taobao.open.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -64,6 +66,7 @@ public class HotPatchOauthActivity implements IPatch {
 
                         List<String> thirdAppAuthHint = new ArrayList<String>();
                         if (!obj.isNull("authHint")) {
+                            Log.d(TAG, "authHint not null");
                             JSONArray array = obj.getJSONArray("authHint");
 
                             for (int i = 0; i < array.length(); i++) {
@@ -74,13 +77,15 @@ public class HotPatchOauthActivity implements IPatch {
 
                         // 显示
                         XposedHelpers.callMethod(param.thisObject, "initView");
+                        View view = (View)XposedHelpers.callMethod(param.thisObject, "findViewById", 0x7f090087);
+                        view.setVisibility(View.GONE);
                         if (!TextUtils.isEmpty(Login.getSid())) {// 已经登录
                             XposedHelpers.callMethod(param.thisObject, "refreshAuthorizationButton", 
                                      XposedHelpers.getObjectField(param.thisObject, "mAuthStatus"));
                             XposedHelpers.callMethod(param.thisObject, "refreshTaoAccountView");
                         }
                     } catch (JSONException e) {
-                        XposedHelpers.callMethod(param.thisObject, "errorResult", "网络返回数据无法解析，网络不稳定");
+                        XposedHelpers.callMethod(param.thisObject, "errorResult", "网络返回数据无法解析hotpatch，网络不稳定");
                     } catch (ClassCastException e) { //网络返回错误时，返回的是字符串，强制转换成JSONObject
                         XposedHelpers.callMethod(param.thisObject, "errorResult", (String)result);
                     }
