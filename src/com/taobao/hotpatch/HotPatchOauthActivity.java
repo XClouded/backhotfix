@@ -1,6 +1,5 @@
 package com.taobao.hotpatch;
 
-import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -27,12 +26,12 @@ public class HotPatchOauthActivity implements IPatch {
         
         Log.d(TAG, "HotPatchOauthActivity start detecting ... ");
         
-        Class<?> GetWayActivity = null;
+        Class<?> OauthActivity = null;
         
         try {
-            GetWayActivity = arg0.context.getClassLoader().loadClass(
+            OauthActivity = arg0.context.getClassLoader().loadClass(
                     "com.taobao.open.OauthActivity");
-            Log.d(TAG, "HotPatchGetWayActivity loadClass success");
+            Log.d(TAG, "HotPatchOauthActivity loadClass success");
         } catch (ClassNotFoundException e) {
             Log.d(TAG, "invoke HotPatchOauthActivity class failed" + e.toString());
             return;
@@ -40,7 +39,7 @@ public class HotPatchOauthActivity implements IPatch {
         
         Log.d(TAG, "loadClass HotPatchOauthActivity Env success.");
         
-        XposedBridge.findAndHookMethod(GetWayActivity, "endGetAppInfo", Object.class,
+        XposedBridge.findAndHookMethod(OauthActivity, "endGetAppInfo", Object.class,
                 new XC_MethodReplacement() {
             
                 @Override
@@ -62,7 +61,6 @@ public class HotPatchOauthActivity implements IPatch {
                         XposedHelpers.setObjectField(param.thisObject, "mThirdAppTitle", obj.getString("title"));
                         XposedHelpers.setObjectField(param.thisObject, "mThirdAppLogo", obj.getString("logo"));
                         XposedHelpers.setObjectField(param.thisObject, "mAuthStatus", obj.getBoolean("authStatus"));
-                        XposedHelpers.setObjectField(param.thisObject, "mThirdAppKey", obj.getString("appKey"));
 
                         List<String> thirdAppAuthHint = new ArrayList<String>();
                         if (!obj.isNull("authHint")) {
@@ -80,8 +78,6 @@ public class HotPatchOauthActivity implements IPatch {
                             XposedHelpers.callMethod(param.thisObject, "refreshAuthorizationButton", 
                                      XposedHelpers.getObjectField(param.thisObject, "mAuthStatus"));
                             XposedHelpers.callMethod(param.thisObject, "refreshTaoAccountView");
-                        } else {// 启动登录
-                            Login.login((Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler"), true);
                         }
                     } catch (JSONException e) {
                         XposedHelpers.callMethod(param.thisObject, "errorResult", "网络返回数据无法解析，网络不稳定");

@@ -1,5 +1,6 @@
 package com.taobao.hotpatch;
 
+import android.os.Bundle;
 import android.taobao.util.SafeHandler;
 import android.text.TextUtils;
 import android.util.Log;
@@ -10,6 +11,7 @@ import com.taobao.android.dexposed.XposedHelpers;
 import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchCallback.PatchParam;
 import com.taobao.login4android.api.Login;
+import com.taobao.login4android.api.LoginConstants;
 
 public class HotPatchGetWayActivity implements IPatch {
 
@@ -46,7 +48,9 @@ public class HotPatchGetWayActivity implements IPatch {
                             XposedHelpers.callMethod(param.thisObject, "startOauth");
                         } else {
                             XposedHelpers.setObjectField(param.thisObject, "mLoginStart", true);
-                            Login.login(new SafeHandler((android.os.Handler.Callback)param.thisObject), true);
+                            Bundle bundle = new Bundle();
+                            bundle.putString(LoginConstants.BROWSER_REF_URL, "http://oauth.m.taobao.com/openSdk");
+                            Login.login(new SafeHandler((android.os.Handler.Callback)param.thisObject), true, bundle);
                         }
                     } else {
                         XposedHelpers.callMethod(param.thisObject, "errorResult", 
