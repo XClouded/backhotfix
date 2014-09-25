@@ -14,6 +14,8 @@ import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchCallback.PatchParam;
 import com.taobao.securityjni.StaticDataStore;
 import com.taobao.securityjni.tools.DataContext;
+import com.taobao.tao.Globals;
+import com.taobao.tao.TaoApplication;
 
 public class HotPatchCpEnvManager implements IPatch {
 
@@ -48,7 +50,7 @@ public class HotPatchCpEnvManager implements IPatch {
                     Log.d(TAG, "2Begin replaceHookedMethod Env");
                     
                     String sAppkey = (String) XposedHelpers.getStaticObjectField(param.method.getDeclaringClass(), "sAppkey");      //public static String sAppkey;
-                    
+
                     Log.d(TAG, "sak===");
                     
                     int sVersionStyle =  (Integer) XposedHelpers.getStaticObjectField(param.method.getDeclaringClass(), "sVersionStyle");   // public static int sVersionStyle
