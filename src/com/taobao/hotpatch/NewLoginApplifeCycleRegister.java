@@ -109,18 +109,22 @@ public class NewLoginApplifeCycleRegister extends AbstractActivityLifecycleCallb
             Bundle bundle = (Bundle) msg.obj;
             String url = bundle.getString(LoginConstants.BROWSER_REF_URL);
             TaoLog.Logd("LoginApplifeCycleRegister", "browserRefUrl=" + url);
+            if (TextUtils.isEmpty(url)) {
+                url = Login.browserRefUrl;
+            }
+            
             if (!TextUtils.isEmpty(url)) {
-                if (url.contains("http://oauth.m.taobao.com/") && mActivity != null) {
-                    Activity a = mActivity.get();
-                    Activity top = mTopActivity.get();
+                if (url.contains("http://oauth.m.taobao.com/") && mActivity != null) {//说明是从授权界面而
+                    Activity a = mActivity.get();//代表新创建的页面
+                    Activity top = mTopActivity.get();//淘宝已经获取焦点的页面
                     if (a != null && !TextUtils.equals(a.getLocalClassName(), "com.taobao.browser.BrowserActivity") 
-                            && !TextUtils.equals(a.getLocalClassName(), "com.taobao.open.GetWayActivity")) {
+                            && !TextUtils.equals(a.getLocalClassName(), "com.taobao.open.GetWayActivity")) {//切换后台销毁
                         // 最新创建的activity不是游戏授权，由于授权页和手淘不在一个task，把手淘的task推至后台
                         TaoLog.Logv("LoginApplifeCycleRegister", "moveTaskToBack:true " + a.toString());
                         a.moveTaskToBack(true);
                     } else if(top != null && a != null 
                             && (TextUtils.equals(a.getLocalClassName(), "com.taobao.browser.BrowserActivity") || TextUtils.equals(a.getLocalClassName(), "com.taobao.open.GetWayActivity"))
-                            && !top.getLocalClassName().equals(a.getLocalClassName())){
+                            && !top.getLocalClassName().equals(a.getLocalClassName())){//后退状态
                         //最新创建的activity是授权，但获得焦点的activity不是授权。由于授权页和手淘不在一个task，所以整个手淘task推至后台
                         TaoLog.Logv("LoginApplifeCycleRegister", "moveTaskToBack:true " + top.toString());
                         top.moveTaskToBack(true);
@@ -135,6 +139,10 @@ public class NewLoginApplifeCycleRegister extends AbstractActivityLifecycleCallb
             Bundle bundle = (Bundle) msg.obj;
             String url = bundle.getString(LoginConstants.BROWSER_REF_URL);
             TaoLog.Logd("LoginApplifeCycleRegister", "browserRefUrl=" + url);
+            if (TextUtils.isEmpty(url)) {
+                url = Login.browserRefUrl;
+            }
+            
             if (!TextUtils.isEmpty(url)) {
                 if (url.contains("http://oauth.m.taobao.com/") && mActivity != null) {
                     Activity a = mActivity.get();
