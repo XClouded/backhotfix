@@ -1,5 +1,7 @@
 package com.taobao.hotpatch;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.taobao.util.SafeHandler;
 import android.text.TextUtils;
@@ -21,6 +23,16 @@ public class HotPatchGetWayActivity implements IPatch {
     public void handlePatch(PatchParam arg0) throws Throwable {
         
         Log.d(TAG, "HotPatchGetWayActivity start detecting ... ");
+        
+        final Context context1 = arg0.context;
+        // 得到当前运行的进程名字。
+        String processName = getProcessName(context1);
+
+        // 由于patch运行在多进程的环境，如果只是运行在主进程，就要做如下的相应判断
+        if (!"com.taobao.taobao".equals(processName)) {
+            // 不是主进程就返回
+            return;
+        }
         
         Class<?> GetWayActivity = null;
         
@@ -62,6 +74,18 @@ public class HotPatchGetWayActivity implements IPatch {
                 }
                 
         });
+    }
+    
+    // 获得当前的进程名字
+    public static String getProcessName(Context context) {
+        int pid = android.os.Process.myPid();
+        ActivityManager mActivityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningAppProcessInfo appProcess : mActivityManager.getRunningAppProcesses()) {
+            if (appProcess.pid == pid) {
+                return appProcess.processName;
+            }
+        }
+        return "";
     }
 
 }
