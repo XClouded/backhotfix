@@ -3,22 +3,18 @@ package com.taobao.hotpatch;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.location.LocationManager;
 import android.taobao.atlas.framework.Atlas;
 import android.taobao.atlas.framework.BundleImpl;
-import android.taobao.locate.LocationInfo;
 import android.text.TextUtils;
 import android.util.Log;
+
 import com.alibaba.fastjson.JSON;
-import com.taobao.android.dexposed.XC_MethodHook;
 import com.taobao.android.dexposed.XC_MethodReplacement;
 import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchCallback;
 import com.taobao.passivelocation.aidl.LocationDTO;
 import com.taobao.passivelocation.aidl.LocationServiceManager;
-import com.taobao.tao.Globals;
-import org.json.JSONObject;
 
 /**
  * Created by xufu.lg on 2014/9/23.
