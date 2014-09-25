@@ -59,11 +59,11 @@ public class HotPatchOauthActivity implements IPatch {
                     try {
                         // 解析数据
                         JSONObject obj = (JSONObject) result;
-
+                        boolean authStatus = obj.getBoolean("authStatus");
                         XposedHelpers.setObjectField(param.thisObject, "mThirdAppKey", obj.getString("appKey"));
                         XposedHelpers.setObjectField(param.thisObject, "mThirdAppTitle", obj.getString("title"));
                         XposedHelpers.setObjectField(param.thisObject, "mThirdAppLogo", obj.getString("logo"));
-                        XposedHelpers.setObjectField(param.thisObject, "mAuthStatus", obj.getBoolean("authStatus"));
+                        XposedHelpers.setObjectField(param.thisObject, "mAuthStatus", authStatus);
 
                         List<String> thirdAppAuthHint = new ArrayList<String>();
                         if (!obj.isNull("authHint")) {
@@ -82,13 +82,12 @@ public class HotPatchOauthActivity implements IPatch {
                         XposedHelpers.callMethod(param.thisObject, "initView");
                         Log.d(TAG, "view will gone");
                         Activity activity = (Activity)param.thisObject;
-                        View view = activity.findViewById(0x7f080006);
+                        View view = activity.findViewById(0x7f090087);
                         if (view != null) {
                             view.setVisibility(View.GONE);
                         }
                         if (!TextUtils.isEmpty(Login.getSid())) {// 已经登录
-                            XposedHelpers.callMethod(param.thisObject, "refreshAuthorizationButton", 
-                                     XposedHelpers.getObjectField(param.thisObject, "mAuthStatus"));
+                            XposedHelpers.callMethod(param.thisObject, "refreshAuthorizationButton", authStatus);
                             XposedHelpers.callMethod(param.thisObject, "refreshTaoAccountView");
                         }
                     } catch (JSONException e) {
