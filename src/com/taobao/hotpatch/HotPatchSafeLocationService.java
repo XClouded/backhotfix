@@ -54,15 +54,23 @@ public class HotPatchSafeLocationService implements IPatch {
         XposedBridge.findAndHookMethod(safeLocationService,"getLocationInfo",  new XC_MethodReplacement() {
             @Override
             protected Object replaceHookedMethod(MethodHookParam methodHookParam) throws Throwable {
-                LocationDTO locationInfo = LocationServiceManager.getCachedLocation();
-                if(locationInfo != null)
-                    return locationInfo;
-                SharedPreferences sp = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);//LBSUtil.getSharedPreferences();
-                String locationStr = sp.getString("nav_success","");
-                if(!TextUtils.isEmpty(locationStr)) {
-                    com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(locationStr);
-                    locationInfo = JSON.toJavaObject(jsonObject, LocationDTO.class);
-                    return locationInfo;
+                try {
+                    LocationDTO locationInfo = LocationServiceManager.getCachedLocation();
+                    if (locationInfo != null) {
+                        Log.d("HotPatchSafeLocationService", "getCachedLocation != null");
+                        return locationInfo;
+                    }
+                    Log.d("HotPatchSafeLocationService", "getCachedLocation = null");
+                    SharedPreferences sp = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);//LBSUtil.getSharedPreferences();
+                    String locationStr = sp.getString("nav_success", "");
+                    if (!TextUtils.isEmpty(locationStr)) {
+                        Log.d("HotPatchSafeLocationService", "locationStr=" + locationStr);
+                        com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(locationStr);
+                        locationInfo = JSON.toJavaObject(jsonObject, LocationDTO.class);
+                        return locationInfo;
+                    }
+                } catch (Exception e){
+
                 }
                 return null;
             }
