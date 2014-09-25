@@ -139,6 +139,10 @@ public class NewLoginApplifeCycleRegister extends AbstractActivityLifecycleCallb
             Bundle bundle = (Bundle) msg.obj;
             String url = bundle.getString(LoginConstants.BROWSER_REF_URL);
             TaoLog.Logd("LoginApplifeCycleRegister", "browserRefUrl=" + url);
+            if (TextUtils.isEmpty(url)) {
+                url = Login.browserRefUrl;
+            }
+            
             if (!TextUtils.isEmpty(url)) {
                 if (url.contains("http://oauth.m.taobao.com/") && mActivity != null) {
                     Activity a = mActivity.get();
