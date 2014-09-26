@@ -3,8 +3,12 @@ package com.taobao.hotpatch;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Looper;
 import android.os.Message;
+import android.os.Handler.Callback;
+import android.taobao.util.SafeHandler;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -13,6 +17,7 @@ import com.taobao.android.dexposed.XC_MethodReplacement;
 import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.android.dexposed.XposedHelpers;
 import com.taobao.android.lifecycle.PanguApplication;
+import com.taobao.android.nav.Nav;
 import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchCallback.PatchParam;
 import com.taobao.login4android.api.Login;
@@ -84,12 +89,15 @@ public class HotPatchLoginApplifeCycleRegister implements IPatch {
             
                 protected void beforeHookedMethod(MethodHookParam param)
                         throws Throwable {
+                    Log.v("NavLoginHookerCallback", "start");
                     Message msg = (Message)param.args[0];
                     Bundle bundle = (Bundle)msg.obj;
                     if(bundle != null) {
                         String url = bundle.getString(LoginConstants.BROWSER_REF_URL);
                         if(!TextUtils.isEmpty(url) && url.contains("http://oauth.m.taobao.com/")) {
+                            Log.v("NavLoginHookerCallback", "start1");
                             bundle.remove(LoginConstants.BROWSER_REF_URL);
+                            Log.v("NavLoginHookerCallback", "end");
                         }
                     }
                 }
