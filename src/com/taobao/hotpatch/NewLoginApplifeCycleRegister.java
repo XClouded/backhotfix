@@ -74,7 +74,6 @@ public class NewLoginApplifeCycleRegister extends AbstractActivityLifecycleCallb
                     && activity.getLocalClassName().contains("UserLoginActivity")
                     && !TextUtils.isEmpty(Login.browserRefUrl) && Login.browserRefUrl.contains("http://oauth.m.taobao.com/")) {
                 mIsComeFromOauth = true;
-                Login.browserRefUrl = "";
             }
         }
         //Log.d("LoginApplifeCycleRegister", "checkIsFromOauth mIsComeFromOauth:" + mIsComeFromOauth + ", className:" + activity.getLocalClassName());
@@ -88,7 +87,7 @@ public class NewLoginApplifeCycleRegister extends AbstractActivityLifecycleCallb
                 && mIsComeFromOauth) {
             activity1.finish();
             // notify cancel login
-            Intent cancelNotifyIntent = new Intent(LoginAction.NOTIFY_LOGIN_CANCEL.name());
+            Intent cancelNotifyIntent = new Intent("com.ali.user.sdk.login.CANCEL");
             mContext.sendBroadcast(cancelNotifyIntent);
             //Log.v("LoginApplifeCycleRegister", "onActivityStopped:UserLoginActivity. finish(). sendBroadcast:NOTIFY_LOGIN_CANCEL");
         }
