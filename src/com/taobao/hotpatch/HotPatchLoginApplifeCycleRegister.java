@@ -25,14 +25,13 @@ import com.taobao.login4android.api.LoginConstants;
 
 public class HotPatchLoginApplifeCycleRegister implements IPatch {
 
-
     private final static String TAG = "HotPatchLoginApplifeCycleRegister";
-    
+
     @Override
     public void handlePatch(PatchParam arg0) throws Throwable {
-        
+
         Log.d(TAG, "HotPatchLoginApplifeCycleRegister start detecting ... ");
-        
+
         final Context context1 = arg0.context;
         // 得到当前运行的进程名字。
         String processName = getProcessName(context1);
@@ -42,74 +41,86 @@ public class HotPatchLoginApplifeCycleRegister implements IPatch {
             // 不是主进程就返回
             return;
         }
-        
+
         Class<?> LoginApplifeCycleRegister = null;
         Class<?> NavLoginHookerCallback = null;
-        
+
         try {
-            PanguApplication context = (PanguApplication)arg0.context;
-            NewLoginApplifeCycleRegister login = new NewLoginApplifeCycleRegister(context);
+            PanguApplication context = (PanguApplication) arg0.context;
+            NewLoginApplifeCycleRegister login = new NewLoginApplifeCycleRegister(
+                    context);
             context.registerCrossActivityLifecycleCallback(login);
             context.registerActivityLifecycleCallbacks(login);
-            
-            LoginApplifeCycleRegister = arg0.context.getClassLoader().loadClass(
-                    "com.taobao.taobaocompat.lifecycle.LoginApplifeCycleRegister");
-            NavLoginHookerCallback = arg0.context.getClassLoader()
-                    .loadClass("com.taobao.tao.u");
-            
+
+            LoginApplifeCycleRegister = arg0.context
+                    .getClassLoader()
+                    .loadClass(
+                            "com.taobao.taobaocompat.lifecycle.LoginApplifeCycleRegister");
+            NavLoginHookerCallback = arg0.context.getClassLoader().loadClass(
+                    "com.taobao.tao.u");
+
             Log.d(TAG, "HotPatchLoginApplifeCycleRegister loadClass success");
         } catch (Exception e) {
-            Log.d(TAG, "invoke HotPatchLoginApplifeCycleRegister class failed" + e.toString());
+            Log.d(TAG, "invoke HotPatchLoginApplifeCycleRegister class failed"
+                    + e.toString());
             return;
         }
-        
+
         Log.d(TAG, "loadClass HotPatchLoginApplifeCycleRegister Env success.");
-        XposedBridge.findAndHookMethod(LoginApplifeCycleRegister, "handleMessage", Message.class,
-                new XC_MethodReplacement() {
-            
-                @Override
-                protected Object replaceHookedMethod(MethodHookParam param) throws Throwable {
-                    
-                    Message msg = (Message) param.args[0];
-                    switch (msg.what) {
-                    case Login.NOTIFY_LOGINSUCCESS:
-                        String sid = Login.getSid();
-                        XposedHelpers.callMethod(param.thisObject, "updateCpsTrack", sid);
-                        break;
+        XposedBridge.findAndHookMethod(LoginApplifeCycleRegister,
+                "handleMessage", Message.class, new XC_MethodReplacement() {
+
+                    @Override
+                    protected Object replaceHookedMethod(MethodHookParam param)
+                            throws Throwable {
+
+                        Message msg = (Message) param.args[0];
+                        switch (msg.what) {
+                        case Login.NOTIFY_LOGINSUCCESS:
+                            String sid = Login.getSid();
+                            XposedHelpers.callMethod(param.thisObject,
+                                    "updateCpsTrack", sid);
+                            break;
+                        }
+
+                        param.setResult(false);
+                        return false;
                     }
-                    
-                    param.setResult(false);
-                    return false;
-                }
-                
-        });
-        
-        XposedBridge.findAndHookMethod(NavLoginHookerCallback, "handleMessage", Message.class,
-                new XC_MethodHook() {
-            
-                protected void beforeHookedMethod(MethodHookParam param)
-                        throws Throwable {
-                    Log.v("NavLoginHookerCallback", "start");
-                    Message msg = (Message)param.args[0];
-                    Bundle bundle = (Bundle)msg.obj;
-                    if(bundle != null) {
-                        String url = bundle.getString(LoginConstants.BROWSER_REF_URL);
-                        if(!TextUtils.isEmpty(url) && url.contains("http://oauth.m.taobao.com/")) {
-                            Log.v("NavLoginHookerCallback", "start1");
-                            bundle.remove(LoginConstants.BROWSER_REF_URL);
-                            Log.v("NavLoginHookerCallback", "end");
+
+                });
+
+        XposedBridge.findAndHookMethod(NavLoginHookerCallback, "handleMessage",
+                Message.class, new XC_MethodHook() {
+
+                    protected void beforeHookedMethod(MethodHookParam param)
+                            throws Throwable {
+                        Log.v("NavLoginHookerCallback", "start");
+                        Message msg = (Message) param.args[0];
+                        if (msg.what == Login.NOTIFY_LOGINSUCCESS) {
+                            Bundle bundle = (Bundle) msg.obj;
+                            if (bundle != null) {
+                                String url = bundle
+                                        .getString(LoginConstants.BROWSER_REF_URL);
+                                if (!TextUtils.isEmpty(url)
+                                        && url.contains("http://oauth.m.taobao.com/")) {
+                                    Log.v("NavLoginHookerCallback", "remove");
+                                    bundle.remove(LoginConstants.BROWSER_REF_URL);
+                                    Log.v("NavLoginHookerCallback", "end");
+                                }
+                            }
                         }
                     }
-                }
-        });
+                });
 
     }
 
     // 获得当前的进程名字
     public static String getProcessName(Context context) {
         int pid = android.os.Process.myPid();
-        ActivityManager mActivityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningAppProcessInfo appProcess : mActivityManager.getRunningAppProcesses()) {
+        ActivityManager mActivityManager = (ActivityManager) context
+                .getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningAppProcessInfo appProcess : mActivityManager
+                .getRunningAppProcesses()) {
             if (appProcess.pid == pid) {
                 return appProcess.processName;
             }
