@@ -94,8 +94,8 @@ public class HotPatchLoginApplifeCycleRegister implements IPatch {
 
                     protected void beforeHookedMethod(MethodHookParam param)
                             throws Throwable {
-                        Log.v("NavLoginHookerCallback", "start");
                         Message msg = (Message) param.args[0];
+                        Log.v("NavLoginHookerCallback", "start beforeHookedMethod, msg.what=" + msg.what);
                         if (msg.what == Login.NOTIFY_LOGINSUCCESS) {
                             Bundle bundle = (Bundle) msg.obj;
                             if (bundle != null) {
@@ -105,6 +105,7 @@ public class HotPatchLoginApplifeCycleRegister implements IPatch {
                                         && url.contains("http://oauth.m.taobao.com/")) {
                                     Log.v("NavLoginHookerCallback", "remove");
                                     bundle.remove(LoginConstants.BROWSER_REF_URL);
+                                    msg.obj = bundle;
                                     Log.v("NavLoginHookerCallback", "end");
                                 }
                             }
