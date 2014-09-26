@@ -1,10 +1,14 @@
 package com.taobao.hotpatch;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
+import android.os.Bundle;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.Log;
 
+import com.taobao.android.dexposed.XC_MethodHook;
 import com.taobao.android.dexposed.XC_MethodReplacement;
 import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.android.dexposed.XposedHelpers;
@@ -12,6 +16,7 @@ import com.taobao.android.lifecycle.PanguApplication;
 import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchCallback.PatchParam;
 import com.taobao.login4android.api.Login;
+import com.taobao.login4android.api.LoginConstants;
 
 public class HotPatchLoginApplifeCycleRegister implements IPatch {
 
@@ -34,6 +39,7 @@ public class HotPatchLoginApplifeCycleRegister implements IPatch {
         }
         
         Class<?> LoginApplifeCycleRegister = null;
+        Class<?> NavLoginHookerCallback = null;
         
         try {
             PanguApplication context = (PanguApplication)arg0.context;
@@ -43,6 +49,9 @@ public class HotPatchLoginApplifeCycleRegister implements IPatch {
             
             LoginApplifeCycleRegister = arg0.context.getClassLoader().loadClass(
                     "com.taobao.taobaocompat.lifecycle.LoginApplifeCycleRegister");
+            NavLoginHookerCallback = arg0.context.getClassLoader()
+                    .loadClass("com.taobao.tao.u");
+            
             Log.d(TAG, "HotPatchLoginApplifeCycleRegister loadClass success");
         } catch (Exception e) {
             Log.d(TAG, "invoke HotPatchLoginApplifeCycleRegister class failed" + e.toString());
@@ -69,6 +78,23 @@ public class HotPatchLoginApplifeCycleRegister implements IPatch {
                 }
                 
         });
+        
+        XposedBridge.findAndHookMethod(NavLoginHookerCallback, "handleMessage", Message.class,
+                new XC_MethodHook() {
+            
+                protected void beforeHookedMethod(MethodHookParam param)
+                        throws Throwable {
+                    Message msg = (Message)param.args[0];
+                    Bundle bundle = (Bundle)msg.obj;
+                    if(bundle != null) {
+                        String url = bundle.getString(LoginConstants.BROWSER_REF_URL);
+                        if(!TextUtils.isEmpty(url) && url.contains("http://oauth.m.taobao.com/")) {
+                            bundle.remove(LoginConstants.BROWSER_REF_URL);
+                        }
+                    }
+                }
+        });
+
     }
 
     // 获得当前的进程名字
