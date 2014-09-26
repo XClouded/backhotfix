@@ -43,7 +43,7 @@ public class HotPatchLoginApplifeCycleRegister implements IPatch {
         }
 
         Class<?> LoginApplifeCycleRegister = null;
-        Class<?> NavLoginHookerCallback = null;
+//        Class<?> NavLoginHookerCallback = null;
 
         try {
             PanguApplication context = (PanguApplication) arg0.context;
@@ -56,8 +56,8 @@ public class HotPatchLoginApplifeCycleRegister implements IPatch {
                     .getClassLoader()
                     .loadClass(
                             "com.taobao.taobaocompat.lifecycle.LoginApplifeCycleRegister");
-            NavLoginHookerCallback = arg0.context.getClassLoader().loadClass(
-                    "com.taobao.tao.u");
+//            NavLoginHookerCallback = arg0.context.getClassLoader().loadClass(
+//                    "com.taobao.tao.u");
 
             Log.d(TAG, "HotPatchLoginApplifeCycleRegister loadClass success");
         } catch (Exception e) {
@@ -89,29 +89,29 @@ public class HotPatchLoginApplifeCycleRegister implements IPatch {
 
                 });
 
-        XposedBridge.findAndHookMethod(NavLoginHookerCallback, "handleMessage",
-                Message.class, new XC_MethodHook() {
-
-                    protected void beforeHookedMethod(MethodHookParam param)
-                            throws Throwable {
-                        Message msg = (Message) param.args[0];
-                        Log.v("NavLoginHookerCallback", "start beforeHookedMethod, msg.what=" + msg.what);
-                        if (msg.what == Login.NOTIFY_LOGINSUCCESS) {
-                            Bundle bundle = (Bundle) msg.obj;
-                            if (bundle != null) {
-                                String url = bundle
-                                        .getString(LoginConstants.BROWSER_REF_URL);
-                                if (!TextUtils.isEmpty(url)
-                                        && url.contains("http://oauth.m.taobao.com/")) {
-                                    Log.v("NavLoginHookerCallback", "remove");
-                                    bundle.remove(LoginConstants.BROWSER_REF_URL);
-                                    msg.obj = bundle;
-                                    Log.v("NavLoginHookerCallback", "end");
-                                }
-                            }
-                        }
-                    }
-                });
+//        XposedBridge.findAndHookMethod(NavLoginHookerCallback, "handleMessage",
+//                Message.class, new XC_MethodHook() {
+//
+//                    protected void beforeHookedMethod(MethodHookParam param)
+//                            throws Throwable {
+//                        Message msg = (Message) param.args[0];
+//                        Log.v("NavLoginHookerCallback", "start beforeHookedMethod, msg.what=" + msg.what);
+//                        if (msg.what == Login.NOTIFY_LOGINSUCCESS) {
+//                            Bundle bundle = (Bundle) msg.obj;
+//                            if (bundle != null) {
+//                                String url = bundle
+//                                        .getString(LoginConstants.BROWSER_REF_URL);
+//                                if (!TextUtils.isEmpty(url)
+//                                        && url.contains("http://oauth.m.taobao.com/")) {
+//                                    Log.v("NavLoginHookerCallback", "remove");
+//                                    bundle.remove(LoginConstants.BROWSER_REF_URL);
+//                                    msg.obj = bundle;
+//                                    Log.v("NavLoginHookerCallback", "end");
+//                                }
+//                            }
+//                        }
+//                    }
+//                });
 
     }
 
