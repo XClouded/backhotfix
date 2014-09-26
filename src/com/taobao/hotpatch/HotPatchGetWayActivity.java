@@ -1,15 +1,20 @@
 package com.taobao.hotpatch;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Message;
 import android.taobao.util.SafeHandler;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 
+import com.taobao.android.dexposed.XC_MethodHook;
 import com.taobao.android.dexposed.XC_MethodReplacement;
 import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.android.dexposed.XposedHelpers;
+import com.taobao.android.dexposed.XC_MethodHook.MethodHookParam;
 import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchCallback.PatchParam;
 import com.taobao.login4android.api.Login;
@@ -18,6 +23,7 @@ import com.taobao.login4android.api.LoginConstants;
 public class HotPatchGetWayActivity implements IPatch {
 
     private final static String TAG = "HotPatchGetWayActivity";
+    private SafeHandler mHandler;
     
     @Override
     public void handlePatch(PatchParam arg0) throws Throwable {
@@ -63,7 +69,8 @@ public class HotPatchGetWayActivity implements IPatch {
                             XposedHelpers.setObjectField(param.thisObject, "mLoginStart", true);
                             Bundle bundle = new Bundle();
                             bundle.putString(LoginConstants.BROWSER_REF_URL, "http://oauth.m.taobao.com/openSdk");
-                            Login.login(new SafeHandler((android.os.Handler.Callback)param.thisObject), true, bundle);
+                            mHandler = new SafeHandler((android.os.Handler.Callback)param.thisObject);
+                            Login.login(mHandler, true, bundle);
                         }
                     } else {
                         XposedHelpers.callMethod(param.thisObject, "errorResult", 
@@ -73,6 +80,27 @@ public class HotPatchGetWayActivity implements IPatch {
                     return null;
                 }
                 
+        });
+        
+        XposedBridge.findAndHookMethod(GetWayActivity, "handleMessage", Message.class,
+                new XC_MethodHook() {
+            
+                @Override
+                protected void afterHookedMethod(MethodHookParam param)
+                        throws Throwable {
+                    Message msg = (Message)param.args[0];
+                    switch (msg.what) {
+                    case Login.NOTIFY_LOGINSUCCESS:
+                    case Login.NOTIFY_LOGINCANCEL:
+                    case Login.NOTIFY_LOGINFAILED:
+                        Login.deleteLoadedListener(mHandler);
+                        mHandler = null;
+                        break;
+
+                    default:
+                        break;
+                    }
+                }
         });
     }
     
