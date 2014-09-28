@@ -7,13 +7,13 @@ import android.os.Handler.Callback;
 import android.os.Message;
 import android.taobao.util.SafeHandler;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.taobao.android.compat.ApplicationCompat.AbstractActivityLifecycleCallbacks;
 import com.taobao.android.lifecycle.PanguApplication;
 import com.taobao.android.lifecycle.PanguApplication.CrossActivityLifecycleCallback;
 import com.taobao.android.nav.Nav;
 import com.taobao.login4android.api.Login;
-import com.taobao.login4android.api.LoginAction;
 
 import java.lang.ref.WeakReference;
 
@@ -76,20 +76,20 @@ public class NewLoginApplifeCycleRegister extends AbstractActivityLifecycleCallb
                 mIsComeFromOauth = true;
             }
         }
-        //Log.d("LoginApplifeCycleRegister", "checkIsFromOauth mIsComeFromOauth:" + mIsComeFromOauth + ", className:" + activity.getLocalClassName());
+        Log.d("LoginApplifeCycleRegister", "checkIsFromOauth mIsComeFromOauth:" + mIsComeFromOauth + ", className:" + activity.getLocalClassName());
         mActivity = new WeakReference<Activity>(activity);
     }
 
     @Override
     public void onActivityStopped(Activity activity1) {
-        //Log.d("LoginApplifeCycleRegister", "onActivityStopped mIsComeFromOauth:" + mIsComeFromOauth + ", className:" + activity1.getLocalClassName());
+        Log.d("LoginApplifeCycleRegister", "onActivityStopped mIsComeFromOauth:" + mIsComeFromOauth + ", className:" + activity1.getLocalClassName());
         if (activity1 != null && activity1.getLocalClassName().contains("UserLoginActivity")
                 && mIsComeFromOauth) {
             activity1.finish();
             // notify cancel login
             Intent cancelNotifyIntent = new Intent("com.ali.user.sdk.login.CANCEL");
             mContext.sendBroadcast(cancelNotifyIntent);
-            //Log.v("LoginApplifeCycleRegister", "onActivityStopped:UserLoginActivity. finish(). sendBroadcast:NOTIFY_LOGIN_CANCEL");
+            Log.v("LoginApplifeCycleRegister", "onActivityStopped:UserLoginActivity. finish(). sendBroadcast:NOTIFY_LOGIN_CANCEL");
         }
     }
 
@@ -124,7 +124,7 @@ public class NewLoginApplifeCycleRegister extends AbstractActivityLifecycleCallb
         if (mIsComeFromOauth && mActivity != null) {
             mIsComeFromOauth = false;
             Activity a = mActivity.get();
-            //Log.d("LoginApplifeCycleRegister", "moveLoginTaskToBack mIsComeFromOauth:" + mIsComeFromOauth + ", className:" + a.getLocalClassName());
+            Log.d("LoginApplifeCycleRegister", "moveLoginTaskToBack mIsComeFromOauth:" + mIsComeFromOauth + ", className:" + a.getLocalClassName());
 
             if (a != null && a.getLocalClassName().contains("UserLoginActivity")) {
                 a.moveTaskToBack(true);

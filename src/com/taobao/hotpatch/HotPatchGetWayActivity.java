@@ -1,6 +1,5 @@
 package com.taobao.hotpatch;
 
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.os.Bundle;
@@ -8,13 +7,11 @@ import android.os.Message;
 import android.taobao.util.SafeHandler;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
 
 import com.taobao.android.dexposed.XC_MethodHook;
 import com.taobao.android.dexposed.XC_MethodReplacement;
 import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.android.dexposed.XposedHelpers;
-import com.taobao.android.dexposed.XC_MethodHook.MethodHookParam;
 import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchCallback.PatchParam;
 import com.taobao.login4android.api.Login;
@@ -70,6 +67,7 @@ public class HotPatchGetWayActivity implements IPatch {
                             Bundle bundle = new Bundle();
                             bundle.putString(LoginConstants.BROWSER_REF_URL, "http://oauth.m.taobao.com/openSdk");
                             mHandler = new SafeHandler((android.os.Handler.Callback)param.thisObject);
+                            Log.d(TAG, "loadClass HotPatchGetWayActivity mHandler:" + mHandler + " : " + param.thisObject);
                             Login.login(mHandler, true, bundle);
                         }
                     } else {
@@ -93,6 +91,7 @@ public class HotPatchGetWayActivity implements IPatch {
                     case Login.NOTIFY_LOGINSUCCESS:
                     case Login.NOTIFY_LOGINCANCEL:
                     case Login.NOTIFY_LOGINFAILED:
+                        Log.d(TAG, "msg.what:" + msg.what + ":mHandler:" + mHandler);
                         Login.deleteLoadedListener(mHandler);
                         mHandler = null;
                         break;
