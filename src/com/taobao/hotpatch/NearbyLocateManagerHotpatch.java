@@ -1,9 +1,12 @@
 package com.taobao.hotpatch;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.taobao.android.dexposed.XC_MethodHook;
+import com.taobao.android.dexposed.XC_MethodReplacement;
 import com.taobao.android.dexposed.XposedBridge;
+import com.taobao.android.dexposed.XposedHelpers;
 import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchCallback;
 
@@ -32,23 +35,23 @@ public class NearbyLocateManagerHotpatch implements IPatch
         // TODO 入参跟上面描述相同，只是最后参数为XC_MethodHook。
         // beforeHookedMethod和afterHookedMethod，可以根据需要只实现其一
         XposedBridge.findAndHookMethod(nearbyLocateManager, "getHomePageLocationInfo",
-                new XC_MethodHook()
+                new XC_MethodReplacement()
                 {
-                    protected void beforeHookedMethod(MethodHookParam param)
-                            throws Throwable
-                    {
-
-                    }
-
-                    @Override
-                    protected void afterHookedMethod(MethodHookParam param)
-                            throws Throwable
-                    {
-
-
-                    }
+					@Override
+					protected Object replaceHookedMethod(MethodHookParam arg0)
+							throws Throwable {
+						Object instance = arg0.thisObject;
+						Object mHomePageLocationInfo = XposedHelpers.getObjectField(instance, "c");
+						String cityCode = (String) XposedHelpers.getObjectField(mHomePageLocationInfo, "cityCode");
+						if (mHomePageLocationInfo != null
+								&& cityCode == null) {
+							Log.d("NearbyPatch", "city code is default");
+							XposedHelpers.setObjectField(mHomePageLocationInfo, "cityCode", "");
+						}
+						Log.d("NearbyPatch", "done");
+						return mHomePageLocationInfo;
+					}
                 });
-
 
     }
 }
