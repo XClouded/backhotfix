@@ -3,7 +3,6 @@ package com.taobao.hotpatch;
 import android.content.Context;
 import android.util.Log;
 
-import com.taobao.android.dexposed.XC_MethodHook;
 import com.taobao.android.dexposed.XC_MethodReplacement;
 import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.android.dexposed.XposedHelpers;
@@ -37,20 +36,24 @@ public class NearbyLocateManagerHotpatch implements IPatch
         XposedBridge.findAndHookMethod(nearbyLocateManager, "getHomePageLocationInfo",
                 new XC_MethodReplacement()
                 {
-					@Override
-					protected Object replaceHookedMethod(MethodHookParam arg0)
-							throws Throwable {
-						Object instance = arg0.thisObject;
-						Object mHomePageLocationInfo = XposedHelpers.getObjectField(instance, "c");
-						String cityCode = (String) XposedHelpers.getObjectField(mHomePageLocationInfo, "cityCode");
-						if (mHomePageLocationInfo != null
-								&& cityCode == null) {
-							Log.d("NearbyPatch", "city code is default");
-							XposedHelpers.setObjectField(mHomePageLocationInfo, "cityCode", "");
-						}
-						Log.d("NearbyPatch", "done");
-						return mHomePageLocationInfo;
-					}
+                    @Override
+                    protected Object replaceHookedMethod(MethodHookParam arg0)
+                            throws Throwable
+                    {
+                        Object instance = arg0.thisObject;
+                        Object mHomePageLocationInfo = XposedHelpers.getObjectField(instance, "c");
+                        if (mHomePageLocationInfo != null)
+                        {
+                            String cityCode = (String) XposedHelpers.getObjectField(mHomePageLocationInfo, "cityCode");
+                            if (cityCode == null)
+                            {
+                                Log.d("NearbyPatch", "city code is default");
+                                XposedHelpers.setObjectField(mHomePageLocationInfo, "cityCode", "");
+                            }
+                            Log.d("NearbyPatch", "done");
+                        }
+                        return mHomePageLocationInfo;
+                    }
                 });
 
     }
