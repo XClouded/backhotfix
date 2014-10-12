@@ -3,9 +3,11 @@ package com.taobao.hotpatch;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.taobao.util.SafeHandler;
 
 import com.taobao.android.dexposed.XC_MethodReplacement;
 import com.taobao.android.dexposed.XposedBridge;
+import com.taobao.android.dexposed.XposedHelpers;
 import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchCallback;
 
@@ -44,13 +46,16 @@ public class NearbyCouponDetailActivityHotpatch implements IPatch
                 // arg0.thisObject是方法被调用的所在的实例
                 Activity instance = (Activity) arg0.thisObject;
                 // 调用父类中的super方法。
+//              setUTPageName("NearbyDetail");
+                XposedHelpers.callMethod(instance, "setUTPageName", "NearbyDetail");
+                SafeHandler loginHandler = new SafeHandler(this, new WeakLoginCallback(instance));
                 XposedBridge.invokeNonVirtual(instance,
                         instance.getClass().getSuperclass().getDeclaredMethod("oncreate", Bundle.class));
-                return null;
+//                return null;
 
 
                 //需要修改的代码
-//                setUTPageName("NearbyDetail");
+
 //                super.onCreate(savedInstanceState);
 //                mLoginHandler = new SafeHandler(this, new WeakLoginCallback(this));
 //                setContentView(R.layout.nearby_activity_coupon_detail);
