@@ -25,7 +25,7 @@ import java.util.Map;
  * @author yupeng.yyp
  * @create 14-10-15 14:56
  */
-public class MtopProxyHotPatch implements IPatch {
+public class MtopProxyHotpatch implements IPatch {
 
     @Override
     public void handlePatch(PatchCallback.PatchParam patchParam) throws Throwable {
