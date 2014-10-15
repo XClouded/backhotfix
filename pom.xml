@@ -109,8 +109,8 @@
             </dependency>
             <dependency>
 	            <groupId>com.taobao.android</groupId>
-	            <artifactId>mtopsdk_mtop</artifactId>
-	            <version>1.4.1</version>
+	            <artifactId>mtopsdk_allinone</artifactId>
+	            <version>1.4.2.3</version>
 	            <scope>provided</scope>
 	        </dependency>
 	        <dependency>
