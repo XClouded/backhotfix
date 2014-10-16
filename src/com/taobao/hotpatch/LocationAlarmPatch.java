@@ -15,7 +15,7 @@ public class LocationAlarmPatch implements IPatch {
 
 	private final static String ACTION_UPDATE_CONFIG = "com.taobao.passivelocation.Update_Config";
 	
-	private static int pendingIntentHashCode = 0;
+//	private static boolean isCanceled = false;
 
 	@Override
 	public void handlePatch(PatchCallback.PatchParam arg0) throws Throwable {
@@ -29,56 +29,36 @@ public class LocationAlarmPatch implements IPatch {
 				.getSystemService(Context.ALARM_SERVICE);
 		Intent intent = new Intent(ACTION_UPDATE_CONFIG);
 		PendingIntent pendingIntent = PendingIntent.getService(context, 0,
-				intent, PendingIntent.FLAG_NO_CREATE);
+				intent, PendingIntent.FLAG_NO_CREATE);		
 		if (pendingIntent != null) {
 			alarms.cancel(pendingIntent);
 			Log.d("hotpatch", "cancel alarm");
 		} else {
-			Log.d("hotpatch", "pengding intent null");
+			Log.d("hotpatch", "alarm not set");
 		}
-		
-		final Class<?> PendingIntent = PatchHelper.loadClass(context,
-				"android.app.PendingIntent",
-				null);
-		if (PendingIntent == null) {
+		final Class<?> LocationParameterConfiger = PatchHelper.loadClass(context,
+				"com.taobao.passivelocation.util.LocationParameterConfiger",
+				"com.taobao.passivelocation");
+		if (LocationParameterConfiger == null) {
 			return;
 		}
-		XposedBridge.findAndHookMethod(PendingIntent, "getService", Context.class, int.class, Intent.class, int.class,
+		XposedBridge.findAndHookMethod(LocationParameterConfiger, "getInstance", Context.class,
 				new XC_MethodHook() {
 					@Override
-					protected void beforeHookedMethod(MethodHookParam param)
+					protected void afterHookedMethod(MethodHookParam param)
 							throws Throwable {
-						Intent intent = (Intent) param.args[2];						
-						if (intent.getAction().equals(ACTION_UPDATE_CONFIG)) {
-							pendingIntentHashCode = System.identityHashCode((PendingIntent)param.getResult());
-							Log.d("hotpatch", "location pending intent");
+						AlarmManager alarms = (AlarmManager) context
+								.getSystemService(Context.ALARM_SERVICE);
+						Intent intent = new Intent(ACTION_UPDATE_CONFIG);
+						PendingIntent pendingIntent = PendingIntent.getService(
+								context, 0, intent,
+								PendingIntent.FLAG_NO_CREATE);
+						if (pendingIntent != null) {
+							alarms.cancel(pendingIntent);
+							Log.d("hotpatch", "cancel alarm in method");
 						} else {
-							pendingIntentHashCode = 0;
-							Log.d("hotpatch", "other pending intent");
+							Log.d("hotpatch", "alarm not set in method");
 						}
-					}
-				});
-		
-		final Class<?> AlarmManager = PatchHelper.loadClass(context,
-				"android.app.AlarmManager",
-				null);
-		if (AlarmManager == null) {
-			return;
-		}
-		XposedBridge.findAndHookMethod(AlarmManager, "set", int.class, long.class, PendingIntent.class,
-				new XC_MethodHook() {
-					@Override
-					protected void beforeHookedMethod(MethodHookParam param)
-							throws Throwable {
-						PendingIntent pendingIntent = (android.app.PendingIntent) param.args[2];
-						int currentPendingIntentHash = System.identityHashCode(pendingIntent);
-						if (currentPendingIntentHash == pendingIntentHashCode) {
-							Log.d("hotpatch", "not set pendingintent for location");
-                            param.setResult(null);
-						} else {
-							Log.d("hotpatch", "other set pendingintent");
-						}
-						pendingIntentHashCode = 0;
 					}
 				});
 
