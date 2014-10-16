@@ -14,8 +14,6 @@ import com.taobao.hotpatch.patch.PatchCallback;
 public class LocationAlarmPatch implements IPatch {
 
 	private final static String ACTION_UPDATE_CONFIG = "com.taobao.passivelocation.Update_Config";
-	
-	private static boolean isCanceled = false;
 
 	@Override
 	public void handlePatch(PatchCallback.PatchParam arg0) throws Throwable {
