@@ -46,7 +46,7 @@ public class LocationAlarmPatch implements IPatch {
 		XposedBridge.findAndHookMethod(PendingIntent, "getService", Context.class, int.class, Intent.class, int.class,
 				new XC_MethodHook() {
 					@Override
-					protected void afterHookedMethod(MethodHookParam param)
+					protected void beforeHookedMethod(MethodHookParam param)
 							throws Throwable {
 						Intent intent = (Intent) param.args[2];						
 						if (intent.getAction().equals(ACTION_UPDATE_CONFIG)) {
