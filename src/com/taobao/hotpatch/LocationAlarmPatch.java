@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import com.taobao.android.dexposed.XC_MethodHook;
 import com.taobao.android.dexposed.XposedBridge;
@@ -28,7 +29,7 @@ public class LocationAlarmPatch implements IPatch {
 		PendingIntent pendingIntent = PendingIntent.getService(context, 0,
 				intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		alarms.cancel(pendingIntent);
-
+        Log.d("hotpatch", "cancel alarm");
 		final Class<?> LocationParameterConfiger = PatchHelper.loadClass(context,
 				"com.taobao.passivelocation.util.LocationParameterConfiger",
 				"com.taobao.passivelocation");
@@ -47,6 +48,7 @@ public class LocationAlarmPatch implements IPatch {
 						PendingIntent pendingIntent = PendingIntent.getService(context, 0,
 								intent, PendingIntent.FLAG_UPDATE_CURRENT);
 						alarms.cancel(pendingIntent);
+						Log.d("hotpatch", "cancel alarm in method");
 					}
 				});
 
