@@ -15,7 +15,7 @@ public class LocationAlarmPatch implements IPatch {
 
 	private final static String ACTION_UPDATE_CONFIG = "com.taobao.passivelocation.Update_Config";
 	
-	private static PendingIntent s_pendingIntent;
+	private static boolean isLocationPendingCalling = false;
 
 	@Override
 	public void handlePatch(PatchCallback.PatchParam arg0) throws Throwable {
@@ -50,9 +50,10 @@ public class LocationAlarmPatch implements IPatch {
 							throws Throwable {
 						Intent intent = (Intent) param.args[2];
 						if (intent.getAction().equals(ACTION_UPDATE_CONFIG)) {
-							Log.d("hotpatch", "get location pending intent");
-							s_pendingIntent = (android.app.PendingIntent) param.getResult();
+							isLocationPendingCalling = true;
+							Log.d("hotpatch", "location pending intent");
 						} else {
+							isLocationPendingCalling = false;
 							Log.d("hotpatch", "other pending intent");
 						}
 					}
@@ -69,8 +70,7 @@ public class LocationAlarmPatch implements IPatch {
 					@Override
 					protected void beforeHookedMethod(MethodHookParam param)
 							throws Throwable {
-						PendingIntent pendingintent = (android.app.PendingIntent) param.args[2];
-						if (pendingintent.equals(s_pendingIntent)) {
+						if (isLocationPendingCalling) {
 							Log.d("hotpatch", "not set pendingintent for location");
                             param.setResult(null);
 						} else {
