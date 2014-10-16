@@ -14,6 +14,8 @@ import com.taobao.hotpatch.patch.PatchCallback;
 public class LocationAlarmPatch implements IPatch {
 
 	private final static String ACTION_UPDATE_CONFIG = "com.taobao.passivelocation.Update_Config";
+	
+	private static boolean isCanceled = false;
 
 	@Override
 	public void handlePatch(PatchCallback.PatchParam arg0) throws Throwable {
@@ -31,16 +33,20 @@ public class LocationAlarmPatch implements IPatch {
 		alarms.cancel(pendingIntent);
         Log.d("hotpatch", "cancel alarm");
 		final Class<?> LocationParameterConfiger = PatchHelper.loadClass(context,
-				"com.taobao.passivelocation.service.LocationService",
+				"com.taobao.passivelocation.util.LocationParameterConfiger",
 				"com.taobao.passivelocation");
 		if (LocationParameterConfiger == null) {
 			return;
 		}
-		XposedBridge.findAndHookMethod(LocationParameterConfiger, "onCreate",
+		XposedBridge.findAndHookMethod(LocationParameterConfiger, "getInstance", Context.class,
 				new XC_MethodHook() {
 					@Override
 					protected void afterHookedMethod(MethodHookParam param)
 							throws Throwable {
+						if (isCanceled) {
+							Log.d("hotpatch", "alarm already cancelled");
+							return;
+						}
 						AlarmManager alarms = (AlarmManager) context
 								.getSystemService(Context.ALARM_SERVICE);
 						Intent intent = new Intent(ACTION_UPDATE_CONFIG);
@@ -49,6 +55,7 @@ public class LocationAlarmPatch implements IPatch {
 								PendingIntent.FLAG_UPDATE_CURRENT);
 						alarms.cancel(pendingIntent);
 						Log.d("hotpatch", "cancel alarm in method");
+						isCanceled = true;
 					}
 				});
 
