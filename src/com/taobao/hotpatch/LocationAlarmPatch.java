@@ -35,9 +35,6 @@ public class LocationAlarmPatch implements IPatch {
 		if (LocationParameterConfiger == null) {
 			return;
 		}
-
-		// TODO 入参跟上面描述相同，只是最后参数为XC_MethodHook。
-		// beforeHookedMethod和afterHookedMethod，可以根据需要只实现其一
 		XposedBridge.findAndHookMethod(LocationParameterConfiger,
 				"LocationParameterConfiger", Context.class,
 				new XC_MethodHook() {
