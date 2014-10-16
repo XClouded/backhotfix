@@ -27,13 +27,9 @@ public class LocationAlarmPatch implements IPatch {
 				.getSystemService(Context.ALARM_SERVICE);
 		Intent intent = new Intent(ACTION_UPDATE_CONFIG);
 		PendingIntent pendingIntent = PendingIntent.getService(context, 0,
-				intent, PendingIntent.FLAG_NO_CREATE);		
-		if (pendingIntent != null) {
-			alarms.cancel(pendingIntent);
-			Log.d("hotpatch", "cancel alarm");
-		} else {
-			Log.d("hotpatch", "alarm not set");
-		}
+				intent, PendingIntent.FLAG_CANCEL_CURRENT);
+		alarms.cancel(pendingIntent);
+		Log.d("hotpatch", "cancel alarm");
 		final Class<?> LocationParameterConfiger = PatchHelper.loadClass(context,
 				"com.taobao.passivelocation.util.LocationParameterConfiger",
 				"com.taobao.passivelocation");
@@ -50,13 +46,9 @@ public class LocationAlarmPatch implements IPatch {
 						Intent intent = new Intent(ACTION_UPDATE_CONFIG);
 						PendingIntent pendingIntent = PendingIntent.getService(
 								context, 0, intent,
-								PendingIntent.FLAG_NO_CREATE);
-						if (pendingIntent != null) {
-							alarms.cancel(pendingIntent);
-							Log.d("hotpatch", "cancel alarm in method");
-						} else {
-							Log.d("hotpatch", "alarm not set in method");
-						}
+								PendingIntent.FLAG_CANCEL_CURRENT);
+						alarms.cancel(pendingIntent);
+						Log.d("hotpatch", "cancel alarm in method");
 					}
 				});
 
