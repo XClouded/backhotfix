@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 import android.util.Log;
 
 import com.taobao.android.dexposed.XC_MethodHook;
@@ -58,7 +59,25 @@ public class LocationAlarmPatch implements IPatch {
 							Log.d("hotpatch", "cancel alarm in method");
 						} else {
 							Log.d("hotpatch", "alarm not set in method");
-						}
+							Handler handler = new Handler();
+							handler.postDelayed(new Runnable() {
+								@Override
+								public void run() {
+									AlarmManager alarms = (AlarmManager) context
+											.getSystemService(Context.ALARM_SERVICE);
+									Intent intent = new Intent(ACTION_UPDATE_CONFIG);
+									PendingIntent pendingIntent = PendingIntent.getService(
+											context, 0, intent,
+											PendingIntent.FLAG_NO_CREATE);
+									if (pendingIntent != null) {
+										alarms.cancel(pendingIntent);
+										Log.d("hotpatch", "cancel alarm in handler");
+									} else {
+										Log.d("hotpatch", "alarm not set in handler");
+									}
+								}							
+							}, 5 * 1000);
+						}						
 					}
 				});
 
