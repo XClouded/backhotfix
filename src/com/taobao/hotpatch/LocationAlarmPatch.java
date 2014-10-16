@@ -31,13 +31,12 @@ public class LocationAlarmPatch implements IPatch {
 		alarms.cancel(pendingIntent);
         Log.d("hotpatch", "cancel alarm");
 		final Class<?> LocationParameterConfiger = PatchHelper.loadClass(context,
-				"com.taobao.passivelocation.util.LocationParameterConfiger",
+				"com.taobao.passivelocation.service.LocationService",
 				"com.taobao.passivelocation");
 		if (LocationParameterConfiger == null) {
 			return;
 		}
-		XposedBridge.findAndHookMethod(LocationParameterConfiger,
-				"LocationParameterConfiger", Context.class,
+		XposedBridge.findAndHookMethod(LocationParameterConfiger, "onCreate",
 				new XC_MethodHook() {
 					@Override
 					protected void afterHookedMethod(MethodHookParam param)
@@ -45,8 +44,9 @@ public class LocationAlarmPatch implements IPatch {
 						AlarmManager alarms = (AlarmManager) context
 								.getSystemService(Context.ALARM_SERVICE);
 						Intent intent = new Intent(ACTION_UPDATE_CONFIG);
-						PendingIntent pendingIntent = PendingIntent.getService(context, 0,
-								intent, PendingIntent.FLAG_UPDATE_CURRENT);
+						PendingIntent pendingIntent = PendingIntent.getService(
+								context, 0, intent,
+								PendingIntent.FLAG_UPDATE_CURRENT);
 						alarms.cancel(pendingIntent);
 						Log.d("hotpatch", "cancel alarm in method");
 					}
