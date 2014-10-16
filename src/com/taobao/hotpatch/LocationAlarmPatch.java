@@ -52,6 +52,8 @@ public class LocationAlarmPatch implements IPatch {
 						if (intent.getAction().equals(ACTION_UPDATE_CONFIG)) {
 							Log.d("hotpatch", "get location pending intent");
 							s_pendingIntent = (android.app.PendingIntent) param.getResult();
+						} else {
+							Log.d("hotpatch", "other pending intent");
 						}
 					}
 				});
@@ -71,6 +73,8 @@ public class LocationAlarmPatch implements IPatch {
 						if (pendingintent.equals(s_pendingIntent)) {
 							Log.d("hotpatch", "not set pendingintent for location");
                             param.setResult(null);
+						} else {
+							Log.d("hotpatch", "other set pendingintent");
 						}
 					}
 				});
