@@ -47,10 +47,6 @@ public class LocationAlarmPatch implements IPatch {
 					@Override
 					protected void afterHookedMethod(MethodHookParam param)
 							throws Throwable {
-						if (isCanceled) {
-							Log.d("hotpatch", "alarm already cancelled");
-							return;
-						}
 						AlarmManager alarms = (AlarmManager) context
 								.getSystemService(Context.ALARM_SERVICE);
 						Intent intent = new Intent(ACTION_UPDATE_CONFIG);
@@ -63,7 +59,6 @@ public class LocationAlarmPatch implements IPatch {
 						} else {
 							Log.d("hotpatch", "alarm not set in method");
 						}
-						isCanceled = true;
 					}
 				});
 
