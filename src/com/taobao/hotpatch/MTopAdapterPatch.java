@@ -33,12 +33,12 @@ public class MTopAdapterPatch implements IPatch {
 		// 从arg0里面，可以得到主客的context供使用
 		final Context context = arg0.context;
 		
-		// 由于patch运行在多进程的环境，如果只是运行在主进程，就要做如下的相应判断		
-		if (!PatchHelper.isRunInMainProcess(context)) {
-			// 不是主进程就返回
-			Log.d("hotpatch", "isRunInMainProcess  == false ");
-			return;
-		}
+//		// 由于patch运行在多进程的环境，如果只是运行在主进程，就要做如下的相应判断		
+//		if (!PatchHelper.isRunInMainProcess(context)) {
+//			// 不是主进程就返回
+//			Log.d("hotpatch", "isRunInMainProcess  == false ");
+//			return;
+//		}
 
 		// TODO 这里填上你要patch的bundle中的class名字，最后的参数是所在bundle中manifest的packageName
 		final Class<?> TaoHelper = PatchHelper.loadClass(context, "com.taobao.tao.util.TaoHelper", null);
