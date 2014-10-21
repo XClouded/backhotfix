@@ -55,6 +55,12 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+		  <groupId>com.taobao.android</groupId>
+		  <artifactId>remote_business</artifactId>
+		  <version>1.0.7.1</version>
+		  <scope>provided</scope>
+		</dependency>
+		<dependency>
             <groupId>com.taobao.fireeye</groupId>
             <artifactId>scanlib</artifactId>
             <version>2.6.0.9-SNAPSHOT</version>
