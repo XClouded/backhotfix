@@ -29,28 +29,18 @@ public class MTopAdapterPatch implements IPatch {
 	@Override
 	public void handlePatch(PatchParam arg0) throws Throwable {
 		
-		Log.d("hotpatch", "handlePatch  start");
 		// 从arg0里面，可以得到主客的context供使用
 		final Context context = arg0.context;
 		
-//		// 由于patch运行在多进程的环境，如果只是运行在主进程，就要做如下的相应判断		
-//		if (!PatchHelper.isRunInMainProcess(context)) {
-//			// 不是主进程就返回
-//			Log.d("hotpatch", "isRunInMainProcess  == false ");
-//			return;
-//		}
-
 		// TODO 这里填上你要patch的bundle中的class名字，最后的参数是所在bundle中manifest的packageName
 		final Class<?> TaoHelper = PatchHelper.loadClass(context, "com.taobao.tao.util.TaoHelper", null);
 		if (TaoHelper == null) {
-			Log.d("hotpatch", "TaoHelper  == null ");
 			return;
 		}
 		
 		// TODO 这里填上你要patch的bundle中的class名字，最后的参数是所在bundle中manifest的packageName
 		Class<?> mtopAdapter = PatchHelper.loadClass(context, "com.taobao.wopc.core.b", null);
 		if (mtopAdapter == null) {
-			Log.d("hotpatch", "mtopAdapter  == null ");
 			return;
 		}
 		
@@ -74,19 +64,16 @@ public class MTopAdapterPatch implements IPatch {
 				// TODO 把原方法直接考入进这个方法里，然后用反射的方式进行翻译
 				// arg0.thisObject是方法被调用的所在的实例
 				
-				Log.d("hotpatch", "call startRequest start arg0 = " + arg0.thisObject.getClass().getName());
+				Log.d("hotpatch", "call startRequest start");
 				
 				String apiName = (String) arg0.args[0];
 				String apiVersion = (String) arg0.args[1];
 				Boolean needLogin = (Boolean) arg0.args[2];
 				Object requestContext = arg0.args[3];
-				Log.d("hotpatch", "call startRequest 0 - 1");
 				Map<String, Serializable> paramMap = (Map<String, Serializable>) arg0.args[4];
 				String ua = (String) arg0.args[5];
 				String appKey = (String) arg0.args[6];
 				String accessToken = (String) arg0.args[7];
-				
-				Log.d("hotpatch", "call startRequest 0");
 				
 				// default 2.0
 		        if (TextUtils.isEmpty(apiVersion)) {
@@ -99,8 +86,6 @@ public class MTopAdapterPatch implements IPatch {
 		        mtopRequest.setVersion(apiVersion);
 		        mtopRequest.setNeedEcode(needLogin);
 		        mtopRequest.setNeedSession(null != Login.getSid());
-		        
-		        Log.d("hotpatch", "call startRequest 1");
 		        
 		        // paramMap 在这个地方可以将扩展的数据存入jsonObject中
 		        if (paramMap != null) {
@@ -116,12 +101,7 @@ public class MTopAdapterPatch implements IPatch {
 		            mtopRequest.setData(jsonObject.toString());
 		        }
 		        
-		        Log.d("hotpatch", "call startRequest 2");
-		        
 		        RemoteBusiness mRemoteBusiness = (RemoteBusiness) RemoteBusiness.build(context, mtopRequest, ttid).reqContext(requestContext);
-		        
-		        Log.d("hotpatch", "call startRequest 4");
-		        
 		        mRemoteBusiness.addOpenApiParams(appKey, accessToken);
 		        mRemoteBusiness.addMteeUa(ua);
 		        mRemoteBusiness.setJsonType(JsonTypeEnum.ORIGINALJSON);
