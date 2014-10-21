@@ -118,7 +118,7 @@ public class MTopAdapterPatch implements IPatch {
 		        
 		        Log.d("hotpatch", "call startRequest 1 - 1");
 
-		        Object mRemoteBusiness = XposedHelpers.getObjectField(arg0.thisObject, "mRemoteBusiness");
+		        Object mRemoteBusiness = XposedHelpers.getObjectField(arg0.thisObject, "a");
 		        
 		        Log.d("hotpatch", "call startRequest 2");
 		        
