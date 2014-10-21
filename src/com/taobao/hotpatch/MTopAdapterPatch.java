@@ -116,26 +116,20 @@ public class MTopAdapterPatch implements IPatch {
 		            mtopRequest.setData(jsonObject.toString());
 		        }
 		        
-		        Log.d("hotpatch", "call startRequest 1 - 1");
-
-		        Object mRemoteBusiness = XposedHelpers.getObjectField(arg0.thisObject, "a");
-		        
 		        Log.d("hotpatch", "call startRequest 2");
 		        
-		        mRemoteBusiness = RemoteBusiness.build(context, mtopRequest, ttid).reqContext(requestContext);
-		        
-		        Log.d("hotpatch", "call startRequest 3");
-		        
-		        RemoteBusiness remoteBusiness = (RemoteBusiness) mRemoteBusiness;
+		        RemoteBusiness mRemoteBusiness = (RemoteBusiness) RemoteBusiness.build(context, mtopRequest, ttid).reqContext(requestContext);
 		        
 		        Log.d("hotpatch", "call startRequest 4");
 		        
-		        remoteBusiness.addOpenApiParams(appKey, accessToken);
-		        remoteBusiness.addMteeUa(ua);
-		        remoteBusiness.setJsonType(JsonTypeEnum.ORIGINALJSON);
-		        remoteBusiness.useWua();
-		        remoteBusiness.reqMethod(MethodEnum.POST);
-		        remoteBusiness.registeListener((IRemoteListener) arg0.thisObject).startRequest();
+		        mRemoteBusiness.addOpenApiParams(appKey, accessToken);
+		        mRemoteBusiness.addMteeUa(ua);
+		        mRemoteBusiness.setJsonType(JsonTypeEnum.ORIGINALJSON);
+		        mRemoteBusiness.useWua();
+		        mRemoteBusiness.reqMethod(MethodEnum.POST);
+		        mRemoteBusiness.registeListener((IRemoteListener) arg0.thisObject).startRequest();
+		        
+		        XposedHelpers.setObjectField(arg0.thisObject, "a", mRemoteBusiness);
 
 		        Log.d("hotpatch", "call startRequest end");
 		        return true;
