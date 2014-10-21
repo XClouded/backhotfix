@@ -48,7 +48,7 @@ public class MTopAdapterPatch implements IPatch {
 		}
 		
 		// TODO 这里填上你要patch的bundle中的class名字，最后的参数是所在bundle中manifest的packageName
-		Class<?> mtopAdapter = PatchHelper.loadClass(context, "com.taobao.wopc.core.b", "com.taobao.wopc");
+		Class<?> mtopAdapter = PatchHelper.loadClass(context, "com.taobao.wopc.core.b", null);
 		if (mtopAdapter == null) {
 			Log.d("hotpatch", "mtopAdapter  == null ");
 			return;

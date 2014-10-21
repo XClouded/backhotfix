@@ -31,23 +31,23 @@ public class PatchHelper {
     public static Class<?> loadClass(Context context,String className, String bundleName) {
     	if (bundleName == null) {
     		try {
-    			Log.d("hotpatch", "loadClass：bundleName == null & return class");
+    			Log.d("hotpatch", "loadClass：bundleName == null & return class " + className);
     			return context.getClassLoader().loadClass(className);
     		} catch (ClassNotFoundException e) {
-    			Log.d("hotpatch", "loadClass：bundleName == null & ClassNotFoundException");
+    			Log.d("hotpatch", "loadClass：bundleName == null & ClassNotFoundException " + className);
     			return null;
     		}
     	} else {
     		BundleImpl bundle = (BundleImpl) Atlas.getInstance().getBundle(bundleName);
     		if (bundle == null) {
-    			Log.d("hotpatch", "loadClass：bundleName != null & bundle == null");
+    			Log.d("hotpatch", "loadClass：bundleName != null & bundle == null " + className);
     			return null;
     		}
     		try {
-    			Log.d("hotpatch", "loadClass：bundleName != null & return class");
+    			Log.d("hotpatch", "loadClass：bundleName != null & return class " + className);
     			return bundle.getClassLoader().loadClass(className);
     		} catch (ClassNotFoundException e) {
-    			Log.d("hotpatch", "loadClass：bundleName != null & ClassNotFoundException");
+    			Log.d("hotpatch", "loadClass：bundleName != null & ClassNotFoundException " + className);
     			return null;
     		}
     	} 	
