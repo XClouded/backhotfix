@@ -74,7 +74,7 @@ public class MTopAdapterPatch implements IPatch {
 				// TODO 把原方法直接考入进这个方法里，然后用反射的方式进行翻译
 				// arg0.thisObject是方法被调用的所在的实例
 				
-				Log.d("hotpatch", "call startRequest start");
+				Log.d("hotpatch", "call startRequest start arg0 = " + arg0.args);
 				
 				Activity instance = (Activity) arg0.thisObject;
 				
@@ -87,6 +87,8 @@ public class MTopAdapterPatch implements IPatch {
 				String appKey = (String) arg0.args[6];
 				String accessToken = (String) arg0.args[7];
 				
+				Log.d("hotpatch", "call startRequest 0");
+				
 				// default 2.0
 		        if (TextUtils.isEmpty(apiVersion)) {
 		            apiVersion = "2.0";
@@ -98,7 +100,9 @@ public class MTopAdapterPatch implements IPatch {
 		        mtopRequest.setVersion(apiVersion);
 		        mtopRequest.setNeedEcode(needLogin);
 		        mtopRequest.setNeedSession(null != Login.getSid());
-
+		        
+		        Log.d("hotpatch", "call startRequest 1");
+		        
 		        // paramMap 在这个地方可以将扩展的数据存入jsonObject中
 		        if (paramMap != null) {
 		            JSONObject jsonObject = new JSONObject();
@@ -115,7 +119,11 @@ public class MTopAdapterPatch implements IPatch {
 
 		        RemoteBusiness mRemoteBusiness = (RemoteBusiness) XposedHelpers.getObjectField(arg0.thisObject, "mRemoteBusiness");
 		        
+		        Log.d("hotpatch", "call startRequest 2");
+		        
 		        mRemoteBusiness = (RemoteBusiness) RemoteBusiness.build(context, mtopRequest, ttid).reqContext(requestContext);
+		        
+		        Log.d("hotpatch", "call startRequest 3");
 		        
 		        mRemoteBusiness.addOpenApiParams(appKey, accessToken);
 		        mRemoteBusiness.addMteeUa(ua);
