@@ -74,14 +74,17 @@ public class MTopAdapterPatch implements IPatch {
 				// TODO 把原方法直接考入进这个方法里，然后用反射的方式进行翻译
 				// arg0.thisObject是方法被调用的所在的实例
 				
-				Log.d("hotpatch", "call startRequest start arg0 = " + arg0.args);
+				Log.d("hotpatch", "call startRequest start arg0 = " + arg0.args.toString());
 				
 				Activity instance = (Activity) arg0.thisObject;
+				
+				Log.d("hotpatch", "call startRequest 0 - 0");
 				
 				String apiName = (String) arg0.args[0];
 				String apiVersion = (String) arg0.args[1];
 				Boolean needLogin = (Boolean) arg0.args[2];
 				Object requestContext = arg0.args[3];
+				Log.d("hotpatch", "call startRequest 0 - 1");
 				Map<String, Serializable> paramMap = (Map<String, Serializable>) arg0.args[4];
 				String ua = (String) arg0.args[5];
 				String appKey = (String) arg0.args[6];
