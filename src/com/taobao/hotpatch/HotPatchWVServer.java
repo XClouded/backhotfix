@@ -48,8 +48,9 @@ public class HotPatchWVServer implements IPatch{
 			@Override
 			protected void beforeHookedMethod(MethodHookParam param)
 					throws Throwable {
-				super.beforeHookedMethod(param);
-				
+//				super.beforeHookedMethod(param);
+				 Log.d("HotPatch_pkg","xxxxxxxxxx");
+
 //				Handler mHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
 				long lastlocktime = XposedHelpers.getLongField(param.thisObject, "lastlocktime");
 				boolean NeedApiLock =XposedHelpers.getBooleanField(param.thisObject, "NeedApiLock");
@@ -81,7 +82,7 @@ public class HotPatchWVServer implements IPatch{
 			protected void beforeHookedMethod(MethodHookParam param)
 					throws Throwable {
 
-				super.beforeHookedMethod(param);
+//				super.beforeHookedMethod(param);
 				HttpResponse response =(HttpResponse)param.args[1];
 				if(!response.isSuccess() || response.getData()==null){
                   	int responseCode= response.getHttpCode();
