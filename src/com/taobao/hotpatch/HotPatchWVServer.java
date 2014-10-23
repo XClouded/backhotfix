@@ -1,6 +1,4 @@
-/**
- * 
- */
+
 package com.taobao.hotpatch;
 
 import android.content.Context;
@@ -30,7 +28,7 @@ public class HotPatchWVServer implements IPatch{
 	
 	static boolean mNeedApiLock =false;
 	
-	static long mlastlocktime;
+	static long mlastlocktime=0l;
 	@Override
 	public void handlePatch(PatchParam arg0) throws Throwable {
 		// TODO Auto-generated method stub
@@ -52,23 +50,18 @@ public class HotPatchWVServer implements IPatch{
 			@Override
 			protected void beforeHookedMethod(MethodHookParam param)
 					throws Throwable {
-				
-//				long lastlocktime = XposedHelpers.getLongField(param.thisObject, "lastlocktime");
-//				boolean NeedApiLock =XposedHelpers.getBooleanField(param.thisObject, "NeedApiLock");
-				
-				 Log.d("HotPatch_pkg", " in "+mlastlocktime+"***"+mNeedApiLock+"***"+System.currentTimeMillis());
+	
+//				 Log.d("HotPatch_pkg", " in "+mlastlocktime+"***"+mNeedApiLock+"***"+System.currentTimeMillis());
 
 				if(mNeedApiLock&&System.currentTimeMillis()-mlastlocktime<5000){
 					
 	          		Toast.makeText(mContext, "哎呦喂，被挤爆啦，请稍后重试", Toast.LENGTH_LONG).show();         		
-					 Log.d("HotPatch_pkg", " execute invoke WVServer class success"+mlastlocktime+"***"+mNeedApiLock+"***"+System.currentTimeMillis());
-					 
+//					 Log.d("HotPatch_pkg", " execute invoke WVServer class success"+mlastlocktime+"***"+mNeedApiLock+"***"+System.currentTimeMillis());				 
 					param.setResult(true);
 					return;
 
 	          	}   
-				 Log.d("HotPatch_pkg", " out execute invoke WVServer class success"+mlastlocktime+"***"+mNeedApiLock+"***"+System.currentTimeMillis());
-
+//				 Log.d("HotPatch_pkg", " out execute invoke WVServer class success"+mlastlocktime+"***"+mNeedApiLock+"***"+System.currentTimeMillis());
 	          	mNeedApiLock =false;
 				
 			}
@@ -78,11 +71,9 @@ public class HotPatchWVServer implements IPatch{
 		///    private void parseResult(Object context, HttpResponse response){
 		XposedBridge.findAndHookMethod(WVServer, "parseResult", Object.class, HttpResponse.class, new XC_MethodHook(){
 
-
 			@Override
 			protected void beforeHookedMethod(MethodHookParam param)
 					throws Throwable {
-//				 Log.d("HotPatch_pkg","parseResult xxxxxxxxxx");
 
 				HttpResponse response =(HttpResponse)param.args[1];
 				if(!response.isSuccess() || response.getData()==null){
@@ -91,22 +82,19 @@ public class HotPatchWVServer implements IPatch{
 					if (responseCode ==420||responseCode ==499 || responseCode ==599){
 						//responseCode ==420;499;599 限流处理
 						try{
-							Handler mHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
-//							long lastlocktime = XposedHelpers.getLongField(param.thisObject, "lastlocktime");
-//							boolean NeedApiLock =XposedHelpers.getBooleanField(param.thisObject, "NeedApiLock");
-
+//							Handler mHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
 							mlastlocktime =System.currentTimeMillis();
 							mNeedApiLock = true;
-						     if(mHandler!=null){
-				                	mHandler.post(new Runnable() {
-				                        @Override
-				                        public void run() {
-				                            Toast.makeText(mContext, "哎呦喂，被挤爆啦，请稍后重试", Toast.LENGTH_LONG).show();
-				                        }
-				                    });
-				                }
+//						     if(mHandler!=null){
+//				                	mHandler.post(new Runnable() {
+//				                        @Override
+//				                        public void run() {
+//				                            Toast.makeText(mContext, "哎呦喂，被挤爆啦，请稍后重试", Toast.LENGTH_LONG).show();
+//				                        }
+//				                    });
+//				                }
 
-						 Log.d("HotPatch_pkg", "lastlocktime invoke WVServer class success"+mlastlocktime+"xxx"+mNeedApiLock);
+//						 Log.d("HotPatch_pkg", "lastlocktime invoke WVServer class success"+mlastlocktime+"xxx"+mNeedApiLock);
 						}catch(Exception e){
 
 						}finally{
