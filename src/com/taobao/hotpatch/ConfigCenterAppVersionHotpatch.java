@@ -110,8 +110,7 @@ public class ConfigCenterAppVersionHotpatch implements IPatch {
 
                 int loopTime = XposedHelpers.getIntField(configDetaiInitRequest, "loopTime");
                 String [] requestGroupNames = (String[]) XposedHelpers.getObjectField(configDetaiInitRequest, "requestGroupNames");
-                Object listener = XposedHelpers.newInstance(listenerClass, requestGroupNames,loopTime);
-
+                Object listener = XposedHelpers.newInstance(listenerClass, new Class<?>[] {String[].class, int.class},requestGroupNames,loopTime);
                 asyncProxy.setCallback((mtopsdk.mtop.common.MtopListener) listener);
                 asyncProxy.asyncApiCall();
                 Log.d(ConfigConstant.TAG, "appVersion hot-patch end.....");
