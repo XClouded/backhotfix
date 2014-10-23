@@ -49,7 +49,7 @@ public class HotPatchWVServer implements IPatch{
 			protected void beforeHookedMethod(MethodHookParam param)
 					throws Throwable {
 //				super.beforeHookedMethod(param);
-				 Log.d("HotPatch_pkg","xxxxxxxxxx");
+				 Log.d("HotPatch_pkg","execute xxxxxxxxxx");
 
 //				Handler mHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
 				long lastlocktime = XposedHelpers.getLongField(param.thisObject, "lastlocktime");
@@ -81,6 +81,7 @@ public class HotPatchWVServer implements IPatch{
 			@Override
 			protected void beforeHookedMethod(MethodHookParam param)
 					throws Throwable {
+				 Log.d("HotPatch_pkg","parseResult xxxxxxxxxx");
 
 //				super.beforeHookedMethod(param);
 				HttpResponse response =(HttpResponse)param.args[1];
@@ -105,7 +106,7 @@ public class HotPatchWVServer implements IPatch{
 //				                    });
 //				                }
 
-//						 Log.d("HotPatch_pkg", "invoke WVServer class success"+lastlocktime+"xxx"+NeedApiLock);
+						 Log.d("HotPatch_pkg", "invoke WVServer class success"+lastlocktime+"xxx"+NeedApiLock);
 						}catch(Exception e){
 
 						}finally{
