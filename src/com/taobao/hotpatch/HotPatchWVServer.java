@@ -61,7 +61,7 @@ public class HotPatchWVServer implements IPatch{
 	          		Toast.makeText(mContext, "哎呦喂，被挤爆啦，请稍后重试", Toast.LENGTH_LONG).show();         		
 					 Log.d("HotPatch_pkg", " execute invoke WVServer class success"+lastlocktime+"***"+NeedApiLock+"***"+System.currentTimeMillis());
 					 
-					param.setResult(null);
+					param.setResult(true);
 					return;
 
 	          	}   
