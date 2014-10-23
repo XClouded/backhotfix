@@ -3,8 +3,10 @@
  */
 package com.taobao.hotpatch;
 
+import android.os.Handler;
 import android.taobao.windvane.connect.HttpResponse;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.taobao.android.dexposed.XC_MethodHook;
 import com.taobao.android.dexposed.XposedBridge;
@@ -31,7 +33,7 @@ public class HotPatchWVServer implements IPatch{
 
 		try {
 			WVServer  = arg0.classLoader
-					.loadClass(" android.taobao.windvane.extra.jsbridge.WVServer");
+					.loadClass("android.taobao.windvane.extra.jsbridge.WVServer");
 			  Log.d("HotPatch_pkg", "invoke WVServer class success");
 		} catch (ClassNotFoundException e) {
 			Log.e("HotPatch_pkg", "invoke WVServer class failed" + e.toString());
@@ -53,12 +55,21 @@ public class HotPatchWVServer implements IPatch{
 					if (responseCode ==420||responseCode ==499 || responseCode ==599){
 						//responseCode ==420;499;599 限流处理
 						try{
-//							Handler mHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
+							Handler mHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
 							long lastlocktime = XposedHelpers.getLongField(param.thisObject, "lastlocktime");
 							boolean NeedApiLock =XposedHelpers.getBooleanField(param.thisObject, "NeedApiLock");
 
 							lastlocktime =System.currentTimeMillis();
 							NeedApiLock = true;
+						     if(mHandler!=null){
+				                	mHandler.post(new Runnable() {
+				                        @Override
+				                        public void run() {
+				                            Toast.makeText(mContext, "哎呦喂，被挤爆啦，请稍后重试", Toast.LENGTH_LONG).show();
+				                        }
+				                    });
+				                }
+
 						 Log.d("HotPatch_pkg", "invoke WVServer class success"+lastlocktime+"xxx"+NeedApiLock);
 						}catch(Exception e){
 
