@@ -53,6 +53,8 @@ public class HotPatchWVServer implements IPatch{
 //				Handler mHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
 				long lastlocktime = XposedHelpers.getLongField(param.thisObject, "lastlocktime");
 				boolean NeedApiLock =XposedHelpers.getBooleanField(param.thisObject, "NeedApiLock");
+				
+				 Log.d("HotPatch_pkg", " in "+lastlocktime+"***"+NeedApiLock+"***"+System.currentTimeMillis());
 
 				if(NeedApiLock&&System.currentTimeMillis()-lastlocktime<5000){
 					
@@ -62,7 +64,9 @@ public class HotPatchWVServer implements IPatch{
 					param.setResult(null);
 					return;
 
-	          	}       		
+	          	}   
+				 Log.d("HotPatch_pkg", " out execute invoke WVServer class success"+lastlocktime+"***"+NeedApiLock+"***"+System.currentTimeMillis());
+
 	          	NeedApiLock =false;
 				
 			}
