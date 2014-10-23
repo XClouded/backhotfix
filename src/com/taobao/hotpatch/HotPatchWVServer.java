@@ -3,6 +3,7 @@
  */
 package com.taobao.hotpatch;
 
+import android.content.Context;
 import android.os.Handler;
 import android.taobao.windvane.connect.HttpResponse;
 import android.util.Log;
@@ -30,7 +31,7 @@ public class HotPatchWVServer implements IPatch{
 		// TODO Auto-generated method stub
 
 		Class<?> WVServer  = null;
-
+		final Context mContext = arg0.context;
 		try {
 			WVServer  = arg0.classLoader
 					.loadClass("android.taobao.windvane.extra.jsbridge.WVServer");
