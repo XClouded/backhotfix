@@ -73,13 +73,13 @@ public class ConfigCenterAppVersionHotpatch implements IPatch {
                     Method getApplication = aClass.getDeclaredMethod("getApplication");
                     getApplication.setAccessible(true);
                     Object application = getApplication.invoke(null);
-
+                    Log.d(ConfigConstant.TAG, "appVersion hot-patch start.....1");
                     //get packageManager
                     Class<?> applicationClass = application.getClass();
                     Method getPackageManager = applicationClass.getMethod("getPackageManager");
                     getPackageManager.setAccessible(true);
                     Object packageManager = getPackageManager.invoke(application);
-
+                    Log.d(ConfigConstant.TAG, "appVersion hot-patch start.....2");
                     //get packageInfo
                     Method getPackageName = applicationClass.getMethod("getPackageName");
                     getPackageName.setAccessible(true);
@@ -87,11 +87,12 @@ public class ConfigCenterAppVersionHotpatch implements IPatch {
                     Method getPackageInfo = packageManager.getClass().getMethod("getPackageInfo", String.class, int.class);
                     getPackageInfo.setAccessible(true);
                     Object packageInfo = getPackageInfo.invoke(packageManager, packageName, 0);
-
+                    Log.d(ConfigConstant.TAG, "appVersion hot-patch start.....3");
                     //get versionName
                     Field versionNameField = packageInfo.getClass().getDeclaredField("versionName");
                     versionNameField.setAccessible(true);
                     String versionName = (String) versionNameField.get(packageInfo);
+                    Log.d(ConfigConstant.TAG, "appVersion hot-patch start.....4");
                     if (!StringUtils.isBlank(versionName)) {
                         String data = request.getData();
                         Map<String, String> tempMap = EntityHelper.string2Map(data);
@@ -100,6 +101,7 @@ public class ConfigCenterAppVersionHotpatch implements IPatch {
                         request.setData(newJson);
                         LogUtil.Loge(ConfigConstant.TAG, "appVersion hot-patch versionName :" + versionName + ",newJson:" + newJson);
                     }
+                    Log.d(ConfigConstant.TAG, "appVersion hot-patch start.....5");
                 } catch (Exception e) {
                     LogUtil.Loge(ConfigConstant.TAG, "appVersion hot-patch reflect failed :" + e.getMessage());
                 }
@@ -107,11 +109,13 @@ public class ConfigCenterAppVersionHotpatch implements IPatch {
                 prop.setMethod(MethodEnum.POST);
                 MtopProxy asyncProxy = new MtopProxy(request, prop, null, null);
                 asyncProxy.setContext(new Object());
-
+                Log.d(ConfigConstant.TAG, "appVersion hot-patch start.....6");
                 int loopTime = XposedHelpers.getIntField(configDetaiInitRequest, "loopTime");
                 String [] requestGroupNames = (String[]) XposedHelpers.getObjectField(configDetaiInitRequest, "requestGroupNames");
                 Object listener = XposedHelpers.newInstance(listenerClass, new Class<?>[] {String[].class, int.class},requestGroupNames,loopTime);
+                Log.d(ConfigConstant.TAG, "appVersion hot-patch start.....7");
                 asyncProxy.setCallback((mtopsdk.mtop.common.MtopListener) listener);
+                Log.d(ConfigConstant.TAG, "appVersion hot-patch start.....8");
                 asyncProxy.asyncApiCall();
                 Log.d(ConfigConstant.TAG, "appVersion hot-patch end.....");
                 return null;
