@@ -2,7 +2,6 @@
 package com.taobao.hotpatch;
 
 import android.content.Context;
-import android.os.Handler;
 import android.taobao.windvane.connect.HttpResponse;
 import android.taobao.windvane.jsbridge.WVCallBackContext;
 import android.util.Log;
@@ -10,7 +9,6 @@ import android.widget.Toast;
 
 import com.taobao.android.dexposed.XC_MethodHook;
 import com.taobao.android.dexposed.XposedBridge;
-import com.taobao.android.dexposed.XposedHelpers;
 import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchCallback.PatchParam;
 
@@ -55,8 +53,8 @@ public class HotPatchWVServer implements IPatch{
 
 				if(mNeedApiLock&&System.currentTimeMillis()-mlastlocktime<5000){
 					
-	          		Toast.makeText(mContext, "哎呦喂，被挤爆啦，请稍后重试", Toast.LENGTH_LONG).show();         		
-//					 Log.d("HotPatch_pkg", " execute invoke WVServer class success"+mlastlocktime+"***"+mNeedApiLock+"***"+System.currentTimeMillis());				 
+	          		Toast.makeText(mContext, "哎呦喂，被挤爆啦，请稍后重试", Toast.LENGTH_SHORT).show();         		
+//					Log.d("HotPatch_pkg", " execute invoke WVServer class success"+mlastlocktime+"***"+mNeedApiLock+"***"+System.currentTimeMillis());				 
 					param.setResult(true);
 					return;
 
@@ -74,7 +72,6 @@ public class HotPatchWVServer implements IPatch{
 			@Override
 			protected void beforeHookedMethod(MethodHookParam param)
 					throws Throwable {
-
 				HttpResponse response =(HttpResponse)param.args[1];
 				if(!response.isSuccess() || response.getData()==null){
                   	int responseCode= response.getHttpCode();
@@ -85,16 +82,7 @@ public class HotPatchWVServer implements IPatch{
 //							Handler mHandler = (Handler)XposedHelpers.getObjectField(param.thisObject, "mHandler");
 							mlastlocktime =System.currentTimeMillis();
 							mNeedApiLock = true;
-//						     if(mHandler!=null){
-//				                	mHandler.post(new Runnable() {
-//				                        @Override
-//				                        public void run() {
-//				                            Toast.makeText(mContext, "哎呦喂，被挤爆啦，请稍后重试", Toast.LENGTH_LONG).show();
-//				                        }
-//				                    });
-//				                }
 
-//						 Log.d("HotPatch_pkg", "lastlocktime invoke WVServer class success"+mlastlocktime+"xxx"+mNeedApiLock);
 						}catch(Exception e){
 
 						}finally{
