@@ -28,18 +28,23 @@ public class HotPatchWVServer implements IPatch{
 	
 	static long mlastlocktime=0l;
 	@Override
-	public void handlePatch(PatchParam arg0) throws Throwable {
-		// TODO Auto-generated method stub
+	public void handlePatch(PatchParam arg0) throws Throwable {	
 
 		Class<?> WVServer  = null;
 	
 		final Context mContext = arg0.context;
+		   // 由于patch运行在多进程的环境，如果只是运行在主进程，就要做如下的相应判断
+        if (!PatchHelper.isRunInMainProcess(mContext)) {
+            // 不是主进程就返回
+            return;
+        }
 		try {
 			WVServer  = arg0.classLoader
 					.loadClass("android.taobao.windvane.extra.jsbridge.WVServer");
 			  Log.d("HotPatch_pkg", "invoke WVServer class success");
-		} catch (ClassNotFoundException e) {
+		} catch (ClassNotFoundException e) {			
 			Log.e("HotPatch_pkg", "invoke WVServer class failed" + e.toString());
+			return;
 		}
 
 		//(String action, String params, WVCallBackContext callback)
