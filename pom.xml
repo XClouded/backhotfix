@@ -63,7 +63,7 @@
 		 <dependency>
             <groupId>com.taobao.android</groupId>
             <artifactId>share</artifactId>
-            <scope>${scope.value}</scope>
+            <version>2.1.5</version>
             <scope>provided</scope>
         </dependency>
 		<dependency>
