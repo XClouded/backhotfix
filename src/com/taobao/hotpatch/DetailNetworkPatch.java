@@ -1,6 +1,7 @@
 package com.taobao.hotpatch;
 
 import android.content.Context;
+import android.util.Log;
 import com.taobao.android.dexposed.XC_MethodHook;
 import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.android.dexposed.XposedHelpers;
@@ -44,22 +45,32 @@ public class DetailNetworkPatch implements IPatch {
         XposedBridge.findAndHookMethod(detailActivityClazz, "handleError", new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                Log.d("DetailNetworkPatch", "handleError enter");
+                try {
+                    if (null == param || null == param.args || 0 == param.args.length) {
+                        return;
+                    }
+                    Object obj = param.args[0];
+                    if (null != obj) {
+                        Object isNetworkErr = XposedHelpers.callMethod(obj, "isNetworkError");
+                        if ((Boolean) isNetworkErr) {
 
-                if (null == param || null == param.args || 0 == param.args.length) {
-                    return;
-                }
-                Object obj = param.args[0];
-                if (null != obj) {
-                    Object isNetworkErr = XposedHelpers.callMethod(obj, "isNetworkError");
-                    if ((Boolean) isNetworkErr) {
+                            Log.d("DetailNetworkPatch", "handleError is network error");
 
-                        Object ttid = XposedHelpers.getStaticObjectField(detailConfigClazz, "ttid");
-                        if (null == ttid || 0 == ttid.toString().length()) {
-                            XposedHelpers.setStaticObjectField(detailConfigClazz, "ttid", getTTid(context));
-                        } else {
-                            XposedHelpers.setStaticBooleanField(multiGwProxyClazz, "forceHttp", true);
+                            Object ttid = XposedHelpers.getStaticObjectField(detailConfigClazz, "ttid");
+                            if (null == ttid || 0 == ttid.toString().length()) {
+
+                                Log.d("DetailNetworkPatch", "handleError ttid is not set ");
+                                XposedHelpers.setStaticObjectField(detailConfigClazz, "ttid", getTTid(context));
+                            } else {
+
+                                Log.d("DetailNetworkPatch", "handleError spdy is now degrade ..");
+                                XposedHelpers.setStaticBooleanField(multiGwProxyClazz, "forceHttp", true);
+                            }
                         }
                     }
+                }catch (Throwable e){
+                    Log.d("DetailNetworkPatch", "handleError exception " + e.getMessage());
                 }
 
             }
