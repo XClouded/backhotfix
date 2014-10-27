@@ -21,6 +21,12 @@ public class DetailNetworkPatch implements IPatch {
 
         // 从arg0里面，可以得到主客的context供使用
         final Context context = patchParam.context;
+        
+        // 由于patch运行在多进程的环境，如果只是运行在主进程，就要做如下的相应判断
+        if (!PatchHelper.isRunInMainProcess(context)) {
+            // 不是主进程就返回
+            return;
+        }
 
         final Class<?> detailActivityClazz = PatchHelper.loadClass(context, "com.taobao.tao.detail.activity.DetailActivity", "com.taobao.android.trade");
         if (null == detailActivityClazz) {
