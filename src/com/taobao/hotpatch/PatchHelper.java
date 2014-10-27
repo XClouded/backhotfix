@@ -31,18 +31,23 @@ public class PatchHelper {
     public static Class<?> loadClass(Context context,String className, String bundleName) {
     	if (bundleName == null) {
     		try {
+    			Log.d("hotpatch-debug", "loadClass -- 1 -- return");
     			return context.getClassLoader().loadClass(className);
     		} catch (ClassNotFoundException e) {
+    			Log.d("hotpatch-debug", "loadClass -- 2 --  return null ");
     			return null;
     		}
     	} else {
     		BundleImpl bundle = (BundleImpl) Atlas.getInstance().getBundle(bundleName);
     		if (bundle == null) {
+    			Log.d("hotpatch-debug", "loadClass -- 3 -- return null");
     			return null;
     		}
     		try {
+    			Log.d("hotpatch-debug", "loadClass -- 4 -- return");
     			return bundle.getClassLoader().loadClass(className);
     		} catch (ClassNotFoundException e) {
+    			Log.d("hotpatch-debug", "loadClass -- 5 -- return null");
     			return null;
     		}
     	} 	

@@ -7,7 +7,6 @@ import java.util.Map;
 import mtopsdk.mtop.domain.JsonTypeEnum;
 import mtopsdk.mtop.domain.MethodEnum;
 import mtopsdk.mtop.domain.MtopRequest;
-import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
