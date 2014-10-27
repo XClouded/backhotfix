@@ -7,6 +7,7 @@ import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.android.dexposed.XposedHelpers;
 import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchCallback;
+import mtopsdk.mtop.domain.MtopResponse;
 
 /**
  * Created by wuzhong on 14/10/27.
@@ -26,23 +27,23 @@ public class DetailNetworkPatch implements IPatch {
             return;
         }
 
-        final Class<?> multiGwProxyClazz = PatchHelper.loadClass(context, "com.taobao.tao.detail.biz.api5.common.b",  "com.taobao.android.trade");
+        final Class<?> multiGwProxyClazz = PatchHelper.loadClass(context, "com.taobao.tao.detail.biz.api5.common.b", "com.taobao.android.trade");
         if (null == multiGwProxyClazz) {
             return;
         }
 
-        final Class<?> detailConfigClazz = PatchHelper.loadClass(context, "com.taobao.wireless.detail.a",  "com.taobao.android.trade");
+        final Class<?> detailConfigClazz = PatchHelper.loadClass(context, "com.taobao.wireless.detail.a", "com.taobao.android.trade");
         if (null == detailConfigClazz) {
             return;
         }
 
-        final Class<?> apiStackParserClazz = PatchHelper.loadClass(context, "com.taobao.wireless.detail.api.a",  "com.taobao.android.trade");
+        final Class<?> apiStackParserClazz = PatchHelper.loadClass(context, "com.taobao.wireless.detail.api.a", "com.taobao.android.trade");
         if (null == apiStackParserClazz) {
             return;
         }
 
         // 修复网络不通的问题
-        XposedBridge.findAndHookMethod(detailActivityClazz, "handleError", new XC_MethodHook() {
+        XposedBridge.findAndHookMethod(detailActivityClazz, "handleError", MtopResponse.class, new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 Log.d("DetailNetworkPatch", "handleError enter");
@@ -50,10 +51,9 @@ public class DetailNetworkPatch implements IPatch {
                     if (null == param || null == param.args || 0 == param.args.length) {
                         return;
                     }
-                    Object obj = param.args[0];
-                    if (null != obj) {
-                        Object isNetworkErr = XposedHelpers.callMethod(obj, "isNetworkError");
-                        if ((Boolean) isNetworkErr) {
+                    MtopResponse mtopResponse = (MtopResponse) param.args[0];
+                    if (null != mtopResponse) {
+                        if (mtopResponse.isNetworkError()) {
 
                             Log.d("DetailNetworkPatch", "handleError is network error");
 
@@ -69,7 +69,7 @@ public class DetailNetworkPatch implements IPatch {
                             }
                         }
                     }
-                }catch (Throwable e){
+                } catch (Throwable e) {
                     Log.d("DetailNetworkPatch", "handleError exception " + e.getMessage());
                 }
 
