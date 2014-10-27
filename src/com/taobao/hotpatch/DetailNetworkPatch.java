@@ -19,34 +19,40 @@ public class DetailNetworkPatch implements IPatch {
     @Override
     public void handlePatch(PatchCallback.PatchParam patchParam) throws Throwable {
 
+        Log.d("DetailNetworkPatch", "handlePath enter");
         // 从arg0里面，可以得到主客的context供使用
         final Context context = patchParam.context;
         
         // 由于patch运行在多进程的环境，如果只是运行在主进程，就要做如下的相应判断
         if (!PatchHelper.isRunInMainProcess(context)) {
             // 不是主进程就返回
+            Log.d("DetailNetworkPatch", "handlePath is not main process");
             return;
         }
 
         final Class<?> detailActivityClazz = PatchHelper.loadClass(context, "com.taobao.tao.detail.activity.DetailActivity", "com.taobao.android.trade");
         if (null == detailActivityClazz) {
+            Log.d("DetailNetworkPatch", "detail activity is null");
             return;
         }
 
         final Class<?> multiGwProxyClazz = PatchHelper.loadClass(context, "com.taobao.tao.detail.biz.api5.common.b", "com.taobao.android.trade");
         if (null == multiGwProxyClazz) {
+            Log.d("DetailNetworkPatch", "multi GwProxyClazz is null");
             return;
         }
 
         final Class<?> detailConfigClazz = PatchHelper.loadClass(context, "com.taobao.wireless.detail.a", "com.taobao.android.trade");
         if (null == detailConfigClazz) {
+            Log.d("DetailNetworkPatch", "detail ConfigClazz is null");
             return;
         }
 
-        final Class<?> apiStackParserClazz = PatchHelper.loadClass(context, "com.taobao.wireless.detail.api.a", "com.taobao.android.trade");
-        if (null == apiStackParserClazz) {
-            return;
-        }
+//        final Class<?> apiStackParserClazz = PatchHelper.loadClass(context, "com.taobao.wireless.detail.api.a", "com.taobao.android.trade");
+//        if (null == apiStackParserClazz) {
+//            Log.d("DetailNetworkPatch", "detail activity is null");
+//            return;
+//        }
 
         // 修复网络不通的问题
         XposedBridge.findAndHookMethod(detailActivityClazz, "handleError", MtopResponse.class, new XC_MethodHook() {

@@ -33,6 +33,7 @@ public class PatchHelper {
     		try {
     			return context.getClassLoader().loadClass(className);
     		} catch (ClassNotFoundException e) {
+
     			return null;
     		}
     	} else {
