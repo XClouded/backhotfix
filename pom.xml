@@ -44,7 +44,7 @@
 		<dependency>
 			<groupId>com.taobao.android</groupId>
 			<artifactId>hotpatch</artifactId>
-			<version>1.3.0</version>
+			<version>1.8.0</version>
 			<type>jar</type>
 			<scope>provided</scope>
 		</dependency>

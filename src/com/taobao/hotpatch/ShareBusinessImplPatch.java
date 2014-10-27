@@ -2,19 +2,14 @@ package com.taobao.hotpatch;
 
 import java.util.HashSet;
 
-import org.osgi.framework.Bundle;
-
-import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
 import com.taobao.android.dexposed.XC_MethodHook;
-import com.taobao.android.dexposed.XC_MethodHook.MethodHookParam;
-import com.taobao.android.dexposed.XC_MethodReplacement;
 import com.taobao.android.dexposed.XposedBridge;
-import com.taobao.android.dexposed.XposedHelpers;
 import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchCallback.PatchParam;
+import com.taobao.updatecenter.util.PatchHelper;
 import com.ut.share.SharePlatform;
 
 // 所有要实现patch某个方法，都需要集成Ipatch这个接口
