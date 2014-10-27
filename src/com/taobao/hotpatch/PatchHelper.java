@@ -38,6 +38,7 @@ public class PatchHelper {
     	} else {
     		BundleImpl bundle = (BundleImpl) Atlas.getInstance().getBundle(bundleName);
     		if (bundle == null) {
+    			Log.d("hotpatch", bundleName + "is not found");
     			return null;
     		}
     		try {
