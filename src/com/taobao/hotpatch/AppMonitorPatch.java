@@ -10,9 +10,9 @@ import com.taobao.android.dexposed.XposedHelpers;
 import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchCallback.PatchParam;
 import com.taobao.updatecenter.util.PatchHelper;
-import android.content.Context;
 import java.util.Map;
 import java.util.HashMap;
+import android.util.Log;
 
 // 所有要实现patch某个方法，都需要集成Ipatch这个接口
 public class AppMonitorPatch implements IPatch {
@@ -48,15 +48,18 @@ public class AppMonitorPatch implements IPatch {
                                                int eventId = (Integer) param.args[0];
                                                String page = (String) param.args[1];
                                                String monitorPoint = (String) param.args[2];
+                                               Log.v("AppMonitorPatch", "page: " + page + " monitorPoint: "
+                                                                        + monitorPoint);
                                                if (isBlank(page) || isBlank(monitorPoint)) {
                                                    return null;
                                                }
                                                String eventKey = page + "$" + monitorPoint;
-
+                                               Log.v("AppMonitorPatch", "eventKey: " + eventKey);
                                                Event event = null;
                                                Map<Integer, Map<String, Event>> eventMap = (Map<Integer, Map<String, Event>>) XposedHelpers.getObjectField(eventRepo,
                                                                                                                                                            "b");
                                                if (eventMap == null) {
+                                                   Log.v("AppMonitorPatch", "eventMap is null");
                                                    return null;
                                                }
                                                synchronized (eventMap) {
@@ -67,6 +70,7 @@ public class AppMonitorPatch implements IPatch {
                                                            eventMap.put(eventId, targetEventMap);
                                                        }
                                                        int type = getEventType();
+                                                       Log.v("AppMonitorPatch", "event type: " + type);
                                                        if (type == 0) {
                                                            event = new AlarmEvent(eventId, page, monitorPoint);
                                                            targetEventMap.put(eventKey, event);
@@ -86,6 +90,8 @@ public class AppMonitorPatch implements IPatch {
                                                e.fillInStackTrace();
                                                StackTraceElement[] elements = e.getStackTrace();
                                                for (StackTraceElement element : elements) {
+                                                   Log.v("AppMonitorPatch",
+                                                         "StackTraceElement className: " + element.getClassName());
                                                    if (element.getClassName().equals("com.alibaba.a.a.a$a")) {
                                                        return 0; // AlarmEvent
                                                    } else if (element.getClassName().equals("com.alibaba.a.a.a$b")
