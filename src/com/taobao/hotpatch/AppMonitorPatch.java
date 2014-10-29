@@ -21,19 +21,20 @@ public class AppMonitorPatch implements IPatch {
     // handlePatch这个方法，会在应用进程启动的时候被调用，在这里来实现patch的功能
 	@Override
 	public void handlePatch(PatchParam arg0) throws Throwable {
-    Log.d("AppMonitorPatch", "handlePatch entry");
+        Log.d("AppMonitorPatch", "handlePatch entryyyyyyy");
         // 从arg0里面，可以得到主客的context供使用
 		final Context context = arg0.context;
 		
         // 由于patch运行在多进程的环境，如果只是运行在主进程，就要做如下的相应判断
 		if (!PatchHelper.isRunInMainProcess(context)) {
+            Log.d("AppMonitorPatch", "is not RunInMainProcess return");
             // 不是主进程就返回
 			return;
 		}
-		
+        Log.d("AppMonitorPatch", "before loadClass");
         // TODO 这里填上你要patch的class名字，根据mapping得到混淆后的名字，在主dex中的class，最后的参数为null
         Class<?> eventRepo = PatchHelper.loadClass(context, "com.alibaba.a.a.a.g", null);
-
+        Log.d("AppMonitorPatch", "after loadClass");
         if (eventRepo == null) {
           Log.d("AppMonitorPatch", "eventRepo is null");
 			return;
