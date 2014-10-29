@@ -49,7 +49,7 @@ public class AppMonitorPatch implements IPatch {
 
                                            @Override
                                            protected Object replaceHookedMethod(MethodHookParam param) throws Throwable {
-                                               Log.v("AppMonitorPatch", "replaceHookedMethod");
+                                               Log.v("AppMonitorPatch", "replaceHookedMethod000000000000");
                                                Object eventRepo = param.thisObject;
                                                Log.v("AppMonitorPatch", "eventRepo: " + eventRepo);
                                                int eventId = (Integer) param.args[0];
@@ -106,6 +106,7 @@ public class AppMonitorPatch implements IPatch {
                                                    }
                                                }
                                                Log.v("AppMonitorPatch", "getEvent finish");
+                                               Log.v("AppMonitorPatch", "event is null?" + (event == null));
                                                return event;
                                            }
 
