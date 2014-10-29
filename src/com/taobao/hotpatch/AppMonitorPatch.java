@@ -1,5 +1,11 @@
 package com.taobao.hotpatch;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import android.content.Context;
+import android.util.Log;
+
 import com.alibaba.mtl.appmonitor.model.AlarmEvent;
 import com.alibaba.mtl.appmonitor.model.CountEvent;
 import com.alibaba.mtl.appmonitor.model.Event;
@@ -10,10 +16,6 @@ import com.taobao.android.dexposed.XposedHelpers;
 import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchCallback.PatchParam;
 import com.taobao.updatecenter.util.PatchHelper;
-import java.util.Map;
-import java.util.HashMap;
-import android.util.Log;
-import android.content.Context;
 
 // 所有要实现patch某个方法，都需要集成Ipatch这个接口
 public class AppMonitorPatch implements IPatch {
@@ -50,9 +52,13 @@ public class AppMonitorPatch implements IPatch {
                                            protected Object replaceHookedMethod(MethodHookParam param) throws Throwable {
                                                Log.v("AppMonitorPatch", "replaceHookedMethod");
                                                EventRepo eventRepo = (EventRepo) param.thisObject;
+                                               Log.v("AppMonitorPatch", "eventRepo: " + eventRepo);
                                                int eventId = (Integer) param.args[0];
+                                               Log.v("AppMonitorPatch", "eventId: " + eventId);
                                                String page = (String) param.args[1];
+                                               Log.v("AppMonitorPatch", "page: " + page);
                                                String monitorPoint = (String) param.args[2];
+                                               Log.v("AppMonitorPatch", "monitorPoint: " + monitorPoint);
                                                Log.v("AppMonitorPatch", "page: " + page + " monitorPoint: "
                                                                         + monitorPoint);
                                                if (isBlank(page) || isBlank(monitorPoint)) {
