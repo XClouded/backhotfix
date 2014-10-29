@@ -21,6 +21,7 @@ public class AppMonitorPatch implements IPatch {
     // handlePatch这个方法，会在应用进程启动的时候被调用，在这里来实现patch的功能
 	@Override
 	public void handlePatch(PatchParam arg0) throws Throwable {
+    Log.d("AppMonitorPatch", "handlePatch entry");
         // 从arg0里面，可以得到主客的context供使用
 		final Context context = arg0.context;
 		
