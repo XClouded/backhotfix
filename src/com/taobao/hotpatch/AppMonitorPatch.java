@@ -58,9 +58,15 @@ public class AppMonitorPatch implements IPatch {
                                                Log.v("AppMonitorPatch", "page: " + page);
                                                String monitorPoint = (String) param.args[2];
                                                Log.v("AppMonitorPatch", "monitorPoint: " + monitorPoint);
+                                               double value = (Double) param.args[3];
                                                Log.v("AppMonitorPatch", "page: " + page + " monitorPoint: "
                                                                         + monitorPoint);
-                                               return getCountEvent(eventRepo, eventId, page, monitorPoint);
+                                               Object event = getCountEvent(eventRepo, eventId, page, monitorPoint);
+                                               if (event != null) {
+                                                   XposedHelpers.callMethod(event, "addValue",
+                                                                            new Class<?>[] { double.class },
+                                                                            new Object[] { value });
+                                               }
                                            }
                                            
 
