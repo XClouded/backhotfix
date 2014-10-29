@@ -20,22 +20,17 @@ public class AppMonitorPatch implements IPatch {
     // handlePatch这个方法，会在应用进程启动的时候被调用，在这里来实现patch的功能
 	@Override
 	public void handlePatch(PatchParam arg0) throws Throwable {
-        Log.d("AppMonitorPatch", "handlePatch entryyyyyyy");
         // 从arg0里面，可以得到主客的context供使用
 		final Context context = arg0.context;
 		
         // 由于patch运行在多进程的环境，如果只是运行在主进程，就要做如下的相应判断
 		if (!PatchHelper.isRunInMainProcess(context)) {
-            Log.d("AppMonitorPatch", "is not RunInMainProcess return");
             // 不是主进程就返回
 			return;
 		}
-        Log.d("AppMonitorPatch", "before loadClass");
         // TODO 这里填上你要patch的class名字，根据mapping得到混淆后的名字，在主dex中的class，最后的参数为null
         Class<?> eventRepo = PatchHelper.loadClass(context, "com.alibaba.a.a.a.g", null);
-        Log.d("AppMonitorPatch", "after loadClass");
         if (eventRepo == null) {
-          Log.d("AppMonitorPatch", "eventRepo is null");
 			return;
 		}
         Log.d("AppMonitorPatch", "eventRepo:" + eventRepo.toString());
@@ -49,18 +44,11 @@ public class AppMonitorPatch implements IPatch {
 
                                            @Override
                                            protected Object replaceHookedMethod(MethodHookParam param) throws Throwable {
-                                               Log.v("AppMonitorPatch", "replaceHookedMethod000000000000");
                                                Object eventRepo = param.thisObject;
-                                               Log.v("AppMonitorPatch", "eventRepo: " + eventRepo);
                                                int eventId = (Integer) param.args[0];
-                                               Log.v("AppMonitorPatch", "eventId: " + eventId);
                                                String page = (String) param.args[1];
-                                               Log.v("AppMonitorPatch", "page: " + page);
                                                String monitorPoint = (String) param.args[2];
-                                               Log.v("AppMonitorPatch", "monitorPoint: " + monitorPoint);
                                                double value = (Double) param.args[3];
-                                               Log.v("AppMonitorPatch", "page: " + page + " monitorPoint: "
-                                                                        + monitorPoint);
                                                Object event = getCountEvent(eventRepo, eventId, page, monitorPoint);
                                                if (event != null) {
                                                    XposedHelpers.callMethod(event, "addValue",
@@ -94,13 +82,11 @@ public class AppMonitorPatch implements IPatch {
                                                                targetEventMap = new HashMap();// getEventMap(eventClass.getClass());
                                                                eventMap.put(eventId, targetEventMap);
                                                            }
-                                                           Log.v("AppMonitorPatch", "getEvent");
                                                            Class eventClass = Class.forName("com.alibaba.a.a.a.d");
                                                            Constructor constructor = eventClass.getConstructor(int.class,
                                                                                                                String.class,
                                                                                                                String.class);
                                                            event = constructor.newInstance(eventId, page, monitorPoint);
-                                                           Log.v("AppMonitorPatch", "getEvent newInstance");
                                                            if (event != null) {
                                                                targetEventMap.put(eventKey, event);
                                                            }
@@ -113,7 +99,6 @@ public class AppMonitorPatch implements IPatch {
                                                    }
                                                }
                                                Log.v("AppMonitorPatch", "getEvent finish");
-                                               Log.v("AppMonitorPatch", "event is null?" + (event == null));
                                                return event;
                                            }
 
