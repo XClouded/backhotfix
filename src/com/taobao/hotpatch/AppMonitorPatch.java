@@ -1,15 +1,12 @@
 package com.taobao.hotpatch;
 
+import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 
 import android.content.Context;
 import android.util.Log;
 
-import com.alibaba.mtl.appmonitor.model.AlarmEvent;
-import com.alibaba.mtl.appmonitor.model.CountEvent;
-import com.alibaba.mtl.appmonitor.model.Event;
-import com.alibaba.mtl.appmonitor.model.EventRepo;
 import com.taobao.android.dexposed.XC_MethodReplacement;
 import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.android.dexposed.XposedHelpers;
@@ -48,24 +45,11 @@ public class AppMonitorPatch implements IPatch {
                                        new XC_MethodReplacement() {
 
                                            // 在这个方法中，实现替换逻辑
+
                                            @Override
                                            protected Object replaceHookedMethod(MethodHookParam param) throws Throwable {
-                                               Log.v("AppMonitorPatch", "replaceHookedMethodppppppppppp");
-                                               Object obj = param.thisObject;
-                                               Log.v("AppMonitorPatch", "obj:" + obj.toString());
-                                               try {
-                                                   Log.v("AppMonitorPatch",
-                                                         "eventRepo class: " + EventRepo.class.getName());
-                                               } catch (Throwable e) {
-                                                   Log.v("AppMonitorPatch",
-                                                         "EventRepo Class throwable: " + e.toString());
-                                               }
-                                               EventRepo eventRepo = null;
-                                               try {
-                                                   eventRepo = (EventRepo) param.thisObject;
-                                               } catch (Throwable e) {
-                                                   Log.v("AppMonitorPatch", "eventRepo throwable: " + e.toString());
-                                               }
+                                               Log.v("AppMonitorPatch", "replaceHookedMethod!!!!!!!!!!!!!!");
+                                               Object eventRepo = param.thisObject;
                                                Log.v("AppMonitorPatch", "eventRepo: " + eventRepo);
                                                int eventId = (Integer) param.args[0];
                                                Log.v("AppMonitorPatch", "eventId: " + eventId);
@@ -80,27 +64,30 @@ public class AppMonitorPatch implements IPatch {
                                                }
                                                String eventKey = page + "$" + monitorPoint;
                                                Log.v("AppMonitorPatch", "eventKey: " + eventKey);
-                                               Event event = null;
-                                               Map<Integer, Map<String, Event>> eventMap = (Map<Integer, Map<String, Event>>) XposedHelpers.getObjectField(eventRepo,
+                                               Object event = null;
+                                               Map<Integer, Map> eventMap = (Map<Integer, Map>) XposedHelpers.getObjectField(eventRepo,
                                                                                                                                                            "b");
                                                if (eventMap == null) {
                                                    Log.v("AppMonitorPatch", "eventMap is null");
                                                    return null;
                                                }
                                                synchronized (eventMap) {
-                                                   Map<String, Event> targetEventMap = eventMap.get(eventId);
+                                                   Map targetEventMap = eventMap.get(eventId);
                                                    if (targetEventMap == null || targetEventMap.get(eventKey) == null) {
                                                        if (targetEventMap == null) {
-                                                           targetEventMap = new HashMap<String, Event>();
+                                                           Log.v("AppMonitorPatch", "targetEventMap is null");
+                                                           Class eventClass = Class.forName("com.alibaba.a.a.a.e");
+                                                           Log.v("AppMonitorPatch", "targetEventMap is null get class");
+                                                           targetEventMap = getEventMap(eventClass.getClass());
+                                                           Log.v("AppMonitorPatch", "targetEventMap is null new map");
                                                            eventMap.put(eventId, targetEventMap);
                                                        }
-                                                       int type = getEventType();
-                                                       Log.v("AppMonitorPatch", "event type: " + type);
-                                                       if (type == 0) {
-                                                           event = new AlarmEvent(eventId, page, monitorPoint);
-                                                           targetEventMap.put(eventKey, event);
-                                                       } else if (type == 1) {
-                                                           event = new CountEvent(eventId, page, monitorPoint);
+                                                       Log.v("AppMonitorPatch", "getEvent");
+                                                       event = getEvent(eventId, page, monitorPoint);
+                                                       Log.v("AppMonitorPatch", "event type: "
+                                                                                + event.getClass().getName());
+                                                       if (event != null) {
+                                                           Log.v("AppMonitorPatch", "getEvent event is not null");
                                                            targetEventMap.put(eventKey, event);
                                                        }
                                                    } else {
@@ -109,22 +96,62 @@ public class AppMonitorPatch implements IPatch {
                                                }
                                                return event;
                                            }
+                                           
+                                           public <T> Map getEventMap(Class<T> t){
+                                               Log.v("AppMonitorPatch", "getEventMap");
+                                               return new HashMap<String,T>();
+                                           }
 
-                                           public int getEventType() {
+                                           public Object getEvent(int eventId, String page, String monitorPoint) {
                                                RuntimeException e = new RuntimeException();
                                                e.fillInStackTrace();
                                                StackTraceElement[] elements = e.getStackTrace();
+                                               Class eventClass = null;
+                                               Constructor constructor = null;
+                                               Object event = null;
                                                for (StackTraceElement element : elements) {
                                                    Log.v("AppMonitorPatch",
                                                          "StackTraceElement className: " + element.getClassName());
-                                                   if (element.getClassName().equals("com.alibaba.a.a.a$a")) {
-                                                       return 0; // AlarmEvent
-                                                   } else if (element.getClassName().equals("com.alibaba.a.a.a$b")
-                                                              || element.getClassName().equals("com.alibaba.a.a.a$c")) {
-                                                       return 1; // CounterEvent
-                                                   }
+                                                       // AlarmEvent
+                                                       try {
+                                                       if (element.getClassName().equals("com.alibaba.a.a.a$a")) {
+                                                           Log.v("AppMonitorPatch",
+                                                                 "getEvent event class" + element.getClassName());
+                                                           eventClass = Class.forName("com.alibaba.a.a.a.c");
+                                                           Log.v("AppMonitorPatch",
+                                                                 "getEvent get class" + element.getClassName());
+                                                           constructor = eventClass.getConstructor(int.class,
+                                                                                                   String.class,
+                                                                                                   String.class);
+                                                           Log.v("AppMonitorPatch",
+                                                                 "getEvent getConstructor" + element.getClassName());
+                                                           event = constructor.newInstance(eventId, page, monitorPoint);
+                                                           Log.v("AppMonitorPatch",
+                                                                 "getEvent newInstance" + element.getClassName());
+                                                           break;
+                                                       } else if (element.getClassName().equals("com.alibaba.a.a.a$b")
+                                                                  || element.getClassName().equals("com.alibaba.a.a.a$c")) {
+                                                           // CounterEvent
+                                                           Log.v("AppMonitorPatch",
+                                                                 "getEvent event class" + element.getClassName());
+                                                           eventClass = Class.forName("com.alibaba.a.a.a.d");
+                                                           Log.v("AppMonitorPatch",
+                                                                 "getEvent get class" + element.getClassName());
+                                                           constructor = eventClass.getConstructor(int.class,
+                                                                                                   String.class,
+                                                                                                   String.class);
+                                                           Log.v("AppMonitorPatch",
+                                                                 "getEvent getConstructor" + element.getClassName());
+                                                           event = constructor.newInstance(eventId, page, monitorPoint);
+                                                           Log.v("AppMonitorPatch",
+                                                                 "getEvent newInstance" + element.getClassName());
+                                                           break;
+                                                       }
+                                                       } catch (Throwable t) {
+                                                       }
+
                                                }
-                                               return -1;
+                                               return event;
                                            }
 
                                            public boolean isBlank(String str) {
