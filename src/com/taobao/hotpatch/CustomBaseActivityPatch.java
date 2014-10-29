@@ -39,7 +39,7 @@ public class CustomBaseActivityPatch implements IPatch {
         if (activityClass == null) {
             return;
         }
-        final Class<?> MtopBusinessErrorClass = PatchHelper.loadClass(context, "com.taobao.business.MTopBusinessError", null);
+        final Class<?> MtopBusinessErrorClass = PatchHelper.loadClass(context, "com.taobao.business.b", null);
         if (MtopBusinessErrorClass == null) {
             return;
         }
