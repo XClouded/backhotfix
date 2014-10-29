@@ -33,11 +33,12 @@ public class AppMonitorPatch implements IPatch {
 		
         // TODO 这里填上你要patch的class名字，根据mapping得到混淆后的名字，在主dex中的class，最后的参数为null
         Class<?> eventRepo = PatchHelper.loadClass(context, "com.alibaba.a.a.a.g", null);
+
         if (eventRepo == null) {
           Log.d("AppMonitorPatch", "eventRepo is null");
 			return;
 		}
-		
+        Log.d("AppMonitorPatch", "eventRepo:" + eventRepo.toString());
         // TODO 入参跟上面描述相同，只是最后参数为XC_MethodHook。
         // beforeHookedMethod和afterHookedMethod，可以根据需要只实现其一
         XposedBridge.findAndHookMethod(eventRepo, "a", int.class, String.class, String.class,
@@ -46,7 +47,7 @@ public class AppMonitorPatch implements IPatch {
                                            // 在这个方法中，实现替换逻辑
                                            @Override
                                            protected Object replaceHookedMethod(MethodHookParam param) throws Throwable {
-
+                                               Log.v("AppMonitorPatch", "replaceHookedMethod");
                                                EventRepo eventRepo = (EventRepo) param.thisObject;
                                                int eventId = (Integer) param.args[0];
                                                String page = (String) param.args[1];
