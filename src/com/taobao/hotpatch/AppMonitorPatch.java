@@ -50,7 +50,7 @@ public class AppMonitorPatch implements IPatch {
                                            // 在这个方法中，实现替换逻辑
                                            @Override
                                            protected Object replaceHookedMethod(MethodHookParam param) throws Throwable {
-                                               Log.v("AppMonitorPatch", "replaceHookedMethod");
+                                               Log.v("AppMonitorPatch", "replaceHookedMethodddddddd");
                                                EventRepo eventRepo = (EventRepo) param.thisObject;
                                                Log.v("AppMonitorPatch", "eventRepo: " + eventRepo);
                                                int eventId = (Integer) param.args[0];
