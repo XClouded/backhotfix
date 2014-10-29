@@ -67,6 +67,7 @@ public class AppMonitorPatch implements IPatch {
                                                                             new Class<?>[] { double.class },
                                                                             new Object[] { value });
                                                }
+                                               return null;
                                            }
                                            
 
