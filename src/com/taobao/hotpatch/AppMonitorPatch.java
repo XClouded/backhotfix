@@ -13,6 +13,7 @@ import com.taobao.updatecenter.util.PatchHelper;
 import java.util.Map;
 import java.util.HashMap;
 import android.util.Log;
+import android.content.Context;
 
 // 所有要实现patch某个方法，都需要集成Ipatch这个接口
 public class AppMonitorPatch implements IPatch {
