@@ -41,14 +41,15 @@ public class AppMonitorPatch implements IPatch {
         Log.d("AppMonitorPatch", "eventRepo:" + eventRepo.toString());
         // TODO 入参跟上面描述相同，只是最后参数为XC_MethodHook。
         // beforeHookedMethod和afterHookedMethod，可以根据需要只实现其一
-        XposedBridge.findAndHookMethod(eventRepo, "a", int.class, String.class, String.class,
+        XposedBridge.findAndHookMethod(eventRepo, "countEventCommit", int.class, String.class, String.class,
+                                       double.class,
                                        new XC_MethodReplacement() {
 
                                            // 在这个方法中，实现替换逻辑
 
                                            @Override
                                            protected Object replaceHookedMethod(MethodHookParam param) throws Throwable {
-                                               Log.v("AppMonitorPatch", "replaceHookedMethod!!!!!!!!!!!!!!");
+                                               Log.v("AppMonitorPatch", "replaceHookedMethod?????????????????");
                                                Object eventRepo = param.thisObject;
                                                Log.v("AppMonitorPatch", "eventRepo: " + eventRepo);
                                                int eventId = (Integer) param.args[0];
@@ -59,102 +60,69 @@ public class AppMonitorPatch implements IPatch {
                                                Log.v("AppMonitorPatch", "monitorPoint: " + monitorPoint);
                                                Log.v("AppMonitorPatch", "page: " + page + " monitorPoint: "
                                                                         + monitorPoint);
+                                               return getCountEvent(eventRepo, eventId, page, monitorPoint);
+                                           }
+                                           
+
+                                           private Object getCountEvent(Object eventRepo, int eventId, String page,
+                                                                        String monitorPoint) {
                                                if (isBlank(page) || isBlank(monitorPoint)) {
                                                    return null;
                                                }
-                                               String eventKey = page + "$" + monitorPoint;
-                                               Log.v("AppMonitorPatch", "eventKey: " + eventKey);
-                                               Object event = null;
                                                Map<Integer, Map> eventMap = (Map<Integer, Map>) XposedHelpers.getObjectField(eventRepo,
-                                                                                                                                                           "b");
+                                                                                                                             "b");
                                                if (eventMap == null) {
                                                    Log.v("AppMonitorPatch", "eventMap is null");
                                                    return null;
                                                }
+                                               String eventKey = page + "$" + monitorPoint;
+                                               Object event = null;
                                                synchronized (eventMap) {
-                                                   Map targetEventMap = eventMap.get(eventId);
-                                                   if (targetEventMap == null || targetEventMap.get(eventKey) == null) {
-                                                       if (targetEventMap == null) {
-                                                           Log.v("AppMonitorPatch", "targetEventMap is null");
-                                                           Class eventClass = Class.forName("com.alibaba.a.a.a.e");
-                                                           Log.v("AppMonitorPatch", "targetEventMap is null get class");
-                                                           targetEventMap = getEventMap(eventClass.getClass());
-                                                           Log.v("AppMonitorPatch", "targetEventMap is null new map");
-                                                           eventMap.put(eventId, targetEventMap);
+                                                   try {
+                                                       Map targetEventMap = eventMap.get(eventId);
+                                                       if (targetEventMap == null
+                                                           || targetEventMap.get(eventKey) == null) {
+                                                           if (targetEventMap == null) {
+                                                               Log.v("AppMonitorPatch", "targetEventMap is null");
+                                                               Class eventClass = Class.forName("com.alibaba.a.a.a.e");
+                                                               Log.v("AppMonitorPatch",
+                                                                     "targetEventMap is null get class");
+                                                               targetEventMap = getEventMap(eventClass.getClass());
+                                                               Log.v("AppMonitorPatch",
+                                                                     "targetEventMap is null new map");
+                                                               eventMap.put(eventId, targetEventMap);
+                                                           }
+                                                           Log.v("AppMonitorPatch", "getEvent");
+                                                           Class eventClass = Class.forName("com.alibaba.a.a.a.d");
+                                                           Log.v("AppMonitorPatch", "getEvent get class");
+                                                           Constructor constructor = eventClass.getConstructor(int.class,
+                                                                                                               String.class,
+                                                                                                               String.class);
+                                                           Log.v("AppMonitorPatch", "getEvent getConstructor");
+                                                           event = constructor.newInstance(eventId, page, monitorPoint);
+                                                           Log.v("AppMonitorPatch", "getEvent newInstance");
+                                                           Log.v("AppMonitorPatch", "event type: "
+                                                                                    + event.getClass().getName());
+                                                           if (event != null) {
+                                                               Log.v("AppMonitorPatch", "getEvent event is not null");
+                                                               targetEventMap.put(eventKey, event);
+                                                           }
+                                                       } else {
+                                                           event = targetEventMap.get(eventKey);
                                                        }
-                                                       Log.v("AppMonitorPatch", "getEvent");
-                                                       event = getEvent(eventId, page, monitorPoint);
-                                                       Log.v("AppMonitorPatch", "event type: "
-                                                                                + event.getClass().getName());
-                                                       if (event != null) {
-                                                           Log.v("AppMonitorPatch", "getEvent event is not null");
-                                                           targetEventMap.put(eventKey, event);
-                                                       }
-                                                   } else {
-                                                       event = targetEventMap.get(eventKey);
+                                                   } catch (Throwable t) {
+
                                                    }
                                                }
                                                return event;
                                            }
-                                           
-                                           public <T> Map getEventMap(Class<T> t){
+
+                                           private <T> Map getEventMap(Class<T> t) {
                                                Log.v("AppMonitorPatch", "getEventMap");
-                                               return new HashMap<String,T>();
+                                               return new HashMap<String, T>();
                                            }
 
-                                           public Object getEvent(int eventId, String page, String monitorPoint) {
-                                               RuntimeException e = new RuntimeException();
-                                               e.fillInStackTrace();
-                                               StackTraceElement[] elements = e.getStackTrace();
-                                               Class eventClass = null;
-                                               Constructor constructor = null;
-                                               Object event = null;
-                                               for (StackTraceElement element : elements) {
-                                                   Log.v("AppMonitorPatch",
-                                                         "StackTraceElement className: " + element.getClassName());
-                                                       // AlarmEvent
-                                                       try {
-                                                       if (element.getClassName().equals("com.alibaba.a.a.a$a")) {
-                                                           Log.v("AppMonitorPatch",
-                                                                 "getEvent event class" + element.getClassName());
-                                                           eventClass = Class.forName("com.alibaba.a.a.a.c");
-                                                           Log.v("AppMonitorPatch",
-                                                                 "getEvent get class" + element.getClassName());
-                                                           constructor = eventClass.getConstructor(int.class,
-                                                                                                   String.class,
-                                                                                                   String.class);
-                                                           Log.v("AppMonitorPatch",
-                                                                 "getEvent getConstructor" + element.getClassName());
-                                                           event = constructor.newInstance(eventId, page, monitorPoint);
-                                                           Log.v("AppMonitorPatch",
-                                                                 "getEvent newInstance" + element.getClassName());
-                                                           break;
-                                                       } else if (element.getClassName().equals("com.alibaba.a.a.a$b")
-                                                                  || element.getClassName().equals("com.alibaba.a.a.a$c")) {
-                                                           // CounterEvent
-                                                           Log.v("AppMonitorPatch",
-                                                                 "getEvent event class" + element.getClassName());
-                                                           eventClass = Class.forName("com.alibaba.a.a.a.d");
-                                                           Log.v("AppMonitorPatch",
-                                                                 "getEvent get class" + element.getClassName());
-                                                           constructor = eventClass.getConstructor(int.class,
-                                                                                                   String.class,
-                                                                                                   String.class);
-                                                           Log.v("AppMonitorPatch",
-                                                                 "getEvent getConstructor" + element.getClassName());
-                                                           event = constructor.newInstance(eventId, page, monitorPoint);
-                                                           Log.v("AppMonitorPatch",
-                                                                 "getEvent newInstance" + element.getClassName());
-                                                           break;
-                                                       }
-                                                       } catch (Throwable t) {
-                                                       }
-
-                                               }
-                                               return event;
-                                           }
-
-                                           public boolean isBlank(String str) {
+                                           private boolean isBlank(String str) {
                                                int strLen;
                                                if (str == null || (strLen = str.length()) == 0) {
                                                    return true;
