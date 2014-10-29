@@ -33,6 +33,7 @@ public class AppMonitorPatch implements IPatch {
         // TODO 这里填上你要patch的class名字，根据mapping得到混淆后的名字，在主dex中的class，最后的参数为null
         Class<?> eventRepo = PatchHelper.loadClass(context, "com.alibaba.a.a.a.g", null);
         if (eventRepo == null) {
+          Log.d("AppMonitorPatch", "eventRepo is null");
 			return;
 		}
 		
