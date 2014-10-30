@@ -1,14 +1,10 @@
 package com.taobao.hotpatch;
 
-import android.app.Activity;
 import android.content.Context;
-import android.os.Bundle;
 import android.util.Log;
 
-import com.taobao.android.dexposed.XC_MethodHook;
 import com.taobao.android.dexposed.XC_MethodReplacement;
 import com.taobao.android.dexposed.XposedBridge;
-import com.taobao.android.dexposed.XposedHelpers;
 import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchCallback.PatchParam;
 import com.taobao.tao.Globals;
@@ -22,16 +18,17 @@ public class APatch implements IPatch {
 	public void handlePatch(PatchParam arg0) throws Throwable {
 		// 从arg0里面，可以得到主客的context供使用
 		final Context context = arg0.context;
-		
+		Log.d("hotpatch", "main handlePatch");
 		// 由于patch运行在多进程的环境，如果只是运行在主进程，就要做如下的相应判断		
 		if (!PatchHelper.isRunInMainProcess(context)) {
 			// 不是主进程就返回
 			return;
 		}
-		Log.d("hotpatchMain", "handlePatch");
+		
 		// TODO 这里填上你要patch的class名字，根据mapping得到混淆后的名字，在主dex中的class，最后的参数为null
 		Class<?> game = PatchHelper.loadClass(context, "com.taobao.home.welcomegame.GameDialog$a", "com.taobao.home.welcomegame");
 		if (game == null) {
+			Log.d("hotpatch", "gamedialog not found");
 			return;
 		}
 
