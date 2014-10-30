@@ -38,9 +38,9 @@ public class UpdaterPatch implements IPatch {
 						boolean arg = (Boolean) param.args[0];
 						if (!arg) {
 							sLastCheckTime = XposedHelpers.getLongField(
-									instance, "sLastCheckTime");
+									instance, "q");
 							XposedHelpers.setLongField(instance,
-									"sLastCheckTime", 0);
+									"q", 0);
 						}
 					}
 					// 这个方法执行的相当于在原oncreate方法后面，加上一段逻辑。
@@ -52,7 +52,7 @@ public class UpdaterPatch implements IPatch {
 						boolean arg = (Boolean) param.args[0];
 						if (!arg) {
 							XposedHelpers.setLongField(instance,
-									"sLastCheckTime", sLastCheckTime);
+									"q", sLastCheckTime);
 						}
 					}
 				});
