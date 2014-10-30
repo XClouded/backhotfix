@@ -1,6 +1,8 @@
 package com.taobao.hotpatch;
 
 import android.content.Context;
+import android.taobao.atlas.framework.Atlas;
+import android.taobao.atlas.framework.BundleImpl;
 import android.util.Log;
 
 import com.taobao.android.dexposed.XC_MethodReplacement;
@@ -26,9 +28,16 @@ public class APatch implements IPatch {
 		}
 		
 		// TODO 这里填上你要patch的class名字，根据mapping得到混淆后的名字，在主dex中的class，最后的参数为null
-		Class<?> game = PatchHelper.loadClass(context, "com.taobao.home.welcomegame.GameDialog$a", "com.taobao.home.welcomegame");
-		if (game == null) {
-			Log.d("hotpatch", "gamedialog not found");
+		Class<?> game;
+		BundleImpl bundle = (BundleImpl) Atlas.getInstance().getBundle("com.taobao.home.welcomegame");
+		if (bundle == null) {
+			Log.d("hotpatch", "bundle not found");
+			return;
+		}
+		try {
+			game =  bundle.getClassLoader().loadClass("com.taobao.home.welcomegame.GameDialog$a");
+		} catch (ClassNotFoundException e) {
+			Log.d("hotpatch", "welcomegame$gamedialog not found");
 			return;
 		}
 
