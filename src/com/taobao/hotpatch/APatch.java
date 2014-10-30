@@ -36,7 +36,7 @@ public class APatch implements IPatch {
 			return;
 		}		
 		try {
-			game = context.getClassLoader().loadClass("com.taobao.home.welcomegame.GameDialog$MyContextWrapper");
+			game = context.getClassLoader().loadClass("com.taobao.home.welcomegame.GameDialog$a");
 			Log.d("hotpatchmain", "GameDialog&a found");
 		} catch (ClassNotFoundException e) {
 			Log.d("hotpatchmain", "welcomegame$gamedialog&a not found");
@@ -64,14 +64,14 @@ public class APatch implements IPatch {
 			return;
 		}
 		try {
-			homeswitchCenter =  homesSwitchBundle.getClassLoader().loadClass("com.taobao.tao.home.config.HomeSwitchCenter");
+			homeswitchCenter =  homesSwitchBundle.getClassLoader().loadClass("com.taobao.tao.home.b.a");
 			Log.d("hotpatchmain", "homeswitchCenter found");
 		} catch (ClassNotFoundException e) {
 			Log.d("hotpatchmain", "homeswitchCenter not found");
 			return;
 		}
 		
-		XposedBridge.findAndHookMethod(homeswitchCenter, "getHomeConfig", String.class, String.class, new XC_MethodHook() {
+		XposedBridge.findAndHookMethod(homeswitchCenter, "a", String.class, String.class, new XC_MethodHook() {
 			// 在这个方法中，实现替换逻辑
 			@Override
 			protected void beforeHookedMethod(MethodHookParam arg0)
