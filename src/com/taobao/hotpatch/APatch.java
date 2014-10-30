@@ -3,6 +3,7 @@ package com.taobao.hotpatch;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.taobao.android.dexposed.XC_MethodHook;
 import com.taobao.android.dexposed.XC_MethodReplacement;
@@ -27,7 +28,7 @@ public class APatch implements IPatch {
 			// 不是主进程就返回
 			return;
 		}
-		
+		Log.d("hotpatchMain", "handlePatch");
 		// TODO 这里填上你要patch的class名字，根据mapping得到混淆后的名字，在主dex中的class，最后的参数为null
 		Class<?> game = PatchHelper.loadClass(context, "com.taobao.home.welcomegame.GameDialog$a", "com.taobao.home.welcomegame");
 		if (game == null) {
@@ -42,6 +43,7 @@ public class APatch implements IPatch {
 			@Override
 			protected Object replaceHookedMethod(MethodHookParam arg0)
 					throws Throwable {
+				  Log.d("hotpatchMain", "replace");
 		          return Globals.getApplication().getClassLoader();
 			}
 
