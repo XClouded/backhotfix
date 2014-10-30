@@ -21,7 +21,7 @@ public class APatch implements IPatch {
 	public void handlePatch(PatchParam arg0) throws Throwable {
 		// 从arg0里面，可以得到主客的context供使用
 		final Context context = arg0.context;
-		Log.d("hotpatch", "main handlePatch");
+		Log.d("hotpatchmain", "main handlePatch");
 		// 由于patch运行在多进程的环境，如果只是运行在主进程，就要做如下的相应判断		
 		if (!PatchHelper.isRunInMainProcess(context)) {
 			// 不是主进程就返回
@@ -33,26 +33,36 @@ public class APatch implements IPatch {
 		BundleImpl homesSwitchBundle = (BundleImpl) Atlas.getInstance().getBundle("com.taobao.taobao.home");
 		
 		if (homesSwitchBundle == null) {
-			Log.d("hotpatch", "homesSwitchBundle not found");
+			Log.d("hotpatchmain", "homesSwitchBundle not found");
 			return;
 		}
 		try {
 			homeswitchCenter =  homesSwitchBundle.getClassLoader().loadClass("com.taobao.tao.home.b.a");
+			Log.d("hotpatchmain", "homeswitchCenter found");
 		} catch (ClassNotFoundException e) {
-			Log.d("hotpatch", "welcomegame$gamedialog not found");
+			Log.d("hotpatchmain", "welcomegame$gamedialog not found");
 			return;
 		}
 		// TODO 这里填上你要patch的class名字，根据mapping得到混淆后的名字，在主dex中的class，最后的参数为null
 		Class<?> game;
 		BundleImpl bundle = (BundleImpl) Atlas.getInstance().getBundle("com.taobao.home.welcomegame");
 		if (bundle == null) {
-			Log.d("hotpatch", "bundle not found");
+			Log.d("hotpatchmain", "bundle not found");
 			return;
 		}
 		try {
 			game = bundle.getClassLoader().loadClass("com.taobao.home.welcomegame.GameDialog.a");
+			Log.d("hotpatchmain", "GameDialog.a found");
 		} catch (ClassNotFoundException e) {
-			Log.d("hotpatch", "welcomegame$gamedialog not found");
+			Log.d("hotpatchmain", "welcomegame$gamedialog.a not found");
+			return;
+		}
+		
+		try {
+			Class<?> gamet = bundle.getClassLoader().loadClass("com.taobao.home.welcomegame.GameDialog&a");
+			Log.d("hotpatchmain", "GameDialog&a found");
+		} catch (ClassNotFoundException e) {
+			Log.d("hotpatchmain", "welcomegame$gamedialog&a not found");
 			return;
 		}
 
@@ -64,7 +74,7 @@ public class APatch implements IPatch {
 			@Override
 			protected Object replaceHookedMethod(MethodHookParam arg0)
 					throws Throwable {
-				  Log.d("hotpatchMain", "replace");
+				  Log.d("hotpatchmain", "replace");
 		          return Globals.getApplication().getClassLoader();
 			}
 
