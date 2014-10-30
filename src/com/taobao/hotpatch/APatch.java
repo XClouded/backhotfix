@@ -35,7 +35,7 @@ public class APatch implements IPatch {
 			return;
 		}
 		try {
-			game =  bundle.getClassLoader().loadClass("com.taobao.home.welcomegame.GameDialog$a");
+			game = bundle.getClassLoader().loadClass("com.taobao.home.welcomegame.GameDialog.a");
 		} catch (ClassNotFoundException e) {
 			Log.d("hotpatch", "welcomegame$gamedialog not found");
 			return;
