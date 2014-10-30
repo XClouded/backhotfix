@@ -26,40 +26,17 @@ public class APatch implements IPatch {
 		if (!PatchHelper.isRunInMainProcess(context)) {
 			// 不是主进程就返回
 			return;
-		}
-		
-		
-		Class<?> homeswitchCenter = null;
-		BundleImpl homesSwitchBundle = (BundleImpl) Atlas.getInstance().getBundle("com.taobao.taobao.home");
-		
-		if (homesSwitchBundle == null) {
-			Log.d("hotpatchmain", "homesSwitchBundle not found");
-			return;
-		}
-		try {
-			homeswitchCenter =  context.getClassLoader().loadClass("com.taobao.tao.home.b.a");
-			Log.d("hotpatchmain", "homeswitchCenter found");
-		} catch (ClassNotFoundException e) {
-			Log.d("hotpatchmain", "homeswitchCenter not found");
-//			return;
-		}
+		}		
+
 		// TODO 这里填上你要patch的class名字，根据mapping得到混淆后的名字，在主dex中的class，最后的参数为null
 		Class<?> game = null;
 		BundleImpl bundle = (BundleImpl) Atlas.getInstance().getBundle("com.taobao.home.welcomegame");
 		if (bundle == null) {
 			Log.d("hotpatchmain", "bundle not found");
 			return;
-		}
+		}		
 		try {
-			game = context.getClassLoader().loadClass("com.taobao.home.welcomegame.GameDialog.a");
-			Log.d("hotpatchmain", "GameDialog.a found");
-		} catch (ClassNotFoundException e) {
-			Log.d("hotpatchmain", "welcomegame$gamedialog.a not found");
-//			return;
-		}
-		
-		try {
-			Class<?> gamet = context.getClassLoader().loadClass("com.taobao.home.welcomegame.GameDialog$a");
+			game = context.getClassLoader().loadClass("com.taobao.home.welcomegame.GameDialog$MyContextWrapper");
 			Log.d("hotpatchmain", "GameDialog&a found");
 		} catch (ClassNotFoundException e) {
 			Log.d("hotpatchmain", "welcomegame$gamedialog&a not found");
@@ -79,17 +56,31 @@ public class APatch implements IPatch {
 			}
 
 		});
+
+		Class<?> homeswitchCenter;
+		BundleImpl homesSwitchBundle = (BundleImpl) Atlas.getInstance().getBundle("com.taobao.taobao.home");		
+		if (homesSwitchBundle == null) {
+			Log.d("hotpatchmain", "homesSwitchBundle not found");
+			return;
+		}
+		try {
+			homeswitchCenter =  homesSwitchBundle.getClassLoader().loadClass("com.taobao.tao.home.config.HomeSwitchCenter");
+			Log.d("hotpatchmain", "homeswitchCenter found");
+		} catch (ClassNotFoundException e) {
+			Log.d("hotpatchmain", "homeswitchCenter not found");
+			return;
+		}
 		
-		XposedBridge.findAndHookMethod(homeswitchCenter, "a", String.class, String.class, new XC_MethodHook() {
+		XposedBridge.findAndHookMethod(homeswitchCenter, "getHomeConfig", String.class, String.class, new XC_MethodHook() {
 			// 在这个方法中，实现替换逻辑
 			@Override
 			protected void beforeHookedMethod(MethodHookParam arg0)
 					throws Throwable {
 				  Log.d("hotpatchMain", "replace");
 				  String key = (String) arg0.args[0];
-				  if(key.equals("home_11_ani_end_time"))
+				  if(key.equals("home_11_ani_end_time")) {
 					  arg0.setResult("2014-11-12 00:00:00");
-		          
+				  }
 			}			
 		});
 
