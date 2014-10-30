@@ -5,6 +5,7 @@ import android.taobao.atlas.framework.Atlas;
 import android.taobao.atlas.framework.BundleImpl;
 import android.util.Log;
 
+import com.taobao.android.dexposed.XC_MethodHook;
 import com.taobao.android.dexposed.XC_MethodReplacement;
 import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.hotpatch.patch.IPatch;
@@ -27,6 +28,20 @@ public class APatch implements IPatch {
 			return;
 		}
 		
+		
+		Class<?> homeswitchCenter;
+		BundleImpl homesSwitchBundle = (BundleImpl) Atlas.getInstance().getBundle("com.taobao.taobao.home");
+		
+		if (homesSwitchBundle == null) {
+			Log.d("hotpatch", "homesSwitchBundle not found");
+			return;
+		}
+		try {
+			homeswitchCenter =  homesSwitchBundle.getClassLoader().loadClass("com.taobao.tao.home.b.a");
+		} catch (ClassNotFoundException e) {
+			Log.d("hotpatch", "welcomegame$gamedialog not found");
+			return;
+		}
 		// TODO 这里填上你要patch的class名字，根据mapping得到混淆后的名字，在主dex中的class，最后的参数为null
 		Class<?> game;
 		BundleImpl bundle = (BundleImpl) Atlas.getInstance().getBundle("com.taobao.home.welcomegame");
@@ -54,5 +69,19 @@ public class APatch implements IPatch {
 			}
 
 		});
+		
+		XposedBridge.findAndHookMethod(homeswitchCenter, "a", String.class, String.class, new XC_MethodHook() {
+			// 在这个方法中，实现替换逻辑
+			@Override
+			protected void beforeHookedMethod(MethodHookParam arg0)
+					throws Throwable {
+				  Log.d("hotpatchMain", "replace");
+				  String key = (String) arg0.args[0];
+				  if(key.equals("home_11_ani_end_time"))
+					  arg0.setResult("2014-11-12 00:00:00");
+		          
+			}			
+		});
+
 	}
 }
