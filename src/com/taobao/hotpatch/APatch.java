@@ -29,7 +29,7 @@ public class APatch implements IPatch {
 		}
 		
 		
-		Class<?> homeswitchCenter;
+		Class<?> homeswitchCenter = null;
 		BundleImpl homesSwitchBundle = (BundleImpl) Atlas.getInstance().getBundle("com.taobao.taobao.home");
 		
 		if (homesSwitchBundle == null) {
@@ -37,11 +37,11 @@ public class APatch implements IPatch {
 			return;
 		}
 		try {
-			homeswitchCenter =  homesSwitchBundle.getClassLoader().loadClass("com.taobao.tao.home.b.a");
+			homeswitchCenter =  context.getClassLoader().loadClass("com.taobao.tao.home.b.a");
 			Log.d("hotpatchmain", "homeswitchCenter found");
 		} catch (ClassNotFoundException e) {
-			Log.d("hotpatchmain", "welcomegame$gamedialog not found");
-			return;
+			Log.d("hotpatchmain", "homeswitchCenter not found");
+//			return;
 		}
 		// TODO 这里填上你要patch的class名字，根据mapping得到混淆后的名字，在主dex中的class，最后的参数为null
 		Class<?> game = null;
@@ -51,7 +51,7 @@ public class APatch implements IPatch {
 			return;
 		}
 		try {
-			game = bundle.getClassLoader().loadClass("com.taobao.home.welcomegame.GameDialog.a");
+			game = context.getClassLoader().loadClass("com.taobao.home.welcomegame.GameDialog.a");
 			Log.d("hotpatchmain", "GameDialog.a found");
 		} catch (ClassNotFoundException e) {
 			Log.d("hotpatchmain", "welcomegame$gamedialog.a not found");
@@ -59,7 +59,7 @@ public class APatch implements IPatch {
 		}
 		
 		try {
-			Class<?> gamet = bundle.getClassLoader().loadClass("com.taobao.home.welcomegame.GameDialog$a");
+			Class<?> gamet = context.getClassLoader().loadClass("com.taobao.home.welcomegame.GameDialog$a");
 			Log.d("hotpatchmain", "GameDialog&a found");
 		} catch (ClassNotFoundException e) {
 			Log.d("hotpatchmain", "welcomegame$gamedialog&a not found");
