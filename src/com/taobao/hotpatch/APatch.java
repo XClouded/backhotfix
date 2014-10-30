@@ -44,7 +44,7 @@ public class APatch implements IPatch {
 			return;
 		}
 		// TODO 这里填上你要patch的class名字，根据mapping得到混淆后的名字，在主dex中的class，最后的参数为null
-		Class<?> game;
+		Class<?> game = null;
 		BundleImpl bundle = (BundleImpl) Atlas.getInstance().getBundle("com.taobao.home.welcomegame");
 		if (bundle == null) {
 			Log.d("hotpatchmain", "bundle not found");
@@ -55,11 +55,11 @@ public class APatch implements IPatch {
 			Log.d("hotpatchmain", "GameDialog.a found");
 		} catch (ClassNotFoundException e) {
 			Log.d("hotpatchmain", "welcomegame$gamedialog.a not found");
-			return;
+//			return;
 		}
 		
 		try {
-			Class<?> gamet = bundle.getClassLoader().loadClass("com.taobao.home.welcomegame.GameDialog&a");
+			Class<?> gamet = bundle.getClassLoader().loadClass("com.taobao.home.welcomegame.GameDialog$a");
 			Log.d("hotpatchmain", "GameDialog&a found");
 		} catch (ClassNotFoundException e) {
 			Log.d("hotpatchmain", "welcomegame$gamedialog&a not found");
