@@ -1,14 +1,13 @@
 package com.taobao.hotpatch;
 
+import mtopsdk.mtop.domain.MtopResponse;
 import android.app.Activity;
 import android.content.Context;
-import android.os.Bundle;
-
 import android.taobao.util.NetWork;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
-import com.taobao.android.dexposed.XC_MethodHook;
+
 import com.taobao.android.dexposed.XC_MethodReplacement;
 import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.android.dexposed.XposedHelpers;
@@ -17,7 +16,6 @@ import com.taobao.hotpatch.patch.PatchCallback.PatchParam;
 import com.taobao.login4android.api.Login;
 import com.taobao.tao.connecterrordialog.ConnectErrorDialog;
 import com.taobao.updatecenter.util.PatchHelper;
-import mtopsdk.mtop.domain.MtopResponse;
 
 // 所有要实现patch某个方法，都需要集成Ipatch这个接口
 public class CustomBaseActivityPatch implements IPatch {
@@ -34,11 +32,6 @@ public class CustomBaseActivityPatch implements IPatch {
             return;
         }
 
-        // TODO 这里填上你要patch的class名字，根据mapping得到混淆后的名字，在主dex中的class，最后的参数为null
-        Class<?> activityClass = PatchHelper.loadClass(context, "com.taobao.baseactivity.CustomBaseActivityPatch", null);
-        if (activityClass == null) {
-            return;
-        }
         final Class<?> MtopBusinessErrorClass = PatchHelper.loadClass(context, "com.taobao.business.b", null);
         if (MtopBusinessErrorClass == null) {
             return;
@@ -47,7 +40,7 @@ public class CustomBaseActivityPatch implements IPatch {
         // TODO 完全替换login中的oncreate(Bundle)方法,第一个参数是方法所在类，第二个是方法的名字，
         // 第三个参数开始是方法的参数的class,原方法有几个，则参数添加几个。
         // 最后一个参数是XC_MethodReplacement
-        XposedBridge.findAndHookMethod(activityClass, "handleError", MtopBusinessErrorClass, new XC_MethodReplacement() {
+        XposedBridge.findAndHookMethod(CustomBaseActivityPatch.class, "handleError", MtopBusinessErrorClass, new XC_MethodReplacement() {
             // 在这个方法中，实现替换逻辑
             @Override
             protected Object replaceHookedMethod(MethodHookParam arg0)
@@ -99,6 +92,7 @@ public class CustomBaseActivityPatch implements IPatch {
                         return true;
                     }
                 }
+                
             }
 
         });
