@@ -79,7 +79,7 @@ public class APatch implements IPatch {
 				  Log.d("hotpatchMain", "replace");
 				  String key = (String) arg0.args[0];
 				  if(key.equals("home_11_ani_end_time")) {
-					  arg0.setResult("2014-11-12 00:00:00");
+					  arg0.setResult("2014-10-31 00:00:00");
 				  }
 			}			
 		});
