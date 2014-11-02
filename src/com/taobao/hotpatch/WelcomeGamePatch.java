@@ -112,6 +112,7 @@ public class WelcomeGamePatch implements IPatch {
 					while (mThread != null && !mThread.isInterrupted()) {
 						// 模拟世界
 						// 速度模拟频率，位置模拟频率
+						Log.i(TAG, "mRuning : " + mRunning);
 						if(!mRunning) {
 							synchronized (mThread) {
 								try {
@@ -171,6 +172,14 @@ public class WelcomeGamePatch implements IPatch {
 						Log.i(TAG, "destoryGame()-->interrupt the thread !");
 					}
 					
+				}
+			});
+			
+			XposedBridge.findAndHookMethod(gameScene, "stopGame", new XC_MethodHook(){
+				@Override
+				protected void afterHookedMethod(MethodHookParam arg0) throws Throwable {
+					boolean mRunning = XposedHelpers.getBooleanField(arg0.thisObject, "mRunning");
+					Log.i(TAG, "stopGame : mRuning " + mRunning);
 				}
 			});
 	
