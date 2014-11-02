@@ -15,12 +15,12 @@ import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
-import android.os.Handler;
 import android.os.Message;
 import android.taobao.atlas.framework.Atlas;
 import android.taobao.atlas.framework.BundleImpl;
 import android.taobao.threadpool2.ThreadPage;
 import android.taobao.util.Priority;
+import android.taobao.util.SafeHandler;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
@@ -188,7 +188,7 @@ public class FaceHongbaoGamePatch implements IPatch {
                         Object instance = argument.thisObject;
                         final Object OuterInstacne = XposedHelpers.getObjectField(instance, "a");
                         Log.e(TAG, "Outer class name is =" + OuterInstacne.getClass());
-                        final Handler mHandler = (Handler) XposedHelpers.getObjectField(
+                        final SafeHandler mHandler = (SafeHandler) XposedHelpers.getObjectField(
                                 OuterInstacne, "A");
                         //Camera camera = (Camera) XposedHelpers.getObjectField(instance, "camera");
                         Camera camera = (Camera) XposedHelpers.getObjectField(OuterInstacne, "g");
