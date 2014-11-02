@@ -54,8 +54,7 @@ public class FaceHongbaoGamePatch implements IPatch {
         }
         Class<?> mHongbaoUtil;
         try {
-            mHongbaoUtil = context.getClassLoader().loadClass(
-                    "com.taobao.facehongbao.c.b");
+            mHongbaoUtil = context.getClassLoader().loadClass("com.taobao.facehongbao.c.b");
             Log.d(TAG, "HongbaoUtil found");
 
         } catch (ClassNotFoundException e) {
@@ -112,8 +111,7 @@ public class FaceHongbaoGamePatch implements IPatch {
 
         Class<?> mFaceDetactionBackup;
         try {
-            mFaceDetactionBackup = context.getClassLoader().loadClass(
-                    "com.taobao.facehongbao.a");
+            mFaceDetactionBackup = context.getClassLoader().loadClass("com.taobao.facehongbao.a");
             Log.d(TAG, "mFaceDetactionBackup found");
 
         } catch (ClassNotFoundException e) {
@@ -134,8 +132,8 @@ public class FaceHongbaoGamePatch implements IPatch {
                         boolean previewing = XposedHelpers.getBooleanField(instance, "e");
                         if (camera != null && !previewing) {
                             try {
-                                Object cameraConObject = XposedHelpers.getObjectField(instance,
-                                        "n");
+                                Object cameraConObject = XposedHelpers
+                                        .getObjectField(instance, "n");
                                 XposedHelpers.callMethod(cameraConObject,
                                         "initFromCameraParameters", Camera.class, camera);
                                 //                        mCameraConfigurationManager.initFromCameraParameters(camera);
@@ -159,8 +157,7 @@ public class FaceHongbaoGamePatch implements IPatch {
 
                             } catch (Exception e) {
                                 Log.d(TAG, "HongbaoUtil init camera failed");
-                                Object callbackObject = XposedHelpers.getObjectField(instance,
-                                        "h");
+                                Object callbackObject = XposedHelpers.getObjectField(instance, "h");
                                 XposedHelpers.callMethod(callbackObject, "onOpenCameraError");
                                 //callback.onOpenCameraError();
                             }
@@ -169,120 +166,109 @@ public class FaceHongbaoGamePatch implements IPatch {
                         return null;
                     }
                 });
-        
+
         Class<?> mFaceDetaction;
         try {
-            mFaceDetaction = context.getClassLoader().loadClass(
-                    "com.taobao.facehongbao.h");
+            mFaceDetaction = context.getClassLoader().loadClass("com.taobao.facehongbao.h");
             Log.d(TAG, "mFaceDetaction found");
 
         } catch (ClassNotFoundException e) {
             Log.d(TAG, "mFaceDetaction not found");
             return;
         }
-        
 
-        
-        XposedBridge.findAndHookMethod(mFaceDetaction, "onPictureTaken", new byte[0].getClass(),Camera.class,new XC_MethodReplacement() {
-            
-            @Override
-            protected Object replaceHookedMethod(final MethodHookParam argument) throws Throwable {
-                final Object instance = argument.thisObject;
-                Object OuterInstacne =XposedHelpers.getSurroundingThis(instance);
-                Log.e(TAG, "Outer class name is ="+OuterInstacne.getClass());
-                Handler mHandler =XposedHelpers.getObjectField(OuterInstacne, "");
-              //Camera camera = (Camera) XposedHelpers.getObjectField(instance, "camera");
-                Camera camera = (Camera) XposedHelpers.getObjectField(instance, "b");
-                //boolean previewing = XposedHelpers.getBooleanField(instance, "previewing");
-                boolean previewing = XposedHelpers.getBooleanField(instance, "e");
-                
-                //有的机型会自动停止，不需要手工停止了，这里的停止不回调反馈页面
-                if (camera != null && previewing) {
-                    previewing = false;
-                    try {
-                        camera.stopFaceDetection();
-                        camera.stopPreview();
-                    } catch (Exception e) {
-                        Log.e(TAG, "on take pic stop FaceDetaction Failed");
-                    }
-
-                }
-                ThreadPage dbContactThreadPage = new ThreadPage(
-                        Priority.PRIORITY_NORM);
-                dbContactThreadPage.execute(new Runnable() {
+        XposedBridge.findAndHookMethod(mFaceDetaction, "onPictureTaken", new byte[0].getClass(),
+                Camera.class, new XC_MethodReplacement() {
 
                     @Override
-                    public void run() {
-                        
-                        Rect faceRect = (Rect) XposedHelpers.getObjectField(instance, "faceRect");
-                        float heightScale = XposedHelpers.getFloatField(instance, "heightScale");
-                        float widthScale = XposedHelpers.getFloatField(instance, "widthScale");
-                        if (faceRect.width() == 0
-                                || faceRect.height() == 0)
-                            return;
-                        BitmapRegionDecoder decoder = null;
-                        Bitmap region = null;
-                        try {
-                            Rect actualRect = new Rect();
-                            actualRect.top = (int) (faceRect.top * heightScale);
-                            actualRect.bottom = (int) (faceRect.bottom * heightScale);
-                            actualRect.left = (int) (faceRect.left * widthScale);
-                            actualRect.right = (int) (faceRect.right * widthScale);
+                    protected Object replaceHookedMethod(final MethodHookParam argument)
+                            throws Throwable {
+                        Object instance = argument.thisObject;
+                        final Object OuterInstacne = XposedHelpers.getSurroundingThis(instance);
+                        Log.e(TAG, "Outer class name is =" + OuterInstacne.getClass());
+                        final Handler mHandler = (Handler) XposedHelpers.getObjectField(
+                                OuterInstacne, "A");
+                        //Camera camera = (Camera) XposedHelpers.getObjectField(instance, "camera");
+                        Camera camera = (Camera) XposedHelpers.getObjectField(OuterInstacne, "g");
+                        //boolean previewing = XposedHelpers.getBooleanField(instance, "previewing");
+                        boolean previewing = XposedHelpers.getBooleanField(OuterInstacne, "j");
 
-                            //剪切
-                            byte[]arg0 =(byte[]) argument.args[0];
-                            decoder = BitmapRegionDecoder
-                                    .newInstance(arg0, 0,
-                                            arg0.length,
-                                            false);
-                            region = decoder.decodeRegion(
-                                    actualRect, null);
-                            decoder.recycle();
-                            decoder = null;
+                        //有的机型会自动停止，不需要手工停止了，这里的停止不回调反馈页面
+                        if (camera != null && previewing) {
+                            previewing = false;
+                            try {
+                                camera.stopFaceDetection();
+                                camera.stopPreview();
+                            } catch (Exception e) {
+                                Log.e(TAG, "on take pic stop FaceDetaction Failed");
+                            }
 
-                            //缩放
-                            int width = region.getWidth();
-                            int height = region.getHeight();
-                            // 设置想要的大小  
-                            int newWidth = 60;
-                            int newHeight = 60;
-                            // 计算缩放比例  
-                            float scaleWidth = ((float) newWidth)
-                                    / width;
-                            float scaleHeight = ((float) newHeight)
-                                    / height;
-                            Matrix matrix = new Matrix();
-                            matrix.postScale(scaleWidth,
-                                    scaleHeight);
-                            // 得到新的图片  
-                            Bitmap newbm = Bitmap
-                                    .createBitmap(region,
-                                            0, 0, width,
-                                            height, matrix,
-                                            true);
-                            region.recycle();
-                            region = null;
-
-                            Message message = Message
-                                    .obtain();
-                            message.what = 0;
-                            message.obj = newbm;
-                            mHandler.sendMessage(message);
-
-                        } catch (IOException e) {
-                            Message message = Message
-                                    .obtain();
-                            message.what = 0;
-                            mHandler.sendMessage(message);
                         }
+                        ThreadPage dbContactThreadPage = new ThreadPage(Priority.PRIORITY_NORM);
+                        dbContactThreadPage.execute(new Runnable() {
 
+                            @Override
+                            public void run() {
+
+                                Rect faceRect = (Rect) XposedHelpers.getObjectField(OuterInstacne,
+                                        "s");
+                                float heightScale = XposedHelpers.getFloatField(OuterInstacne,
+                                        "u");
+                                float widthScale = XposedHelpers.getFloatField(OuterInstacne,
+                                        "t");
+                                if (faceRect.width() == 0 || faceRect.height() == 0)
+                                    return;
+                                BitmapRegionDecoder decoder = null;
+                                Bitmap region = null;
+                                try {
+                                    Rect actualRect = new Rect();
+                                    actualRect.top = (int) (faceRect.top * heightScale);
+                                    actualRect.bottom = (int) (faceRect.bottom * heightScale);
+                                    actualRect.left = (int) (faceRect.left * widthScale);
+                                    actualRect.right = (int) (faceRect.right * widthScale);
+
+                                    //剪切
+                                    byte[] arg0 = (byte[]) argument.args[0];
+                                    decoder = BitmapRegionDecoder.newInstance(arg0, 0, arg0.length,
+                                            false);
+                                    region = decoder.decodeRegion(actualRect, null);
+                                    decoder.recycle();
+                                    decoder = null;
+
+                                    //缩放
+                                    int width = region.getWidth();
+                                    int height = region.getHeight();
+                                    // 设置想要的大小  
+                                    int newWidth = 60;
+                                    int newHeight = 60;
+                                    // 计算缩放比例  
+                                    float scaleWidth = ((float) newWidth) / width;
+                                    float scaleHeight = ((float) newHeight) / height;
+                                    Matrix matrix = new Matrix();
+                                    matrix.postScale(scaleWidth, scaleHeight);
+                                    // 得到新的图片  
+                                    Bitmap newbm = Bitmap.createBitmap(region, 0, 0, width, height,
+                                            matrix, true);
+                                    region.recycle();
+                                    region = null;
+
+                                    Message message = Message.obtain();
+                                    message.what = 0;
+                                    message.obj = newbm;
+                                    mHandler.sendMessage(message);
+
+                                } catch (IOException e) {
+                                    Message message = Message.obtain();
+                                    message.what = 0;
+                                    mHandler.sendMessage(message);
+                                }
+
+                            }
+                        }, Priority.PRIORITY_NORM);
+                        return null;
                     }
-                }, Priority.PRIORITY_NORM);
-            }
-            
-                return null;
-            }
-        });
+
+                });
 
     }
 
