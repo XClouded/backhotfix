@@ -1,5 +1,7 @@
 package com.taobao.hotpatch;
 
+import java.lang.reflect.Method;
+
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.os.Build;
@@ -131,7 +133,10 @@ public class WelcomeGamePatch implements IPatch {
 		                
 						t1 = System.currentTimeMillis();
 //						postInvalidate();
-						XposedHelpers.callMethod(arg0.thisObject, "postInvalidate");
+//						XposedHelpers.callMethod(arg0.thisObject, "postInvalidate");
+						Class<?> viewClass = context.getClassLoader().loadClass("android.view.View");
+						Method method = XposedHelpers.findMethodBestMatch(viewClass, "postInvalidate");
+						method.invoke(instance);
 						t2 = System.currentTimeMillis();
 						used = t2 - t1;
 						
