@@ -58,7 +58,6 @@ public class WelcomeGamePatch implements IPatch {
 					protected void beforeHookedMethod(MethodHookParam arg0)
 							throws Throwable {
 						Object instance = arg0.thisObject;
-						Log.i(TAG, "startWelcomVoice");
 						boolean mRunning = XposedHelpers.getBooleanField(instance, "mRunning");
 						MediaPlayer welcomeplayer = (MediaPlayer) XposedHelpers.getObjectField(instance, "mWelcomPlayer");
 						if (!mRunning) {
@@ -83,11 +82,11 @@ public class WelcomeGamePatch implements IPatch {
 					
 					if(mThread != null) {
 						synchronized (mThread) {
-							mThread.notify();
-//							XposedHelpers.callMethod(mThread, "notify");
+							Log.i(TAG, "start()-->mThread.notify()");
+//							mThread.notify();
+							XposedHelpers.callMethod(mThread, "notify");
 						}
 						arg0.setResult(null);
-						Log.i(TAG, "start()-->mThread.notify()");
 					}
 					else {
 						Log.i(TAG, "start()-->new Thread !");
@@ -117,8 +116,8 @@ public class WelcomeGamePatch implements IPatch {
 							synchronized (mThread) {
 								try {
 									Log.i(TAG, "run()-->mThread.wait");
-									mThread.wait();
-//									XposedHelpers.callMethod(mThread, "wait");
+//									mThread.wait();
+									XposedHelpers.callMethod(mThread, "wait");
 								} catch (Exception e1) {
 									e1.printStackTrace();
 									//TODO 直接推出动画
