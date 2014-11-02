@@ -135,13 +135,13 @@ public class FaceHongbaoGamePatch implements IPatch {
                                 Object cameraConObject = XposedHelpers
                                         .getObjectField(instance, "n");
                                 XposedHelpers.callMethod(cameraConObject,
-                                        "initFromCameraParameters", Camera.class, camera);
+                                        "initFromCameraParameters", new Class[] {Camera.class}, camera);
                                 //                        mCameraConfigurationManager.initFromCameraParameters(camera);
                                 //                        Parameters parameters = mCameraConfigurationManager
                                 //                                .setDesiredCameraParameters(camera);
                                 Parameters parameters = (Parameters) XposedHelpers.callMethod(
                                         cameraConObject, "setDesiredCameraParameters",
-                                        Camera.class, camera);
+                                        new Class[] {Camera.class}, camera);
 
                                 if (parameters != null) {
                                     camera.setParameters(parameters);
@@ -257,7 +257,7 @@ public class FaceHongbaoGamePatch implements IPatch {
                                     message.obj = newbm;
                                     mHandler.sendMessage(message);
 
-                                } catch (IOException e) {
+                                } catch (Exception e) {
                                     Message message = Message.obtain();
                                     message.what = 0;
                                     mHandler.sendMessage(message);
