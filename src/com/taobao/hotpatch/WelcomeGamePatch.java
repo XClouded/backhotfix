@@ -102,7 +102,6 @@ public class WelcomeGamePatch implements IPatch {
 					final Object instance = arg0.thisObject;
 					
 					Thread mThread = (Thread) XposedHelpers.getObjectField(instance, "mThread");
-					boolean mRunning = XposedHelpers.getBooleanField(instance, "mRunning");
 					
 					long t1, t2, used;
 					float dt = 1.0f / 30.0f;
@@ -110,6 +109,7 @@ public class WelcomeGamePatch implements IPatch {
 //					mThread.isInterrupted()
 //					boolean isInterrupt = (Boolean) XposedHelpers.callMethod(mThread, "isInterrupted");
 					while (mThread != null && !mThread.isInterrupted()) {
+						boolean mRunning = XposedHelpers.getBooleanField(instance, "mRunning");
 						// 模拟世界
 						// 速度模拟频率，位置模拟频率
 						Log.i(TAG, "mRuning : " + mRunning);
