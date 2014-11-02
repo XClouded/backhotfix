@@ -8,6 +8,7 @@ import android.os.Build;
 import android.taobao.atlas.framework.Atlas;
 import android.taobao.atlas.framework.BundleImpl;
 import android.util.Log;
+import android.view.View;
 
 import com.taobao.android.dexposed.XC_MethodHook;
 import com.taobao.android.dexposed.XC_MethodReplacement;
@@ -134,9 +135,9 @@ public class WelcomeGamePatch implements IPatch {
 						t1 = System.currentTimeMillis();
 //						postInvalidate();
 //						XposedHelpers.callMethod(arg0.thisObject, "postInvalidate");
-						Class<?> viewClass = context.getClassLoader().loadClass("android.view.View");
-						Method method = XposedHelpers.findMethodBestMatch(viewClass, "postInvalidate");
+						Method method = XposedHelpers.findMethodBestMatch(android.view.View.class, "postInvalidate");
 						method.invoke(instance);
+						Log.i(TAG, "postinvalidate");
 						t2 = System.currentTimeMillis();
 						used = t2 - t1;
 						
