@@ -49,7 +49,7 @@ public class FaceHongbaoGamePatch implements IPatch {
         Class<?> mHongbaoUtil;
         try {
             mHongbaoUtil = context.getClassLoader().loadClass(
-                    "com.taobao.facehongbao.util.HongbaoUtil");
+                    "com.taobao.facehongbao.c.b");
             Log.d(TAG, "HongbaoUtil found");
 
         } catch (ClassNotFoundException e) {
@@ -107,27 +107,29 @@ public class FaceHongbaoGamePatch implements IPatch {
         Class<?> mFaceDetactionBackup;
         try {
             mFaceDetactionBackup = context.getClassLoader().loadClass(
-                    "com.taobao.facehongbao.FaceDetectionHongBaoBackup");
+                    "com.taobao.facehongbao.a");
             Log.d(TAG, "mFaceDetactionBackup found");
 
         } catch (ClassNotFoundException e) {
             Log.d(TAG, "mFaceDetactionBackup not found");
             return;
         }
-        XposedBridge.findAndHookMethod(mFaceDetactionBackup, "setCameraAndStartPriview",
+        XposedBridge.findAndHookMethod(mFaceDetactionBackup, "c",
+        //XposedBridge.findAndHookMethod(mFaceDetactionBackup, "setCameraAndStartPriview",
                 new XC_MethodReplacement() {
 
                     @Override
                     protected Object replaceHookedMethod(MethodHookParam arg0) throws Throwable {
                         Object instance = arg0.thisObject;
                         XposedHelpers.callMethod(instance, "pause");
-                        Camera camera = (Camera) XposedHelpers.getObjectField(instance, "camera");
-                        boolean previewing = XposedHelpers.getBooleanField(instance, "previewing");
-
+                        //Camera camera = (Camera) XposedHelpers.getObjectField(instance, "camera");
+                        Camera camera = (Camera) XposedHelpers.getObjectField(instance, "b");
+                        //boolean previewing = XposedHelpers.getBooleanField(instance, "previewing");
+                        boolean previewing = XposedHelpers.getBooleanField(instance, "e");
                         if (camera != null && !previewing) {
                             try {
                                 Object cameraConObject = XposedHelpers.getObjectField(instance,
-                                        "mCameraConfigurationManager");
+                                        "n");
                                 XposedHelpers.callMethod(cameraConObject,
                                         "initFromCameraParameters", Camera.class, camera);
                                 //                        mCameraConfigurationManager.initFromCameraParameters(camera);
@@ -141,7 +143,7 @@ public class FaceHongbaoGamePatch implements IPatch {
                                     camera.setParameters(parameters);
                                 }
                                 SurfaceHolder mhHolder = (SurfaceHolder) XposedHelpers
-                                        .getObjectField(instance, "surfaceHolder");
+                                        .getObjectField(instance, "d");
                                 camera.setPreviewDisplay(mhHolder);
 
                                 XposedHelpers.callMethod(instance, "reStart");
@@ -152,7 +154,7 @@ public class FaceHongbaoGamePatch implements IPatch {
                             } catch (Exception e) {
                                 Log.d(TAG, "HongbaoUtil init camera failed");
                                 Object callbackObject = XposedHelpers.getObjectField(instance,
-                                        "callback");
+                                        "h");
                                 XposedHelpers.callMethod(callbackObject, "onOpenCameraError");
                                 //callback.onOpenCameraError();
                             }
