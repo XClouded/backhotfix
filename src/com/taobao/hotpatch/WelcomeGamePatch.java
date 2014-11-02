@@ -83,8 +83,8 @@ public class WelcomeGamePatch implements IPatch {
 					if(mThread != null) {
 						synchronized (mThread) {
 							Log.i(TAG, "start()-->mThread.notify()");
-//							mThread.notify();
-							XposedHelpers.callMethod(mThread, "notify");
+							mThread.notify();
+//							XposedHelpers.callMethod(mThread, "notify");
 						}
 						arg0.setResult(null);
 					}
@@ -116,8 +116,8 @@ public class WelcomeGamePatch implements IPatch {
 							synchronized (mThread) {
 								try {
 									Log.i(TAG, "run()-->mThread.wait");
-//									mThread.wait();
-									XposedHelpers.callMethod(mThread, "wait");
+									mThread.wait();
+//									XposedHelpers.callMethod(mThread, "wait");
 								} catch (Exception e1) {
 									e1.printStackTrace();
 									//TODO 直接推出动画
