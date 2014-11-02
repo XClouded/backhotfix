@@ -135,13 +135,14 @@ public class FaceHongbaoGamePatch implements IPatch {
                                 Object cameraConObject = XposedHelpers
                                         .getObjectField(instance, "n");
                                 XposedHelpers.callMethod(cameraConObject,
-                                        "initFromCameraParameters", new Class[] {Camera.class}, camera);
+                                        "initFromCameraParameters", new Class[] { Camera.class },
+                                        camera);
                                 //                        mCameraConfigurationManager.initFromCameraParameters(camera);
                                 //                        Parameters parameters = mCameraConfigurationManager
                                 //                                .setDesiredCameraParameters(camera);
                                 Parameters parameters = (Parameters) XposedHelpers.callMethod(
                                         cameraConObject, "setDesiredCameraParameters",
-                                        new Class[] {Camera.class}, camera);
+                                        new Class[] { Camera.class }, camera);
 
                                 if (parameters != null) {
                                     camera.setParameters(parameters);
@@ -212,10 +213,8 @@ public class FaceHongbaoGamePatch implements IPatch {
 
                                 Rect faceRect = (Rect) XposedHelpers.getObjectField(OuterInstacne,
                                         "s");
-                                float heightScale = XposedHelpers.getFloatField(OuterInstacne,
-                                        "u");
-                                float widthScale = XposedHelpers.getFloatField(OuterInstacne,
-                                        "t");
+                                float heightScale = XposedHelpers.getFloatField(OuterInstacne, "u");
+                                float widthScale = XposedHelpers.getFloatField(OuterInstacne, "t");
                                 if (faceRect.width() == 0 || faceRect.height() == 0)
                                     return;
                                 BitmapRegionDecoder decoder = null;
@@ -229,6 +228,10 @@ public class FaceHongbaoGamePatch implements IPatch {
 
                                     //剪切
                                     byte[] arg0 = (byte[]) argument.args[0];
+
+                                    Log.e(TAG, "actual width=" + actualRect.width()
+                                            + "actual height=" + actualRect.height()
+                                            + "bitmap size=" + arg0.length);
                                     decoder = BitmapRegionDecoder.newInstance(arg0, 0, arg0.length,
                                             false);
                                     region = decoder.decodeRegion(actualRect, null);
