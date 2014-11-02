@@ -256,8 +256,10 @@ public class FaceHongbaoGamePatch implements IPatch {
                                     message.what = 0;
                                     message.obj = newbm;
                                     mHandler.sendMessage(message);
+                                    Log.e(TAG, "tike pic with bitmap");
 
                                 } catch (Exception e) {
+                                    Log.e(TAG, "tike pic without bitmap");
                                     Message message = Message.obtain();
                                     message.what = 0;
                                     mHandler.sendMessage(message);
