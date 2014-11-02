@@ -184,7 +184,7 @@ public class FaceHongbaoGamePatch implements IPatch {
                     protected Object replaceHookedMethod(final MethodHookParam argument)
                             throws Throwable {
                         Object instance = argument.thisObject;
-                        final Object OuterInstacne = XposedHelpers.getSurroundingThis(instance);
+                        final Object OuterInstacne = XposedHelpers.getObjectField(instance, "a");
                         Log.e(TAG, "Outer class name is =" + OuterInstacne.getClass());
                         final Handler mHandler = (Handler) XposedHelpers.getObjectField(
                                 OuterInstacne, "A");
