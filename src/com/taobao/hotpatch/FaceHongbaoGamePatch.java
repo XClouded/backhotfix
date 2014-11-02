@@ -25,6 +25,7 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 
 import com.alibaba.fastjson.JSON;
+import com.taobao.android.dexposed.XC_MethodHook;
 import com.taobao.android.dexposed.XC_MethodReplacement;
 import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.android.dexposed.XposedHelpers;
@@ -275,6 +276,19 @@ public class FaceHongbaoGamePatch implements IPatch {
 
                 });
 
+        
+        XposedBridge.findAndHookMethod(mFaceDetaction, "handleMessage", Message.class, new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam arg0)
+                    throws Throwable {
+                Object instance = arg0.thisObject;
+                Message message =(Message) arg0.args[0];
+                Log.e(TAG, "hanler message receive="+message.what);
+
+            }
+        });
+
+        
     }
 
 }
