@@ -8,7 +8,6 @@ import android.os.Build;
 import android.taobao.atlas.framework.Atlas;
 import android.taobao.atlas.framework.BundleImpl;
 import android.util.Log;
-import android.view.View;
 
 import com.taobao.android.dexposed.XC_MethodHook;
 import com.taobao.android.dexposed.XC_MethodReplacement;
@@ -71,6 +70,21 @@ public class WelcomeGamePatch implements IPatch {
 
 					}
 				});
+		
+		XposedBridge.findAndHookMethod(gameScene, "startCollisionVoice", Context.class, new XC_MethodHook(){
+			@Override
+			protected void beforeHookedMethod(MethodHookParam arg0){
+				Object instance = arg0.thisObject;
+				boolean mRunning = XposedHelpers.getBooleanField(instance, "mRunning");
+				MediaPlayer mCollisionPlayer = (MediaPlayer) XposedHelpers.getObjectField(instance, "mCollisionPlayer");
+				if(!mRunning) {
+					if(mCollisionPlayer != null){
+						mCollisionPlayer.stop();
+						arg0.setResult(null);
+					}
+				}
+			}
+		});
 			
 			XposedBridge.findAndHookMethod(gameScene, "start", new XC_MethodHook() {
 				
@@ -112,7 +126,7 @@ public class WelcomeGamePatch implements IPatch {
 						boolean mRunning = XposedHelpers.getBooleanField(instance, "mRunning");
 						// 模拟世界
 						// 速度模拟频率，位置模拟频率
-						Log.i(TAG, "mRuning : " + mRunning);
+//						Log.i(TAG, "mRuning : " + mRunning);
 						if(!mRunning) {
 							synchronized (mThread) {
 								try {
@@ -137,7 +151,7 @@ public class WelcomeGamePatch implements IPatch {
 //						XposedHelpers.callMethod(arg0.thisObject, "postInvalidate");
 						Method method = XposedHelpers.findMethodBestMatch(android.view.View.class, "postInvalidate");
 						method.invoke(instance);
-						Log.i(TAG, "postinvalidate");
+//						Log.i(TAG, "postinvalidate");
 						t2 = System.currentTimeMillis();
 						used = t2 - t1;
 						
@@ -175,15 +189,6 @@ public class WelcomeGamePatch implements IPatch {
 				}
 			});
 			
-			XposedBridge.findAndHookMethod(gameScene, "stopGame", new XC_MethodHook(){
-				@Override
-				protected void afterHookedMethod(MethodHookParam arg0) throws Throwable {
-					boolean mRunning = XposedHelpers.getBooleanField(arg0.thisObject, "mRunning");
-					Log.i(TAG, "stopGame : mRuning " + mRunning);
-				}
-			});
-	
-
 	}
 
 }
