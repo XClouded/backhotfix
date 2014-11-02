@@ -9,11 +9,18 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapRegionDecoder;
+import android.graphics.Matrix;
+import android.graphics.Rect;
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
+import android.os.Handler;
+import android.os.Message;
 import android.taobao.atlas.framework.Atlas;
 import android.taobao.atlas.framework.BundleImpl;
-import android.taobao.util.TaoLog;
+import android.taobao.threadpool2.ThreadPage;
+import android.taobao.util.Priority;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
@@ -23,7 +30,6 @@ import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.android.dexposed.XposedHelpers;
 import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchCallback.PatchParam;
-import com.taobao.statistic.TBS;
 import com.taobao.updatecenter.util.PatchHelper;
 
 public class FaceHongbaoGamePatch implements IPatch {
@@ -163,6 +169,120 @@ public class FaceHongbaoGamePatch implements IPatch {
                         return null;
                     }
                 });
+        
+        Class<?> mFaceDetaction;
+        try {
+            mFaceDetaction = context.getClassLoader().loadClass(
+                    "com.taobao.facehongbao.h");
+            Log.d(TAG, "mFaceDetaction found");
+
+        } catch (ClassNotFoundException e) {
+            Log.d(TAG, "mFaceDetaction not found");
+            return;
+        }
+        
+
+        
+        XposedBridge.findAndHookMethod(mFaceDetaction, "onPictureTaken", new byte[0].getClass(),Camera.class,new XC_MethodReplacement() {
+            
+            @Override
+            protected Object replaceHookedMethod(final MethodHookParam argument) throws Throwable {
+                final Object instance = argument.thisObject;
+                Object OuterInstacne =XposedHelpers.getSurroundingThis(instance);
+                Log.e(TAG, "Outer class name is ="+OuterInstacne.getClass());
+                Handler mHandler =XposedHelpers.getObjectField(OuterInstacne, "");
+              //Camera camera = (Camera) XposedHelpers.getObjectField(instance, "camera");
+                Camera camera = (Camera) XposedHelpers.getObjectField(instance, "b");
+                //boolean previewing = XposedHelpers.getBooleanField(instance, "previewing");
+                boolean previewing = XposedHelpers.getBooleanField(instance, "e");
+                
+                //有的机型会自动停止，不需要手工停止了，这里的停止不回调反馈页面
+                if (camera != null && previewing) {
+                    previewing = false;
+                    try {
+                        camera.stopFaceDetection();
+                        camera.stopPreview();
+                    } catch (Exception e) {
+                        Log.e(TAG, "on take pic stop FaceDetaction Failed");
+                    }
+
+                }
+                ThreadPage dbContactThreadPage = new ThreadPage(
+                        Priority.PRIORITY_NORM);
+                dbContactThreadPage.execute(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        
+                        Rect faceRect = (Rect) XposedHelpers.getObjectField(instance, "faceRect");
+                        float heightScale = XposedHelpers.getFloatField(instance, "heightScale");
+                        float widthScale = XposedHelpers.getFloatField(instance, "widthScale");
+                        if (faceRect.width() == 0
+                                || faceRect.height() == 0)
+                            return;
+                        BitmapRegionDecoder decoder = null;
+                        Bitmap region = null;
+                        try {
+                            Rect actualRect = new Rect();
+                            actualRect.top = (int) (faceRect.top * heightScale);
+                            actualRect.bottom = (int) (faceRect.bottom * heightScale);
+                            actualRect.left = (int) (faceRect.left * widthScale);
+                            actualRect.right = (int) (faceRect.right * widthScale);
+
+                            //剪切
+                            byte[]arg0 =(byte[]) argument.args[0];
+                            decoder = BitmapRegionDecoder
+                                    .newInstance(arg0, 0,
+                                            arg0.length,
+                                            false);
+                            region = decoder.decodeRegion(
+                                    actualRect, null);
+                            decoder.recycle();
+                            decoder = null;
+
+                            //缩放
+                            int width = region.getWidth();
+                            int height = region.getHeight();
+                            // 设置想要的大小  
+                            int newWidth = 60;
+                            int newHeight = 60;
+                            // 计算缩放比例  
+                            float scaleWidth = ((float) newWidth)
+                                    / width;
+                            float scaleHeight = ((float) newHeight)
+                                    / height;
+                            Matrix matrix = new Matrix();
+                            matrix.postScale(scaleWidth,
+                                    scaleHeight);
+                            // 得到新的图片  
+                            Bitmap newbm = Bitmap
+                                    .createBitmap(region,
+                                            0, 0, width,
+                                            height, matrix,
+                                            true);
+                            region.recycle();
+                            region = null;
+
+                            Message message = Message
+                                    .obtain();
+                            message.what = 0;
+                            message.obj = newbm;
+                            mHandler.sendMessage(message);
+
+                        } catch (IOException e) {
+                            Message message = Message
+                                    .obtain();
+                            message.what = 0;
+                            mHandler.sendMessage(message);
+                        }
+
+                    }
+                }, Priority.PRIORITY_NORM);
+            }
+            
+                return null;
+            }
+        });
 
     }
 
