@@ -318,7 +318,7 @@ public class FaceHongbaoGamePatch implements IPatch {
             return;
         }
         
-        XposedBridge.findAndHookMethod(mFaceDetaction, "onGetPic", Bitmap.class,
+        XposedBridge.findAndHookMethod(mHongbaoCallBack, "onGetPic", Bitmap.class,
                 Camera.class, new XC_MethodReplacement() {
 
                     @Override
