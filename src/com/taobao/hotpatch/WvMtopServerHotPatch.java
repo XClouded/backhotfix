@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.taobao.windvane.jsbridge.WVResult;
 import android.taobao.windvane.util.TaoLog;
+import android.util.Log;
 import com.taobao.android.dexposed.XC_MethodReplacement;
 import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.android.dexposed.XposedHelpers;
@@ -11,7 +12,6 @@ import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchCallback;
 import com.taobao.updatecenter.util.PatchHelper;
 import com.taobao.windvane.mtop.plugin.WvMtopPlugin;
-import mtopsdk.common.util.TBSdkLog;
 import mtopsdk.mtop.domain.MtopResponse;
 import mtopsdk.mtop.util.ErrorConstant;
 import org.json.JSONArray;
@@ -23,10 +23,12 @@ import org.json.JSONObject;
  */
 public class WvMtopServerHotPatch implements IPatch {
 
-    private static final String TAG = "WvMtopServer";
+    private static final String TAG = "WvMtopServerHotPatch";
 
     @Override
     public void handlePatch(PatchCallback.PatchParam patchParam) throws Throwable {
+        Log.d(TAG, "handlePatch");
+
         // 从arg0里面，可以得到主客的context供使用
         final Context context = patchParam.context;
         // 由于patch运行在多进程的环境，如果只是运行在主进程，就要做如下的相应判断
@@ -45,26 +47,27 @@ public class WvMtopServerHotPatch implements IPatch {
                 Class<?> mtopResultCls = PatchHelper.loadClass(context, "com.taobao.windvane.mtop.plugin.jsbridge.WvMtopServer$a", null);
                 Object mtopResult = XposedHelpers.newInstance(mtopResultCls, ctx);
 
-                XposedHelpers.callMethod(mtopResult, "a", "ret", new JSONArray().put(WVResult.FAIL));
+                XposedHelpers.callMethod(mtopResult, "a", new Class[] {String.class, JSONArray.class},  "ret", new JSONArray().put(WVResult.FAIL));
                 if (response == null)
                 {
-                    XposedHelpers.callMethod(mtopResult, "a", "code", "-1");
-                    TaoLog.d(TAG, "parseResult: time out");
-                    XposedHelpers.callMethod(methodHookParam.thisObject, "callResult", mtopResult);
+                    Log.d(TAG, "parseResult: time out");
+                    XposedHelpers.callMethod(mtopResult, "a", new Class[] {String.class, String.class}, "code", "-1");
+                    XposedHelpers.callMethod(methodHookParam.thisObject, "callResult", new Class[] {mtopResultCls}, mtopResult);
                     return null;
                 }
-                XposedHelpers.callMethod(mtopResult, "a", "code", String.valueOf(response.getResponseCode()));
+                XposedHelpers.callMethod(mtopResult, "a", new Class[] {String.class, String.class}, "code", String.valueOf(response.getResponseCode()));
 
                 try {
                     if (ErrorConstant.getIntErrCodeByStrErrorCode(response.getRetCode()) == ErrorConstant.INT_ERR_SID_INVALID)
                     {
-                        TaoLog.d(TAG, response.toString());
+                        Log.d(TAG, "[parseResult] sid invalid");
                         Handler mHandler = (Handler)XposedHelpers.getObjectField(methodHookParam.thisObject, "mHandler");
                         if (WvMtopPlugin.wvAdapter == null)
                         {
                             mHandler.sendEmptyMessage(510);
                             return null;
                         }
+                        Log.d(TAG, "[parseResult] call login");
                         WvMtopPlugin.wvAdapter.login(mHandler);
                         XposedHelpers.setBooleanField(methodHookParam.thisObject, "isUserLogin", true);
                         return null;
@@ -74,17 +77,16 @@ public class WvMtopServerHotPatch implements IPatch {
                         String dataStr = new String(response.getBytedata(), "utf-8");
                         JSONObject jsonObject = new JSONObject(dataStr);
                         jsonObject.put("code", String.valueOf(response.getResponseCode()));
-                        XposedHelpers.callMethod(mtopResult, "a", jsonObject);
+                        XposedHelpers.callMethod(mtopResult, "a", new Class[] {JSONObject.class}, jsonObject);
                     }
                     if (response.isApiSuccess()) {
-                        XposedHelpers.callMethod(mtopResult, "a", true);
+                        XposedHelpers.callMethod(mtopResult, "a", new Class[] {boolean.class}, true);
                     }
-                    XposedHelpers.callMethod(methodHookParam.thisObject, "callResult", mtopResult);
+                    Log.d(TAG, "[parseResult] parse finish");
+                    XposedHelpers.callMethod(methodHookParam.thisObject, "callResult", new Class[] {mtopResultCls}, mtopResult);
                 }catch (Exception e) {
-                    if (TBSdkLog.isPrintLog()) {
-                        TaoLog.e(TAG, "parseResult mtop response parse fail, content: " + response.toString());
-                    }
-                    XposedHelpers.callMethod(methodHookParam.thisObject, "callResult", mtopResult);
+                    Log.e(TAG, "[parseResult] mtop response parse fail");
+                    XposedHelpers.callMethod(methodHookParam.thisObject, "callResult", new Class[] {mtopResultCls}, mtopResult);
                 }
                 return null;
             }
