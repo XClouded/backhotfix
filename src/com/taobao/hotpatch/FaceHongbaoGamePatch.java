@@ -40,7 +40,7 @@ public class FaceHongbaoGamePatch implements IPatch {
     public void handlePatch(PatchParam arg0) throws Throwable {
         // 从arg0里面，可以得到主客的context供使用
         final Context context = arg0.context;
-        Log.e(TAG, "main handlePatch");
+        //Log.e(TAG, "main handlePatch");
         // 由于patch运行在多进程的环境，如果只是运行在主进程，就要做如下的相应判断
         if (!PatchHelper.isRunInMainProcess(context)) {
             // 不是主进程就返回
@@ -55,7 +55,7 @@ public class FaceHongbaoGamePatch implements IPatch {
         Class<?> mHongbaoUtil;
         try {
             mHongbaoUtil = bundle.getClassLoader().loadClass("com.taobao.facehongbao.c.b");
-            Log.e(TAG, "HongbaoUtil found");
+            //Log.e(TAG, "HongbaoUtil found");
 
         } catch (ClassNotFoundException e) {
             Log.e(TAG, "HongbaoUtil not found");
@@ -112,7 +112,7 @@ public class FaceHongbaoGamePatch implements IPatch {
         Class<?> mFaceDetactionBackup;
         try {
             mFaceDetactionBackup = bundle.getClassLoader().loadClass("com.taobao.facehongbao.a");
-            Log.e(TAG, "mFaceDetactionBackup found");
+            //Log.e(TAG, "mFaceDetactionBackup found");
 
         } catch (ClassNotFoundException e) {
             Log.e(TAG, "mFaceDetactionBackup not found");
@@ -154,7 +154,7 @@ public class FaceHongbaoGamePatch implements IPatch {
                                 XposedHelpers.callMethod(instance, "reStart");
                                 //reStart();
 
-                                Log.e(TAG, "HongbaoUtil init camera sucess");
+                                //Log.e(TAG, "HongbaoUtil init camera sucess");
 
                             } catch (Exception e) {
                                 Log.e(TAG, "HongbaoUtil init camera failed");
@@ -171,7 +171,7 @@ public class FaceHongbaoGamePatch implements IPatch {
         Class<?> mFaceDetaction;
         try {
             mFaceDetaction = bundle.getClassLoader().loadClass("com.taobao.facehongbao.h");
-            Log.e(TAG, "mFaceDetaction found");
+            //Log.e(TAG, "mFaceDetaction found");
 
         } catch (ClassNotFoundException e) {
             Log.e(TAG, "mFaceDetaction not found");
@@ -267,7 +267,7 @@ public class FaceHongbaoGamePatch implements IPatch {
                                     message.obj = newbm;
                                     
                                     mHandler.sendMessage(message);
-                                    Log.e(TAG, "tike pic with bitmap");
+                                    //Log.e(TAG, "tike pic with bitmap");
 
                                 } catch (Exception e) {
                                     Log.e(TAG, "tike pic without bitmap");
@@ -311,7 +311,7 @@ public class FaceHongbaoGamePatch implements IPatch {
         Class<?> mHongbaoCallBack;
         try {
             mHongbaoCallBack = bundle.getClassLoader().loadClass("com.taobao.facehongbao.k");
-            Log.e(TAG, "mHongbaoCallBack found");
+            //Log.e(TAG, "mHongbaoCallBack found");
 
         } catch (ClassNotFoundException e) {
             Log.e(TAG, "mHongbaoCallBack not found");
@@ -326,16 +326,16 @@ public class FaceHongbaoGamePatch implements IPatch {
                         Object instance = argument.thisObject;
                         Object OuterInstacne = XposedHelpers.getObjectField(instance, "a");
                         Bitmap mShowBitmap =(Bitmap) XposedHelpers.getObjectField(OuterInstacne, "mShowBitmap");
-                        Log.e(TAG, "get bitmap");
+                        //Log.e(TAG, "get bitmap");
                         Bitmap bitmap =(Bitmap) argument.args[0];
                         if (bitmap != null) {
                             Bitmap temp =mShowBitmap;
-                            Log.e(TAG, "set bitmap");
+                            //Log.e(TAG, "set bitmap");
                             XposedHelpers.setObjectField(OuterInstacne, "mShowBitmap", bitmap);
                             //mShowBitmap = bitmap;
                             try {
                                 if(temp!=null&&!temp.isRecycled()){
-                                    Log.e(TAG, "recycle bitmap");
+                                    //Log.e(TAG, "recycle bitmap");
                                     temp.recycle();
                                     temp=null;
                                 }
