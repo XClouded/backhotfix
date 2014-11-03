@@ -25,7 +25,6 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 
 import com.alibaba.fastjson.JSON;
-import com.taobao.android.dexposed.XC_MethodHook;
 import com.taobao.android.dexposed.XC_MethodReplacement;
 import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.android.dexposed.XposedHelpers;
@@ -55,7 +54,7 @@ public class FaceHongbaoGamePatch implements IPatch {
         }
         Class<?> mHongbaoUtil;
         try {
-            mHongbaoUtil = context.getClassLoader().loadClass("com.taobao.facehongbao.c.b");
+            mHongbaoUtil = bundle.getClassLoader().loadClass("com.taobao.facehongbao.c.b");
             Log.e(TAG, "HongbaoUtil found");
 
         } catch (ClassNotFoundException e) {
@@ -112,7 +111,7 @@ public class FaceHongbaoGamePatch implements IPatch {
 
         Class<?> mFaceDetactionBackup;
         try {
-            mFaceDetactionBackup = context.getClassLoader().loadClass("com.taobao.facehongbao.a");
+            mFaceDetactionBackup = bundle.getClassLoader().loadClass("com.taobao.facehongbao.a");
             Log.e(TAG, "mFaceDetactionBackup found");
 
         } catch (ClassNotFoundException e) {
@@ -171,7 +170,7 @@ public class FaceHongbaoGamePatch implements IPatch {
 
         Class<?> mFaceDetaction;
         try {
-            mFaceDetaction = context.getClassLoader().loadClass("com.taobao.facehongbao.h");
+            mFaceDetaction = bundle.getClassLoader().loadClass("com.taobao.facehongbao.h");
             Log.e(TAG, "mFaceDetaction found");
 
         } catch (ClassNotFoundException e) {
@@ -285,30 +284,70 @@ public class FaceHongbaoGamePatch implements IPatch {
                 });
 
         
-        Class<?> mFaceDetactionGenerator;
+//        Class<?> mFaceDetactionGenerator;
+//        try {
+//            mFaceDetactionGenerator = context.getClassLoader().loadClass("com.taobao.facehongbao.FaceDetectionHongBaoGenerator");
+//            Log.e(TAG, "mFaceDetactionGenerator found");
+//
+//        } catch (ClassNotFoundException e) {
+//            Log.e(TAG, "mFaceDetactionGenerator not found");
+//            return;
+//        }
+//        
+//        XposedBridge.findAndHookMethod(mFaceDetactionGenerator, "handleMessage", Message.class, new XC_MethodHook() {
+//            @Override
+//            protected void beforeHookedMethod(MethodHookParam arg0)
+//                    throws Throwable {
+//                Object instance = arg0.thisObject;
+//                Message message =(Message) arg0.args[0];
+//                Log.e(TAG, "hanler message receive="+message.what);
+//
+//            }
+//        });
+//        
+//        
+//        Log.e(TAG, "out success");
+        
+        Class<?> mHongbaoCallBack;
         try {
-            mFaceDetactionGenerator = context.getClassLoader().loadClass("com.taobao.facehongbao.FaceDetectionHongBaoGenerator");
-            Log.e(TAG, "mFaceDetactionGenerator found");
+            mHongbaoCallBack = bundle.getClassLoader().loadClass("com.taobao.facehongbao.k");
+            Log.e(TAG, "mHongbaoCallBack found");
 
         } catch (ClassNotFoundException e) {
-            Log.e(TAG, "mFaceDetactionGenerator not found");
+            Log.e(TAG, "mHongbaoCallBack not found");
             return;
         }
         
-        XposedBridge.findAndHookMethod(mFaceDetactionGenerator, "handleMessage", Message.class, new XC_MethodHook() {
-            @Override
-            protected void beforeHookedMethod(MethodHookParam arg0)
-                    throws Throwable {
-                Object instance = arg0.thisObject;
-                Message message =(Message) arg0.args[0];
-                Log.e(TAG, "hanler message receive="+message.what);
+        XposedBridge.findAndHookMethod(mFaceDetaction, "onGetPic", Bitmap.class,
+                Camera.class, new XC_MethodReplacement() {
 
-            }
-        });
-        
-        
-        Log.e(TAG, "out success");
-        
+                    @Override
+                    protected Object replaceHookedMethod(final MethodHookParam argument)
+                            throws Throwable {
+                        Object instance = argument.thisObject;
+                        Object OuterInstacne = XposedHelpers.getObjectField(instance, "a");
+                        Bitmap mShowBitmap =(Bitmap) XposedHelpers.getObjectField(OuterInstacne, "mShowBitmap");
+                        Bitmap bitmap =(Bitmap) argument.args[0];
+                        if (bitmap != null) {
+                            Bitmap temp =mShowBitmap;
+                            Log.e(TAG, "set bitmap");
+                            XposedHelpers.setObjectField(OuterInstacne, "mShowBitmap", bitmap);
+                            //mShowBitmap = bitmap;
+                            try {
+                                if(temp!=null&&!temp.isRecycled()){
+                                    Log.e(TAG, "recycle bitmap");
+                                    temp.recycle();
+                                    temp=null;
+                                }
+                            } catch (Exception e) {
+                                Log.e(TAG, "recycle bitmap exception");
+                            }
+                            
+                        }
+                        return null;
+                    }
+
+                });
     }
 
 }
