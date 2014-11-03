@@ -96,7 +96,7 @@ public class FaceHongbaoGamePatch implements IPatch {
                                 }
                             }
                             String contents = sb.toString();
-                            Log.e(TAG, "share content is =" + contents);
+                            //Log.e(TAG, "share content is =" + contents);
                             object = JSON.parseObject(contents, clazz);
                         } catch (MalformedURLException e) {
                             Log.e(TAG, "MALFORMED URL EXCEPTION");
@@ -189,11 +189,11 @@ public class FaceHongbaoGamePatch implements IPatch {
                         
                         
                         final Object OuterInstacne = XposedHelpers.getObjectField(instance, "a");
-                        Log.e(TAG, "Outer class name is =" + OuterInstacne.getClass());
+                        //Log.e(TAG, "Outer class name is =" + OuterInstacne.getClass());
                         final SafeHandler mHandler = (SafeHandler) XposedHelpers.getObjectField(
                                 OuterInstacne, "A");
                         
-                        Log.e(TAG, "mHandler =" + mHandler + " " + mHandler.getClass().getClassLoader());
+                        //Log.e(TAG, "mHandler =" + mHandler + " " + mHandler.getClass().getClassLoader());
                         
                         //Camera camera = (Camera) XposedHelpers.getObjectField(instance, "camera");
                         Camera camera = (Camera) XposedHelpers.getObjectField(OuterInstacne, "g");
@@ -236,9 +236,9 @@ public class FaceHongbaoGamePatch implements IPatch {
                                     //剪切
                                     byte[] arg0 = (byte[]) argument.args[0];
 
-                                    Log.e(TAG, "actual width=" + actualRect.width()
-                                            + "actual height=" + actualRect.height()
-                                            + "bitmap size=" + arg0.length);
+//                                    Log.e(TAG, "actual width=" + actualRect.width()
+//                                            + "actual height=" + actualRect.height()
+//                                            + "bitmap size=" + arg0.length);
                                     decoder = BitmapRegionDecoder.newInstance(arg0, 0, arg0.length,
                                             false);
                                     region = decoder.decodeRegion(actualRect, null);
