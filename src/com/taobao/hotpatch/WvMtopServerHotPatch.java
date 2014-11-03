@@ -11,6 +11,7 @@ import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchCallback;
 import com.taobao.updatecenter.util.PatchHelper;
 import com.taobao.windvane.mtop.plugin.WvMtopPlugin;
+import mtopsdk.common.util.TBSdkLog;
 import mtopsdk.mtop.domain.MtopResponse;
 import mtopsdk.mtop.util.ErrorConstant;
 import org.json.JSONArray;
@@ -80,7 +81,9 @@ public class WvMtopServerHotPatch implements IPatch {
                     }
                     XposedHelpers.callMethod(methodHookParam.thisObject, "callResult", mtopResult);
                 }catch (Exception e) {
-                    TaoLog.e(TAG, "parseResult mtop response parse fail, content: " + response.toString());
+                    if (TBSdkLog.isPrintLog()) {
+                        TaoLog.e(TAG, "parseResult mtop response parse fail, content: " + response.toString());
+                    }
                     XposedHelpers.callMethod(methodHookParam.thisObject, "callResult", mtopResult);
                 }
                 return null;
