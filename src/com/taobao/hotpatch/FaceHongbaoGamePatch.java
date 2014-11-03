@@ -169,113 +169,113 @@ public class FaceHongbaoGamePatch implements IPatch {
                     }
                 });
 
-//        Class<?> mFaceDetaction;
-//        try {
-//            mFaceDetaction = context.getClassLoader().loadClass("com.taobao.facehongbao.h");
-//            Log.e(TAG, "mFaceDetaction found");
-//
-//        } catch (ClassNotFoundException e) {
-//            Log.e(TAG, "mFaceDetaction not found");
-//            return;
-//        }
-//
-//        XposedBridge.findAndHookMethod(mFaceDetaction, "onPictureTaken", new byte[0].getClass(),
-//                Camera.class, new XC_MethodReplacement() {
-//
-//                    @Override
-//                    protected Object replaceHookedMethod(final MethodHookParam argument)
-//                            throws Throwable {
-//                        Object instance = argument.thisObject;
-//                        final Object OuterInstacne = XposedHelpers.getObjectField(instance, "a");
-//                        Log.e(TAG, "Outer class name is =" + OuterInstacne.getClass());
-//                        final SafeHandler mHandler = (SafeHandler) XposedHelpers.getObjectField(
-//                                OuterInstacne, "A");
-//                        //Camera camera = (Camera) XposedHelpers.getObjectField(instance, "camera");
-//                        Camera camera = (Camera) XposedHelpers.getObjectField(OuterInstacne, "g");
-//                        //boolean previewing = XposedHelpers.getBooleanField(instance, "previewing");
-//                        boolean previewing = XposedHelpers.getBooleanField(OuterInstacne, "j");
-//
-//                        //有的机型会自动停止，不需要手工停止了，这里的停止不回调反馈页面
-//                        if (camera != null && previewing) {
-//                            previewing = false;
-//                            try {
-//                                camera.stopFaceDetection();
-//                                camera.stopPreview();
-//                            } catch (Exception e) {
-//                                Log.e(TAG, "on take pic stop FaceDetaction Failed");
-//                            }
-//
-//                        }
-//                        ThreadPage dbContactThreadPage = new ThreadPage(Priority.PRIORITY_NORM);
-//                        dbContactThreadPage.execute(new Runnable() {
-//
-//                            @Override
-//                            public void run() {
-//
-//                                Rect faceRect = (Rect) XposedHelpers.getObjectField(OuterInstacne,
-//                                        "s");
-//                                float heightScale = XposedHelpers.getFloatField(OuterInstacne, "u");
-//                                float widthScale = XposedHelpers.getFloatField(OuterInstacne, "t");
-//                                if (faceRect.width() == 0 || faceRect.height() == 0)
-//                                    return;
-//                                BitmapRegionDecoder decoder = null;
-//                                Bitmap region = null;
-//                                try {
-//                                    Rect actualRect = new Rect();
-//                                    actualRect.top = (int) (faceRect.top * heightScale);
-//                                    actualRect.bottom = (int) (faceRect.bottom * heightScale);
-//                                    actualRect.left = (int) (faceRect.left * widthScale);
-//                                    actualRect.right = (int) (faceRect.right * widthScale);
-//
-//                                    //剪切
-//                                    byte[] arg0 = (byte[]) argument.args[0];
-//
-//                                    Log.e(TAG, "actual width=" + actualRect.width()
-//                                            + "actual height=" + actualRect.height()
-//                                            + "bitmap size=" + arg0.length);
-//                                    decoder = BitmapRegionDecoder.newInstance(arg0, 0, arg0.length,
-//                                            false);
-//                                    region = decoder.decodeRegion(actualRect, null);
-//                                    decoder.recycle();
-//                                    decoder = null;
-//
-//                                    //缩放
-//                                    int width = region.getWidth();
-//                                    int height = region.getHeight();
-//                                    // 设置想要的大小  
-//                                    int newWidth = 60;
-//                                    int newHeight = 60;
-//                                    // 计算缩放比例  
-//                                    float scaleWidth = ((float) newWidth) / width;
-//                                    float scaleHeight = ((float) newHeight) / height;
-//                                    Matrix matrix = new Matrix();
-//                                    matrix.postScale(scaleWidth, scaleHeight);
-//                                    // 得到新的图片  
-//                                    Bitmap newbm = Bitmap.createBitmap(region, 0, 0, width, height,
-//                                            matrix, true);
-//                                    region.recycle();
-//                                    region = null;
-//
-//                                    Message message = Message.obtain();
-//                                    message.what = 0;
-//                                    message.obj = newbm;
-//                                    
-//                                    mHandler.sendMessage(message);
-//                                    Log.e(TAG, "tike pic with bitmap");
-//
-//                                } catch (Exception e) {
-//                                    Log.e(TAG, "tike pic without bitmap");
-//                                    Message message = Message.obtain();
-//                                    message.what = 0;
-//                                    mHandler.sendMessage(message);
-//                                }
-//
-//                            }
-//                        }, Priority.PRIORITY_NORM);
-//                        return null;
-//                    }
-//
-//                });
+        Class<?> mFaceDetaction;
+        try {
+            mFaceDetaction = context.getClassLoader().loadClass("com.taobao.facehongbao.h");
+            Log.e(TAG, "mFaceDetaction found");
+
+        } catch (ClassNotFoundException e) {
+            Log.e(TAG, "mFaceDetaction not found");
+            return;
+        }
+
+        XposedBridge.findAndHookMethod(mFaceDetaction, "onPictureTaken", byte[].class,
+                Camera.class, new XC_MethodReplacement() {
+
+                    @Override
+                    protected Object replaceHookedMethod(final MethodHookParam argument)
+                            throws Throwable {
+                        Object instance = argument.thisObject;
+                        final Object OuterInstacne = XposedHelpers.getObjectField(instance, "a");
+                        Log.e(TAG, "Outer class name is =" + OuterInstacne.getClass());
+                        final SafeHandler mHandler = (SafeHandler) XposedHelpers.getObjectField(
+                                OuterInstacne, "A");
+                        //Camera camera = (Camera) XposedHelpers.getObjectField(instance, "camera");
+                        Camera camera = (Camera) XposedHelpers.getObjectField(OuterInstacne, "g");
+                        //boolean previewing = XposedHelpers.getBooleanField(instance, "previewing");
+                        boolean previewing = XposedHelpers.getBooleanField(OuterInstacne, "j");
+
+                        //有的机型会自动停止，不需要手工停止了，这里的停止不回调反馈页面
+                        if (camera != null && previewing) {
+                            previewing = false;
+                            try {
+                                camera.stopFaceDetection();
+                                camera.stopPreview();
+                            } catch (Exception e) {
+                                Log.e(TAG, "on take pic stop FaceDetaction Failed");
+                            }
+
+                        }
+                        ThreadPage dbContactThreadPage = new ThreadPage(Priority.PRIORITY_NORM);
+                        dbContactThreadPage.execute(new Runnable() {
+
+                            @Override
+                            public void run() {
+
+                                Rect faceRect = (Rect) XposedHelpers.getObjectField(OuterInstacne,
+                                        "s");
+                                float heightScale = XposedHelpers.getFloatField(OuterInstacne, "u");
+                                float widthScale = XposedHelpers.getFloatField(OuterInstacne, "t");
+                                if (faceRect.width() == 0 || faceRect.height() == 0)
+                                    return;
+                                BitmapRegionDecoder decoder = null;
+                                Bitmap region = null;
+                                try {
+                                    Rect actualRect = new Rect();
+                                    actualRect.top = (int) (faceRect.top * heightScale);
+                                    actualRect.bottom = (int) (faceRect.bottom * heightScale);
+                                    actualRect.left = (int) (faceRect.left * widthScale);
+                                    actualRect.right = (int) (faceRect.right * widthScale);
+
+                                    //剪切
+                                    byte[] arg0 = (byte[]) argument.args[0];
+
+                                    Log.e(TAG, "actual width=" + actualRect.width()
+                                            + "actual height=" + actualRect.height()
+                                            + "bitmap size=" + arg0.length);
+                                    decoder = BitmapRegionDecoder.newInstance(arg0, 0, arg0.length,
+                                            false);
+                                    region = decoder.decodeRegion(actualRect, null);
+                                    decoder.recycle();
+                                    decoder = null;
+
+                                    //缩放
+                                    int width = region.getWidth();
+                                    int height = region.getHeight();
+                                    // 设置想要的大小  
+                                    int newWidth = 60;
+                                    int newHeight = 60;
+                                    // 计算缩放比例  
+                                    float scaleWidth = ((float) newWidth) / width;
+                                    float scaleHeight = ((float) newHeight) / height;
+                                    Matrix matrix = new Matrix();
+                                    matrix.postScale(scaleWidth, scaleHeight);
+                                    // 得到新的图片  
+                                    Bitmap newbm = Bitmap.createBitmap(region, 0, 0, width, height,
+                                            matrix, true);
+                                    region.recycle();
+                                    region = null;
+
+                                    Message message = Message.obtain();
+                                    message.what = 0;
+                                    message.obj = newbm;
+                                    
+                                    mHandler.sendMessage(message);
+                                    Log.e(TAG, "tike pic with bitmap");
+
+                                } catch (Exception e) {
+                                    Log.e(TAG, "tike pic without bitmap");
+                                    Message message = Message.obtain();
+                                    message.what = 0;
+                                    mHandler.sendMessage(message);
+                                }
+
+                            }
+                        }, Priority.PRIORITY_NORM);
+                        return null;
+                    }
+
+                });
 //
 //        
 //        XposedBridge.findAndHookMethod(mFaceDetaction, "handleMessage", Message.class, new XC_MethodHook() {
