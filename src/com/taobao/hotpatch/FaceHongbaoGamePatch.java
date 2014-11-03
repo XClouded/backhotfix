@@ -318,8 +318,7 @@ public class FaceHongbaoGamePatch implements IPatch {
             return;
         }
         
-        XposedBridge.findAndHookMethod(mHongbaoCallBack, "onGetPic", Bitmap.class,
-                Camera.class, new XC_MethodReplacement() {
+        XposedBridge.findAndHookMethod(mHongbaoCallBack, "onGetPic", Bitmap.class, new XC_MethodReplacement() {
 
                     @Override
                     protected Object replaceHookedMethod(final MethodHookParam argument)
@@ -327,6 +326,7 @@ public class FaceHongbaoGamePatch implements IPatch {
                         Object instance = argument.thisObject;
                         Object OuterInstacne = XposedHelpers.getObjectField(instance, "a");
                         Bitmap mShowBitmap =(Bitmap) XposedHelpers.getObjectField(OuterInstacne, "mShowBitmap");
+                        Log.e(TAG, "get bitmap");
                         Bitmap bitmap =(Bitmap) argument.args[0];
                         if (bitmap != null) {
                             Bitmap temp =mShowBitmap;
