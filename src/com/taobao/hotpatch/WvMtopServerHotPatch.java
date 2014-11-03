@@ -38,6 +38,14 @@ public class WvMtopServerHotPatch implements IPatch {
         }
 
         final Class<?> cls = PatchHelper.loadClass(context, "com.taobao.windvane.mtop.plugin.jsbridge.WvMtopServer", null);
+        if (cls == null) {
+        	return;
+        }
+        
+        final Class<?> mtopResultCls = PatchHelper.loadClass(context, "com.taobao.windvane.mtop.plugin.jsbridge.WvMtopServer$a", null);
+        if (mtopResultCls == null) {
+        	return;
+        }
         XposedBridge.findAndHookMethod(cls, "parseResult", Object.class, MtopResponse.class, new XC_MethodReplacement() {
             @Override
             protected Object replaceHookedMethod(MethodHookParam methodHookParam) throws Throwable {
@@ -46,7 +54,6 @@ public class WvMtopServerHotPatch implements IPatch {
                 Object ctx = methodHookParam.args[0];
                 MtopResponse response = (MtopResponse)methodHookParam.args[1];
 
-                Class<?> mtopResultCls = PatchHelper.loadClass(context, "com.taobao.windvane.mtop.plugin.jsbridge.WvMtopServer$a", null);
                 Object mtopResult = XposedHelpers.newInstance(mtopResultCls, new Class[] {Object.class}, ctx);
 
                 XposedHelpers.callMethod(mtopResult, "a", new Class[] {String.class, JSONArray.class},  "ret", new JSONArray().put(WVResult.FAIL));
