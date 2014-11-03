@@ -193,6 +193,9 @@ public class FaceHongbaoGamePatch implements IPatch {
                         Log.e(TAG, "Outer class name is =" + OuterInstacne.getClass());
                         final SafeHandler mHandler = (SafeHandler) XposedHelpers.getObjectField(
                                 OuterInstacne, "A");
+                        
+                        Log.e(TAG, "mHandler =" + mHandler + " " + mHandler.getClass().getClassLoader());
+                        
                         //Camera camera = (Camera) XposedHelpers.getObjectField(instance, "camera");
                         Camera camera = (Camera) XposedHelpers.getObjectField(OuterInstacne, "g");
                         //boolean previewing = XposedHelpers.getBooleanField(instance, "previewing");
@@ -281,7 +284,17 @@ public class FaceHongbaoGamePatch implements IPatch {
                 });
 
         
-        XposedBridge.findAndHookMethod(mFaceDetaction, "handleMessage", Message.class, new XC_MethodHook() {
+        Class<?> mFaceDetactionGenerator;
+        try {
+            mFaceDetactionGenerator = context.getClassLoader().loadClass("com.taobao.facehongbao.FaceDetectionHongBaoGenerator");
+            Log.e(TAG, "mFaceDetactionGenerator found");
+
+        } catch (ClassNotFoundException e) {
+            Log.e(TAG, "mFaceDetactionGenerator not found");
+            return;
+        }
+        
+        XposedBridge.findAndHookMethod(mFaceDetactionGenerator, "handleMessage", Message.class, new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam arg0)
                     throws Throwable {
@@ -291,7 +304,9 @@ public class FaceHongbaoGamePatch implements IPatch {
 
             }
         });
-
+        
+        
+        Log.e(TAG, "out success");
         
     }
 
