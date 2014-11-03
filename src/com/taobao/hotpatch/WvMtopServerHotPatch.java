@@ -1,7 +1,5 @@
 package com.taobao.hotpatch;
 
-import java.lang.reflect.Constructor;
-
 import android.content.Context;
 import android.os.Handler;
 import android.taobao.windvane.jsbridge.WVResult;
@@ -54,11 +52,6 @@ public class WvMtopServerHotPatch implements IPatch {
 
                 Object ctx = methodHookParam.args[0];
                 MtopResponse response = (MtopResponse)methodHookParam.args[1];
-//                Constructor[] cs = mtopResultCls.getConstructors();
-//                Log.d(TAG, "cs size" + cs.length);
-//                for (int i = 0; i < cs.length; i++) {
-//                	Log.d(TAG, "cs " + i + " = " + cs[i].toGenericString());
-//                }
                 Object mtopResult = XposedHelpers.newInstance(mtopResultCls, new Class[] {cls, Object.class}, methodHookParam.thisObject, ctx);
 
                 XposedHelpers.callMethod(mtopResult, "a", new Class[] {String.class, JSONArray.class},  "ret", new JSONArray().put(WVResult.FAIL));
