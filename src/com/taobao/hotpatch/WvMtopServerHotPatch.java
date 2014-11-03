@@ -59,7 +59,7 @@ public class WvMtopServerHotPatch implements IPatch {
 //                for (int i = 0; i < cs.length; i++) {
 //                	Log.d(TAG, "cs " + i + " = " + cs[i].toGenericString());
 //                }
-                Object mtopResult = XposedHelpers.newInstance(mtopResultCls, new Class[] {cls, Object.class}, ctx);
+                Object mtopResult = XposedHelpers.newInstance(mtopResultCls, new Class[] {cls, Object.class}, methodHookParam.thisObject, ctx);
 
                 XposedHelpers.callMethod(mtopResult, "a", new Class[] {String.class, JSONArray.class},  "ret", new JSONArray().put(WVResult.FAIL));
                 if (response == null)
