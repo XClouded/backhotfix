@@ -203,6 +203,7 @@ public class FaceHongbaoGamePatch implements IPatch {
 
                         //有的机型会自动停止，不需要手工停止了，这里的停止不回调反馈页面
                         if (camera != null && previewing) {
+                            XposedHelpers.setBooleanField(OuterInstacne, "j", false);
                             previewing = false;
                             try {
                                 camera.stopFaceDetection();
