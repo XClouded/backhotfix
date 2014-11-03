@@ -186,6 +186,9 @@ public class FaceHongbaoGamePatch implements IPatch {
                     protected Object replaceHookedMethod(final MethodHookParam argument)
                             throws Throwable {
                         Object instance = argument.thisObject;
+                        
+                        
+                        
                         final Object OuterInstacne = XposedHelpers.getObjectField(instance, "a");
                         Log.e(TAG, "Outer class name is =" + OuterInstacne.getClass());
                         final SafeHandler mHandler = (SafeHandler) XposedHelpers.getObjectField(
@@ -276,18 +279,18 @@ public class FaceHongbaoGamePatch implements IPatch {
                     }
 
                 });
-//
-//        
-//        XposedBridge.findAndHookMethod(mFaceDetaction, "handleMessage", Message.class, new XC_MethodHook() {
-//            @Override
-//            protected void beforeHookedMethod(MethodHookParam arg0)
-//                    throws Throwable {
-//                Object instance = arg0.thisObject;
-//                Message message =(Message) arg0.args[0];
-//                Log.e(TAG, "hanler message receive="+message.what);
-//
-//            }
-//        });
+
+        
+        XposedBridge.findAndHookMethod(mFaceDetaction, "handleMessage", Message.class, new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam arg0)
+                    throws Throwable {
+                Object instance = arg0.thisObject;
+                Message message =(Message) arg0.args[0];
+                Log.e(TAG, "hanler message receive="+message.what);
+
+            }
+        });
 
         
     }
