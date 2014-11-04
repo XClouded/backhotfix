@@ -23,6 +23,9 @@ import android.taobao.util.Priority;
 import android.taobao.util.SafeHandler;
 import android.util.Log;
 import android.view.SurfaceHolder;
+import android.view.View;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.taobao.android.dexposed.XC_MethodReplacement;
@@ -91,7 +94,38 @@ public class FaceHongbaoGamePatch implements IPatch {
             Log.e(TAG, "mFaceDetaction not found");
             return;
         }
+        
+        Class<?> mFaceHongbaoGame;
+        try {
+            mFaceHongbaoGame = bundle.getClassLoader().loadClass("com.taobao.facehongbao.FaceHongBaoGame");
+            Log.d(TAG, "mFaceHongbaoGame found");
 
+        } catch (ClassNotFoundException e) {
+            Log.e(TAG, "mFaceHongbaoGame not found");
+            return;
+        }
+
+        
+        XposedBridge.findAndHookMethod(mFaceHongbaoGame, "showError",
+                new XC_MethodReplacement() {
+
+                    @Override
+                    protected Object replaceHookedMethod(MethodHookParam arg0) throws Throwable {
+                        Log.d(TAG, "showError invoke");
+                        Object instance = arg0.thisObject;
+                        
+                        RelativeLayout mErrorLayout =(RelativeLayout)XposedHelpers.getObjectField(instance, "mErrorLayout");
+                        TextView mErrorMessageTextView =(TextView)XposedHelpers.getObjectField(instance, "mErrorMessageTextView");
+                        RelativeLayout mTipsLayout =(RelativeLayout)XposedHelpers.getObjectField(instance, "mTipsLayout");
+                        
+                        mErrorLayout.setVisibility(View.VISIBLE);
+                        mErrorMessageTextView.setText("您的手机未授权手淘使用摄像头，请打开权限后再来。");
+                        mTipsLayout.setVisibility(View.GONE);
+
+                        return null;
+                    }
+                });
+        
         // TODO 完全替换login中的oncreate(Bundle)方法,第一个参数是方法所在类，第二个是方法的名字，
         // 第三个参数开始是方法的参数的class,原方法有几个，则参数添加几个。
         // 最后一个参数是XC_MethodReplacement
