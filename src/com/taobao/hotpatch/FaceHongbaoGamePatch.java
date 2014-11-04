@@ -119,7 +119,7 @@ public class FaceHongbaoGamePatch implements IPatch {
                         RelativeLayout mTipsLayout =(RelativeLayout)XposedHelpers.getObjectField(instance, "mTipsLayout");
                         
                         mErrorLayout.setVisibility(View.VISIBLE);
-                        mErrorMessageTextView.setText("您的手机未授权手淘使用摄像头，请打开权限后再来。");
+                        mErrorMessageTextView.setText("您的手机可能未授权手淘使用摄像头，打开权限试试。");
                         mTipsLayout.setVisibility(View.GONE);
 
                         return null;
