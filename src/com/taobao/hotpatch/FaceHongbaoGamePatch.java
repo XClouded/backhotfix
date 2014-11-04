@@ -178,7 +178,7 @@ public class FaceHongbaoGamePatch implements IPatch {
 
                                 //Log.e(TAG, "HongbaoUtil init camera sucess");
 
-                            } catch (Exception e) {
+                            } catch (Throwable e) {
                                 Log.e(TAG, "HongbaoUtil init camera failed");
                                 Object callbackObject = XposedHelpers.getObjectField(instance, "h");
                                 XposedHelpers.callMethod(callbackObject, "onOpenCameraError");
