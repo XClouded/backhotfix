@@ -45,6 +45,12 @@ public class WvMtopServerHotPatch implements IPatch {
         if (mtopResultCls == null) {
         	return;
         }
+
+        final Class<?> wvMtopPluginCls = PatchHelper.loadClass(context, "com.taobao.windvane.mtop.plugin.a", null);
+        if (wvMtopPluginCls == null) {
+            return;
+        }
+
         XposedBridge.findAndHookMethod(cls, "parseResult", Object.class, MtopResponse.class, new XC_MethodReplacement() {
             @Override
             protected Object replaceHookedMethod(MethodHookParam methodHookParam) throws Throwable {
@@ -69,13 +75,15 @@ public class WvMtopServerHotPatch implements IPatch {
                     {
                         Log.d(TAG, "[parseResult] sid invalid");
                         Handler mHandler = (Handler)XposedHelpers.getObjectField(methodHookParam.thisObject, "mHandler");
-                        if (WvMtopPlugin.wvAdapter == null)
+
+                        Object wvAdapter = XposedHelpers.getStaticObjectField(wvMtopPluginCls, "wvAdapter");
+                        if (wvAdapter == null)
                         {
                             mHandler.sendEmptyMessage(510);
                             return null;
                         }
                         Log.d(TAG, "[parseResult] call login");
-                        WvMtopPlugin.wvAdapter.login(mHandler);
+                        XposedHelpers.callMethod(wvAdapter, "login", new Class[] {Handler.class}, mHandler);
                         XposedHelpers.setBooleanField(methodHookParam.thisObject, "isUserLogin", true);
                         return null;
                     }
