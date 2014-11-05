@@ -67,7 +67,7 @@ public class SharePatch implements IPatch {
                                                            String type=urlParams.get(keyName);
                                                            Log.i("Share", content.url);
                                                            Log.i("Share:", "type:"+type);
-                                                           if(!TextUtils.isEmpty(type)&&TextUtils.equals(type.trim(), "1")){
+                                                           if(!TextUtils.isEmpty(type)&&(TextUtils.equals(type.trim(), "1")||TextUtils.equals(type.trim(), "2"))){
                                                                if(content.description == null) {
                                                                    Log.e("Share:", "分享内容不能为空！");
                                                                    param.setResult(null);
