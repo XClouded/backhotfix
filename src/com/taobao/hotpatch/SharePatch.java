@@ -56,6 +56,7 @@ public class SharePatch implements IPatch {
                                                    if (null == param || null == param.args || 0 == param.args.length) {
                                                        return;
                                                    }
+                                                   String keyName="shareType";
                                                    Log.i("Share:", "patch");
                                                    Object object=param.args[2];
                                                    if(object!=null){
@@ -63,7 +64,8 @@ public class SharePatch implements IPatch {
                                                        String url=content.url;
                                                        Map<String,String> urlParams=getParams(url);
                                                        if(null!=urlParams && urlParams.size()>0){
-                                                           String type=urlParams.get("type");
+                                                           String type=urlParams.get(keyName);
+                                                           Log.i("Share", content.url);
                                                            Log.i("Share:", "type:"+type);
                                                            if(!TextUtils.isEmpty(type)&&TextUtils.equals(type.trim(), "1")){
                                                                if(content.description == null) {
