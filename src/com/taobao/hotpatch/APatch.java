@@ -104,7 +104,7 @@ public class APatch implements IPatch {
 							}
 							if (TextUtils.isEmpty(value)) {
 								boolean isMarked = (Boolean) XposedHelpers.callStaticMethod(marksClass, "hasMark", new Class[] { String.class }, "home_11");
-								Log.i(TAG, "isMarked ： 表示是否在onResume中播放过动画");
+								Log.i(TAG, "isMarked ： "+ isMarked +" 表示是否在onResume中播放过动画");
 								if (isMarked) {
 									AppPreference.putString("home_11_animation_play_patch", currentDay);
 									Log.i(TAG, "设置当天的时间");
@@ -118,8 +118,11 @@ public class APatch implements IPatch {
 												"getGameDialog", new Class[] {Activity.class,boolean.class },
 												arg0.thisObject, false);
 							if (dialog != null) {
-								Log.i(TAG, "dialog 是否为空");
+								Log.i(TAG, "dialog 不为空");
 								dialog.show();
+							}
+							else {
+								Log.i(TAG, "dialog 为空");
 							}
 						 
 						} catch (Throwable e) {
