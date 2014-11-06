@@ -80,7 +80,7 @@ public class APatch implements IPatch {
 						
 						try {
 							
-//							XposedHelpers.callStaticMethod(marksClass, "markKey", new Class[]{String.class}, "home_11");
+							XposedHelpers.callStaticMethod(marksClass, "markKey", new Class[]{String.class}, "home_11");
 							
 							
 //							long serviceCurTime = TimeStampManager.instance().getCurrentTimeStamp();
