@@ -115,7 +115,7 @@ public class APatch implements IPatch {
 							AppPreference.putString("home_11_animation_play_patch", currentDay);
 							Class<?> extraClass = homesSwitchBundle.getClassLoader().loadClass("com.taobao.tao.homepage.b.b");
 							Dialog dialog = (Dialog) XposedHelpers.callStaticMethod(extraClass,
-												"getGameDialog", new Class[] {Activity.class,Boolean.class },
+												"getGameDialog", new Class[] {Activity.class,boolean.class },
 												arg0.thisObject, false);
 							if (dialog != null) {
 								Log.i(TAG, "dialog 是否为空");
