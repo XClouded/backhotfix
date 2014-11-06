@@ -80,7 +80,10 @@ public class APatch implements IPatch {
 							throws Throwable {
 						
 						try {
-
+							
+							
+							
+							XposedHelpers.callStaticMethod(marksClass, "markKey", new Class[]{String.class}, "home_11");
 							long serviceCurTime = TimeStampManager.instance().getCurrentTimeStamp();
 							SimpleDateFormat YYMMDDHHMMSS = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 							YYMMDDHHMMSS.setTimeZone(TimeZone.getTimeZone("GMT+8"));
