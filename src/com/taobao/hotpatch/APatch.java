@@ -18,7 +18,7 @@ import com.taobao.android.dexposed.XposedHelpers;
 import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchCallback.PatchParam;
 import com.taobao.tao.homepage.preference.AppPreference;
-//import com.taobao.tao.timestamp.TimeStampManager;
+import com.taobao.tao.timestamp.TimeStampManager;
 import com.taobao.updatecenter.util.PatchHelper;
 
 // 所有要实现patch某个方法，都需要集成Ipatch这个接口
@@ -83,9 +83,9 @@ public class APatch implements IPatch {
 							XposedHelpers.callStaticMethod(marksClass, "markKey", new Class[]{String.class}, "home_11");
 							
 							
-//							long serviceCurTime = TimeStampManager.instance().getCurrentTimeStamp();
+							long serviceCurTime = TimeStampManager.instance().getCurrentTimeStamp();
 //							long serviceCurTime = new Date().getTime();
-							long serviceCurTime = System.currentTimeMillis();
+//							long serviceCurTime = System.currentTimeMillis();
 							SimpleDateFormat YYMMDDHHMMSS = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 							YYMMDDHHMMSS.setTimeZone(TimeZone.getTimeZone("GMT+8"));
 							Date deadLineDate = YYMMDDHHMMSS.parse("2014-11-10 23:00:00");
