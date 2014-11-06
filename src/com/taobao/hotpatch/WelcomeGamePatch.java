@@ -135,143 +135,150 @@ public class WelcomeGamePatch implements IPatch {
 				@Override
 				protected Object replaceHookedMethod(MethodHookParam arg0) throws Throwable {
 					
-					final Object instance = arg0.thisObject;
-					
-					Thread mThread = (Thread) XposedHelpers.getObjectField(instance, "mThread");
-					
-					long t1, t2, used;
-					float dt = 1.0f / 30.0f;
-					long sleep = (long) (dt * 1000);
-					while (mThread != null && !mThread.isInterrupted()) {
-						boolean mRunning = XposedHelpers.getBooleanField(instance, "mRunning");
-						// 模拟世界
-						// 速度模拟频率，位置模拟频率
-//						Log.i(TAG, "mRuning : " + mRunning);
-						if(!mRunning) {
-							synchronized (mThread) {
-								try {
-									Log.i(TAG, "run()-->mThread.wait");
-									mThread.wait();
-//									XposedHelpers.callMethod(mThread, "wait");
-								} catch (Exception e1) {
-									e1.printStackTrace();
-//									mRunning = false;
-									XposedHelpers.setBooleanField(instance, "mRunning", false);
-									return null;
-								}
-							}
-						}
+					try {
+						final Object instance = arg0.thisObject;
 						
-						try {
-							
-							Map<String,Vec2> mDestPosition = (Map<String,Vec2>) XposedHelpers.getObjectField(instance, "mDestPosition");
-							if(mDestPosition == null || mDestPosition.size() < 5) {
-								try {
-									Log.i(TAG, "Thread sleep a while and wait!");
-									Thread.sleep(10);
-									continue;
-								} catch (Exception e) {
-									Handler mHandler = (Handler) XposedHelpers.getObjectField(arg0.thisObject, "mHandler");
-									Message message = mHandler.obtainMessage();
-									message.what = 4;
-									mHandler.sendMessage(message);
-									return null;
+						Thread mThread = (Thread) XposedHelpers.getObjectField(instance, "mThread");
+						
+						long t1, t2, used;
+						float dt = 1.0f / 30.0f;
+						long sleep = (long) (dt * 1000);
+						while (mThread != null && !mThread.isInterrupted()) {
+							boolean mRunning = XposedHelpers.getBooleanField(instance, "mRunning");
+							// 模拟世界
+							// 速度模拟频率，位置模拟频率
+//						Log.i(TAG, "mRuning : " + mRunning);
+							if(!mRunning) {
+								synchronized (mThread) {
+									try {
+										Log.i(TAG, "run()-->mThread.wait");
+										mThread.wait();
+//									XposedHelpers.callMethod(mThread, "wait");
+									} catch (Exception e1) {
+										e1.printStackTrace();
+//									mRunning = false;
+										XposedHelpers.setBooleanField(instance, "mRunning", false);
+										return null;
+									}
 								}
-								
 							}
-							Object mWorld = XposedHelpers.getObjectField(arg0.thisObject, "mWorld");
-		                	XposedHelpers.callMethod(mWorld, "step", new Class[] {float.class, int.class, int.class}, dt,3,8);
+							
+							try {
+								
+								Map<String,Vec2> mDestPosition = (Map<String,Vec2>) XposedHelpers.getObjectField(instance, "mDestPosition");
+								if(mDestPosition == null || mDestPosition.size() < 5) {
+									try {
+										Log.i(TAG, "Thread sleep a while and wait!");
+										Thread.sleep(10);
+										continue;
+									} catch (Exception e) {
+										Handler mHandler = (Handler) XposedHelpers.getObjectField(arg0.thisObject, "mHandler");
+										Message message = mHandler.obtainMessage();
+										message.what = 4;
+										mHandler.sendMessage(message);
+										return null;
+									}
+									
+								}
+								Object mWorld = XposedHelpers.getObjectField(arg0.thisObject, "mWorld");
+								XposedHelpers.callMethod(mWorld, "step", new Class[] {float.class, int.class, int.class}, dt,3,8);
 //							mWorld.step(dt, 3, 8);
-							
-							
-							//在线程中进行计算
+								
+								
+								//在线程中进行计算
 //							Body body = mWorld.getBodyList();
-		                	Object body = XposedHelpers.callMethod(mWorld, "getBodyList");
-							Map mAllDynamicBodys = (Map) XposedHelpers.getObjectField(arg0.thisObject, "mAllDynamicBodys");
-							int count = (Integer) XposedHelpers.callMethod(mWorld, "getBodyCount");
-							for (int i = 0; i < count; i++) {
-								BodyType type = (BodyType) XposedHelpers.callMethod(body, "getType");
-								if (type != BodyType.STATIC) {
-									Object des = mAllDynamicBodys.get(body);// TODO 验证是否可行
-									Vec2 vec2 = new Vec2();
-									if(Build.VERSION.SDK_INT >= 14) {
-										if(XposedHelpers.getBooleanField(des, "c")) {
+								Object body = XposedHelpers.callMethod(mWorld, "getBodyList");
+								Map mAllDynamicBodys = (Map) XposedHelpers.getObjectField(arg0.thisObject, "mAllDynamicBodys");
+								int count = (Integer) XposedHelpers.callMethod(mWorld, "getBodyCount");
+								for (int i = 0; i < count; i++) {
+									BodyType type = (BodyType) XposedHelpers.callMethod(body, "getType");
+									if (type != BodyType.STATIC) {
+										Object des = mAllDynamicBodys.get(body);// TODO 验证是否可行
+										Vec2 vec2 = new Vec2();
+										if(Build.VERSION.SDK_INT >= 14) {
+											if(XposedHelpers.getBooleanField(des, "c")) {
 //		        		  	    		computeEntryForce(body);//TODO 
-											XposedHelpers.callMethod(instance, "computeEntryForce", new Class[]{bodyClass}, body);
-										}
-										else {
-											//获取 mInpulse对象
-											Vec2 mInpulse = (Vec2) XposedHelpers.getObjectField(instance, "mInpulse");
-											//轻微的晃动
-											if(XposedHelpers.getBooleanField(instance, "isLightShake")) {
-//												body.applyLinearImpulse(mInpulse, body.getPosition());
-												Vec2 position = (Vec2) XposedHelpers.callMethod(body,"getPosition");
-												String str = (String) XposedHelpers.getObjectField(mAllDynamicBodys.get(body), "e");
-//		        		  	    				computeBackForce(body, mDestPosition.get(str));
-												XposedHelpers.callMethod(instance, "computeBackForce", new Class[]{bodyClass,Vec2.class}, body,mDestPosition.get(str));
-											}
-											
-											//猛烈的晃动
-											if(XposedHelpers.getBooleanField(instance, "isViolentShake")) {
-//		        		  		    			body.applyForce(mInpulse, body.getPosition());
-												float mass = (Float) XposedHelpers.callMethod(body, "getMass");
-												vec2.set(mInpulse.x * mass, mInpulse.y * mass);
-												Vec2 position = (Vec2) XposedHelpers.callMethod(body, "getPosition");
-//												body.applyForce(vec2, position);
-												XposedHelpers.callMethod(body, "applyForce", new Class[]{Vec2.class,Vec2.class}, vec2, position);
+												XposedHelpers.callMethod(instance, "computeEntryForce", new Class[]{bodyClass}, body);
 											}
 											else {
-												if(XposedHelpers.getBooleanField(des, "b")){ //返回到起始位置backToOrigin
+												//获取 mInpulse对象
+												Vec2 mInpulse = (Vec2) XposedHelpers.getObjectField(instance, "mInpulse");
+												//轻微的晃动
+												if(XposedHelpers.getBooleanField(instance, "isLightShake")) {
+//												body.applyLinearImpulse(mInpulse, body.getPosition());
+													Vec2 position = (Vec2) XposedHelpers.callMethod(body,"getPosition");
 													String str = (String) XposedHelpers.getObjectField(mAllDynamicBodys.get(body), "e");
-//		        		  		    				computeBackForce(body, mDestPosition.get(mAllDynamicBodys.get(body).name));
-													XposedHelpers.callMethod(instance, "computeBackForce", new Class[]{bodyClass,Vec2.class}, body, mDestPosition.get(str));
+//		        		  	    				computeBackForce(body, mDestPosition.get(str));
+													XposedHelpers.callMethod(instance, "computeBackForce", new Class[]{bodyClass,Vec2.class}, body,mDestPosition.get(str));
 												}
-												if(XposedHelpers.getBooleanField(des, "a")){//点击效果isTouched
+												
+												//猛烈的晃动
+												if(XposedHelpers.getBooleanField(instance, "isViolentShake")) {
+//		        		  		    			body.applyForce(mInpulse, body.getPosition());
 													float mass = (Float) XposedHelpers.callMethod(body, "getMass");
 													vec2.set(mInpulse.x * mass, mInpulse.y * mass);
-//													body.applyForce(vec2, body.getPosition());
 													Vec2 position = (Vec2) XposedHelpers.callMethod(body, "getPosition");
+//												body.applyForce(vec2, position);
 													XposedHelpers.callMethod(body, "applyForce", new Class[]{Vec2.class,Vec2.class}, vec2, position);
+												}
+												else {
+													if(XposedHelpers.getBooleanField(des, "b")){ //返回到起始位置backToOrigin
+														String str = (String) XposedHelpers.getObjectField(mAllDynamicBodys.get(body), "e");
+//		        		  		    				computeBackForce(body, mDestPosition.get(mAllDynamicBodys.get(body).name));
+														XposedHelpers.callMethod(instance, "computeBackForce", new Class[]{bodyClass,Vec2.class}, body, mDestPosition.get(str));
+													}
+													if(XposedHelpers.getBooleanField(des, "a")){//点击效果isTouched
+														float mass = (Float) XposedHelpers.callMethod(body, "getMass");
+														vec2.set(mInpulse.x * mass, mInpulse.y * mass);
+//													body.applyForce(vec2, body.getPosition());
+														Vec2 position = (Vec2) XposedHelpers.callMethod(body, "getPosition");
+														XposedHelpers.callMethod(body, "applyForce", new Class[]{Vec2.class,Vec2.class}, vec2, position);
+													}
 												}
 											}
 										}
 									}
-								}
 //								body = body.m_next;
-								body = XposedHelpers.getObjectField(body, "m_next");
-							}
-						} catch (Throwable e) {
-							e.printStackTrace();
-							//TODO 发送一个请求
-							Handler mHandler = (Handler) XposedHelpers.getObjectField(arg0.thisObject, "mHandler");
-							Message message = mHandler.obtainMessage();
-							message.what = 4;
-							mHandler.sendMessage(message);
-							return null;
-						}
-						
-		                
-						t1 = System.currentTimeMillis();
-//						postInvalidate();
-//						XposedHelpers.callMethod(arg0.thisObject, "postInvalidate");
-						Method method = XposedHelpers.findMethodBestMatch(android.view.View.class, "postInvalidate");
-						method.invoke(instance);
-//						Log.i(TAG, "postinvalidate");
-						t2 = System.currentTimeMillis();
-						used = t2 - t1;
-						
-						// 正常休眠
-						if (used < sleep) {
-							try {
-								Thread.sleep(sleep - used);
-							} catch (InterruptedException e) {
-//								e.printStackTrace();
+									body = XposedHelpers.getObjectField(body, "m_next");
+								}
+							} catch (Throwable e) {
+								e.printStackTrace();
+								//TODO 发送一个请求
+								Handler mHandler = (Handler) XposedHelpers.getObjectField(arg0.thisObject, "mHandler");
+								Message message = mHandler.obtainMessage();
+								message.what = 4;
+								mHandler.sendMessage(message);
 								return null;
 							}
+							
+							
+							t1 = System.currentTimeMillis();
+//						postInvalidate();
+//						XposedHelpers.callMethod(arg0.thisObject, "postInvalidate");
+							Method method = XposedHelpers.findMethodBestMatch(android.view.View.class, "postInvalidate");
+							method.invoke(instance);
+//						Log.i(TAG, "postinvalidate");
+							t2 = System.currentTimeMillis();
+							used = t2 - t1;
+							
+							// 正常休眠
+							if (used < sleep) {
+								try {
+									Thread.sleep(sleep - used);
+								} catch (InterruptedException e) {
+//								e.printStackTrace();
+									return null;
+								}
+							}
 						}
+						Log.i(TAG, "mThread.interrupted");
+						return null;
+						
+					} catch (Throwable e) {
+						e.printStackTrace();
+						return null;
 					}
-					Log.i(TAG, "mThread.interrupted");
-					return null;
+					
 				}
 				
 			});
@@ -453,34 +460,40 @@ public class WelcomeGamePatch implements IPatch {
 				
 				@Override
 				protected Object replaceHookedMethod(MethodHookParam arg0) throws Throwable {
-					Object instance = arg0.thisObject;
-					Context mContext = (Context) XposedHelpers.getObjectField(instance, "mContext");
-					XposedHelpers.callMethod(instance, "startWelcomVoice", new Class[]{Context.class}, mContext);
-					float[] position = new float[2];
-					String name = (String) arg0.args[0];
-					Map<String,Vec2> mDestPosition = (Map<String,Vec2>) XposedHelpers.getObjectField(instance, "mDestPosition");
-					Map<String,Vec2> mCurPosition = (Map<String,Vec2>) XposedHelpers.getObjectField(instance, "mCurPosition");
-					Vec2 dest = mDestPosition.get(name);
-					Vec2 cur = mCurPosition.get(name);
-					if(dest.y * 100 < cur.y) {
-						cur.y -= 20;
-						position[0] = cur.x;
-						position[1] = cur.y;
-					}
-					else {
-						position[0] = dest.x * 100;
-						position[1] = dest.y * 100;
-						boolean mRuning = XposedHelpers.getBooleanField(arg0.thisObject, "mRunning");
-						if(mRuning) {
-							Handler mHandler = (Handler) XposedHelpers.getObjectField(arg0.thisObject, "mHandler");
-							Message message = mHandler.obtainMessage();
-							message.what = 4;
-							mHandler.sendMessage(message);
-						}
-						XposedHelpers.setBooleanField(arg0.thisObject, "mRunning", false);
+					
+					try {
 						
+						Object instance = arg0.thisObject;
+						Context mContext = (Context) XposedHelpers.getObjectField(instance, "mContext");
+						XposedHelpers.callMethod(instance, "startWelcomVoice", new Class[]{Context.class}, mContext);
+						float[] position = new float[2];
+						String name = (String) arg0.args[0];
+						Map<String,Vec2> mDestPosition = (Map<String,Vec2>) XposedHelpers.getObjectField(instance, "mDestPosition");
+						Map<String,Vec2> mCurPosition = (Map<String,Vec2>) XposedHelpers.getObjectField(instance, "mCurPosition");
+						Vec2 dest = mDestPosition.get(name);
+						Vec2 cur = mCurPosition.get(name);
+						if(dest.y * 100 < cur.y) {
+							cur.y -= 20;
+							position[0] = cur.x;
+							position[1] = cur.y;
+						}
+						else {
+							position[0] = dest.x * 100;
+							position[1] = dest.y * 100;
+							boolean mRuning = XposedHelpers.getBooleanField(arg0.thisObject, "mRunning");
+							if(mRuning) {
+								Handler mHandler = (Handler) XposedHelpers.getObjectField(arg0.thisObject, "mHandler");
+								Message message = mHandler.obtainMessage();
+								message.what = 4;
+								mHandler.sendMessage(message);
+							}
+							XposedHelpers.setBooleanField(arg0.thisObject, "mRunning", false);
+							
+						}
+						return position;
+					} catch (Throwable e) {
+						return null;
 					}
-					return position;
 				}
 			});
 			
