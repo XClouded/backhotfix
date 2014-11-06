@@ -73,15 +73,14 @@ public class APatch implements IPatch {
 //					}
 //				});
 
-		XposedBridge.findAndHookMethod(mainActivity3Class, "lazyInit",
-				new XC_MethodHook() {
+		XposedBridge.findAndHookMethod(mainActivity3Class, "lazyInit", new XC_MethodHook() {
 					@Override
 					protected void afterHookedMethod(MethodHookParam arg0)
 							throws Throwable {
 						
 						try {
 							
-							XposedHelpers.callStaticMethod(marksClass, "markKey", new Class[]{String.class}, "home_11");
+//							XposedHelpers.callStaticMethod(marksClass, "markKey", new Class[]{String.class}, "home_11");
 							
 							
 //							long serviceCurTime = TimeStampManager.instance().getCurrentTimeStamp();
