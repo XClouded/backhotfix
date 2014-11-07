@@ -91,10 +91,10 @@ public class APatch implements IPatch {
 							Date deadLineDate = YYMMDDHHMMSS.parse("2014-11-10 23:00:00");
 							// 如果时间已经超过 2014-11-10 23:00:00
 							if (deadLineDate.getTime() < serviceCurTime) {
-								Log.i(TAG, "当前时间大于截至时间");
+//								Log.i(TAG, "当前时间大于截至时间");
 								return;
 							}
-							Log.i(TAG, "当前时间小于截至时间，可以显示动画");
+//							Log.i(TAG, "当前时间小于截至时间，可以显示动画");
 
 							SimpleDateFormat YYMMDD = new SimpleDateFormat("yyyy-MM-dd");
 							YYMMDD.setTimeZone(TimeZone.getTimeZone("GMT+8"));
@@ -103,15 +103,15 @@ public class APatch implements IPatch {
 							Log.i(TAG, "home_11_animation_play_patch的值为：" + value + "    currentDay的值为：" + currentDay);
 							if (value.equals(currentDay)) {
 								// 当前日期已经标记过
-								Log.i(TAG, "今天已经播放过动画");
+//								Log.i(TAG, "今天已经播放过动画");
 								return;
 							}
 							if (TextUtils.isEmpty(value)) {
 								boolean isMarked = (Boolean) XposedHelpers.callStaticMethod(marksClass, "hasMark", new Class[] { String.class }, "home_11");
-								Log.i(TAG, "isMarked ： "+ isMarked +" 表示是否在onResume中播放过动画");
+//								Log.i(TAG, "isMarked ： "+ isMarked +" 表示是否在onResume中播放过动画");
 								if (isMarked) {
 									AppPreference.putString("home_11_animation_play_patch", currentDay);
-									Log.i(TAG, "设置当天的时间");
+//									Log.i(TAG, "设置当天的时间");
 									return;
 								}
 							}
@@ -122,11 +122,11 @@ public class APatch implements IPatch {
 												"getGameDialog", new Class[] {Activity.class,boolean.class },
 												arg0.thisObject, false);
 							if (dialog != null) {
-								Log.i(TAG, "dialog 不为空");
+//								Log.i(TAG, "dialog 不为空");
 								dialog.show();
 							}
 							else {
-								Log.i(TAG, "dialog 为空");
+//								Log.i(TAG, "dialog 为空");
 							}
 						 
 						} catch (Throwable e) {
