@@ -1,15 +1,15 @@
 package com.taobao.hotpatch;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
+
+import com.taobao.android.dexposed.XC_MethodHook;
+import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.android.dexposed.XposedHelpers;
 import com.taobao.android.nav.Nav;
 import com.taobao.android.scancode.sdk.api.analyze.basic.object.SCBasicResult;
-import android.content.Context;
-import android.util.Log;
-
-import com.taobao.android.dexposed.XC_MethodReplacement;
-import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchCallback.PatchParam;
 import com.taobao.updatecenter.util.PatchHelper;
@@ -33,78 +33,62 @@ public class ScancodeScanLoginPatch implements IPatch {
             return;
         }
 
-        final Class<?> decodeResultAccessMtopProcesser = PatchHelper.loadClass(context, "com.taobao.taobao.scancode.gateway.util.d",
-                "com.taobao.android.scancode");
+        final Class<?> decodeResultAccessMtopProcesser = PatchHelper.loadClass(context,
+                "com.taobao.taobao.scancode.gateway.util.d", "com.taobao.android.scancode");
 
-        final Class<?> kakalibUtils = PatchHelper.loadClass(context, "com.taobao.taobao.scancode.huoyan.util.g",
-                "com.taobao.android.scancode");
+        final Class<?> kakalibUtils = PatchHelper.loadClass(context,
+                "com.taobao.taobao.scancode.huoyan.util.g", "com.taobao.android.scancode");
 
-        final Class<?> kaKaLibApiProcesser = PatchHelper.loadClass(context, "com.taobao.taobao.scancode.huoyan.util.f",
-                "com.taobao.android.scancode");
+        final Class<?> kaKaLibApiProcesser = PatchHelper.loadClass(context,
+                "com.taobao.taobao.scancode.huoyan.util.f", "com.taobao.android.scancode");
 
-        final Class<?> pQrHttpRequestCallBack = PatchHelper.loadClass(context, "com.taobao.taobao.scancode.huoyan.util.d", "com.taobao.android.scancode");
-
-        if (decodeResultAccessMtopProcesser == null || kakalibUtils == null || kaKaLibApiProcesser == null ){
+        if (decodeResultAccessMtopProcesser == null || kakalibUtils == null
+                || kaKaLibApiProcesser == null) {
             return;
         }
 
-        XposedBridge.findAndHookMethod(decodeResultAccessMtopProcesser, "b", SCBasicResult.class, new XC_MethodReplacement() {
-            // 在这个方法中，实现替换逻辑
-            @Override
-            protected Object replaceHookedMethod(MethodHookParam methodHookParam) throws Throwable {
+        XposedBridge.findAndHookMethod(decodeResultAccessMtopProcesser, "b", SCBasicResult.class,
+                new XC_MethodHook() {
 
-                SCBasicResult result = (SCBasicResult) methodHookParam.args[0];
-                String strCode = result.content;
+                    @Override
+                    protected void beforeHookedMethod(MethodHookParam methodHookParam)
+                            throws Throwable {
 
-                Object scanControllerInstance = XposedBridge.invokeNonVirtual(methodHookParam.thisObject,
-                        methodHookParam.thisObject.getClass().getSuperclass().getSuperclass().getSuperclass().getDeclaredMethod("getScanController"));
+                        SCBasicResult result = (SCBasicResult) methodHookParam.args[0];
+                        String strCode = result.content;
 
-                FragmentActivity fragmentActivityInstance = (FragmentActivity)XposedBridge.invokeNonVirtual(methodHookParam.thisObject,
-                        methodHookParam.thisObject.getClass().getSuperclass().getSuperclass().getSuperclass().getDeclaredMethod("getFragmentActivity"));
+                        Object scanControllerInstance = XposedBridge.invokeNonVirtual(
+                                methodHookParam.thisObject, methodHookParam.thisObject.getClass()
+                                        .getSuperclass().getSuperclass().getSuperclass()
+                                        .getDeclaredMethod("getScanController"));
 
-                Object barCodeProductDialogHelperInstance = XposedHelpers.getObjectField(methodHookParam.thisObject, "b");
+                        FragmentActivity fragmentActivityInstance = (FragmentActivity) XposedBridge
+                                .invokeNonVirtual(
+                                        methodHookParam.thisObject,
+                                        methodHookParam.thisObject.getClass().getSuperclass()
+                                                .getSuperclass().getSuperclass()
+                                                .getDeclaredMethod("getFragmentActivity"));
 
-                Boolean isHttpUrl = (Boolean) XposedHelpers.callStaticMethod(kakalibUtils, "isHttpUrl", strCode);
-                if(isHttpUrl){
+                        Boolean isHttpUrl = (Boolean) XposedHelpers.callStaticMethod(kakalibUtils,
+                                "isHttpUrl", strCode);
+                        if (isHttpUrl) {
 
-                    Boolean isSafeUrl = (Boolean) XposedHelpers.callStaticMethod(kakalibUtils, "isSafeUrl", new Class<?>[]{String.class,Context.class}, strCode, fragmentActivityInstance);
-                    if(isSafeUrl){
+                            Boolean isSafeUrl = (Boolean) XposedHelpers.callStaticMethod(
+                                    kakalibUtils, "isSafeUrl", new Class<?>[] { String.class,
+                                            Context.class }, strCode, fragmentActivityInstance);
+                            if (isSafeUrl) {
 
-                        Bundle bundle = new Bundle();
-                        bundle.putString("code", strCode);
-                        bundle.putString("result_format", "QR_CODE");
-                        Nav.from(fragmentActivityInstance).withExtras(bundle).toUri("http://tb.cn/n/scancode/qr_result");
-                        XposedHelpers.callMethod(scanControllerInstance, "restartPreviewMode");
-                    } else{
-
-                        Object qrHttpRequestCallBackInstance = XposedHelpers.getObjectField(methodHookParam.thisObject, "c");
-                        XposedHelpers.callStaticMethod(kaKaLibApiProcesser, "asyncCheckUrlIsSafe", new Class<?>[]{Context.class, String.class, pQrHttpRequestCallBack}, fragmentActivityInstance, strCode, qrHttpRequestCallBackInstance);
-                        XposedHelpers.callMethod(barCodeProductDialogHelperInstance, "showQRUrlDialog", new Class<?>[]{FragmentActivity.class, String.class}, fragmentActivityInstance, strCode);
+                                Bundle bundle = new Bundle();
+                                bundle.putString("code", strCode);
+                                bundle.putString("result_format", "QR_CODE");
+                                Nav.from(fragmentActivityInstance).withExtras(bundle)
+                                        .toUri("http://tb.cn/n/scancode/qr_result");
+                                XposedHelpers.callMethod(scanControllerInstance,
+                                        "restartPreviewMode");
+                                methodHookParam.setResult(null);
+                            }
+                        }
                     }
-                } else{
-
-                    XposedBridge.invokeNonVirtual(barCodeProductDialogHelperInstance, barCodeProductDialogHelperInstance.getClass().getSuperclass().getDeclaredMethod("showQRText",FragmentActivity.class, SCBasicResult.class), fragmentActivityInstance, result);
-
-                }
-
-                return null;
-
-//                if (KaKaLibUtils.isHttpUrl(strCode)) {
-//                    if (KaKaLibUtils.isSafeUrl(strCode, getFragmentActivity())) {
-//                        Bundle bundle = new Bundle();
-//                        bundle.putString("code", url);
-//                        bundle.putString("result_format", "QR_CODE");
-//                        Nav.from(context).withExtras(bundle).toUri("http://tb.cn/n/scancode/qr_result");
-//                        getScanController().restartPreviewMode();
-//                    } else {
-//                        KaKaLibApiProcesser.asyncCheckUrlIsSafe(getFragmentActivity(), strCode,
-//                                qrHttpRequestCallBack);
-//                        barCodeProductDialogHelper.showQRUrlDialog(getFragmentActivity(), strCode);
-//                    }
-//                } else {
-//                    barCodeProductDialogHelper.showQRText(getFragmentActivity(), result);
-//                }
-            }
-        });
+                });
     }
 }
