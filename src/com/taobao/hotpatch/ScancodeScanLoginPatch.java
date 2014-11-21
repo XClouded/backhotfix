@@ -41,6 +41,9 @@ public class ScancodeScanLoginPatch implements IPatch {
         final Class<?> kaKaLibApiProcesser = PatchHelper.loadClass(context, "com.taobao.taobao.scancode.huoyan.util.f",
                 "com.taobao.android.scancode");
 
+        final Class<?> fragmentActivity = PatchHelper.loadClass(context, "android.support.v4.app.FragmentActivity",
+                "com.taobao.android.scancode");
+
         if (decodeResultAccessMtopProcesser == null || kakalibUtils == null || kaKaLibApiProcesser == null ){
             return;
         }
@@ -80,7 +83,8 @@ public class ScancodeScanLoginPatch implements IPatch {
                     }
                 } else{
 
-                    XposedHelpers.callMethod(barCodeProductDialogHelperInstance, "showQRText", fragmentActivityInstance, result);
+                    XposedBridge.invokeNonVirtual(barCodeProductDialogHelperInstance, barCodeProductDialogHelperInstance.getClass().getSuperclass().getDeclaredMethod("showQRText",fragmentActivity, SCBasicResult.class), fragmentActivityInstance, result);
+
                 }
 
                 return null;
