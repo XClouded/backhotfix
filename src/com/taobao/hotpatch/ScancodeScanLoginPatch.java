@@ -67,7 +67,7 @@ public class ScancodeScanLoginPatch implements IPatch {
                 Boolean isHttpUrl = (Boolean) XposedHelpers.callStaticMethod(kakalibUtils, "isHttpUrl", strCode);
                 if(isHttpUrl){
 
-                    Boolean isSafeUrl = (Boolean) XposedHelpers.callStaticMethod(kakalibUtils, "isSafeUrl", strCode, fragmentActivityInstance);
+                    Boolean isSafeUrl = (Boolean) XposedHelpers.callStaticMethod(kakalibUtils, "isSafeUrl", new Class<?>[]{String.class,Context.class}, strCode, fragmentActivityInstance);
                     if(isSafeUrl){
 
                         Bundle bundle = new Bundle();
