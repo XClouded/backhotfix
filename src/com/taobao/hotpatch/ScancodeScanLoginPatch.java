@@ -77,7 +77,7 @@ public class ScancodeScanLoginPatch implements IPatch {
                         XposedHelpers.callMethod(scanControllerInstance, "restartPreviewMode");
                     } else{
 
-                        Object qrHttpRequestCallBack = XposedHelpers.getObjectField(methodHookParam.thisObject, "qrHttpRequestCallBack");
+                        Object qrHttpRequestCallBack = XposedHelpers.getObjectField(methodHookParam.thisObject, "c");
                         XposedHelpers.callStaticMethod(kaKaLibApiProcesser, "asyncCheckUrlIsSafe", fragmentActivityInstance, strCode, qrHttpRequestCallBack);
                         XposedHelpers.callMethod(barCodeProductDialogHelperInstance, "showQRUrlDialog", fragmentActivityInstance, strCode);
                     }
