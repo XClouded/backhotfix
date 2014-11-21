@@ -78,19 +78,31 @@
             <version>2.1.2-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
+
         <dependency>
             <groupId>com.taobao.android</groupId>
-            <artifactId>scancode_sdk_api</artifactId>
-            <version>1.0.0</version>
-            <scope>provided</scope>
+            <artifactId>scancode_sdk_api_analyze_basic</artifactId>
+            <version>1.1.0</version>
         </dependency>
-		<dependency>
-            <groupId>com.taobao.fireeye</groupId>
-            <artifactId>scanlib</artifactId>
-            <version>2.6.0.9-SNAPSHOT</version>
-            <type>jar</type>
-            <scope>provided</scope>
-        </dependency>  
+
+        <dependency>
+            <groupId>com.taobao.android</groupId>
+            <artifactId>scancode_sdk_api_common</artifactId>
+            <version>1.1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.taobao.android</groupId>
+            <artifactId>scancode_sdk_framework_core</artifactId>
+            <version>1.1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.taobao.android</groupId>
+            <artifactId>scancode_sdk_api_adapter_analyze.basic.huoyan</artifactId>
+            <version>1.1.0</version>
+        </dependency>
+
         <dependency>
             <groupId>com.google.android</groupId>
             <artifactId>support-v4</artifactId>
