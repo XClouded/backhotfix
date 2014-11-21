@@ -42,9 +42,6 @@ public class ScancodeScanLoginPatch implements IPatch {
         final Class<?> kaKaLibApiProcesser = PatchHelper.loadClass(context, "com.taobao.taobao.scancode.huoyan.util.f",
                 "com.taobao.android.scancode");
 
-        final Class<?> fragmentActivity = PatchHelper.loadClass(context, "android.support.v4.app.FragmentActivity",
-                "com.taobao.android.scancode");
-
         final Class<?> pQrHttpRequestCallBack = PatchHelper.loadClass(context, "com.taobao.taobao.scancode.huoyan.util.d", "com.taobao.android.scancode");
 
         if (decodeResultAccessMtopProcesser == null || kakalibUtils == null || kaKaLibApiProcesser == null ){
@@ -82,11 +79,11 @@ public class ScancodeScanLoginPatch implements IPatch {
 
                         Object qrHttpRequestCallBackInstance = XposedHelpers.getObjectField(methodHookParam.thisObject, "c");
                         XposedHelpers.callStaticMethod(kaKaLibApiProcesser, "asyncCheckUrlIsSafe", new Class<?>[]{Context.class, String.class, pQrHttpRequestCallBack}, fragmentActivityInstance, strCode, qrHttpRequestCallBackInstance);
-                        XposedHelpers.callMethod(barCodeProductDialogHelperInstance, "showQRUrlDialog",new Class<?>[]{fragmentActivity, String.class}, pQrHttpRequestCallBack, strCode);
+                        XposedHelpers.callMethod(barCodeProductDialogHelperInstance, "showQRUrlDialog", new Class<?>[]{FragmentActivity.class, String.class}, fragmentActivityInstance, strCode);
                     }
                 } else{
 
-                    XposedBridge.invokeNonVirtual(barCodeProductDialogHelperInstance, barCodeProductDialogHelperInstance.getClass().getSuperclass().getDeclaredMethod("showQRText",fragmentActivity, SCBasicResult.class), fragmentActivityInstance, result);
+                    XposedBridge.invokeNonVirtual(barCodeProductDialogHelperInstance, barCodeProductDialogHelperInstance.getClass().getSuperclass().getDeclaredMethod("showQRText",FragmentActivity.class, SCBasicResult.class), fragmentActivityInstance, result);
 
                 }
 
