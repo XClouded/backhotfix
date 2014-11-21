@@ -56,29 +56,31 @@ public class ScancodeScanLoginPatch implements IPatch {
                 Object scanControllerInstance = XposedBridge.invokeNonVirtual(methodHookParam.thisObject,
                         methodHookParam.thisObject.getClass().getSuperclass().getSuperclass().getSuperclass().getDeclaredMethod("getScanController"));
 
+                Context fragmentActivityInstance = (Context)XposedBridge.invokeNonVirtual(methodHookParam.thisObject,
+                        methodHookParam.thisObject.getClass().getSuperclass().getSuperclass().getSuperclass().getDeclaredMethod("getFragmentActivity"));
+
                 Object barCodeProductDialogHelperInstance = XposedHelpers.getObjectField(methodHookParam.thisObject, "b");
-                Context appContext = context.getApplicationContext();
 
                 Boolean isHttpUrl = (Boolean) XposedHelpers.callStaticMethod(kakalibUtils, "isHttpUrl", strCode);
                 if(isHttpUrl){
 
-                    Boolean isSafeUrl = (Boolean) XposedHelpers.callStaticMethod(kakalibUtils, "isSafeUrl", strCode, appContext);
+                    Boolean isSafeUrl = (Boolean) XposedHelpers.callStaticMethod(kakalibUtils, "isSafeUrl", strCode, fragmentActivityInstance);
                     if(isSafeUrl){
 
                         Bundle bundle = new Bundle();
                         bundle.putString("code", strCode);
                         bundle.putString("result_format", "QR_CODE");
-                        Nav.from(appContext).withExtras(bundle).toUri("http://tb.cn/n/scancode/qr_result");
+                        Nav.from(fragmentActivityInstance).withExtras(bundle).toUri("http://tb.cn/n/scancode/qr_result");
                         XposedHelpers.callMethod(scanControllerInstance, "restartPreviewMode");
                     } else{
 
                         Object qrHttpRequestCallBack = XposedHelpers.getObjectField(methodHookParam.thisObject, "qrHttpRequestCallBack");
-                        XposedHelpers.callStaticMethod(kaKaLibApiProcesser, "asyncCheckUrlIsSafe", appContext, strCode, qrHttpRequestCallBack);
-                        XposedHelpers.callMethod(barCodeProductDialogHelperInstance, "showQRUrlDialog", appContext, strCode);
+                        XposedHelpers.callStaticMethod(kaKaLibApiProcesser, "asyncCheckUrlIsSafe", fragmentActivityInstance, strCode, qrHttpRequestCallBack);
+                        XposedHelpers.callMethod(barCodeProductDialogHelperInstance, "showQRUrlDialog", fragmentActivityInstance, strCode);
                     }
                 } else{
 
-                    XposedHelpers.callMethod(barCodeProductDialogHelperInstance, "showQRText", appContext, result);
+                    XposedHelpers.callMethod(barCodeProductDialogHelperInstance, "showQRText", fragmentActivityInstance, result);
                 }
 
                 return null;
