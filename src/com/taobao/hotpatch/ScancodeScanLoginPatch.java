@@ -54,7 +54,7 @@ public class ScancodeScanLoginPatch implements IPatch {
                 String strCode = result.content;
 
                 Object scanControllerInstance = XposedBridge.invokeNonVirtual(methodHookParam.thisObject,
-                        methodHookParam.thisObject.getClass().getSuperclass().getSuperclass().getDeclaredMethod("getScanController"));
+                        methodHookParam.thisObject.getClass().getSuperclass().getSuperclass().getSuperclass().getDeclaredMethod("getScanController"));
 
                 Object barCodeProductDialogHelperInstance = XposedHelpers.getObjectField(methodHookParam.thisObject, "b");
 
