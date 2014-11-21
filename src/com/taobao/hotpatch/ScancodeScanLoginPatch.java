@@ -44,7 +44,7 @@ public class ScancodeScanLoginPatch implements IPatch {
         final Class<?> fragmentActivity = PatchHelper.loadClass(context, "android.support.v4.app.FragmentActivity",
                 "com.taobao.android.scancode");
 
-        final Class<?> qrHttpRequestCallBack = PatchHelper.loadClass(context, "com.taobao.taobao.scancode.huoyan.util.i", "com.taobao.android.scancode");
+        final Class<?> pQrHttpRequestCallBack = PatchHelper.loadClass(context, "com.taobao.taobao.scancode.huoyan.util.d", "com.taobao.android.scancode");
 
         if (decodeResultAccessMtopProcesser == null || kakalibUtils == null || kaKaLibApiProcesser == null ){
             return;
@@ -80,7 +80,7 @@ public class ScancodeScanLoginPatch implements IPatch {
                     } else{
 
                         Object qrHttpRequestCallBackInstance = XposedHelpers.getObjectField(methodHookParam.thisObject, "c");
-                        XposedHelpers.callStaticMethod(kaKaLibApiProcesser, "asyncCheckUrlIsSafe", new Class<?>[]{Context.class, String.class, qrHttpRequestCallBack}, fragmentActivityInstance, strCode, qrHttpRequestCallBackInstance);
+                        XposedHelpers.callStaticMethod(kaKaLibApiProcesser, "asyncCheckUrlIsSafe", new Class<?>[]{Context.class, String.class, pQrHttpRequestCallBack}, fragmentActivityInstance, strCode, qrHttpRequestCallBackInstance);
                         XposedHelpers.callMethod(barCodeProductDialogHelperInstance, "showQRUrlDialog", fragmentActivityInstance, strCode);
                     }
                 } else{
