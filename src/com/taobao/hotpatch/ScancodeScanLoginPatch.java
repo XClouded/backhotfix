@@ -1,6 +1,7 @@
 package com.taobao.hotpatch;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import com.taobao.android.dexposed.XposedHelpers;
 import com.taobao.android.nav.Nav;
 import com.taobao.android.scancode.sdk.api.analyze.basic.object.SCBasicResult;
@@ -61,7 +62,7 @@ public class ScancodeScanLoginPatch implements IPatch {
                 Object scanControllerInstance = XposedBridge.invokeNonVirtual(methodHookParam.thisObject,
                         methodHookParam.thisObject.getClass().getSuperclass().getSuperclass().getSuperclass().getDeclaredMethod("getScanController"));
 
-                Context fragmentActivityInstance = (Context)XposedBridge.invokeNonVirtual(methodHookParam.thisObject,
+                FragmentActivity fragmentActivityInstance = (FragmentActivity)XposedBridge.invokeNonVirtual(methodHookParam.thisObject,
                         methodHookParam.thisObject.getClass().getSuperclass().getSuperclass().getSuperclass().getDeclaredMethod("getFragmentActivity"));
 
                 Object barCodeProductDialogHelperInstance = XposedHelpers.getObjectField(methodHookParam.thisObject, "b");
@@ -82,6 +83,7 @@ public class ScancodeScanLoginPatch implements IPatch {
                         Object qrHttpRequestCallBackInstance = XposedHelpers.getObjectField(methodHookParam.thisObject, "c");
                         XposedHelpers.callStaticMethod(kaKaLibApiProcesser, "asyncCheckUrlIsSafe", new Class<?>[]{Context.class, String.class, pQrHttpRequestCallBack}, fragmentActivityInstance, strCode, qrHttpRequestCallBackInstance);
                         XposedHelpers.callMethod(barCodeProductDialogHelperInstance, "showQRUrlDialog", fragmentActivityInstance, strCode);
+                        XposedHelpers.callMethod(barCodeProductDialogHelperInstance, "showQRUrlDialog",new Class<?>[]{fragmentActivity, String.class}, pQrHttpRequestCallBack, strCode);
                     }
                 } else{
 

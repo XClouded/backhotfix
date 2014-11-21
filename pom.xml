@@ -83,24 +83,28 @@
             <groupId>com.taobao.android</groupId>
             <artifactId>scancode_sdk_api_analyze_basic</artifactId>
             <version>1.1.0</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.taobao.android</groupId>
             <artifactId>scancode_sdk_api_common</artifactId>
             <version>1.1.0</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.taobao.android</groupId>
             <artifactId>scancode_sdk_framework_core</artifactId>
             <version>1.1.0</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.taobao.android</groupId>
             <artifactId>scancode_sdk_api_adapter_analyze.basic.huoyan</artifactId>
             <version>1.1.0</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
