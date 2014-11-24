@@ -1,6 +1,7 @@
 package com.taobao.hotpatch;
 
 import android.content.Context;
+import android.taobao.util.TaoLog;
 import android.util.Log;
 
 import com.taobao.android.dexposed.XC_MethodReplacement;
@@ -10,7 +11,7 @@ import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchCallback.PatchParam;
 import com.taobao.tao.Globals;
 import com.taobao.tao.remotebusiness.IRemoteBaseListener;
-import com.taobao.tao.remotebusiness.RemoteBusiness;    
+import com.taobao.tao.remotebusiness.RemoteBusiness;
 import com.taobao.tao.util.TaoHelper;
 import com.taobao.updatecenter.util.PatchHelper;
 
@@ -23,6 +24,9 @@ import mtopsdk.mtop.domain.IMTOPDataObject;
  * @date 2014年11月21日
  */
 public class SweepStakesBusinessPatch implements IPatch {
+
+
+    private static final String TAG = "SweepStakesBusinessPatch";
 
     @Override
     public void handlePatch(PatchParam arg0) throws Throwable {
@@ -45,10 +49,11 @@ public class SweepStakesBusinessPatch implements IPatch {
                 "com.taobao.tao.floatanimate.mtop.SweepstakeResponse", "com.taobao.rushpromotion");
 
         if (sweepStakesBusiness == null || sweepstakesRequest == null || sweepstakeResponse == null) {
+            TaoLog.Logd(TAG, "object is null");
             return;
         }
 
-        XposedBridge.findAndHookMethod(sweepStakesBusiness, "requestResult", Object.class, Integer.class, String.class, new XC_MethodReplacement() {
+        XposedBridge.findAndHookMethod(sweepStakesBusiness, "requestResult", Object.class, int.class, String.class, new XC_MethodReplacement() {
             // 在这个方法中，实现替换逻辑
             @Override
             protected Object replaceHookedMethod(MethodHookParam methodHookParam) throws Throwable {
@@ -57,11 +62,13 @@ public class SweepStakesBusinessPatch implements IPatch {
                 Integer chesttype = (Integer) methodHookParam.args[1];
                 String sellerId = (String) methodHookParam.args[2];
 
-                IMTOPDataObject request = (IMTOPDataObject) XposedHelpers.newInstance(sweepstakesRequest, null, null);
+                IMTOPDataObject request = (IMTOPDataObject) XposedHelpers.newInstance(sweepstakesRequest);
 
                 IRemoteBaseListener mListener = (IRemoteBaseListener) XposedHelpers.getObjectField(methodHookParam.thisObject, "b");
 
                 String bizParam = String.format("chestType=%s;sellerId=%s", chesttype, sellerId);
+
+                TaoLog.Logd(TAG, bizParam);
 
                 XposedHelpers.callMethod(request, "setBizParam", bizParam);
 
