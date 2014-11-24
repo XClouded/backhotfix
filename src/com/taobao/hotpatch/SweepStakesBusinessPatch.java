@@ -1,7 +1,6 @@
 package com.taobao.hotpatch;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.util.Log;
 
 import com.taobao.android.dexposed.XC_MethodReplacement;
@@ -11,7 +10,7 @@ import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchCallback.PatchParam;
 import com.taobao.tao.Globals;
 import com.taobao.tao.remotebusiness.IRemoteBaseListener;
-import com.taobao.tao.remotebusiness.RemoteBusiness;
+import com.taobao.tao.remotebusiness.RemoteBusiness;    
 import com.taobao.tao.util.TaoHelper;
 import com.taobao.updatecenter.util.PatchHelper;
 
@@ -49,7 +48,7 @@ public class SweepStakesBusinessPatch implements IPatch {
             return;
         }
 
-        XposedBridge.findAndHookMethod(sweepStakesBusiness, "requestResult", Bundle.class, new XC_MethodReplacement() {
+        XposedBridge.findAndHookMethod(sweepStakesBusiness, "requestResult", Object.class, Integer.class, String.class, new XC_MethodReplacement() {
             // 在这个方法中，实现替换逻辑
             @Override
             protected Object replaceHookedMethod(MethodHookParam methodHookParam) throws Throwable {
