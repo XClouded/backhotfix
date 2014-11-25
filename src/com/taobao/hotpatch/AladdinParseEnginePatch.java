@@ -146,7 +146,7 @@ public class AladdinParseEnginePatch implements IPatch {
                                 itemInfoComponents.add(itemInfoComponent);
                                 components.add(itemInfoComponent);
                             }
-                            XposedHelpers.callMethod(shopTitleComponent, "setItemInfoCps", itemInfoComponents);
+                            XposedHelpers.callMethod(shopTitleComponent, "setItemInfoCps", new Class[] {ArrayList.class},itemInfoComponents);
 
                             String promDesc = jsonObject.getString("promDesc");
                             if (promDesc != null) {
@@ -154,7 +154,7 @@ public class AladdinParseEnginePatch implements IPatch {
                                 XposedHelpers.callMethod(labelComponent, "setDesc" ,jsonObject.getString("promDesc"));
                                 components.add(labelComponent);
 
-                                XposedHelpers.callMethod(shopTitleComponent, "setPromDescCp" ,labelComponent);
+                                XposedHelpers.callMethod(shopTitleComponent, "setPromDescCp" ,new Class[] {labelComClass},labelComponent);
                             }
 
                             String postType = jsonObject.getString("postType");
@@ -172,9 +172,9 @@ public class AladdinParseEnginePatch implements IPatch {
                                     options.add(option);
                                 }
 
-                                XposedHelpers.callMethod(methodComponent, "setOptions", options);
+                                XposedHelpers.callMethod(methodComponent, "setOptions", new Class[] {ArrayList.class}, options);
                                 components.add(methodComponent);
-                                XposedHelpers.callMethod(shopTitleComponent, "setMethodCp", methodComponent);
+                                XposedHelpers.callMethod(shopTitleComponent, "setMethodCp", new Class[] {DeliveryMethodComClass}, methodComponent);
                             }
 
                             Boolean useCoupon = jsonObject
@@ -184,10 +184,10 @@ public class AladdinParseEnginePatch implements IPatch {
                                 Object toggleComponent = XposedHelpers.newInstance(ToggleComClass);
 
                                 XposedHelpers.callMethod(toggleComponent, "setTitle", "使用1212购物券");
-                                XposedHelpers.callMethod(toggleComponent, "setChecked", useCoupon);
+                                XposedHelpers.callMethod(toggleComponent, "setChecked", new Class[] {Boolean.class}, useCoupon);
 
                                 components.add(toggleComponent);
-                                XposedHelpers.callMethod(shopTitleComponent, "setUseCouponCp", toggleComponent);
+                                XposedHelpers.callMethod(shopTitleComponent, "setUseCouponCp", new Class[] {ToggleComClass}, toggleComponent);
                             }
 
                         }
