@@ -184,7 +184,7 @@ public class AladdinParseEnginePatch implements IPatch {
                                 Object toggleComponent = XposedHelpers.newInstance(ToggleComClass);
 
                                 XposedHelpers.callMethod(toggleComponent, "setTitle", "使用1212购物券");
-                                XposedHelpers.callMethod(toggleComponent, "setChecked", new Class[] {Boolean.class}, useCoupon);
+                                XposedHelpers.callMethod(toggleComponent, "setChecked", new Class[] {boolean.class}, useCoupon);
 
                                 components.add(toggleComponent);
                                 XposedHelpers.callMethod(shopTitleComponent, "setUseCouponCp", new Class[] {ToggleComClass}, toggleComponent);
