@@ -112,7 +112,7 @@ public class AladdinParseEnginePatch implements IPatch {
                         XposedHelpers.callMethod(addressComponent, "setAddressDesc", data.getString("addressDesc"));
                         XposedHelpers.callMethod(addressComponent, "setMobile", data.getString("mobile"));
                         XposedHelpers.callMethod(addressComponent, "setReceiver", data.getString("receiver"));
-                        XposedHelpers.callMethod(addressComponent, "setOrderMethod", 52);
+                        XposedHelpers.callMethod(addressComponent, "setOrderMethod", new Class[] {int.class},52);
                         components.add(addressComponent);
 
                         JSONArray shopJsonArray = data.getJSONArray("shopGroupList");
