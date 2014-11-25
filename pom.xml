@@ -205,25 +205,7 @@
 		  <artifactId>app-monitor-sdk</artifactId>
 		  <version>1.4</version>
 		  <scope>provided</scope>
-		</dependency>
-		
-		<dependency>
-            <groupId>com.taobao.android</groupId>
-            <artifactId>taobaocompat</artifactId>
-            <version>2.6.9-SNAPSHOT</version>
-            <scope>provided</scope>
-            <exclusions>
-            	<exclusion>
-            		<groupId>com.taobao.android</groupId>
-            		<artifactId>uikit_core</artifactId>
-            	</exclusion>
-            	<exclusion>
-            		<groupId>com.taobao.android</groupId>
-            		<artifactId>uikit_extends</artifactId>
-            	</exclusion>
-            </exclusions>
-        </dependency>
-		
+		</dependency>		
 	</dependencies>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
