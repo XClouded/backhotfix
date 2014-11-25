@@ -108,10 +108,10 @@ public class AladdinParseEnginePatch implements IPatch {
                         ArrayList components = new ArrayList();
 
                         Object addressComponent = XposedHelpers.newInstance(addressComClass);
-                        XposedHelpers.callMethod(addressComponent, "setAddressId", data.getString("addressId"));
-                        XposedHelpers.callMethod(addressComponent, "setAddressDesc", data.getString("addressDesc"));
-                        XposedHelpers.callMethod(addressComponent, "setMobile", data.getString("mobile"));
-                        XposedHelpers.callMethod(addressComponent, "setReceiver", data.getString("receiver"));
+                        XposedHelpers.callMethod(addressComponent, "setAddressId", new Class[] {String.class}, data.getString("addressId"));
+                        XposedHelpers.callMethod(addressComponent, "setAddressDesc", new Class[] {String.class},data.getString("addressDesc"));
+                        XposedHelpers.callMethod(addressComponent, "setMobile", new Class[] {String.class},data.getString("mobile"));
+                        XposedHelpers.callMethod(addressComponent, "setReceiver", new Class[] {String.class},data.getString("receiver"));
                         XposedHelpers.callMethod(addressComponent, "setOrderMethod", new Class[] {int.class},52);
                         components.add(addressComponent);
 
@@ -120,8 +120,8 @@ public class AladdinParseEnginePatch implements IPatch {
                             JSONObject jsonObject = (JSONObject) obj;
 
                             Object shopTitleComponent = XposedHelpers.newInstance(shopTitleComClass);
-                            XposedHelpers.callMethod(shopTitleComponent, "setShopTitle", jsonObject.getString("shopTitle"));
-                            XposedHelpers.callMethod(shopTitleComponent, "setShopType", jsonObject.getString("shopType"));
+                            XposedHelpers.callMethod(shopTitleComponent, "setShopTitle", new Class[] {String.class},jsonObject.getString("shopTitle"));
+                            XposedHelpers.callMethod(shopTitleComponent, "setShopType", new Class[] {String.class},jsonObject.getString("shopType"));
                             components.add(shopTitleComponent);
 
                             ArrayList itemInfoComponents = new ArrayList();
@@ -131,17 +131,17 @@ public class AladdinParseEnginePatch implements IPatch {
 
                                 Object itemInfoComponent = XposedHelpers.newInstance(itemInfoComClass);
 
-                                XposedHelpers.callMethod(itemInfoComponent, "setId", jObject.getString("id"));
-                                XposedHelpers.callMethod(itemInfoComponent, "setItemId", jObject.getString("itemId"));
-                                XposedHelpers.callMethod(itemInfoComponent, "setSkuId", jObject.getString("skuId"));
-                                XposedHelpers.callMethod(itemInfoComponent, "setItemTitle", jObject.getString("itemTitle"));
-                                XposedHelpers.callMethod(itemInfoComponent, "setItemPic", jObject.getString("itemPic"));
-                                XposedHelpers.callMethod(itemInfoComponent, "setPromIcon", jObject.getString("promIcon"));
-                                XposedHelpers.callMethod(itemInfoComponent, "setSkuDesc", jObject.getString("skuDesc"));
-                                XposedHelpers.callMethod(itemInfoComponent, "setPrice", jObject.getString("price"));
-                                XposedHelpers.callMethod(itemInfoComponent, "setPromPrice", jObject.getString("promPrice"));
-                                XposedHelpers.callMethod(itemInfoComponent, "setQuantity", jObject.getString("quantity"));
-                                XposedHelpers.callMethod(itemInfoComponent, "setStatus", jObject.getString("status"));
+                                XposedHelpers.callMethod(itemInfoComponent, "setId", new Class[] {String.class},jObject.getString("id"));
+                                XposedHelpers.callMethod(itemInfoComponent, "setItemId", new Class[] {String.class},jObject.getString("itemId"));
+                                XposedHelpers.callMethod(itemInfoComponent, "setSkuId", new Class[] {String.class},jObject.getString("skuId"));
+                                XposedHelpers.callMethod(itemInfoComponent, "setItemTitle", new Class[] {String.class},jObject.getString("itemTitle"));
+                                XposedHelpers.callMethod(itemInfoComponent, "setItemPic", new Class[] {String.class},jObject.getString("itemPic"));
+                                XposedHelpers.callMethod(itemInfoComponent, "setPromIcon", new Class[] {String.class},jObject.getString("promIcon"));
+                                XposedHelpers.callMethod(itemInfoComponent, "setSkuDesc", new Class[] {String.class},jObject.getString("skuDesc"));
+                                XposedHelpers.callMethod(itemInfoComponent, "setPrice", new Class[] {String.class},jObject.getString("price"));
+                                XposedHelpers.callMethod(itemInfoComponent, "setPromPrice", new Class[] {String.class},jObject.getString("promPrice"));
+                                XposedHelpers.callMethod(itemInfoComponent, "setQuantity",new Class[] {String.class}, jObject.getString("quantity"));
+                                XposedHelpers.callMethod(itemInfoComponent, "setStatus", new Class[] {String.class},jObject.getString("status"));
 
                                 itemInfoComponents.add(itemInfoComponent);
                                 components.add(itemInfoComponent);
@@ -151,7 +151,7 @@ public class AladdinParseEnginePatch implements IPatch {
                             String promDesc = jsonObject.getString("promDesc");
                             if (promDesc != null) {
                                 Object labelComponent = XposedHelpers.newInstance(labelComClass);
-                                XposedHelpers.callMethod(labelComponent, "setDesc" ,jsonObject.getString("promDesc"));
+                                XposedHelpers.callMethod(labelComponent, "setDesc" ,new Class[] {String.class},jsonObject.getString("promDesc"));
                                 components.add(labelComponent);
 
                                 XposedHelpers.callMethod(shopTitleComponent, "setPromDescCp" ,new Class[] {labelComClass},labelComponent);
@@ -160,15 +160,15 @@ public class AladdinParseEnginePatch implements IPatch {
                             String postType = jsonObject.getString("postType");
                             if (postType != null) {
                                 Object methodComponent = XposedHelpers.newInstance(DeliveryMethodComClass);
-                                XposedHelpers.callMethod(methodComponent, "setPostType" ,postType);
+                                XposedHelpers.callMethod(methodComponent, "setPostType" ,new Class[] {String.class},postType);
 
                                 JSONArray postTypeArray = jsonObject.getJSONArray("postTypeMap");
                                 ArrayList options = new ArrayList();
                                 for (Object object : postTypeArray) {
                                     JSONObject jObject = (JSONObject) object;
                                     Object option = XposedHelpers.newInstance(DeliveryMethodOptionClass);
-                                    XposedHelpers.callMethod(option, "setId", jObject.getString("id"));
-                                    XposedHelpers.callMethod(option, "setDeliveryMethodName", jObject.getString("desc"));
+                                    XposedHelpers.callMethod(option, "setId", new Class[] {String.class},jObject.getString("id"));
+                                    XposedHelpers.callMethod(option, "setDeliveryMethodName",new Class[] {String.class}, jObject.getString("desc"));
                                     options.add(option);
                                 }
 
@@ -195,7 +195,7 @@ public class AladdinParseEnginePatch implements IPatch {
                         String tips = data.getString("tips");
                         if (tips != null) {
                             Object tipsComponent = XposedHelpers.newInstance(TipsComClass);
-                            XposedHelpers.callMethod(tipsComponent, "setTips" ,data.getString("tips"));
+                            XposedHelpers.callMethod(tipsComponent, "setTips" ,new Class[] {String.class},data.getString("tips"));
                             components.add(tipsComponent);
                         }
 
