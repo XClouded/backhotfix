@@ -72,13 +72,6 @@
             <version>1.0.2</version>
             <scope>provided</scope>
         </dependency>
-		 <dependency>
-            <groupId>com.taobao.android</groupId>
-            <artifactId>share</artifactId>
-            <version>2.1.2-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-
         <dependency>
             <groupId>com.taobao.android</groupId>
             <artifactId>scancode_sdk_api_analyze_basic</artifactId>
@@ -205,17 +198,8 @@
             <groupId>com.taobao.android</groupId>
             <artifactId>taobaocompat</artifactId>
             <version>2.3.4</version>
+            <type>jar</type>
             <scope>provided</scope>
-            <exclusions>
-            	<exclusion>
-            		<groupId>com.taobao.android</groupId>
-            		<artifactId>uikit_core</artifactId>
-            	</exclusion>
-            	<exclusion>
-            		<groupId>com.taobao.android</groupId>
-            		<artifactId>uikit_extends</artifactId>
-            	</exclusion>
-            </exclusions>
         </dependency>
 	</dependencies>
 	<build>
