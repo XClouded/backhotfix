@@ -199,8 +199,6 @@ public class AladdinParseEnginePatch implements IPatch {
                             components.add(tipsComponent);
                         }
 
-                        TaoLog.Logd("AladdinParseEnginePatch",components.toString());
-
                         return components;
                     }
 
