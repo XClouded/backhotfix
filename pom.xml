@@ -13,7 +13,7 @@
 		</project.reporting.outputEncoding>
 		<java.version>1.6</java.version>
 		<android.version>4.2.2</android.version>
-		<android.compile.apilevel>17</android.compile.apilevel>
+		<android.compile.apilevel>18</android.compile.apilevel>
 		<android.support.version>r18</android.support.version>
 		<android-maven.version>3.5.0</android-maven.version>
         <sign.keystore>${project.basedir}/tools/debug.keystore</sign.keystore>
@@ -165,12 +165,6 @@
                 <version>1.0.3</version>
 	            <scope>provided</scope>
             </dependency>
-        <dependency>
-		  <groupId>com.taobao.android</groupId>
-		  <artifactId>taobao_we_sdk</artifactId>
-		  <version>1.1.9</version>
-		  <scope>provided</scope>
-		</dependency>
 		
 		<dependency>
 		  <groupId>com.taobao.android</groupId>
