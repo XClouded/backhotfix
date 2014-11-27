@@ -51,7 +51,7 @@ public class HttpdnsPatch implements IPatch {
 					    boolean result = settings.getBoolean(PRE_SAVED_COOKIE, false);					    
 					    if (result) {
 					    	if (!isTrack) {
-					    		TBS.Ext.commitEvent(22222);
+					    		TBS.Ext.commitEvent("mllhotpatch", null);
 					    		isTrack = true;
 					    		Log.d("hotpatch", "dns saved track");
 					    	}
@@ -66,7 +66,7 @@ public class HttpdnsPatch implements IPatch {
                             editor.putBoolean(PRE_SAVED_COOKIE, true);					    	
 					    	if (!isTrack) {
 					    		Log.d("hotpatch", "dns first track");
-					    		TBS.Ext.commitEvent(22222);
+					    		TBS.Ext.commitEvent("mllhotpatch", null);
 					    		isTrack = true;
 					    	}
 					    	param.setResult(null);
