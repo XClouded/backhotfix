@@ -36,6 +36,12 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+  <groupId>com.taobao.android</groupId>
+  <artifactId>http-dns</artifactId>
+  <version>1.6.0</version>
+  <scope>provided</scope>
+</dependency>
+        <dependency>
   			<groupId>com.taobao.android</groupId>
   			<artifactId>taobao_android_tbwelcomegame</artifactId>
   			<version>1.2.0</version>
