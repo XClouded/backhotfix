@@ -2,6 +2,7 @@ package com.taobao.hotpatch;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.taobao.android.dexposed.XC_MethodHook;
@@ -10,6 +11,7 @@ import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.android.dexposed.XposedHelpers;
 import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchCallback.PatchParam;
+import com.taobao.updatecenter.hotpatch.HotPatchManager;
 import com.taobao.updatecenter.util.PatchHelper;
 
 // 所有要实现patch某个方法，都需要集成Ipatch这个接口
@@ -43,8 +45,11 @@ public class HttpdnsPatch implements IPatch {
 					protected void beforeHookedMethod(MethodHookParam param)
 							throws Throwable {
 						//param.thisObject是这个类的实例
-						HttpDns instance = (HttpDns) param.thisObject;
+					    HttpDns instance = (HttpDns) param.thisObject;
 						String host = (String) param.args[0];
+						 SharedPreferences settings = context.getSharedPreferences(HotPatchManager.HOTPATCH_FILEPATH_MD5_STORAGE, 0);
+					     boolean result = settings.getBoolean(IS_ENABLE_HOTPATCH_KEY, true);
+
 		                if () {
 							param.setResult(null);
 						}
