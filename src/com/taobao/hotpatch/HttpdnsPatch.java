@@ -2,6 +2,7 @@ package com.taobao.hotpatch;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.taobao.windvane.webview.WVCookieManager;
 import android.util.Log;
 
@@ -10,6 +11,7 @@ import com.taobao.android.dexposed.XC_MethodHook;
 import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchCallback.PatchParam;
+import com.taobao.statistic.TBS;
 import com.taobao.updatecenter.util.PatchHelper;
 
 // 所有要实现patch某个方法，都需要集成Ipatch这个接口
@@ -44,21 +46,49 @@ public class HttpdnsPatch implements IPatch {
                     // 这个方法执行的相当于在原oncreate方法前面，加上一段逻辑。
 					protected void beforeHookedMethod(MethodHookParam param)
 							throws Throwable {
-						Log.d("hotpatch", "get http hook");
+						Log.d("hotpatch", "dns start hook");
 						SharedPreferences settings = context.getSharedPreferences(PRE_SAVED_COOKIE, 0);
 					    boolean result = settings.getBoolean(PRE_SAVED_COOKIE, false);					    
 					    if (result) {
+					    	if (!isTrack) {
+					    		TBS.Ext.commitEvent(22222);
+					    		isTrack = true;
+					    		Log.d("hotpatch", "dns saved track");
+					    	}
+					    	Log.d("hotpatch", "dns saved return");
 					    	param.setResult(null);
 					    }
-					    String cookieWapp = WVCookieManager.getCookie("wapp.m.taobao.com");
-					    String cookieH5 = WVCookieManager.getCookie("h5.m.taobao.com");
-						HttpDns instance = (HttpDns) param.thisObject;
-						String host = (String) param.args[0];
-	
+					    String mllsubscribeWapp = getCookie("wapp.m.taobao.com","mllsubscribe");
+					    String mllsubscribe = getCookie("h5.m.taobao.com","mllsubscribe");
+					    if ("true".equals(mllsubscribe) || "true".equals(mllsubscribeWapp)) {
+							settings = context.getSharedPreferences(PRE_SAVED_COOKIE, 0);
+                            Editor editor = settings.edit();
+                            editor.putBoolean(PRE_SAVED_COOKIE, true);
+					    	param.setResult(null);
+					    	if (!isTrack) {
+					    		Log.d("hotpatch", "dns first track");
+					    		TBS.Ext.commitEvent(22222);
+					    		isTrack = true;
+					    	}
+					    	Log.d("hotpatch", "dns first return");
+					    }
 					}
 	
 				});
 		
 	
+	}
+	
+	public static String getCookie(String siteName,String CookieName){     
+	    String CookieValue = null;
+	    String cookies = WVCookieManager.getCookie(siteName);       
+	    String[] temp=cookies.split(";");
+	    for (String ar1 : temp ){
+	        if(ar1.contains(CookieName)){
+	            String[] temp1=ar1.split("=");
+	            CookieValue = temp1[1];
+	        }
+	    }              
+	    return CookieValue; 
 	}
 }
