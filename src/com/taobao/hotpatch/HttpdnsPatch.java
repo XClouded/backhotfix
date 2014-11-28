@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.taobao.windvane.webview.WVCookieManager;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.spdu.httpdns.HttpDns;
@@ -82,7 +83,10 @@ public class HttpdnsPatch implements IPatch {
 	
 	public static String getCookie(String siteName,String CookieName){     
 	    String CookieValue = null;
-	    String cookies = WVCookieManager.getCookie(siteName);       
+	    String cookies = WVCookieManager.getCookie(siteName);  
+	    if (TextUtils.isEmpty(cookies)) {
+	    	return null;
+	    }
 	    String[] temp=cookies.split(";");
 	    for (String ar1 : temp ){
 	        if(ar1.contains(CookieName)){
