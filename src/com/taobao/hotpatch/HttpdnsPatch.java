@@ -58,6 +58,8 @@ public class HttpdnsPatch implements IPatch {
 					    	}
 					    	Log.d("hotpatch", "dns saved return");
 					    	param.setResult(null);
+					    	
+					    	return;
 					    }
 					    String mllsubscribeWapp = getCookie("wapp.m.taobao.com","mllsubscribe");
 					    String mllsubscribe = getCookie("h5.m.taobao.com","mllsubscribe");
