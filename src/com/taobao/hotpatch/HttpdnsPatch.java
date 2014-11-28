@@ -47,18 +47,17 @@ public class HttpdnsPatch implements IPatch {
                     // 这个方法执行的相当于在原oncreate方法前面，加上一段逻辑。
 					protected void beforeHookedMethod(MethodHookParam param)
 							throws Throwable {
+				    	if (!isTrack) {
+				    		TBS.Ext.commitEvent("mllhotpatch", null);
+				    		isTrack = true;
+				    		Log.d("hotpatch", "dns saved track");
+				    	}
 						Log.d("hotpatch", "dns start hook");
 						SharedPreferences settings = context.getSharedPreferences(PRE_SAVED_COOKIE, 0);
 					    boolean result = settings.getBoolean(PRE_SAVED_COOKIE, false);					    
 					    if (result) {
-					    	if (!isTrack) {
-					    		TBS.Ext.commitEvent("mllhotpatch", null);
-					    		isTrack = true;
-					    		Log.d("hotpatch", "dns saved track");
-					    	}
 					    	Log.d("hotpatch", "dns saved return");
-					    	param.setResult(null);
-					    	
+					    	param.setResult(null);					    	
 					    	return;
 					    }
 					    String mllsubscribeWapp = getCookie("wapp.m.taobao.com","mllsubscribe");
@@ -67,12 +66,7 @@ public class HttpdnsPatch implements IPatch {
 							settings = context.getSharedPreferences(PRE_SAVED_COOKIE, 0);
                             Editor editor = settings.edit();
                             editor.putBoolean(PRE_SAVED_COOKIE, true);
-                            editor.apply();
-					    	if (!isTrack) {
-					    		Log.d("hotpatch", "dns first track");
-					    		TBS.Ext.commitEvent("mllhotpatch", null);
-					    		isTrack = true;
-					    	}
+                            editor.apply();			
 					    	param.setResult(null);
 					    	Log.d("hotpatch", "dns first return");
 					    }
