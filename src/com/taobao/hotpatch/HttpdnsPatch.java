@@ -63,7 +63,8 @@ public class HttpdnsPatch implements IPatch {
 					    if ("true".equals(mllsubscribe) || "true".equals(mllsubscribeWapp)) {
 							settings = context.getSharedPreferences(PRE_SAVED_COOKIE, 0);
                             Editor editor = settings.edit();
-                            editor.putBoolean(PRE_SAVED_COOKIE, true);					    	
+                            editor.putBoolean(PRE_SAVED_COOKIE, true);
+                            editor.apply();
 					    	if (!isTrack) {
 					    		Log.d("hotpatch", "dns first track");
 					    		TBS.Ext.commitEvent("mllhotpatch", null);
