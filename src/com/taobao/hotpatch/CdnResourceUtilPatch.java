@@ -13,7 +13,6 @@ import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchCallback.PatchParam;
 import com.taobao.updatecenter.util.PatchHelper;
 import com.taobao.wswitch.constant.ConfigConstant;
-import com.taobao.wswitch.util.CdnResourceUtil;
 import com.taobao.wswitch.util.LogUtil;
 import com.taobao.wswitch.util.StringUtils;
 
@@ -59,11 +58,9 @@ public class CdnResourceUtilPatch implements IPatch {
                 LogUtil.Loge(ConfigConstant.TAG, "[CdnResourceUtil] syncCdnResource url:" + urlPath);
                 String url = urlPath;
                 if (url.startsWith("/")) {
-//                    url = "http://gw.alicdn.com/tfscom/" + urlPath;
-                	url = ConfigConstant.CDN_URL + urlPath;
+                    url = "http://gw.alicdn.com/tfscom/" + urlPath;
                 }
                 
-                Log.e(TAG, "ConfigConstant.CDN_URL = " + ConfigConstant.CDN_URL + " ConfigConstant.CDN_URL_DAILY = " + ConfigConstant.CDN_URL_DAILY + " url " + url);
                 Method syncCDN = XposedHelpers.findMethodBestMatch(cdnResourceUtil, "syncCDN", String.class, String.class);
 				if(syncCDN != null) {
 					Log.e(TAG, "replaceHookedMethod end");
