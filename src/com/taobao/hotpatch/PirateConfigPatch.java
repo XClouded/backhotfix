@@ -1,13 +1,11 @@
 package com.taobao.hotpatch;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Observable;
 import java.util.Observer;
 
 import android.content.Context;
 import android.taobao.deviceid.DeviceIDManager;
-import android.taobao.util.TaoLog;
 import android.util.Log;
 
 import com.taobao.android.dexposed.XC_MethodReplacement;
