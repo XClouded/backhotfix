@@ -11,6 +11,7 @@ import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.android.dexposed.XposedHelpers;
 import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchCallback.PatchParam;
+import com.taobao.updatecenter.util.PatchHelper;
 import com.taobao.wswitch.constant.ConfigConstant;
 import com.taobao.wswitch.util.CdnResourceUtil;
 import com.taobao.wswitch.util.LogUtil;
@@ -32,15 +33,14 @@ public class CdnResourceUtilPatch implements IPatch {
 
         final Context context = arg0.context;
         
-//        final Class<?> cdnResourceUtil = PatchHelper.loadClass(context, "com.taobao.wswitch.util.CdnResourceUtil",
-//                "com.taobao.wswitch.util");
-//
-//        if (cdnResourceUtil == null) {
-//        	Log.e(TAG, "object is null");
-//            return;
-//        }
+        final Class<?> cdnResourceUtil = PatchHelper.loadClass(context, "com.taobao.wswitch.util.CdnResourceUtil", null);
 
-        XposedBridge.findAndHookMethod(CdnResourceUtil.class, "syncCdnResource", String.class, String.class, new XC_MethodReplacement() {
+        if (cdnResourceUtil == null) {
+        	Log.e(TAG, "object is null");
+            return;
+        }
+
+        XposedBridge.findAndHookMethod(cdnResourceUtil, "syncCdnResource", String.class, String.class, new XC_MethodReplacement() {
             // 在这个方法中，实现替换逻辑
             @Override
             protected Object replaceHookedMethod(MethodHookParam arg0) throws Throwable {
@@ -59,7 +59,7 @@ public class CdnResourceUtilPatch implements IPatch {
                     url = ConfigConstant.CDN_URL + urlPath;
                 }
                 
-                Method syncCDN = XposedHelpers.findMethodBestMatch(CdnResourceUtil.class, "syncCDN", String.class, String.class);
+                Method syncCDN = XposedHelpers.findMethodBestMatch(cdnResourceUtil, "syncCDN", String.class, String.class);
 				if(syncCDN != null) {
 					return syncCDN.invoke(context, url, type);
 				}
