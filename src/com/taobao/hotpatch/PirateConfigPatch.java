@@ -41,7 +41,7 @@ public class PirateConfigPatch implements IPatch {
                 "com.taobao.pirateenginebundle");
 
         if (pirateConfig == null) {
-            TaoLog.Loge(TAG, "object is null");
+            Log.e(TAG, "object is null");
             return;
         }
 
@@ -49,7 +49,7 @@ public class PirateConfigPatch implements IPatch {
             // 在这个方法中，实现替换逻辑
             @Override
             protected Object replaceHookedMethod(MethodHookParam methodHookParam) throws Throwable {
-            	TaoLog.Loge(TAG, "replaceHookedMethod start");
+            	Log.e(TAG, "replaceHookedMethod start");
             	//初始化配置中心配置
             	String[] groupNames = {"android_pirate_config"};
             	boolean isPrd = true;
@@ -70,7 +70,7 @@ public class PirateConfigPatch implements IPatch {
 						}
         			}
         		});
-            	TaoLog.Loge(TAG, "replaceHookedMethod end");
+            	Log.e(TAG, "replaceHookedMethod end");
                 return null;
             }
         });

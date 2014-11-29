@@ -5,6 +5,7 @@ import java.util.Random;
 
 import android.content.Context;
 import android.taobao.util.TaoLog;
+import android.util.Log;
 
 import com.taobao.android.dexposed.XC_MethodReplacement;
 import com.taobao.android.dexposed.XposedBridge;
@@ -35,7 +36,7 @@ public class CdnResourceUtilPatch implements IPatch {
                 "com.taobao.wswitch.util");
 
         if (cdnResourceUtil == null) {
-            TaoLog.Loge(TAG, "object is null");
+        	Log.e(TAG, "object is null");
             return;
         }
 
@@ -44,7 +45,7 @@ public class CdnResourceUtilPatch implements IPatch {
             @Override
             protected Object replaceHookedMethod(MethodHookParam arg0) throws Throwable {
             	TaoLog.Loge(TAG, "replaceHookedMethod start");
-            	LogUtil.Logd(ConfigConstant.TAG, "[CdnResourceUtil] syncCdnResource start ");
+            	Log.e(ConfigConstant.TAG, "[CdnResourceUtil] syncCdnResource start ");
             	
             	String urlPath = (String) arg0.args[0];
             	String type = (String) arg0.args[1];
@@ -63,7 +64,7 @@ public class CdnResourceUtilPatch implements IPatch {
 					return syncCDN.invoke(context, url, type);
 				}
 				
-				TaoLog.Loge(TAG, "replaceHookedMethod end");
+				Log.e(TAG, "replaceHookedMethod end");
                 return "";
             }
         });
