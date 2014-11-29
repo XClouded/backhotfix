@@ -35,14 +35,14 @@ public class PirateConfigPatch implements IPatch {
 
         final Context context = arg0.context;
         
-        final Class<?> pirateConfig = PatchHelper.loadClass(context, "com.taobao.pirateenginebundle.a", null);
+        final Class<?> pirateConfig = PatchHelper.loadClass(context, "com.taobao.pirateenginebundle.a", "com.taobao.pirateenginebundle");
 
         if (pirateConfig == null) {
             Log.e(TAG, "object is null");
             return;
         }
         
-        Log.e(TAG, "object is null");
+        Log.e(TAG, "object is not null");
 
         XposedBridge.findAndHookMethod(pirateConfig, "startCheckTask", new XC_MethodReplacement() {
             // 在这个方法中，实现替换逻辑

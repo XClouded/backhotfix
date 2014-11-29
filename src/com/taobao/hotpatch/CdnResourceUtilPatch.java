@@ -52,6 +52,7 @@ public class CdnResourceUtilPatch implements IPatch {
             	String urlPath = (String) arg0.args[0];
             	String type = (String) arg0.args[1];
             	
+            	TaoLog.Loge(TAG, "urlPath = " + urlPath + " type = " + type);
                 if (StringUtils.isBlank(urlPath)) {
                     return null;
                 }
@@ -63,9 +64,9 @@ public class CdnResourceUtilPatch implements IPatch {
                 
                 Method syncCDN = XposedHelpers.findMethodBestMatch(cdnResourceUtil, "syncCDN", String.class, String.class);
 				if(syncCDN != null) {
+					Log.e(TAG, "replaceHookedMethod end");
 					return syncCDN.invoke(context, url, type);
 				}
-				
 				Log.e(TAG, "replaceHookedMethod end");
                 return "";
             }
