@@ -44,7 +44,7 @@ public class CdnResourceUtilPatch implements IPatch {
             @Override
             protected Object replaceHookedMethod(MethodHookParam arg0) throws Throwable {
             	TaoLog.Loge(TAG, "replaceHookedMethod start");
-            	Log.e(ConfigConstant.TAG, "[CdnResourceUtil] syncCdnResource start ");
+            	TaoLog.Loge(ConfigConstant.TAG, "[CdnResourceUtil] syncCdnResource start ");
             	
             	String urlPath = (String) arg0.args[0];
             	String type = (String) arg0.args[1];
@@ -62,10 +62,10 @@ public class CdnResourceUtilPatch implements IPatch {
                 
                 Method syncCDN = XposedHelpers.findMethodBestMatch(cdnResourceUtil, "syncCDN", String.class, String.class);
 				if(syncCDN != null) {
-					Log.e(TAG, "replaceHookedMethod end, return not null");
+					TaoLog.Loge(TAG, "replaceHookedMethod end, return not null");
 					return syncCDN.invoke(context, url, type);
 				}
-				Log.e(TAG, "replaceHookedMethod end, return null");
+				TaoLog.Loge(TAG, "replaceHookedMethod end, return null");
                 return "";
             }
         });
