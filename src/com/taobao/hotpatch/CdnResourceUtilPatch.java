@@ -39,8 +39,6 @@ public class CdnResourceUtilPatch implements IPatch {
             return;
         }
 
-        Log.e(TAG, "object is not null");
-        
         XposedBridge.findAndHookMethod(cdnResourceUtil, "syncCdnResource", String.class, String.class, new XC_MethodReplacement() {
             // 在这个方法中，实现替换逻辑
             @Override
@@ -55,6 +53,7 @@ public class CdnResourceUtilPatch implements IPatch {
                 if (StringUtils.isBlank(urlPath)) {
                     return null;
                 }
+                
                 LogUtil.Loge(ConfigConstant.TAG, "[CdnResourceUtil] syncCdnResource url:" + urlPath);
                 String url = urlPath;
                 if (url.startsWith("/")) {
@@ -63,10 +62,10 @@ public class CdnResourceUtilPatch implements IPatch {
                 
                 Method syncCDN = XposedHelpers.findMethodBestMatch(cdnResourceUtil, "syncCDN", String.class, String.class);
 				if(syncCDN != null) {
-					Log.e(TAG, "replaceHookedMethod end");
+					Log.e(TAG, "replaceHookedMethod end, return not null");
 					return syncCDN.invoke(context, url, type);
 				}
-				Log.e(TAG, "replaceHookedMethod end");
+				Log.e(TAG, "replaceHookedMethod end, return null");
                 return "";
             }
         });
