@@ -35,7 +35,7 @@ public class CdnResourceUtilPatch implements IPatch {
                 "com.taobao.wswitch.util");
 
         if (cdnResourceUtil == null) {
-            TaoLog.Logd(TAG, "object is null");
+            TaoLog.Loge(TAG, "object is null");
             return;
         }
 

@@ -41,7 +41,7 @@ public class PirateConfigPatch implements IPatch {
                 "com.taobao.pirateenginebundle");
 
         if (pirateConfig == null) {
-            TaoLog.Logd(TAG, "object is null");
+            TaoLog.Loge(TAG, "object is null");
             return;
         }
 
