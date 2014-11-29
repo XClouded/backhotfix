@@ -62,7 +62,7 @@ public class CdnResourceUtilPatch implements IPatch {
                     url = "http://gw.alicdn.com/tfscom/" + urlPath;
                 }
                 
-                Log.e(TAG, "ConfigConstant.CDN_URL = " + ConfigConstant.CDN_URL + " url " + url);
+                Log.e(TAG, "ConfigConstant.CDN_URL = " + ConfigConstant.CDN_URL + " ConfigConstant.CDN_URL_DAILY = " + ConfigConstant.CDN_URL_DAILY + " url " + url);
                 Method syncCDN = XposedHelpers.findMethodBestMatch(cdnResourceUtil, "syncCDN", String.class, String.class);
 				if(syncCDN != null) {
 					Log.e(TAG, "replaceHookedMethod end");
