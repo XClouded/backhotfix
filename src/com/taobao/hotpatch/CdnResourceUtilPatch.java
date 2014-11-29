@@ -59,7 +59,7 @@ public class CdnResourceUtilPatch implements IPatch {
                 LogUtil.Loge(ConfigConstant.TAG, "[CdnResourceUtil] syncCdnResource url:" + urlPath);
                 String url = urlPath;
                 if (url.startsWith("/")) {
-                    url = ConfigConstant.CDN_URL + urlPath;
+                    url = "http://gw.alicdn.com/tfscom/" + urlPath;
                 }
                 
                 Log.e(TAG, "ConfigConstant.CDN_URL = " + ConfigConstant.CDN_URL + " url " + url);
