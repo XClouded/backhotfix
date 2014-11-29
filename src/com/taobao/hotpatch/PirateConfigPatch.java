@@ -35,8 +35,7 @@ public class PirateConfigPatch implements IPatch {
 
         final Context context = arg0.context;
         
-        final Class<?> pirateConfig = PatchHelper.loadClass(context, "com.taobao.pirateenginebundle.a",
-                "com.taobao.pirateenginebundle");
+        final Class<?> pirateConfig = PatchHelper.loadClass(context, "com.taobao.pirateenginebundle.a", null);
 
         if (pirateConfig == null) {
             Log.e(TAG, "object is null");
