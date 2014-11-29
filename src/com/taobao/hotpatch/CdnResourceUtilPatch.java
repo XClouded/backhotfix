@@ -40,6 +40,8 @@ public class CdnResourceUtilPatch implements IPatch {
             return;
         }
 
+        Log.e(TAG, "object is not null");
+        
         XposedBridge.findAndHookMethod(cdnResourceUtil, "syncCdnResource", String.class, String.class, new XC_MethodReplacement() {
             // 在这个方法中，实现替换逻辑
             @Override

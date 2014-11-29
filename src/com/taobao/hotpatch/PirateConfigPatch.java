@@ -41,6 +41,8 @@ public class PirateConfigPatch implements IPatch {
             Log.e(TAG, "object is null");
             return;
         }
+        
+        Log.e(TAG, "object is null");
 
         XposedBridge.findAndHookMethod(pirateConfig, "startCheckTask", new XC_MethodReplacement() {
             // 在这个方法中，实现替换逻辑
