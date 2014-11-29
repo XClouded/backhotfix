@@ -49,7 +49,6 @@ public class CdnResourceUtilPatch implements IPatch {
             	String urlPath = (String) arg0.args[0];
             	String type = (String) arg0.args[1];
             	
-            	Log.e(TAG, "urlPath = " + urlPath + " type = " + type);
                 if (StringUtils.isBlank(urlPath)) {
                     return null;
                 }
