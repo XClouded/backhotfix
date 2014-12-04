@@ -59,16 +59,15 @@ public class RoomVideoPartPatch implements IPatch {
             @Override
             protected Object replaceHookedMethod(final MethodHookParam methodHookParam) throws Throwable {
             	Log.d(TAG, "replaceHookedMethod registerNetChange begin");
-            	final boolean _iswifi = (Boolean) XposedHelpers.callMethod(methodHookParam.thisObject, "isWifiState");
-            	final boolean _isDisconnectState = (Boolean) XposedHelpers.callMethod(methodHookParam.thisObject, "isDisconnectState");
-            	final VideoView _vvAnchorVideo = (VideoView) XposedHelpers.getObjectField(methodHookParam.thisObject, "b");
-            	final Activity mContext = (Activity) XposedHelpers.getObjectField(methodHookParam.thisObject, "m");
-            	
+            	Activity mContext = (Activity) XposedHelpers.getObjectField(methodHookParam.thisObject, "m");            	
             	
             	BroadcastReceiver _mNetChangeReceiver = new BroadcastReceiver() {
         	        @Override 
         	        public void onReceive(Context context, Intent intent) {
         	        	Log.d(TAG, "replaceHookedMethod onReceive");
+        	        	boolean _iswifi = (Boolean) XposedHelpers.callMethod(methodHookParam.thisObject, "isWifiState");
+        	        	VideoView _vvAnchorVideo = (VideoView) XposedHelpers.getObjectField(methodHookParam.thisObject, "b");
+        	        	boolean _isDisconnectState = (Boolean) XposedHelpers.callMethod(methodHookParam.thisObject, "isDisconnectState");
         	        	Log.d(TAG, "replaceHookedMethod onReceive _iswifi:"+_iswifi+"_isDisconnectState"+_isDisconnectState+"_vvAnchorVideo:"+_vvAnchorVideo.isPlaying());
         	        	if( !_iswifi && _isDisconnectState && _vvAnchorVideo.isPlaying() ) {
         	        		Log.d(TAG, "replaceHookedMethod onReceive ok");
@@ -108,12 +107,12 @@ public class RoomVideoPartPatch implements IPatch {
             @Override
             protected Object replaceHookedMethod(final MethodHookParam methodHookParam) throws Throwable {
             	Log.d(TAG, "replaceHookedMethod stopVideo begin");
-            	final int PlayingStatus = 2;
-            	final Activity mContext = (Activity) XposedHelpers.getObjectField(methodHookParam.thisObject, "m");
-            	final int _mRoomStatus = (Integer) XposedHelpers.getObjectField(mContext, "mRoomStatus");
-            	final ImageButton _ibtnPlayVideo = (ImageButton) XposedHelpers.getObjectField(methodHookParam.thisObject, "d");
-            	final ProgressBar _pbar = (ProgressBar) XposedHelpers.getObjectField(methodHookParam.thisObject, "h");
-            	final VideoView _vvAnchorVideo = (VideoView) XposedHelpers.getObjectField(methodHookParam.thisObject, "b");
+            	int PlayingStatus = 2;
+            	Activity mContext = (Activity) XposedHelpers.getObjectField(methodHookParam.thisObject, "m");
+            	int _mRoomStatus = (Integer) XposedHelpers.getObjectField(mContext, "mRoomStatus");
+            	ImageButton _ibtnPlayVideo = (ImageButton) XposedHelpers.getObjectField(methodHookParam.thisObject, "d");
+            	ProgressBar _pbar = (ProgressBar) XposedHelpers.getObjectField(methodHookParam.thisObject, "h");
+            	VideoView _vvAnchorVideo = (VideoView) XposedHelpers.getObjectField(methodHookParam.thisObject, "b");
             	
         		if ( _mRoomStatus == PlayingStatus ) {
         			_ibtnPlayVideo.setVisibility(View.VISIBLE);
