@@ -69,6 +69,7 @@ public class RoomVideoPartPatch implements IPatch {
         	        @Override 
         	        public void onReceive(Context context, Intent intent) {
         	        	Log.d(TAG, "replaceHookedMethod onReceive");
+        	        	Log.d(TAG, "replaceHookedMethod onReceive _iswifi:"+_iswifi+"_isDisconnectState"+_isDisconnectState+"_vvAnchorVideo:"+_vvAnchorVideo.isPlaying());
         	        	if( !_iswifi && _isDisconnectState && _vvAnchorVideo.isPlaying() ) {
         	        		Log.d(TAG, "replaceHookedMethod onReceive ok");
         	        		AlertDialog.Builder builder = new AlertDialog.Builder(context);
