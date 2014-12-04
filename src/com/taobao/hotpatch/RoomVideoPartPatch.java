@@ -50,7 +50,7 @@ public class RoomVideoPartPatch implements IPatch {
                 "com.taobao.crazyanchor");
 
         if (roomVideoPart == null) {
-            TaoLog.Logd(TAG, "object is null");
+        	Log.d(TAG, "object is null");
             return;
         }
         
@@ -58,7 +58,7 @@ public class RoomVideoPartPatch implements IPatch {
             // 在这个方法中，实现替换逻辑
             @Override
             protected Object replaceHookedMethod(final MethodHookParam methodHookParam) throws Throwable {
-            	TaoLog.Logd(TAG, "replaceHookedMethod registerNetChange begin");
+            	Log.d(TAG, "replaceHookedMethod registerNetChange begin");
             	final boolean _iswifi = (Boolean) XposedHelpers.callMethod(methodHookParam.thisObject, "isWifiState");
             	final boolean _isDisconnectState = (Boolean) XposedHelpers.callMethod(methodHookParam.thisObject, "isDisconnectState");
             	final VideoView _vvAnchorVideo = (VideoView) XposedHelpers.getObjectField(methodHookParam.thisObject, "b");
@@ -94,7 +94,7 @@ public class RoomVideoPartPatch implements IPatch {
         		IntentFilter filter = new IntentFilter(); 
         		filter.addAction(NETWORK_CHANGED_ACTION); 
         		mContext.registerReceiver(_mNetChangeReceiver, filter);
-        		TaoLog.Logd(TAG, "replaceHookedMethod registerNetChange end");
+        		Log.d(TAG, "replaceHookedMethod registerNetChange end");
                 return null;
             }
         });
@@ -150,7 +150,7 @@ public class RoomVideoPartPatch implements IPatch {
             // 在这个方法中，实现替换逻辑
             @Override
             protected Object replaceHookedMethod(final MethodHookParam methodHookParam) throws Throwable {
-            	TaoLog.Logd(TAG, "replaceHookedMethod stopVideo begin");
+            	Log.d(TAG, "replaceHookedMethod stopVideo begin");
             	final int PlayingStatus = 2;
             	final Activity mContext = (Activity) XposedHelpers.getObjectField(methodHookParam.thisObject, "m");
             	final int _mRoomStatus = (Integer) XposedHelpers.getObjectField(mContext, "mRoomStatus");
@@ -175,7 +175,7 @@ public class RoomVideoPartPatch implements IPatch {
         		_forcePlay = false;
         		TBS.Ext.commitEvent("Page_ZhuboRoomDetail",2101, "Button-Pause", null, null, null);
         		
-        		TaoLog.Logd(TAG, "replaceHookedMethod stopVideo end");
+        		Log.d(TAG, "replaceHookedMethod stopVideo end");
                 return null;
             }
         });
