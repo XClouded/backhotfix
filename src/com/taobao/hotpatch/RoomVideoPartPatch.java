@@ -68,7 +68,9 @@ public class RoomVideoPartPatch implements IPatch {
             	BroadcastReceiver _mNetChangeReceiver = new BroadcastReceiver() {
         	        @Override 
         	        public void onReceive(Context context, Intent intent) {
+        	        	Log.d(TAG, "replaceHookedMethod onReceive");
         	        	if( !_iswifi && _isDisconnectState && _vvAnchorVideo.isPlaying() ) {
+        	        		Log.d(TAG, "replaceHookedMethod onReceive ok");
         	        		AlertDialog.Builder builder = new AlertDialog.Builder(context);
         	        		builder.setMessage("您的网络已切换为非wifi环境，是否继续播放视频？");
         	        		builder.setCancelable(false);
