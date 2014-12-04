@@ -168,11 +168,7 @@ public class RoomVideoPartPatch implements IPatch {
         		else {
         			XposedHelpers.callMethod(methodHookParam.thisObject, "d");
         		}
-        		XposedHelpers.callMethod(methodHookParam.thisObject, "cancleTimer");
-        		boolean _initVideoFlag = (Boolean) XposedHelpers.getObjectField(methodHookParam.thisObject, "x");
-        		_initVideoFlag = false;
-        		boolean _forcePlay = (Boolean) XposedHelpers.getObjectField(methodHookParam.thisObject, "r");
-        		_forcePlay = false;
+        		XposedHelpers.setBooleanField(methodHookParam.thisObject, "x", false);
         		TBS.Ext.commitEvent("Page_ZhuboRoomDetail",2101, "Button-Pause", null, null, null);
         		
         		Log.d(TAG, "replaceHookedMethod stopVideo end");
