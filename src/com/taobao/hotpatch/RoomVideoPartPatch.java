@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.taobao.util.TaoLog;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -68,7 +67,7 @@ public class RoomVideoPartPatch implements IPatch {
         	        	boolean _iswifi = (Boolean) XposedHelpers.callMethod(methodHookParam.thisObject, "isWifiState");
         	        	VideoView _vvAnchorVideo = (VideoView) XposedHelpers.getObjectField(methodHookParam.thisObject, "b");
         	        	boolean _isDisconnectState = (Boolean) XposedHelpers.callMethod(methodHookParam.thisObject, "isDisconnectState");
-        	        	Log.d(TAG, "replaceHookedMethod onReceive _iswifi:"+_iswifi+"_isDisconnectState"+_isDisconnectState+"_vvAnchorVideo:"+_vvAnchorVideo.isPlaying());
+//        	        	Log.d(TAG, "replaceHookedMethod onReceive _iswifi:"+_iswifi+"_isDisconnectState"+_isDisconnectState+"_vvAnchorVideo:"+_vvAnchorVideo.isPlaying());
         	        	if( !_iswifi && _isDisconnectState && _vvAnchorVideo.isPlaying() ) {
         	        		Log.d(TAG, "replaceHookedMethod onReceive ok");
         	        		AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -126,7 +125,7 @@ public class RoomVideoPartPatch implements IPatch {
         		}
         		XposedHelpers.setBooleanField(methodHookParam.thisObject, "x", false);
         		TBS.Ext.commitEvent("Page_ZhuboRoomDetail",2101, "Button-Pause", null, null, null);
-        		
+        		XposedHelpers.setBooleanField(methodHookParam.thisObject, "r", false);
         		Log.d(TAG, "replaceHookedMethod stopVideo end");
                 return null;
             }
