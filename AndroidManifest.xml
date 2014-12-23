@@ -10,7 +10,7 @@
 
     <application>
         <meta-data android:name="patch_version" android:value="*" />
-        <meta-data android:name="patch_entry" android:value="com.taobao.hotpatch.ScancodeScanLoginPatch" />
+        <meta-data android:name="patch_entry" android:value="com.taobao.hotpatch.SsoIdentityPatch" />
     </application>
 
 </manifest>
