@@ -14,13 +14,14 @@ public class SsoIdentityPatch implements IPatch{
     
     @Override
     public void handlePatch(PatchParam arg0) throws Throwable {
-        Log.d("SsoIdentityPatch", "handlePath enter");
+        Log.e("SsoIdentityPatch", "handlePath enter");
         final Context context = arg0.context;
         
         final Class<?> SsoAuthenticator = PatchHelper.loadClass(context,
                 "com.taobao.android.sso.internal.Authenticator",
                 null);
         if (SsoAuthenticator == null) {
+            Log.e("SsoIdentityPatch", "class not found, return。");
             return;
         }
         
@@ -28,7 +29,7 @@ public class SsoIdentityPatch implements IPatch{
                 new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                Log.d("SsoIdentityPatch", "handleError enter");
+                Log.e("SsoIdentityPatch", "handleError enter");
                 try {
                     if (null == param || null == param.args || 0 == param.args.length) {
                         return;
@@ -39,7 +40,7 @@ public class SsoIdentityPatch implements IPatch{
                         options.putInt("sso-identity", 1);
                     }
                 } catch (Throwable e) {
-                    Log.d("SsoIdentityPatch", "handleError exception " + e.getMessage());
+                    Log.e("SsoIdentityPatch", "handleError exception " + e.getMessage());
                 }
             }
         });
