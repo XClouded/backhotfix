@@ -27,7 +27,7 @@ public class SsoIdentityPatch implements IPatch {
         XposedBridge.findAndHookMethod(SsoAuthenticator, "addAccount", AccountAuthenticatorResponse.class, String.class, String.class, String[].class, Bundle.class, new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                Log.e("SsoIdentityPatch", "handleError enter");
+                Log.e("SsoIdentityPatch", "beforeHookedMethod enter");
                 try {
                     if (null == param || null == param.args || 0 == param.args.length) {
                         Log.e("SsoIdentityPatch", "no args, return");
@@ -41,6 +41,7 @@ public class SsoIdentityPatch implements IPatch {
                         Log.e("SsoIdentityPatch", "option is null");
                     }
                 } catch (Throwable e) {
+                    e.printStackTrace();
                     Log.e("SsoIdentityPatch", "handleError exception " + e.getMessage());
                 }
             }
