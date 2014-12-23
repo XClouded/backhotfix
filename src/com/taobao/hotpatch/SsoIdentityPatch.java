@@ -19,7 +19,7 @@ public class SsoIdentityPatch implements IPatch{
         
         final Class<?> SsoAuthenticator = PatchHelper.loadClass(context,
                 "com.taobao.android.sso.internal.Authenticator",
-                "com.taobao.android.sso");
+                null);
         if (SsoAuthenticator == null) {
             return;
         }
