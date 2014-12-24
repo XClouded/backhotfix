@@ -17,7 +17,11 @@ public class HomeImagePatch implements IPatch {
 	@Override
 	public void handlePatch(PatchParam arg0) throws Throwable {
 		 final Context context = arg0.context;
-		 final Class<?> MainActivity3 = PatchHelper.loadClass(context, "com.taobao.tao.homepage.MainActivity3", null);
+		 final Class<?> MainActivity3 = PatchHelper.loadClass(context, "com.taobao.tao.homepage.MainActivity3", "com.taobao.taobao.home");
+		 if (MainActivity3 == null) {
+	            Log.e("MainActivity3", "class not found, return。");
+	            return;
+	        }
 		 XposedBridge.findAndHookMethod(MainActivity3, "hiddenWelcome", new XC_MethodHook() {
 	            @Override
 	            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
@@ -25,8 +29,8 @@ public class HomeImagePatch implements IPatch {
 	                try {
 		                	TListView listView =  (TListView) XposedHelpers.getObjectField(param.thisObject, "mPutiListView");
 		   	             if(listView.findFeature(SmoothScrollFeature.class) == null){
-		   	            	   listView.addFeature(new SmoothScrollFeature());
-		   	            	   Log.e("MainActivity3", "add feature success");
+		   	            	     listView.addFeature(new SmoothScrollFeature());
+		   	            	     Log.e("MainActivity3", "add feature success");
 		   	             }
 	                } catch (Throwable e) {
 	                    e.printStackTrace();
