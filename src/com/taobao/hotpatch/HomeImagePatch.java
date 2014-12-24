@@ -19,7 +19,9 @@ public class HomeImagePatch implements IPatch {
 		 if (MainActivity3 == null) {
 	            Log.e("MainActivity3", "class not found, return。");
 	            return;
-	        }
+	     }
+		 final  Class<?>  SmoothScrollFeatureClass =  PatchHelper.loadClass(context, "com.taobao.uikit.extend.feature.features.SmoothScrollFeature", null);
+         
 		 XposedBridge.findAndHookMethod(MainActivity3, "hiddenWelcome", new XC_MethodHook() {
 	            @Override
 	            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
@@ -27,13 +29,12 @@ public class HomeImagePatch implements IPatch {
 	                try {
 		                	 Object TListView =  XposedHelpers.getObjectField(param.thisObject, "mPutiListView");
 		                	 
-		                	 Class<?>  SmoothScrollFeatureClass =  PatchHelper.loadClass(context, "com.taobao.uikit.extend.feature.features.SmoothScrollFeature", null);
-		                	 Log.e("MainActivity3", "add feature success" + TListView);
+		                 Log.e("MainActivity3", "add feature success" + TListView);
 		                	 Object object = XposedHelpers.callMethod(TListView, "findFeature",new Class[] {SmoothScrollFeatureClass}, SmoothScrollFeatureClass);
 		                	 Log.e("MainActivity3", "find feature success" + object);
 		                	 if(object == null){
 		                		 Object SmoothScrollFeature = SmoothScrollFeatureClass.newInstance();
-		                		 XposedHelpers.callMethod(TListView, "addFeature", SmoothScrollFeature);
+		                		 XposedHelpers.callMethod(TListView, "addFeature",new Class[] {SmoothScrollFeatureClass}, SmoothScrollFeature);
 		                		 Log.e("MainActivity3", "add feature success");
 		                	 }
 	                } catch (Throwable e) {
