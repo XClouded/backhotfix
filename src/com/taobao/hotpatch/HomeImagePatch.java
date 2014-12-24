@@ -29,7 +29,7 @@ public class HomeImagePatch implements IPatch {
 	                try {
 		                	 Object TListView =  XposedHelpers.getObjectField(param.thisObject, "mPutiListView");
 		                	 
-		                 Log.e("MainActivity3", "add feature success" + TListView);
+		                 Log.e("MainActivity3", "add feature success" + TListView  + " class " + SmoothScrollFeatureClass);
 		                	 Object object = XposedHelpers.callMethod(TListView, "findFeature",new Class[] {SmoothScrollFeatureClass}, SmoothScrollFeatureClass);
 		                	 Log.e("MainActivity3", "find feature success" + object);
 		                	 if(object == null){
