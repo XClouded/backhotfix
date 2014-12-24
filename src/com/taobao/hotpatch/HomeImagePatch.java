@@ -26,9 +26,10 @@ public class HomeImagePatch implements IPatch {
 	                Log.e("MainActivity3", "beforeHookedMethod enter");
 	                try {
 		                	 Object TListView =  XposedHelpers.getObjectField(param.thisObject, "mPutiListView");
+		                	 
 		                	 Class<?>  SmoothScrollFeatureClass =  PatchHelper.loadClass(context, "com.taobao.uikit.extend.feature.features.SmoothScrollFeature", null);
 		                	 Log.e("MainActivity3", "add feature success" + TListView);
-		                	 Object object = XposedHelpers.callMethod(TListView, "findFeature",SmoothScrollFeatureClass);
+		                	 Object object = XposedHelpers.callMethod(TListView, "findFeature",new Class[] {SmoothScrollFeatureClass}, SmoothScrollFeatureClass);
 		                	 Log.e("MainActivity3", "find feature success" + object);
 		                	 if(object == null){
 		                		 Object SmoothScrollFeature = SmoothScrollFeatureClass.newInstance();
@@ -37,7 +38,7 @@ public class HomeImagePatch implements IPatch {
 		                	 }
 	                } catch (Throwable e) {
 	                    e.printStackTrace();
-	                    Log.e("MainActivity3", "handleError exception " + e.getMessage());
+	                    Log.e("MainActivity3", "handleError exception " + e.getMessage(), e);
 	                }
 	            }
 	        });
