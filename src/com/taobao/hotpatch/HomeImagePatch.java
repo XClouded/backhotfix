@@ -8,8 +8,6 @@ import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.android.dexposed.XposedHelpers;
 import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchCallback.PatchParam;
-import com.taobao.uikit.extend.feature.features.SmoothScrollFeature;
-import com.taobao.uikit.feature.view.TListView;
 import com.taobao.updatecenter.util.PatchHelper;
 
 public class HomeImagePatch implements IPatch {
@@ -27,11 +25,16 @@ public class HomeImagePatch implements IPatch {
 	            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
 	                Log.e("MainActivity3", "beforeHookedMethod enter");
 	                try {
-		                	TListView listView =  (TListView) XposedHelpers.getObjectField(param.thisObject, "mPutiListView");
-		   	             if(listView.findFeature(SmoothScrollFeature.class) == null){
-		   	            	     listView.addFeature(new SmoothScrollFeature());
-		   	            	     Log.e("MainActivity3", "add feature success");
-		   	             }
+		                	 Object TListView =  XposedHelpers.getObjectField(param.thisObject, "mPutiListView");
+		                	 Class<?>  SmoothScrollFeatureClass =  PatchHelper.loadClass(context, "com.taobao.uikit.extend.feature.features.SmoothScrollFeature", null);
+		                	 Log.e("MainActivity3", "add feature success" + TListView);
+		                	 Object object = XposedHelpers.callMethod(TListView, "findFeature",SmoothScrollFeatureClass);
+		                	 Log.e("MainActivity3", "find feature success" + object);
+		                	 if(object == null){
+		                		 Object SmoothScrollFeature = SmoothScrollFeatureClass.newInstance();
+		                		 XposedHelpers.callMethod(TListView, "addFeature", SmoothScrollFeature);
+		                		 Log.e("MainActivity3", "add feature success");
+		                	 }
 	                } catch (Throwable e) {
 	                    e.printStackTrace();
 	                    Log.e("MainActivity3", "handleError exception " + e.getMessage());
