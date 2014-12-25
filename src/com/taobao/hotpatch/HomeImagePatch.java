@@ -33,17 +33,15 @@ public class HomeImagePatch implements IPatch {
 	                Log.e("MainActivity3", "beforeHookedMethod enter");
 	                try {
 		                	 Object TListView =  XposedHelpers.getObjectField(param.thisObject, "mPutiListView");
-                         
-		                	 
-		                	 Log.e("MainActivity3", "add feature success" + TListView + " Smoothfeature " + SmoothScrollFeatureClass);
+		                	// Log.e("MainActivity3", "add feature success" + TListView + " Smoothfeature " + SmoothScrollFeatureClass);
                          Method findFeature = findMethod(TListView, "findFeature");
-                         Log.e("MainActivity3", "findFeature method success" + findFeature);
+                         //Log.e("MainActivity3", "findFeature method success" + findFeature);
                          Object  object = findFeature.invoke(TListView, SmoothScrollFeatureClass);
-		                	 Log.e("MainActivity3", "find feature success" + object);
+		                	 //Log.e("MainActivity3", "find feature success" + object);
 		                	 if(object == null){
 		                		 Object SmoothScrollFeature = SmoothScrollFeatureClass.newInstance();
 		                		 Method addFeature = findMethod(TListView, "addFeature");
-		                		 Log.e("MainActivity3", "add feature method success" + addFeature);
+		                		 //Log.e("MainActivity3", "add feature method success" + addFeature);
 		                		 addFeature.invoke(TListView, SmoothScrollFeature);
 		                		 Log.e("MainActivity3", "add feature success");
 		                	 }
@@ -59,7 +57,7 @@ public class HomeImagePatch implements IPatch {
 	private Method  findMethod(Object TListView, String methodName){
 		Method[] methods = TListView.getClass().getMethods();
 		for(Method method : methods){
-			Log.e("MainActivity3", "Method match " + method.getName()  + "  methodName " + methodName);
+			//Log.e("MainActivity3", "Method match " + method.getName()  + "  methodName " + methodName);
 			if(method.getName().equals(methodName)){
 				return method;
 			}
