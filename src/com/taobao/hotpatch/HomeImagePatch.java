@@ -59,6 +59,7 @@ public class HomeImagePatch implements IPatch {
 	private Method  findMethod(Object TListView, String methodName){
 		Method[] methods = TListView.getClass().getMethods();
 		for(Method method : methods){
+			Log.e("MainActivity3", "Method match " + method.getName()  + "  methodName " + methodName);
 			if(method.getName().equals(methodName)){
 				return method;
 			}
