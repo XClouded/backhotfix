@@ -1,5 +1,7 @@
 package com.taobao.hotpatch;
 
+import java.lang.reflect.Method;
+
 import android.content.Context;
 import android.util.Log;
 
@@ -29,8 +31,17 @@ public class HomeImagePatch implements IPatch {
 	                try {
 		                	 Object TListView =  XposedHelpers.getObjectField(param.thisObject, "mPutiListView");
 		                	 
-		                 Log.e("MainActivity3", "add feature success" + TListView  + " class " + SmoothScrollFeatureClass);
-		                	 Object object = XposedHelpers.callMethod(TListView, "findFeature",new Class[] {SmoothScrollFeatureClass}, SmoothScrollFeatureClass);
+		                
+		                 Log.e("MainActivity3", "add feature success" + TListView + "super class" + 	 TListView.getClass().getSuperclass() + " class " + SmoothScrollFeatureClass);
+		                 Method[] methods = TListView.getClass().getMethods();
+		                 if(methods != null){
+		                	    for(Method method : methods){
+		                	       	Log.e("MainActivity3", "TListView method " + method.getName()  + " " + method.getReturnType());
+		                	    }
+		                 }
+		                     
+		                 
+		                 Object object = XposedHelpers.callMethod(TListView, "findFeature",new Class[] {SmoothScrollFeatureClass}, SmoothScrollFeatureClass);
 		                	 Log.e("MainActivity3", "find feature success" + object);
 		                	 if(object == null){
 		                		 Object SmoothScrollFeature = SmoothScrollFeatureClass.newInstance();
