@@ -23,9 +23,7 @@ public class HomeImagePatch implements IPatch {
 	            return;
 	     }
 		 final  Class<?>  SmoothScrollFeatureClass =  PatchHelper.loadClass(context, "com.taobao.uikit.extend.feature.features.SmoothScrollFeature", null);
-         final  Class<?>  AbsFeature = PatchHelper.loadClass(context, "com.taobao.uikit.feature.features.AbsFeature", null);
-		 if(SmoothScrollFeatureClass == null 
-				 || AbsFeature == null){
+      	 if(SmoothScrollFeatureClass == null){
 			 Log.e("MainActivity3", "class feature not found, return。");
 	            return;
 		 }
@@ -35,13 +33,17 @@ public class HomeImagePatch implements IPatch {
 	                Log.e("MainActivity3", "beforeHookedMethod enter");
 	                try {
 		                	 Object TListView =  XposedHelpers.getObjectField(param.thisObject, "mPutiListView");
-                         Log.e("MainActivity3", "add feature success" + TListView + "super class" + 	 TListView.getClass().getSuperclass() + " class " + SmoothScrollFeatureClass);
-                         Method findFeature = TListView.getClass().getMethod("findFeature", AbsFeature);
+                         
+		                	 
+		                	 Log.e("MainActivity3", "add feature success" + TListView + " Smoothfeature " + SmoothScrollFeatureClass);
+                         Method findFeature = findMethod(TListView, "findFeature");
+                         Log.e("MainActivity3", "findFeature method success" + findFeature);
                          Object  object = findFeature.invoke(TListView, SmoothScrollFeatureClass);
 		                	 Log.e("MainActivity3", "find feature success" + object);
 		                	 if(object == null){
 		                		 Object SmoothScrollFeature = SmoothScrollFeatureClass.newInstance();
-		                		 Method addFeature = TListView.getClass().getMethod("addFeature", AbsFeature);
+		                		 Method addFeature = findMethod(TListView, "addFeature");
+		                		 Log.e("MainActivity3", "add feature method success" + addFeature);
 		                		 addFeature.invoke(TListView, SmoothScrollFeature);
 		                		 Log.e("MainActivity3", "add feature success");
 		                	 }
@@ -51,6 +53,17 @@ public class HomeImagePatch implements IPatch {
 	                }
 	            }
 	        });
+	}
+	
+	
+	private Method  findMethod(Object TListView, String methodName){
+		Method[] methods = TListView.getClass().getMethods();
+		for(Method method : methods){
+			if(method.getName().equals(methodName)){
+				return method;
+			}
+		}
+		return null;
 	}
 
 }
