@@ -25,7 +25,7 @@ public class AlipayMspGzipPatch implements IPatch {
 			return;
 		}
 		
-		XposedBridge.findAndHookMethod(TextUtils.class, "equals", String.class,String.class, new XC_MethodHook() {
+		XposedBridge.findAndHookMethod(TextUtils.class, "equals", CharSequence.class,CharSequence.class, new XC_MethodHook() {
 
 			@Override
 			protected void beforeHookedMethod(MethodHookParam param)
