@@ -30,11 +30,11 @@ public class AlipayMspGzipPatch implements IPatch {
 			@Override
 			protected void beforeHookedMethod(MethodHookParam param)
 					throws Throwable {
-				Log.d("AlipayHotPatch","before hook");
+//				Log.d("AlipayHotPatch","before hook");
 				Object[] objs = param.args;
 				if(objs != null && objs.length > 1){
 					if(objs[0] != null && objs[1] != null){
-						Log.d("AlipayHotPatch", AlipayMspGzipPatch.class.getSimpleName() + "  beforeHookedMethod TextUtils.equals");
+//						Log.d("AlipayHotPatch", AlipayMspGzipPatch.class.getSimpleName() + "  beforeHookedMethod TextUtils.equals");
 						String args1 = objs[0].toString();
 						String args2 = objs[1].toString();
 						if("msp-gzip".equals(args1.toLowerCase()) && "msp-gzip".equals(args2.toLowerCase())){
