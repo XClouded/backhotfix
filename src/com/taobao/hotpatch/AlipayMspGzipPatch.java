@@ -1,7 +1,6 @@
 package com.taobao.hotpatch;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.taobao.android.dexposed.XC_MethodHook;
@@ -25,24 +24,18 @@ public class AlipayMspGzipPatch implements IPatch {
 			return;
 		}
 		
-		XposedBridge.findAndHookMethod(TextUtils.class, "equals", CharSequence.class,CharSequence.class, new XC_MethodHook() {
+		Class<?> configClazz = PatchHelper.loadClass(context, "com.alipay.android.app.d.b.a", null);
+		if (configClazz == null) {
+			return;
+		}
+		
+		XposedBridge.findAndHookMethod(configClazz, "ismResponseHeaderGzipFlag", new XC_MethodHook() {
 
 			@Override
 			protected void beforeHookedMethod(MethodHookParam param)
 					throws Throwable {
-//				Log.d("AlipayHotPatch","before hook");
-				Object[] objs = param.args;
-				if(objs != null && objs.length > 1){
-					if(objs[0] != null && objs[1] != null){
-//						Log.d("AlipayHotPatch", AlipayMspGzipPatch.class.getSimpleName() + "  beforeHookedMethod TextUtils.equals");
-						String args1 = objs[0].toString();
-						String args2 = objs[1].toString();
-						if("msp-gzip".equals(args1.toLowerCase()) && "msp-gzip".equals(args2.toLowerCase())){
-							Log.d("AlipayHotPatch-msp-gzip", AlipayMspGzipPatch.class.getSimpleName() + " return true ");
-							param.setResult(Boolean.TRUE);
-						}
-					}
-				}
+				Log.d("AlipayMspGzipPatch", "AlipayMspGzipPatch  handle hook");
+				param.setResult(Boolean.TRUE);
 			}
 			
 		});
