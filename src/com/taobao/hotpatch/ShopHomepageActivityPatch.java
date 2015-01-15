@@ -56,7 +56,7 @@ public class ShopHomepageActivityPatch implements IPatch{
 					throws Throwable {
 				Log.d("hotpatchmain", "ShopHomepageActivityPatch  handle hook---" + (null == param ? "null" : param));
 				if(null != param){
-				Log.d("hotpatchmain", "1");
+				Log.d("hotpatchmain", "1" + param.thisObject + param.thisObject.getClass() + param.thisObject.getClass().getField("mSellerId"));
 				 Field sellerIdField =	param.thisObject.getClass().getField("mSellerId");
 				 Log.d("hotpatchmain", (null == sellerIdField ? "" : sellerIdField) + "");
 				 sellerIdField.setAccessible(true);
