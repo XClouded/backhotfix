@@ -44,39 +44,34 @@ public class ShopHomepageActivityPatch implements IPatch{
             return;
         }
 		
-//		Class<?> configClazz = PatchHelper.loadClass(context, "com.taobao.tao.shop.ShopHomepageActivity", null);
-//		if (configClazz == null) {
-//			return;
-//		}
-		
 		XposedBridge.findAndHookMethod(configClazz, "initData", new XC_MethodHook() {
 
 			@Override
 			protected void afterHookedMethod(MethodHookParam param)
 					throws Throwable {
-				Log.d("hotpatchmain", "ShopHomepageActivityPatch  handle hook---" + (null == param ? "null" : param));
-				if(null != param){
-				Log.d("hotpatchmain", "1" + param.thisObject + param.thisObject.getClass() + param.thisObject.getClass().getDeclaredField("mSellerId"));
-				 Field sellerIdField =	param.thisObject.getClass().getDeclaredField("mSellerId");
-				 Log.d("hotpatchmain", (null == sellerIdField ? "" : sellerIdField) + "");
-				 sellerIdField.setAccessible(true);
-				 long sellerId = sellerIdField.getLong(param.thisObject);
-				 Log.d("hotpatchmain", sellerId + "");
-				 
-				 Field shopIdField = param.thisObject.getClass().getDeclaredField("mShopId");
-				 Log.d("hotpatchmain", (null == shopIdField ? "" : shopIdField) + "");
-				 shopIdField.setAccessible(true);
-				 int shopId = shopIdField.getInt(param.thisObject);
-				 
-				 Field nickField = param.thisObject.getClass().getDeclaredField("mNickName");
-				 Log.d("hotpatchmain", (null == nickField ? "" : nickField) + "");
-				 nickField.setAccessible(true);
-				 String nick = (String) nickField.get(param.thisObject);
-				 Log.d("hotpatchmain", "sellerId：" + sellerId + "  shopId: " + shopId + "  nick: " + (null != nick ? nick : ""));
-				 if(sellerId < 0 && shopId < 0 && !TextUtils.isEmpty(nick)){
-					 shopIdField.setInt(param.thisObject, 0);
-					 Log.d("hotpatchmain", "if(sellerId");
-				 }
+				try{
+					if(null != param){
+						 Field sellerIdField =	param.thisObject.getClass().getDeclaredField("mSellerId");
+						 Log.d("hotpatchmain", (null == sellerIdField ? "" : sellerIdField) + "");
+						 sellerIdField.setAccessible(true);
+						 long sellerId = sellerIdField.getLong(param.thisObject);
+						 
+						 Field shopIdField = param.thisObject.getClass().getDeclaredField("mShopId");
+						 shopIdField.setAccessible(true);
+						 int shopId = shopIdField.getInt(param.thisObject);
+						 
+						 Field nickField = param.thisObject.getClass().getDeclaredField("mNickName");
+						 nickField.setAccessible(true);
+						 String nick = (String) nickField.get(param.thisObject);
+						 if(sellerId < 0 && shopId < 0 && !TextUtils.isEmpty(nick)){
+							 shopIdField.setInt(param.thisObject, 0);
+							 Log.d("hotpatchmain", "if(sellerId");
+						 }
+						}					
+				}catch(Exception e){
+					e.printStackTrace();
+				}catch (Throwable e) {
+					e.printStackTrace();
 				}
 			}
 			
