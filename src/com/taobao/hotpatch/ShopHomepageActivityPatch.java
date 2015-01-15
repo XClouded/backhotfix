@@ -54,7 +54,7 @@ public class ShopHomepageActivityPatch implements IPatch{
 			@Override
 			protected void afterHookedMethod(MethodHookParam param)
 					throws Throwable {
-				Log.d("ShopHomepageActivityPatch", "ShopHomepageActivityPatch  handle hook");
+				Log.d("hotpatchmain", "ShopHomepageActivityPatch  handle hook");
 				if(null != param){
 				 Field sellerIdField =	param.thisObject.getClass().getField("mSellerId");
 				 sellerIdField.setAccessible(true);
@@ -67,9 +67,10 @@ public class ShopHomepageActivityPatch implements IPatch{
 				 Field nickField = param.thisObject.getClass().getField("mNickName");
 				 nickField.setAccessible(true);
 				 String nick = (String) nickField.get(param.thisObject);
-				 
+				 Log.d("hotpatchmain", "sellerId：" + sellerId + "  shopId: " + shopId + "  nick: " + (null != nick ? nick : ""));
 				 if(sellerId < 0 && shopId < 0 && !TextUtils.isEmpty(nick)){
 					 shopIdField.setInt(param.thisObject, 0);
+					 Log.d("hotpatchmain", "if(sellerId");
 				 }
 				}
 			}
