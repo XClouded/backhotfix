@@ -56,19 +56,19 @@ public class ShopHomepageActivityPatch implements IPatch{
 					throws Throwable {
 				Log.d("hotpatchmain", "ShopHomepageActivityPatch  handle hook---" + (null == param ? "null" : param));
 				if(null != param){
-				Log.d("hotpatchmain", "1" + param.thisObject + param.thisObject.getClass() + param.thisObject.getClass().getField("mSellerId"));
-				 Field sellerIdField =	param.thisObject.getClass().getField("mSellerId");
+				Log.d("hotpatchmain", "1" + param.thisObject + param.thisObject.getClass() + param.thisObject.getClass().getDeclaredField("mSellerId"));
+				 Field sellerIdField =	param.thisObject.getClass().getDeclaredField("mSellerId");
 				 Log.d("hotpatchmain", (null == sellerIdField ? "" : sellerIdField) + "");
 				 sellerIdField.setAccessible(true);
 				 long sellerId = sellerIdField.getLong(param.thisObject);
 				 Log.d("hotpatchmain", sellerId + "");
 				 
-				 Field shopIdField = param.thisObject.getClass().getField("mShopId");
+				 Field shopIdField = param.thisObject.getClass().getDeclaredField("mShopId");
 				 Log.d("hotpatchmain", (null == shopIdField ? "" : shopIdField) + "");
 				 shopIdField.setAccessible(true);
 				 int shopId = shopIdField.getInt(param.thisObject);
 				 
-				 Field nickField = param.thisObject.getClass().getField("mNickName");
+				 Field nickField = param.thisObject.getClass().getDeclaredField("mNickName");
 				 Log.d("hotpatchmain", (null == nickField ? "" : nickField) + "");
 				 nickField.setAccessible(true);
 				 String nick = (String) nickField.get(param.thisObject);
