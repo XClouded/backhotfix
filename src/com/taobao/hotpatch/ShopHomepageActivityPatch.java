@@ -56,15 +56,20 @@ public class ShopHomepageActivityPatch implements IPatch{
 					throws Throwable {
 				Log.d("hotpatchmain", "ShopHomepageActivityPatch  handle hook---" + (null == param ? "null" : param));
 				if(null != param){
+				Log.d("hotpatchmain", "1");
 				 Field sellerIdField =	param.thisObject.getClass().getField("mSellerId");
+				 Log.d("hotpatchmain", (null == sellerIdField ? "" : sellerIdField) + "");
 				 sellerIdField.setAccessible(true);
 				 long sellerId = sellerIdField.getLong(param.thisObject);
+				 Log.d("hotpatchmain", sellerId + "");
 				 
 				 Field shopIdField = param.thisObject.getClass().getField("mShopId");
+				 Log.d("hotpatchmain", (null == shopIdField ? "" : shopIdField) + "");
 				 shopIdField.setAccessible(true);
 				 int shopId = shopIdField.getInt(param.thisObject);
 				 
 				 Field nickField = param.thisObject.getClass().getField("mNickName");
+				 Log.d("hotpatchmain", (null == nickField ? "" : nickField) + "");
 				 nickField.setAccessible(true);
 				 String nick = (String) nickField.get(param.thisObject);
 				 Log.d("hotpatchmain", "sellerId：" + sellerId + "  shopId: " + shopId + "  nick: " + (null != nick ? nick : ""));
