@@ -74,7 +74,6 @@ public class WeAppBannerPatch implements IPatch{
 								 
 								 if (bannerItemList == null)
 							            return;
-
 							        for (com.taobao.weapp.component.defaults.WeAppBanner$BannerItem item : bannerItemList) {
 							        	com.taobao.weapp.component.defaults.WeAppBanner$SimpleImageView imageView = new com.taobao.weapp.component.defaults.WeAppBanner$SimpleImageView(getContext(), null);
 							            imageView.jumpUrl = item.url;
