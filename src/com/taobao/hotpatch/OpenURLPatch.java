@@ -42,24 +42,26 @@ public class OpenURLPatch implements IPatch{
 		        Class<?> configClazz;
 		        try {
 		        	configClazz = PatchHelper.loadClass(context, "com.taobao.weapp.action.defaults.OpenURLActionExecutor", null);
-		            Log.d("hotpatchmain", "configClazz found");
+		            Log.d("OpenURLPatch", "configClazz found");
 		            
 		        } catch (Exception e) {
-		            Log.d("hotpatchmain", "configClazz not found");
+		            Log.d("OpenURLPatch", "configClazz not found");
 		            return;
 		        }
 				
-				XposedBridge.findAndHookMethod(configClazz, "open",WeAppComponent.class, String.class, String.class, Boolean.class, Boolean.class, Map.class,Map.class, new XC_MethodHook() {
+				XposedBridge.findAndHookMethod(configClazz, "open",WeAppComponent.class, String.class, String.class, boolean.class, boolean.class, Map.class,Map.class, new XC_MethodHook() {
 
 					@Override
 					protected void afterHookedMethod(MethodHookParam param)
 							throws Throwable {
+						Log.e("OpenURLPatch", "enter afterHookedMethod");
 						try{
 							if (null == param || null == param.args || 0 == param.args.length) {
 		                        Log.e("OpenURLPatch", "no args, return");
 		                        return;
 		                    }
 							String realUrl = param.args[1].toString();
+							Log.e("OpenURLPatch", "enter afterHookedMethod sourceUrl >>> " + realUrl);
 							Object title = param.args[2];
 							Map<String, Serializable> querys = (Map<String, Serializable>)param.args[5];
 							Map<String, Serializable> nativeParams = (Map<String, Serializable>)param.args[6];
@@ -67,18 +69,18 @@ public class OpenURLPatch implements IPatch{
 							WeAppComponent view = (WeAppComponent)param.args[0];
 							if ((param.args[0] instanceof WeAppBanner) && !(param.args[1]).toString().contains("?")){
 								String urlString = param.args[1].toString();
-								Log.e("OpenURLPatch", "sourceUrl >>> " + urlString);
 								int spmIndex = urlString.indexOf("&spm");
 								String sourceUrl = urlString.substring(0, spmIndex);
 								String spmParam = urlString.substring(spmIndex+5);
 								realUrl = sourceUrl + "?" + "spm="+spmParam;
-								Log.e("OpenURLPatch", "realUrl >>> " + realUrl);
+								Log.e("OpenURLPatch", "do with realUrl >>> " + realUrl);
 							}
 							
 							 if (view != null && view.getEngine() != null && view.getEngine().getBrowserAdapter() != null) {
 						            view.getEngine().getBrowserAdapter().gotoBrowser(realUrl, title == null ? null : title.toString(), true,
 						                                                             true, querys, nativeParams);
 						            param.setResult(Boolean.TRUE);
+						            Log.e("OpenURLPatch", "return true");
 						        }
 						}catch(Exception e){
 							e.printStackTrace();
