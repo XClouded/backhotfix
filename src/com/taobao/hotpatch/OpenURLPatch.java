@@ -32,18 +32,19 @@ public class OpenURLPatch implements IPatch{
 					return;
 				}
 				
-				BundleImpl bundle = (BundleImpl) Atlas.getInstance().getBundle("");
-		        if (bundle == null) {
-		            Log.d("hotpatchmain", "bundle not found");
-		            return;
-		        }
+//				
+//				
+//				BundleImpl bundle = (BundleImpl) Atlas.getInstance().getBundle("");
+//		        if (bundle == null) {
+//		            Log.d("hotpatchmain", "bundle not found");
+//		            return;
+//		        }
 		        Class<?> configClazz;
 		        try {
-		        	configClazz = bundle.getClassLoader().loadClass(
-		                    "com.taobao.weapp.action.defaults.OpenURLActionExecutor");
+		        	configClazz = PatchHelper.loadClass(context, "com.taobao.weapp.action.defaults.OpenURLActionExecutor", null);
 		            Log.d("hotpatchmain", "configClazz found");
 		            
-		        } catch (ClassNotFoundException e) {
+		        } catch (Exception e) {
 		            Log.d("hotpatchmain", "configClazz not found");
 		            return;
 		        }
