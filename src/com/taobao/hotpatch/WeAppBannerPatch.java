@@ -116,7 +116,8 @@ public class WeAppBannerPatch implements IPatch{
 						            imageView.setTag("isSharpening");
 						            
 						            setImage(imageView, item.image);
-						            imagesList.add(imageView);				
+						            imagesList.add(imageView);	
+						        }
 						}catch(Exception e){
 							e.printStackTrace();
 						}catch (Throwable e) {
