@@ -50,20 +50,20 @@ public class WeAppBannerPatch implements IPatch{
 		            return;
 		        }
 		        Class<?> configClazz;
-		        final Class<?> simpleImageViewClass;
-		        Class<?> bannerItemClass;
+//		        final Class<?> simpleImageViewClass;
+//		        Class<?> bannerItemClass;
 		        try {
 		        	configClazz = bundle.getClassLoader().loadClass(
 		                    "com.taobao.weapp.component.defaults.WeAppBanner");
 		            Log.d("hotpatchmain", "configClazz found");
 		            
-		            simpleImageViewClass = bundle.getClassLoader().loadClass(
-		                    "com.taobao.weapp.component.defaults.WeAppBanner$SimpleImageView");
-		            Log.d("hotpatchmain", "simpleImageViewClass found");
-		            
-		            bannerItemClass = bundle.getClassLoader().loadClass(
-		                    "com.taobao.weapp.component.defaults.WeAppBanner$BannerItem");
-		            Log.d("hotpatchmain", "bannerItemClass found");
+//		            simpleImageViewClass = bundle.getClassLoader().loadClass(
+//		                    "com.taobao.weapp.component.defaults.WeAppBanner$SimpleImageView");
+//		            Log.d("hotpatchmain", "simpleImageViewClass found");
+//		            
+//		            bannerItemClass = bundle.getClassLoader().loadClass(
+//		                    "com.taobao.weapp.component.defaults.WeAppBanner$BannerItem");
+//		            Log.d("hotpatchmain", "bannerItemClass found");
 
 
 		        } catch (ClassNotFoundException e) {
@@ -82,13 +82,13 @@ public class WeAppBannerPatch implements IPatch{
 								 Field bannerItemListField =	param.thisObject.getClass().getDeclaredField("bannerItemList");
 								 Log.d("hotpatchmain", (null == bannerItemListField ? "" : bannerItemListField) + "");
 								 bannerItemListField.setAccessible(true);
-								 ArrayList<?> bannerItemList = (ArrayList<?>)bannerItemListField.get(param.thisObject);
+								 ArrayList<com.taobao.weapp.component.defaults.WeAppBanner$BannerItem> bannerItemList = (ArrayList<com.taobao.weapp.component.defaults.WeAppBanner$BannerItem>)bannerItemListField.get(param.thisObject);
 								 
 								 if (bannerItemList == null)
 							            return;
-								 context = (Context)XposedHelpers.getObjectField(param.thisObject, "context");
-							        for (Object item : bannerItemList) {
-							        	Object imageView =simpleImageViewClass.getConstructor(context.getClass(), null).newInstance(context, null);
+//								 context = (Context)XposedHelpers.getObjectField(param.thisObject, "context");
+							        for (com.taobao.weapp.component.defaults.WeAppBanner$BannerItem item : bannerItemList) {
+							        	com.taobao.weapp.component.defaults.WeAppBanner$SimpleImageView imageView = new com.taobao.weapp.component.defaults.WeAppBanner$SimpleImageView();
 							            imageView.jumpUrl = item.url;
 							            imageView.pos = item.pos;
 							            imageView.setOnClickListener(new OnClickListener() {
