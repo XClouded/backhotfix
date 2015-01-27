@@ -1,11 +1,8 @@
 package com.taobao.hotpatch;
 
 import java.io.Serializable;
-import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 import android.content.Context;
@@ -13,27 +10,16 @@ import android.taobao.atlas.framework.Atlas;
 import android.taobao.atlas.framework.BundleImpl;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.taobao.android.dexposed.XC_MethodHook;
 import com.taobao.android.dexposed.XposedBridge;
-import com.taobao.android.dexposed.XposedHelpers;
 import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchCallback.PatchParam;
 import com.taobao.updatecenter.util.PatchHelper;
-import com.taobao.weapp.action.WeAppActionManager;
-import com.taobao.weapp.action.WeAppActionType;
 import com.taobao.weapp.component.WeAppComponent;
 import com.taobao.weapp.component.defaults.WeAppBanner;
-import com.taobao.weapp.component.defaults.WeAppBanner.BannerItem;
-import com.taobao.weapp.component.defaults.WeAppBanner.SimpleImageView;
-import com.taobao.weapp.data.dataobject.WeAppActionDO;
-import com.taobao.weapp.utils.StringUtils;
 
-public class WeAppBannerPatch implements IPatch{
+public class OpenURLPatch implements IPatch{
 
 	@Override
 	public void handlePatch(PatchParam arg0) throws Throwable {
@@ -52,76 +38,53 @@ public class WeAppBannerPatch implements IPatch{
 		            return;
 		        }
 		        Class<?> configClazz;
-//		        final Class<?> simpleImageViewClass;
-//		        Class<?> bannerItemClass;
 		        try {
 		        	configClazz = bundle.getClassLoader().loadClass(
-		                    "com.taobao.weapp.component.defaults.WeAppBanner");
+		                    "com.taobao.weapp.action.defaults.OpenURLActionExecutor");
 		            Log.d("hotpatchmain", "configClazz found");
 		            
-//		            simpleImageViewClass = bundle.getClassLoader().loadClass(
-//		                    "com.taobao.weapp.component.defaults.WeAppBanner$SimpleImageView");
-//		            Log.d("hotpatchmain", "simpleImageViewClass found");
-//		            
-//		            bannerItemClass = bundle.getClassLoader().loadClass(
-//		                    "com.taobao.weapp.component.defaults.WeAppBanner$BannerItem");
-//		            Log.d("hotpatchmain", "bannerItemClass found");
-
-
 		        } catch (ClassNotFoundException e) {
 		            Log.d("hotpatchmain", "configClazz not found");
 		            return;
 		        }
 				
-				XposedBridge.findAndHookMethod(configClazz, "addBannerSubViews", new XC_MethodHook() {
+				XposedBridge.findAndHookMethod(configClazz, "open", new XC_MethodHook() {
 
 					@Override
 					protected void afterHookedMethod(MethodHookParam param)
 							throws Throwable {
 						try{
-							 if (bannerItemList == null)
-						            return;
-
-						        for (BannerItem item : bannerItemList) {
-						            SimpleImageView imageView = new SimpleImageView(getContext(), null);
-						            imageView.jumpUrl = item.url;
-						            imageView.pos = item.pos;
-						            imageView.setOnClickListener(new OnClickListener() {
-
-						                @Override
-						                public void onClick(View v) {
-						                    if(TextUtils.isEmpty(((SimpleImageView) v).jumpUrl)) {
-						                        return;
-						                    }
-						                    
-						                    String spm = sendUtParams(((SimpleImageView) v).pos);
-						                    WeAppActionDO action = new WeAppActionDO();
-						                    action.type = WeAppActionType.openURL.name();
-						                    action.param = new HashMap<String, Object>();
-						                    if (!StringUtils.isEmpty(spm)){
-						                        HashMap<String, Serializable> urlParam = new HashMap<String, Serializable>();
-						                        urlParam.put("spm", spm);
-						                        action.param.put("url", StringUtils.genURL(((SimpleImageView) v).jumpUrl, urlParam));
-						                    }
-						                    
-						                    WeAppActionManager.excute(self, action);
-						                }
-						            });
-
-						            imageView.setLayoutParams(new LinearLayout.LayoutParams(
-						                    LinearLayout.LayoutParams.MATCH_PARENT,
-						                    LinearLayout.LayoutParams.MATCH_PARENT));
-						            
-						            // 临时解决方案，支持banner锐化
-						            imageView.setTag("isSharpening");
-						            
-						            setImage(imageView, item.image);
-						            imagesList.add(imageView);	
+							if (null == param || null == param.args || 0 == param.args.length) {
+		                        Log.e("OpenURLPatch", "no args, return");
+		                        return;
+		                    }
+							String realUrl = param.args[1].toString();
+							Object title = param.args[2];
+							Map<String, Serializable> querys = (Map<String, Serializable>)param.args[5];
+							Map<String, Serializable> nativeParams = (Map<String, Serializable>)param.args[6];
+							
+							WeAppComponent view = (WeAppComponent)param.args[0];
+							if ((param.args[0] instanceof WeAppBanner) && !(param.args[1]).toString().contains("?")){
+								String urlString = param.args[1].toString();
+								Log.e("OpenURLPatch", "sourceUrl >>> " + urlString);
+								int spmIndex = urlString.indexOf("&spm");
+								String sourceUrl = urlString.substring(0, spmIndex);
+								String spmParam = urlString.substring(spmIndex+5);
+								realUrl = sourceUrl + "?" + "spm="+spmParam;
+								Log.e("OpenURLPatch", "realUrl >>> " + realUrl);
+							}
+							
+							 if (view != null && view.getEngine() != null && view.getEngine().getBrowserAdapter() != null) {
+						            view.getEngine().getBrowserAdapter().gotoBrowser(realUrl, title == null ? null : title.toString(), true,
+						                                                             true, querys, nativeParams);
+						            param.setResult(Boolean.TRUE);
 						        }
 						}catch(Exception e){
 							e.printStackTrace();
 						}catch (Throwable e) {
 							e.printStackTrace();
+						}finally{
+							
 						}
 					}
 					

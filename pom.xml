@@ -28,6 +28,12 @@
 			<version>${android.version}</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.taobao.android</groupId>
+			<artifactId>taobao_weapp_sdk</artifactId>
+			<version>3.6.12</version>
+			<scope>provided</scope>
+		</dependency>
 
 		<dependency>
 			<groupId>com.taobao.android</groupId>
