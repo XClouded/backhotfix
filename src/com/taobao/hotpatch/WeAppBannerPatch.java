@@ -28,6 +28,8 @@ import com.taobao.weapp.action.WeAppActionManager;
 import com.taobao.weapp.action.WeAppActionType;
 import com.taobao.weapp.component.WeAppComponent;
 import com.taobao.weapp.component.defaults.WeAppBanner;
+import com.taobao.weapp.component.defaults.WeAppBanner.BannerItem;
+import com.taobao.weapp.component.defaults.WeAppBanner.SimpleImageView;
 import com.taobao.weapp.data.dataobject.WeAppActionDO;
 import com.taobao.weapp.utils.StringUtils;
 
@@ -77,57 +79,44 @@ public class WeAppBannerPatch implements IPatch{
 					protected void afterHookedMethod(MethodHookParam param)
 							throws Throwable {
 						try{
-							if(null != param){
-								 final WeAppComponent thisContext = (WeAppBanner)param.thisObject;
-								 Field bannerItemListField =	param.thisObject.getClass().getDeclaredField("bannerItemList");
-								 Log.d("hotpatchmain", (null == bannerItemListField ? "" : bannerItemListField) + "");
-								 bannerItemListField.setAccessible(true);
-								 ArrayList<com.taobao.weapp.component.defaults.WeAppBanner$BannerItem> bannerItemList = (ArrayList<com.taobao.weapp.component.defaults.WeAppBanner$BannerItem>)bannerItemListField.get(param.thisObject);
-								 
-								 if (bannerItemList == null)
-							            return;
-//								 context = (Context)XposedHelpers.getObjectField(param.thisObject, "context");
-							        for (com.taobao.weapp.component.defaults.WeAppBanner$BannerItem item : bannerItemList) {
-							        	com.taobao.weapp.component.defaults.WeAppBanner$SimpleImageView imageView = new com.taobao.weapp.component.defaults.WeAppBanner$SimpleImageView();
-							            imageView.jumpUrl = item.url;
-							            imageView.pos = item.pos;
-							            imageView.setOnClickListener(new OnClickListener() {
+							 if (bannerItemList == null)
+						            return;
 
-							                @Override
-							                public void onClick(View v) {
-							                    if(TextUtils.isEmpty(((com.taobao.weapp.component.defaults.WeAppBanner$SimpleImageView) v).jumpUrl)) {
-							                        return;
-							                    }
-							                    
-							                    String spm = sendUtParams(((com.taobao.weapp.component.defaults.WeAppBanner$SimpleImageView) v).pos);
-							                    WeAppActionDO action = new WeAppActionDO();
-							                    action.type = WeAppActionType.openURL.name();
-							                    action.param = new HashMap<String, Object>();
-							                    if (!StringUtils.isEmpty(spm)){
-							                        HashMap<String, Serializable> urlParam = new HashMap<String, Serializable>();
-							                        urlParam.put("spm", spm);
-							                        action.param.put("url", genURL(((com.taobao.weapp.component.defaults.WeAppBanner$SimpleImageView) v).jumpUrl, urlParam));
-							                    }
-							                    
-							                    WeAppActionManager.excute(thisContext, action);
-							                }
-							            });
+						        for (BannerItem item : bannerItemList) {
+						            SimpleImageView imageView = new SimpleImageView(getContext(), null);
+						            imageView.jumpUrl = item.url;
+						            imageView.pos = item.pos;
+						            imageView.setOnClickListener(new OnClickListener() {
 
-							            imageView.setLayoutParams(new LinearLayout.LayoutParams(
-							                    LinearLayout.LayoutParams.MATCH_PARENT,
-							                    LinearLayout.LayoutParams.MATCH_PARENT));
-							            
-							            // 临时解决方案，支持banner锐化
-							            imageView.setTag("isSharpening");
-							            
-							            setImage(imageView, item.image);
-							            
-										 Field imageList =	param.thisObject.getClass().getDeclaredField("imageList");
-										 Log.d("hotpatchmain", (null == imageList ? "" : imageList) + "");
-										 bannerItemListField.setAccessible(true);
-										 ((ArrayList<ImageView>)imageList.get(param.thisObject)).add(imageView);
-							        }
-								}					
+						                @Override
+						                public void onClick(View v) {
+						                    if(TextUtils.isEmpty(((SimpleImageView) v).jumpUrl)) {
+						                        return;
+						                    }
+						                    
+						                    String spm = sendUtParams(((SimpleImageView) v).pos);
+						                    WeAppActionDO action = new WeAppActionDO();
+						                    action.type = WeAppActionType.openURL.name();
+						                    action.param = new HashMap<String, Object>();
+						                    if (!StringUtils.isEmpty(spm)){
+						                        HashMap<String, Serializable> urlParam = new HashMap<String, Serializable>();
+						                        urlParam.put("spm", spm);
+						                        action.param.put("url", StringUtils.genURL(((SimpleImageView) v).jumpUrl, urlParam));
+						                    }
+						                    
+						                    WeAppActionManager.excute(self, action);
+						                }
+						            });
+
+						            imageView.setLayoutParams(new LinearLayout.LayoutParams(
+						                    LinearLayout.LayoutParams.MATCH_PARENT,
+						                    LinearLayout.LayoutParams.MATCH_PARENT));
+						            
+						            // 临时解决方案，支持banner锐化
+						            imageView.setTag("isSharpening");
+						            
+						            setImage(imageView, item.image);
+						            imagesList.add(imageView);				
 						}catch(Exception e){
 							e.printStackTrace();
 						}catch (Throwable e) {
