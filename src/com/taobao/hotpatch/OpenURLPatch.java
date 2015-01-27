@@ -49,7 +49,7 @@ public class OpenURLPatch implements IPatch{
 		            return;
 		        }
 				
-				XposedBridge.findAndHookMethod(configClazz, "open", new XC_MethodHook() {
+				XposedBridge.findAndHookMethod(configClazz, "open",WeAppComponent.class, String.class, String.class, Boolean.class, Boolean.class, Map.class,Map.class, new XC_MethodHook() {
 
 					@Override
 					protected void afterHookedMethod(MethodHookParam param)
