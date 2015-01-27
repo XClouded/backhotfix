@@ -42,7 +42,7 @@ public class OpenURLPatch implements IPatch{
 		        Class<?> configClazz;
 		        try {
 		        	configClazz = PatchHelper.loadClass(context, "com.taobao.weapp.action.defaults.OpenURLActionExecutor", null);
-		            Log.d("OpenURLPatch", "configClazz found");
+		            Log.d("OpenURLPatch", "com.taobao.weapp.action.defaults.OpenURLActionExecutor configClazz found");
 		            
 		        } catch (Exception e) {
 		            Log.d("OpenURLPatch", "configClazz not found");
@@ -52,7 +52,7 @@ public class OpenURLPatch implements IPatch{
 				XposedBridge.findAndHookMethod(configClazz, "open",WeAppComponent.class, String.class, String.class, boolean.class, boolean.class, Map.class,Map.class, new XC_MethodHook() {
 
 					@Override
-					protected void afterHookedMethod(MethodHookParam param)
+					protected void beforeHookedMethod(MethodHookParam param)
 							throws Throwable {
 						Log.e("OpenURLPatch", "enter afterHookedMethod");
 						try{
@@ -73,15 +73,10 @@ public class OpenURLPatch implements IPatch{
 								String sourceUrl = urlString.substring(0, spmIndex);
 								String spmParam = urlString.substring(spmIndex+5);
 								realUrl = sourceUrl + "?" + "spm="+spmParam;
+								param.args[1] = realUrl;
 								Log.e("OpenURLPatch", "do with realUrl >>> " + realUrl);
 							}
 							
-							 if (view != null && view.getEngine() != null && view.getEngine().getBrowserAdapter() != null) {
-						            view.getEngine().getBrowserAdapter().gotoBrowser(realUrl, title == null ? null : title.toString(), true,
-						                                                             true, querys, nativeParams);
-						            param.setResult(Boolean.TRUE);
-						            Log.e("OpenURLPatch", "return true");
-						        }
 						}catch(Exception e){
 							e.printStackTrace();
 						}catch (Throwable e) {
@@ -90,7 +85,6 @@ public class OpenURLPatch implements IPatch{
 							
 						}
 					}
-					
 				});
 			}
 	
