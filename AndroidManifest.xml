@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.taobao.taobao"
     android:versionCode="92"
-    android:versionName="5.2.4" >
+    android:versionName="5.2.4.3" >
 
     <uses-sdk
         android:minSdkVersion="9"
@@ -10,7 +10,6 @@
 
     <application>
         <meta-data android:name="patch_version" android:value="*" />
-        <meta-data android:name="patch_entry" android:value="com.taobao.hotpatch.SsoIdentityPatch,com.taobao.hotpatch.HomeImagePatch" />
     </application>
 
 </manifest>
