@@ -1,13 +1,9 @@
 package com.taobao.hotpatch;
 
-import android.content.Context;
 import android.util.Log;
 
-import com.taobao.android.dexposed.XC_MethodReplacement;
-import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.hotpatch.patch.IPatch;
-import com.taobao.hotpatch.patch.PatchCallback.PatchParam;
-import com.taobao.updatecenter.util.PatchHelper;
+import com.taobao.hotpatch.patch.PatchParam;
 
 public class OpenBarrier implements IPatch {
 
