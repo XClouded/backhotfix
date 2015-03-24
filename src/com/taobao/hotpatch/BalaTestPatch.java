@@ -40,6 +40,7 @@ public class BalaTestPatch implements IPatch{
 			@Override
 			public void bundleChanged(final BundleEvent event) {
 				{
+					Log.e("BalaPatch", "the bundle name is " + event.getBundle().getLocation());
 					if (event.getBundle().getLocation().equals(name)
 							&& event.getType() == BundleEvent.INSTALLED) {
 						Log.e("BalaPatch", "bundleChanged finded");
