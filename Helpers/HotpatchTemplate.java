@@ -1,4 +1,4 @@
-package com.taobao.updatecenter.util;
+package com.taobao.hotpatch;
 
 import android.app.Activity;
 import android.content.Context;
@@ -9,7 +9,7 @@ import com.taobao.android.dexposed.XC_MethodReplacement;
 import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.android.dexposed.XposedHelpers;
 import com.taobao.hotpatch.patch.IPatch;
-import com.taobao.hotpatch.patch.PatchCallback.PatchParam;
+import com.taobao.hotpatch.patch.PatchParam;
 
 // 所有要实现patch某个方法，都需要集成Ipatch这个接口
 public class HotpatchTemplate implements IPatch {
@@ -26,14 +26,14 @@ public class HotpatchTemplate implements IPatch {
 			return;
 		}
 		
-		// TODO 这里填上你要patch的class名字，根据mapping得到混淆后的名字，在主dex中的class，最后的参数为null
-		Class<?> welcome = PatchHelper.loadClass(context, "com.taobao.welcome", null);
+		// TODO 这里填上你要patch的class名字，根据mapping得到混淆后的名字，在主dex中的class，最后的两个参数均为null
+		Class<?> welcome = PatchHelper.loadClass(context, "com.taobao.welcome", null,null);
 		if (welcome == null) {
 			return;
 		}
 
-		// TODO 这里填上你要patch的bundle中的class名字，最后的参数是所在bundle中manifest的packageName
-		Class<?> login = PatchHelper.loadClass(context, "com.taobao.login", "com.login.bundle");
+		// TODO 这里填上你要patch的bundle中的class名字，第三个参数是所在bundle中manifest的packageName，最后的参数为this
+		Class<?> login = PatchHelper.loadClass(context, "com.taobao.login", "com.login.bundle", this);
 		if (login == null) {
 			return;
 		}
