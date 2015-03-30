@@ -37,7 +37,9 @@ public class PatchHelper {
 					arg0.context = mContext;
 					try {
 						Log.d("hotpatch", bundleName + "is started");
-						bundles.get(bundleName).handlePatch(arg0);
+						if (bundles.get(bundleName) != null) {
+							bundles.get(bundleName).handlePatch(arg0);
+						}
 					} catch (Throwable e) {
 						Log.e("hotpatch", bundleName + e.getMessage());
 					}
