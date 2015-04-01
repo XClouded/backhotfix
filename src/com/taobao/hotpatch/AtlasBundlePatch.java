@@ -90,7 +90,7 @@ public class AtlasBundlePatch implements IPatch {
                 } catch (Exception e){
 //                    log.error("Failed to load bundle for " + componentName + e);
                     logError(e,"intall bundle fail first");
-                    XposedHelpers.callMethod(arg0.thisObject, "fallBackToClassNotFoundCallback", context, intent, componentName);
+                    XposedHelpers.callMethod(arg0.thisObject, "fallBackToClassNotFoundCallback", new Class[]{Context.class,Intent.class,String.class},context, intent, componentName);
                     //fallBackToClassNotFoundCallback(context, intent, componentName);
 //                    return null;
                 }
@@ -122,7 +122,7 @@ public class AtlasBundlePatch implements IPatch {
                     } catch (Exception e){
 //                        log.error("Failed to load bundle for " + componentName + e);
                         logError(e,"intall bundle fail second");
-                        XposedHelpers.callMethod(arg0.thisObject,"fallBackToClassNotFoundCallback",context,intent,componentName);
+                        XposedHelpers.callMethod(arg0.thisObject, "fallBackToClassNotFoundCallback", new Class[]{Context.class,Intent.class,String.class},context, intent, componentName);
                         //fallBackToClassNotFoundCallback(context, intent, componentName);
                         return null;
                     }
