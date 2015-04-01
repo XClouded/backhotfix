@@ -94,27 +94,28 @@ public class AtlasBundlePatch implements IPatch {
                     //fallBackToClassNotFoundCallback(context, intent, componentName);
                     return null;
                 }
-                if(ClassLoadFromBundle.sInternalBundles==null){
-                    String prefix = "lib/armeabi/libcom_";
-                    String suffix = ".so";
-                    List<String> internalBundles = new ArrayList<String>();
-                    try {
-                        ZipFile zipFile = new ZipFile(RuntimeVariables.androidApplication.getApplicationInfo().sourceDir);
-                        Enumeration<? extends ZipEntry> entries = zipFile.entries();
-                        while (entries.hasMoreElements()) {
-                            ZipEntry zipEntry = entries.nextElement();
-                            String entryName = zipEntry.getName();
-                            if (entryName.startsWith(prefix) && entryName.endsWith(suffix)) {
-                                internalBundles.add(getPackageNameFromEntryName(entryName));
-                            }
-                        }
-                        ClassLoadFromBundle.sInternalBundles = internalBundles;
-                    } catch (Exception e) {
-                        logError(e,"resolve internal bundle fail");
-                    }
-                }
 
                 if(DelegateComponent.locateComponent(componentName)==null){
+                    if(ClassLoadFromBundle.sInternalBundles==null){
+                        String prefix = "lib/armeabi/libcom_";
+                        String suffix = ".so";
+                        List<String> internalBundles = new ArrayList<String>();
+                        try {
+                            ZipFile zipFile = new ZipFile(RuntimeVariables.androidApplication.getApplicationInfo().sourceDir);
+                            Enumeration<? extends ZipEntry> entries = zipFile.entries();
+                            while (entries.hasMoreElements()) {
+                                ZipEntry zipEntry = entries.nextElement();
+                                String entryName = zipEntry.getName();
+                                if (entryName.startsWith(prefix) && entryName.endsWith(suffix)) {
+                                    internalBundles.add(getPackageNameFromEntryName(entryName));
+                                }
+                            }
+                            ClassLoadFromBundle.sInternalBundles = internalBundles;
+                        } catch (Exception e) {
+                            logError(e,"resolve internal bundle fail");
+                        }
+                    }
+
                     try{
                         // Make sure to install the bundle holds component
                         ClassLoadFromBundle.checkInstallBundleIfNeed(componentName);
