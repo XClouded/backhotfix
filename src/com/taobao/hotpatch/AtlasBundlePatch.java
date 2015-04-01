@@ -127,6 +127,10 @@ public class AtlasBundlePatch implements IPatch {
                         //fallBackToClassNotFoundCallback(context, intent, componentName);
                         return null;
                     }
+
+                    if(DelegateComponent.locateComponent(componentName)!=null){
+                        TBS.Ext.commitEvent(61005, "atlas", "second success", "", "");
+                    }
                 }
 
                 // Taobao may start a component not exist in com.taobao.taobao package.
