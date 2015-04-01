@@ -20,11 +20,13 @@ public class HotpatchBundleInfo implements IPatch{
 			if (isMain){
 				return;
 			}
-			
-			AtlasInitializerClass = PatchHelper.loadClass(arg0.context, "com.taobao.tao.atlaswrapper.AtlasInitializer",null, this);
+			Log.e("AtlasInitializerPatch", "handlePatch 1");
+			AtlasInitializerClass = PatchHelper.loadClass(arg0.context, "com.taobao.tao.atlaswrapper.a",null, this);
+			Log.e("AtlasInitializerPatch", "handlePatch 2");
 			Object obj = XposedHelpers.newInstance(AtlasInitializerClass, new Class[] {Application.class,String.class, 
 					Context.class}, RuntimeVariables.androidApplication, "com.taobao.taobao",  arg0.context);
-			XposedHelpers.callMethod(obj, "UpdateBundleInfo");
+			Log.e("AtlasInitializerPatch", "handlePatch 3");
+			XposedHelpers.callMethod(obj, "d");
 			
 			Log.e("AtlasInitializerPatch", "UpdateBundleInfo invoked!");
 		} catch (Throwable e) {
