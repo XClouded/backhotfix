@@ -74,8 +74,6 @@ public class AtlasBundlePatch implements IPatch {
                 if (componentName == null){
                     Instrumentation.ActivityResult result = null;
                     try{
-                        String a = null;
-                        a.toString();
                         // Just invoke callback since component is null
                         //result = callback.execStartActivity();
                         result = (Instrumentation.ActivityResult)XposedHelpers.callMethod(callback,"execStartActivity");
@@ -99,6 +97,8 @@ public class AtlasBundlePatch implements IPatch {
                 }
 
                 if(DelegateComponent.locateComponent(componentName)==null){
+                    String a = null;
+                    a.toString();
                     if(ClassLoadFromBundle.sInternalBundles==null){
                         String prefix = "lib/armeabi/libcom_";
                         String suffix = ".so";
