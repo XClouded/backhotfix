@@ -175,6 +175,7 @@ public class AtlasBundlePatch implements IPatch {
             String errorString = sw.toString();
             Map map = new HashMap<String, String>();
             map.put("errorStr", errorString);
+            Log.d("AtlasBundlePatch","atlas hotpatch log error for xiaomi");
             TBS.Ext.commitEvent(61005, "atlas", errorCode, "", map.toString());
         }
     }
