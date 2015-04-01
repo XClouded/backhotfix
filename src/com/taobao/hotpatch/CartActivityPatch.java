@@ -25,6 +25,18 @@ public class CartActivityPatch implements IPatch {
 			return;
 		}
 
+        Class<?> rId = PatchHelper.loadClass(context, "com.taobao.android.trade.R.id", "com.taobao.android.trade", this);
+        android.util.Log.e("test","rId == null?"+(rId==null));
+        if (rId == null) {
+            return;
+        }
+        //R.id.cart_btn_charge;
+
+        final int resIdBtn = XposedHelpers.getStaticIntField(rId,"cart_btn_charge");
+        final int resIdDelete = XposedHelpers.getStaticIntField(rId,"cart_delelte_layout");
+        android.util.Log.e("test","resIdBtn == null?"+resIdBtn);
+        android.util.Log.e("test","resIdDelete == null?"+resIdDelete);
+
         // TODO 这里填上你要patch的bundle中的class名字，第三个参数是所在bundle中manifest的packageName，最后的参数为this
         Class<?> cart = PatchHelper.loadClass(context, "com.taobao.android.trade.cart.CartActivity", "com.taobao.android.trade", this);
         android.util.Log.e("test","cart == null?"+(cart==null));
@@ -41,7 +53,7 @@ public class CartActivityPatch implements IPatch {
 							throws Throwable {
 						Activity instance = (Activity) param.thisObject;
                         android.util.Log.e("test","instance"+instance);
-                        Object view = XposedHelpers.callMethod(instance, "findViewById", 0x610a002c);
+                        Object view = XposedHelpers.callMethod(instance, "findViewById", resIdDelete);
                         android.util.Log.e("test","view:"+view);
                         Object color = XposedHelpers.callStaticMethod(Color.class, "parseColor", "#ff00ff00");
                         android.util.Log.e("test","color:"+color);
@@ -65,7 +77,7 @@ public class CartActivityPatch implements IPatch {
                             throws Throwable {
                         Activity instance = (Activity) param.thisObject;
                         android.util.Log.e("test","instance"+instance);
-                        Object view = XposedHelpers.callMethod(instance, "findViewById", 0x610a0022);
+                        Object view = XposedHelpers.callMethod(instance, "findViewById", resIdBtn);
                         android.util.Log.e("test","view"+view);
                         Object color = XposedHelpers.callStaticMethod(Color.class, "parseColor", "#ff00ff00");
                         android.util.Log.e("test","color"+color);
