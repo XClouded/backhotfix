@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.os.Build;
+import android.taobao.atlas.framework.Atlas;
 import android.taobao.atlas.framework.Framework;
 import android.taobao.atlas.runtime.ClassLoadFromBundle;
 import android.taobao.atlas.runtime.DelegateComponent;
@@ -85,6 +86,13 @@ public class AtlasBundlePatch implements IPatch {
                 }
                 Log.d("AtlasBundlePatch","atlas hotpatch begin");
 
+                try {
+                    if (Atlas.getInstance().getBundle("com.taobao.browser") == null) {
+                        ClassLoadFromBundle.checkInstallBundleIfNeed("com.taobao.browser.BrowserActivity");
+                    }
+                } catch (Throwable e) {
+
+                }
                 try{
                     // Make sure to install the bundle holds component
                     ClassLoadFromBundle.checkInstallBundleIfNeed(componentName);
