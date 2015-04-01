@@ -1,21 +1,10 @@
 package com.taobao.hotpatch;
 
-import java.lang.reflect.Method;
-
-import org.osgi.framework.BundleEvent;
-
-import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
-import android.taobao.atlas.framework.Atlas;
-import android.taobao.atlas.framework.BundleImpl;
-import android.taobao.atlas.runtime.BundleLifecycleHandler;
 import android.taobao.atlas.runtime.RuntimeVariables;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.taobao.android.dexposed.XC_MethodHook;
-import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.android.dexposed.XposedHelpers;
 import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchParam;
