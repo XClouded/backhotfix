@@ -92,7 +92,7 @@ public class AtlasBundlePatch implements IPatch {
                     logError(e,"intall bundle fail first");
                     XposedHelpers.callMethod(arg0.thisObject, "fallBackToClassNotFoundCallback", context, intent, componentName);
                     //fallBackToClassNotFoundCallback(context, intent, componentName);
-                    return null;
+//                    return null;
                 }
 
                 if(DelegateComponent.locateComponent(componentName)==null){
