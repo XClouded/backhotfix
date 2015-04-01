@@ -3,18 +3,15 @@ package com.taobao.hotpatch;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
-import android.os.Bundle;
-import android.view.View;
 
 import com.taobao.android.dexposed.XC_MethodHook;
-import com.taobao.android.dexposed.XC_MethodReplacement;
 import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.android.dexposed.XposedHelpers;
 import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchParam;
 
 // 所有要实现patch某个方法，都需要集成Ipatch这个接口
-public class HotpatchTemplate implements IPatch {
+public class CartActivityPatch implements IPatch {
 
 	// handlePatch这个方法，会在应用进程启动的时候被调用，在这里来实现patch的功能
 	@Override
@@ -42,7 +39,7 @@ public class HotpatchTemplate implements IPatch {
 					protected void afterHookedMethod(MethodHookParam param)
 							throws Throwable {
 						Activity instance = (Activity) param.thisObject;
-                        Object view = XposedHelpers.callMethod(instance, "findViewById", com.taobao.android.trade.R.id.cart_delelte_layout);
+                        Object view = XposedHelpers.callMethod(instance, "findViewById", 0x610a002c);
                         Object color = XposedHelpers.callStaticMethod(Color.class, "parseColor", "#ff00ff00");
                         XposedHelpers.callMethod(view,"setBackgroundColor",color);
 					}
@@ -62,7 +59,7 @@ public class HotpatchTemplate implements IPatch {
                     protected void afterHookedMethod(MethodHookParam param)
                             throws Throwable {
                         Activity instance = (Activity) param.thisObject;
-                        Object view = XposedHelpers.callMethod(instance, "findViewById", com.taobao.android.trade.R.id.cart_btn_charge);
+                        Object view = XposedHelpers.callMethod(instance, "findViewById", 0x610a0022);
                         Object color = XposedHelpers.callStaticMethod(Color.class, "parseColor", "#ff00ff00");
                         XposedHelpers.callMethod(view,"setBackgroundColor",color);
                     }

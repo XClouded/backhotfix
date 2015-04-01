@@ -228,13 +228,6 @@
 			</exclusions>
 		</dependency>
 
-        <dependency>
-            <groupId>com.taobao.android</groupId>
-            <artifactId>tao_trade</artifactId>
-            <version>2.6.8</version>
-            <scope>provided</scope>
-        </dependency>
-
 	</dependencies>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
