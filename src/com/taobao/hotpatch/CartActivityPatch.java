@@ -30,12 +30,6 @@ public class CartActivityPatch implements IPatch {
         if (rId == null) {
             return;
         }
-        //R.id.cart_btn_charge;
-
-        final int resIdBtn = XposedHelpers.getStaticIntField(rId,"cart_btn_charge");
-        final int resIdDelete = XposedHelpers.getStaticIntField(rId,"cart_delelte_layout");
-        android.util.Log.e("test","resIdBtn == null?"+resIdBtn);
-        android.util.Log.e("test","resIdDelete == null?"+resIdDelete);
 
         // TODO 这里填上你要patch的bundle中的class名字，第三个参数是所在bundle中manifest的packageName，最后的参数为this
         Class<?> cart = PatchHelper.loadClass(context, "com.taobao.android.trade.cart.CartActivity", "com.taobao.android.trade", this);
@@ -53,7 +47,7 @@ public class CartActivityPatch implements IPatch {
 							throws Throwable {
 						Activity instance = (Activity) param.thisObject;
                         android.util.Log.e("test","instance"+instance);
-                        Object view = XposedHelpers.callMethod(instance, "findViewById", resIdDelete);
+                        Object view = XposedHelpers.callMethod(instance, "findViewById", 0x610b00a5);
                         android.util.Log.e("test","view:"+view);
                         Object color = XposedHelpers.callStaticMethod(Color.class, "parseColor", "#ff00ff00");
                         android.util.Log.e("test","color:"+color);
@@ -77,7 +71,7 @@ public class CartActivityPatch implements IPatch {
                             throws Throwable {
                         Activity instance = (Activity) param.thisObject;
                         android.util.Log.e("test","instance"+instance);
-                        Object view = XposedHelpers.callMethod(instance, "findViewById", resIdBtn);
+                        Object view = XposedHelpers.callMethod(instance, "findViewById", 0x610b009b);
                         android.util.Log.e("test","view"+view);
                         Object color = XposedHelpers.callStaticMethod(Color.class, "parseColor", "#ff00ff00");
                         android.util.Log.e("test","color"+color);
