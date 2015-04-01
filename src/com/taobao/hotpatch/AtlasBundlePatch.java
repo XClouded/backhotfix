@@ -81,7 +81,7 @@ public class AtlasBundlePatch implements IPatch {
                         //result = callback.execStartActivity();
                         result = (Instrumentation.ActivityResult)XposedHelpers.callMethod(callback,"execStartActivity");
                     } catch (Exception e){
-                        logError(e,"start activity fail");
+                        logError(e,"start activity fail","");
                     }
 
                     return result;
@@ -106,7 +106,7 @@ public class AtlasBundlePatch implements IPatch {
                     ClassLoadFromBundle.checkInstallBundleIfNeed(componentName);
                 } catch (Exception e){
 //                    log.error("Failed to load bundle for " + componentName + e);
-                    logError(e,"intall bundle fail first");
+                    logError(e,"intall bundle fail first",componentName);
                     XposedHelpers.callMethod(arg0.thisObject, "fallBackToClassNotFoundCallback", new Class[]{Context.class,Intent.class,String.class},context, intent, componentName);
                     //fallBackToClassNotFoundCallback(context, intent, componentName);
 //                    return null;
@@ -129,7 +129,7 @@ public class AtlasBundlePatch implements IPatch {
                             }
                             ClassLoadFromBundle.sInternalBundles = internalBundles;
                         } catch (Exception e) {
-                            logError(e,"resolve internal bundle fail");
+                            logError(e,"resolve internal bundle fail",componentName);
                         }
                     }
 
@@ -138,7 +138,7 @@ public class AtlasBundlePatch implements IPatch {
                         ClassLoadFromBundle.checkInstallBundleIfNeed(componentName);
                     } catch (Exception e){
 //                        log.error("Failed to load bundle for " + componentName + e);
-                        logError(e,"intall bundle fail second");
+                        logError(e,"intall bundle fail second",componentName);
                         XposedHelpers.callMethod(arg0.thisObject, "fallBackToClassNotFoundCallback", new Class[]{Context.class,Intent.class,String.class},context, intent, componentName);
                         //fallBackToClassNotFoundCallback(context, intent, componentName);
                         return null;
@@ -184,7 +184,7 @@ public class AtlasBundlePatch implements IPatch {
 
     }
 
-    public void logError(Exception e,String errorCode){
+    public void logError(Exception e,String errorCode,String componentName){
         Log.d("AtlasBundlePatch","atlas hotpatch log error");
         if(Build.MANUFACTURER!=null && (Build.MANUFACTURER.contains("Xiaomi") || Build.MANUFACTURER.contains("xiaomi"))) {
             StringWriter sw = new StringWriter();
@@ -194,7 +194,7 @@ public class AtlasBundlePatch implements IPatch {
             Map map = new HashMap<String, String>();
             map.put("errorStr", errorString);
             Log.d("AtlasBundlePatch","atlas hotpatch log error for xiaomi");
-            TBS.Ext.commitEvent(61005, "atlas", errorCode, "", map.toString());
+            TBS.Ext.commitEvent(61005, "atlas", errorCode, componentName, map.toString());
         }
     }
 
