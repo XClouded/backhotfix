@@ -76,7 +76,7 @@ public class AtlasBundlePatch implements IPatch {
                     try{
                         // Just invoke callback since component is null
                         //result = callback.execStartActivity();
-                        XposedHelpers.callMethod(callback,"execStartActivity");
+                        result = (Instrumentation.ActivityResult)XposedHelpers.callMethod(callback,"execStartActivity");
                     } catch (Exception e){
                         logError(e,"start activity fail");
                     }
