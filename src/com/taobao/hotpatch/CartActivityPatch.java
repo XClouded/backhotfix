@@ -25,12 +25,6 @@ public class CartActivityPatch implements IPatch {
 			return;
 		}
 
-        Class<?> rId = PatchHelper.loadClass(context, "com.taobao.android.trade.R.id", "com.taobao.android.trade", this);
-        android.util.Log.e("test","rId == null?"+(rId==null));
-        if (rId == null) {
-            return;
-        }
-
         // TODO 这里填上你要patch的bundle中的class名字，第三个参数是所在bundle中manifest的packageName，最后的参数为this
         Class<?> cart = PatchHelper.loadClass(context, "com.taobao.android.trade.cart.CartActivity", "com.taobao.android.trade", this);
         android.util.Log.e("test","cart == null?"+(cart==null));
