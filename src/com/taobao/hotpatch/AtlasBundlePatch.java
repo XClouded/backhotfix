@@ -27,7 +27,9 @@ import com.taobao.statistic.TBS;
 import com.taobao.tao.connecterrordialog.ConnectErrorDialog;
 import mtopsdk.mtop.domain.MtopResponse;
 import org.apache.http.util.ExceptionUtils;
+import org.osgi.framework.BundleException;
 
+import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Method;
@@ -87,8 +89,14 @@ public class AtlasBundlePatch implements IPatch {
                 Log.d("AtlasBundlePatch","atlas hotpatch begin");
 
                 try {
-                    if (Atlas.getInstance().getBundle("com.taobao.browser") == null) {
-                        ClassLoadFromBundle.checkInstallBundleIfNeed("com.taobao.browser.BrowserActivity");
+                    if(Atlas.getInstance().getBundle("com.taobao.browser")==null) {
+                        String soName = "com.taobao.browser".replace(".", "_");
+                        soName = "lib".concat(soName).concat(".so");
+                        File libDir = new File(Framework.getProperty("android.taobao.atlas.AppDirectory"), "lib");
+                        File soFile = new File(libDir, soName);
+                        if (soFile.exists()){
+                            Atlas.getInstance().installBundle("com.taobao.browser", soFile);
+                        }
                     }
                 } catch (Throwable e) {
 
