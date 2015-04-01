@@ -31,10 +31,11 @@ public class HotpatchBundleInfo implements IPatch{
 			if (PatchHelper.isRunInMainProcess(arg0.context)){
 				return;
 			}
-			AtlasInitializerClass = PatchHelper.loadClass(arg0.context, "com.taobao.tao.atlaswrapper.AtlasInitializer",null, this);
+			
+			AtlasInitializerClass = PatchHelper.loadClass(arg0.context, "com.taobao.tao.atlaswrapper.a",null, this);
 			Object obj = XposedHelpers.newInstance(AtlasInitializerClass, new Class[] {Application.class,String.class, 
 					Context.class}, RuntimeVariables.androidApplication, "com.taobao.taobao",  this);
-			XposedHelpers.callMethod(obj, "UpdateBundleInfo");
+			XposedHelpers.callMethod(obj, "a");
 			
 			Log.e("AtlasInitializerPatch", "UpdateBundleInfo invoked!");
 		} catch (Throwable e) {
