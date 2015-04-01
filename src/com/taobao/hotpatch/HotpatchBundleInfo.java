@@ -13,7 +13,7 @@ public class HotpatchBundleInfo implements IPatch{
 
 	@Override
 	public void handlePatch(PatchParam arg0) throws Throwable {
-		Log.e("BalaPatch", "handlePatch");
+		Log.e("AtlasInitializerPatch", "handlePatch");
 		Class<?> AtlasInitializerClass = null;
 		try {
 			boolean isMain = PatchHelper.isRunInMainProcess(arg0.context);
