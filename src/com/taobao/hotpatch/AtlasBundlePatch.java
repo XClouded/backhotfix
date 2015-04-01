@@ -138,7 +138,7 @@ public class AtlasBundlePatch implements IPatch {
                 String pkg = DelegateComponent.locateComponent(componentName);
                 if (pkg != null) {
                     //return callback.execStartActivity();
-                    XposedHelpers.callMethod(callback,"execStartActivity");
+                    return XposedHelpers.callMethod(callback,"execStartActivity");
                 }
 
                 // Try to get class from system Classloader
@@ -147,7 +147,7 @@ public class AtlasBundlePatch implements IPatch {
                     clazz = Framework.getSystemClassLoader().loadClass(componentName);
                     if (clazz != null) {
                         //return callback.execStartActivity();
-                        XposedHelpers.callMethod(callback,"execStartActivity");
+                        return XposedHelpers.callMethod(callback,"execStartActivity");
                     }
                 } catch (ClassNotFoundException e) {
                     //log.error("Can't find class " + componentName);
