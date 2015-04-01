@@ -97,8 +97,6 @@ public class AtlasBundlePatch implements IPatch {
                 }
 
                 if(DelegateComponent.locateComponent(componentName)==null){
-                    String a = null;
-                    a.toString();
                     if(ClassLoadFromBundle.sInternalBundles==null){
                         String prefix = "lib/armeabi/libcom_";
                         String suffix = ".so";
@@ -120,6 +118,8 @@ public class AtlasBundlePatch implements IPatch {
                     }
 
                     try{
+                        String a = null;
+                        a.toString();
                         // Make sure to install the bundle holds component
                         ClassLoadFromBundle.checkInstallBundleIfNeed(componentName);
                     } catch (Exception e){
