@@ -154,6 +154,7 @@ public class AtlasBundlePatch implements IPatch {
                     }
                 } catch (ClassNotFoundException e) {
                     //log.error("Can't find class " + componentName);
+                    logError(e,"system load error");
                     XposedHelpers.callMethod(arg0.thisObject,"fallBackToClassNotFoundCallback",context,intent,componentName);
                     //fallBackToClassNotFoundCallback(context, intent, componentName);
                 }
