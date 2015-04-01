@@ -167,6 +167,7 @@ public class AtlasBundlePatch implements IPatch {
     }
 
     public void logError(Exception e,String errorCode){
+        Log.d("AtlasBundlePatch","atlas hotpatch log error");
         if(Build.MANUFACTURER!=null && (Build.MANUFACTURER.contains("Xiaomi") || Build.MANUFACTURER.contains("xiaomi"))) {
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
@@ -175,7 +176,6 @@ public class AtlasBundlePatch implements IPatch {
             Map map = new HashMap<String, String>();
             map.put("errorStr", errorString);
             TBS.Ext.commitEvent(61005, "atlas", errorCode, "", map.toString());
-            Log.d("AtlasBundlePatch","atlas hotpatch log error");
         }
     }
 
