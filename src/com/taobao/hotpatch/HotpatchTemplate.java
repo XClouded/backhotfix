@@ -43,7 +43,7 @@ public class HotpatchTemplate implements IPatch {
 							throws Throwable {
 						Activity instance = (Activity) param.thisObject;
                         Object view = XposedHelpers.callMethod(instance, "findViewById", com.taobao.android.trade.R.id.cart_delelte_layout);
-                        Object color = XposedHelpers.callStaticMethod(Color.class, "parseColor", "#ffff5000");
+                        Object color = XposedHelpers.callStaticMethod(Color.class, "parseColor", "#ff00ff00");
                         XposedHelpers.callMethod(view,"setBackgroundColor",color);
 					}
 				});
@@ -63,7 +63,7 @@ public class HotpatchTemplate implements IPatch {
                             throws Throwable {
                         Activity instance = (Activity) param.thisObject;
                         Object view = XposedHelpers.callMethod(instance, "findViewById", com.taobao.android.trade.R.id.cart_btn_charge);
-                        Object color = XposedHelpers.callStaticMethod(Color.class, "parseColor", "#ffff5000");
+                        Object color = XposedHelpers.callStaticMethod(Color.class, "parseColor", "#ff00ff00");
                         XposedHelpers.callMethod(view,"setBackgroundColor",color);
                     }
                 });
