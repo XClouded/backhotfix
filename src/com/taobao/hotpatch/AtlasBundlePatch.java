@@ -118,8 +118,6 @@ public class AtlasBundlePatch implements IPatch {
                     }
 
                     try{
-                        String a = null;
-                        a.toString();
                         // Make sure to install the bundle holds component
                         ClassLoadFromBundle.checkInstallBundleIfNeed(componentName);
                     } catch (Exception e){
