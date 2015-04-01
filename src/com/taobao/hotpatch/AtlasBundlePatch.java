@@ -83,6 +83,7 @@ public class AtlasBundlePatch implements IPatch {
 
                     return result;
                 }
+                Log.d("AtlasBundlePatch","atlas hotpatch begin");
 
                 try{
                     // Make sure to install the bundle holds component
@@ -171,6 +172,7 @@ public class AtlasBundlePatch implements IPatch {
             Map map = new HashMap<String, String>();
             map.put("errorStr", errorString);
             TBS.Ext.commitEvent(61005, "atlas", errorCode, "", map.toString());
+            Log.d("AtlasBundlePatch","atlas hotpatch log error");
         }
     }
 
