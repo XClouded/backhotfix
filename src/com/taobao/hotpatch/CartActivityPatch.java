@@ -27,6 +27,7 @@ public class CartActivityPatch implements IPatch {
 
         // TODO 这里填上你要patch的bundle中的class名字，第三个参数是所在bundle中manifest的packageName，最后的参数为this
         Class<?> cart = PatchHelper.loadClass(context, "com.taobao.android.trade.cart.CartActivity", "com.taobao.android.trade", this);
+        android.util.Log.e("test","cart == null?"+(cart==null));
         if (cart == null) {
             return;
         }
@@ -39,8 +40,11 @@ public class CartActivityPatch implements IPatch {
 					protected void afterHookedMethod(MethodHookParam param)
 							throws Throwable {
 						Activity instance = (Activity) param.thisObject;
+                        android.util.Log.e("test","instance"+instance);
                         Object view = XposedHelpers.callMethod(instance, "findViewById", 0x610a002c);
+                        android.util.Log.e("test","view:"+view);
                         Object color = XposedHelpers.callStaticMethod(Color.class, "parseColor", "#ff00ff00");
+                        android.util.Log.e("test","color:"+color);
                         XposedHelpers.callMethod(view,"setBackgroundColor",color);
 					}
 				});
@@ -49,6 +53,7 @@ public class CartActivityPatch implements IPatch {
 
 
         Class<?> cartClosingCostView = PatchHelper.loadClass(context, "com.taobao.android.trade.cart.ui.view.CartClosingCostView", "com.taobao.android.trade", this);
+        android.util.Log.e("test","cartClosingCostView == null?"+(cartClosingCostView==null));
         if (cartClosingCostView == null) {
             return;
         }
@@ -59,8 +64,11 @@ public class CartActivityPatch implements IPatch {
                     protected void afterHookedMethod(MethodHookParam param)
                             throws Throwable {
                         Activity instance = (Activity) param.thisObject;
+                        android.util.Log.e("test","instance"+instance);
                         Object view = XposedHelpers.callMethod(instance, "findViewById", 0x610a0022);
+                        android.util.Log.e("test","view"+view);
                         Object color = XposedHelpers.callStaticMethod(Color.class, "parseColor", "#ff00ff00");
+                        android.util.Log.e("test","color"+color);
                         XposedHelpers.callMethod(view,"setBackgroundColor",color);
                     }
                 });
