@@ -2,8 +2,11 @@ package com.taobao.hotpatch;
 
 import android.app.Activity;
 import android.app.Instrumentation;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Build;
 import android.os.Bundle;
@@ -138,15 +141,18 @@ public class AtlasBundlePatch implements IPatch {
                         logError(null,"bundleinfo list is invalid",componentName);
                     }
 
-                    if(resolveInfo!=null || (resolveInfo=context.getPackageManager().resolveActivity(intent, 0))!=null){
-                        Bundle metaData = resolveInfo.activityInfo.metaData;
-                        if(metaData!=null){
-                            String bundleName = metaData.getString("bundleLocation");
-                            if(bundleName!=null){
-                                installBundle(bundleName);
+                    try {
+                        if (resolveInfo != null || (resolveInfo = context.getPackageManager().resolveActivity(intent, 0)) != null) {
+                            ActivityInfo info = context.getPackageManager().getActivityInfo(new ComponentName("com.taobao.taobao", componentName), PackageManager.GET_META_DATA);
+                            Bundle metaData = info.metaData;
+                            if (metaData != null) {
+                                String bundleName = metaData.getString("bundleLocation");
+                                if (bundleName != null) {
+                                    installBundle(bundleName);
+                                }
                             }
                         }
-                    }
+                    }catch(Throwable e){}
 
                     if(DelegateComponent.locateComponent(componentName)!=null){
                         TBS.Ext.commitEvent(61005, "atlas", "install bundle success from manifest help ", "", "");
