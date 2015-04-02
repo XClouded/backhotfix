@@ -5,10 +5,7 @@ import android.app.Instrumentation;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
+import android.content.pm.*;
 import android.os.Build;
 import android.os.Bundle;
 import android.taobao.atlas.bundleInfo.BundleInfoList;
@@ -59,10 +56,11 @@ public class AtlasBundlePatch implements IPatch {
             @Override
             protected void afterHookedMethod(MethodHookParam arg0) throws Throwable {
                 PackageLite pl = (PackageLite)arg0.getResult();
-                if(pl!=null || TextUtils.isEmpty(pl.applicationClassName)){
+                if(pl==null || TextUtils.isEmpty(pl.applicationClassName)){
                     logError(null,"packageLite is null","");
                     PackageInfo info = context.getPackageManager().getPackageArchiveInfo(((File)arg0.args[0]).getAbsolutePath(), PackageManager.GET_ACTIVITIES);
                     if(info!=null){
+                        logError(null,"packageLite is ok","");
                         Constructor<PackageLite> constructor = PackageLite.class.getDeclaredConstructor();
                         pl = constructor.newInstance();
                         pl.applicationClassName = info.applicationInfo.className;
@@ -73,6 +71,18 @@ public class AtlasBundlePatch implements IPatch {
                             }
                         }
                         pl.metaData = info.applicationInfo.metaData;
+                        info = context.getPackageManager().getPackageArchiveInfo(((File)arg0.args[0]).getAbsolutePath(), PackageManager.GET_SERVICES);
+                        if(info.services!=null){
+                            for(ServiceInfo serviceInfo : info.services){
+                                pl.components.add(serviceInfo.name);
+                            }
+                        }
+                        info = context.getPackageManager().getPackageArchiveInfo(((File)arg0.args[0]).getAbsolutePath(), PackageManager.GET_RECEIVERS);
+                        if(info.receivers!=null){
+                            for(ActivityInfo receiverInfo : info.receivers){
+                                pl.components.add(receiverInfo.name);
+                            }
+                        }
                     }
                 }
                 arg0.setResult(pl);
