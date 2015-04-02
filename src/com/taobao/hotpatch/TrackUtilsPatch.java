@@ -10,10 +10,13 @@ import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchParam;
 import com.taobao.tao.TrackBuried;
 
+import java.util.HashMap;
+
 /**
  * Created by junjie.fjj on 2015/4/2.
  */
 public class TrackUtilsPatch implements IPatch {
+    private HashMap<String,String> effectMap = null;
     @Override
     public void handlePatch(PatchParam patchParam) throws Throwable {
         // 从arg0里面，可以得到主客的context供使用
@@ -43,6 +46,32 @@ public class TrackUtilsPatch implements IPatch {
                     return true;
                 }
                 return false;
+            }
+        });
+
+        effectMap = (HashMap<String, String>) XposedHelpers.getStaticObjectField(trackBuried,"effectMap");
+        android.util.Log.e("DetailHotpatch","effectMap size"+effectMap.size());
+        XposedBridge.findAndHookMethod(trackUtils, "geteffectNormalMap", null, new XC_MethodReplacement() {
+            @Override
+            protected Object replaceHookedMethod(MethodHookParam methodHookParam) throws Throwable {
+                String list_type = (String) XposedHelpers.getStaticObjectField(trackBuried, "list_Type");
+                android.util.Log.e("DetailHotpatch", "list_type="+list_type);
+                String carrier = (String) XposedHelpers.getStaticObjectField(trackBuried, "carrier");
+                android.util.Log.e("DetailHotpatch", "carrier"+carrier);
+                String list_param = (String) XposedHelpers.getStaticObjectField(trackBuried, "list_Param");
+                android.util.Log.e("DetailHotpatch", "list_param"+list_param);
+                String bdid = (String) XposedHelpers.getStaticObjectField(trackBuried, "bdid");
+                android.util.Log.e("DetailHotpatch", "bdid"+bdid);
+
+                if (null == effectMap) {
+                    effectMap = new HashMap<String, String>();
+                }
+                effectMap.put("list_param", list_param);
+                effectMap.put("list_type", list_type);
+                effectMap.put("bdid", bdid);
+                effectMap.put("carrier_id", carrier);
+
+                return effectMap;
             }
         });
     }
