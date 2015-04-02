@@ -28,7 +28,7 @@ public class TrackUtilsPatch implements IPatch {
 
         try{
             // TODO 这里填上你要patch的bundle中的class名字，第三个参数是所在bundle中manifest的packageName，最后的参数为this
-            final Class<?> trackUtils = PatchHelper.loadClass(context, "com.taobao.tao.util.TrackUtils", "com.taobao.android.detail", this);
+            final Class<?> trackUtils = PatchHelper.loadClass(context, "com.taobao.tao.util.TrackUtils", "com.taobao.android.trade", this);
             android.util.Log.e("DetailHotpatch","trackUtils == null?"+(trackUtils==null));
             if (trackUtils == null) {
                 return;
@@ -40,7 +40,7 @@ public class TrackUtilsPatch implements IPatch {
                 return;
             }
 
-            final Class<?> detailActivity = PatchHelper.loadClass(context, "com.taobao.tao.detail.activity.DetailActivity", "com.taobao.android.detail", this);
+            final Class<?> detailActivity = PatchHelper.loadClass(context, "com.taobao.tao.detail.activity.DetailActivity", "com.taobao.android.trade", this);
             android.util.Log.e("DetailHotpatch","detailActivity=null?"+(detailActivity==null));
 
             if (detailActivity == null) {
@@ -82,7 +82,7 @@ public class TrackUtilsPatch implements IPatch {
 //                return false;
 //            }
 //        });
-        }catch(Exception e){
+        }catch(Throwable e){
             e.printStackTrace();
         }
 
@@ -116,7 +116,7 @@ public class TrackUtilsPatch implements IPatch {
             android.util.Log.e("DetailHotpatch", "c"+c);
             String d = (String) XposedHelpers.getStaticObjectField(toclazz, "bdid");
             android.util.Log.e("DetailHotpatch", "d"+d);
-        }catch (Exception e){
+        }catch (Throwable e){
             e.printStackTrace();
         }
 
