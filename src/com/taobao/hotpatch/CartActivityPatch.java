@@ -27,7 +27,6 @@ public class CartActivityPatch implements IPatch {
         }
         // TODO 这里填上你要patch的bundle中的class名字，第三个参数是所在bundle中manifest的packageName，最后的参数为this
         Class<?> cart = PatchHelper.loadClass(context, "com.taobao.android.trade.cart.CartActivity", "com.taobao.android.trade", this);
-        android.util.Log.e("test","cart == null?"+(cart==null));
         if (cart == null) {
             return;
         }
@@ -40,14 +39,9 @@ public class CartActivityPatch implements IPatch {
                     protected void afterHookedMethod(MethodHookParam param)
                             throws Throwable {
                         Activity instance = (Activity) param.thisObject;
-                        android.util.Log.e("test","instance"+instance);
+                        int color = Color.parseColor("#ffff5000");
+
                         View view = instance.findViewById(1628045356);
-                        //Object view = XposedHelpers.callMethod(instance, "findViewById", new Class[]{int.class}, 1628045356);
-                        android.util.Log.e("test","view:"+view);
-                        //Integer color = (Integer)XposedHelpers.callStaticMethod(Color.class, "parseColor", new Class[]{String.class},"#ff00ff00");
-                        int color = Color.parseColor("#ff00ff00");
-                        android.util.Log.e("test","color:"+color);
-                        //XposedHelpers.callMethod(view,"setBackgroundColor", new Class[]{int.class}, color);
                         view.setBackgroundColor(color);
 
                         view = instance.findViewById(1628045346);
