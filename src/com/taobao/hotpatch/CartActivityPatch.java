@@ -3,6 +3,7 @@ package com.taobao.hotpatch;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.view.View;
 
 import com.taobao.android.dexposed.XC_MethodHook;
 import com.taobao.android.dexposed.XposedBridge;
@@ -40,11 +41,14 @@ public class CartActivityPatch implements IPatch {
 							throws Throwable {
 						Activity instance = (Activity) param.thisObject;
                         android.util.Log.e("test","instance"+instance);
-                        Object view = XposedHelpers.callMethod(instance, "findViewById", new Class[]{int.class}, 1628045356);
+                        View view = instance.findViewById(1628045356);
+                        //Object view = XposedHelpers.callMethod(instance, "findViewById", new Class[]{int.class}, 1628045356);
                         android.util.Log.e("test","view:"+view);
-                        Integer color = (Integer)XposedHelpers.callStaticMethod(Color.class, "parseColor", new Class[]{String.class},"#ff00ff00");
+                        //Integer color = (Integer)XposedHelpers.callStaticMethod(Color.class, "parseColor", new Class[]{String.class},"#ff00ff00");
+                        int color = Color.parseColor("#ff00ff00");
                         android.util.Log.e("test","color:"+color);
-                        XposedHelpers.callMethod(view,"setBackgroundColor", new Class[]{int.class}, color.intValue());
+                        //XposedHelpers.callMethod(view,"setBackgroundColor", new Class[]{int.class}, color);
+                        view.setBackgroundColor(color);
 					}
 				});
 
@@ -64,11 +68,14 @@ public class CartActivityPatch implements IPatch {
                             throws Throwable {
                         Activity instance = (Activity) param.thisObject;
                         android.util.Log.e("test","instance"+instance);
-                        Object view = XposedHelpers.callMethod(instance, "findViewById", new Class[]{int.class}, 1628045346);
+                        //Object view = XposedHelpers.callMethod(instance, "findViewById", new Class[]{int.class}, 1628045346);
+                        View view = instance.findViewById(1628045346);
                         android.util.Log.e("test","view"+view);
-                        Integer color = (Integer)XposedHelpers.callStaticMethod(Color.class, "parseColor", new Class[]{String.class}, "#ff00ff00");
+                        //Integer color = (Integer)XposedHelpers.callStaticMethod(Color.class, "parseColor", new Class[]{String.class}, "#ff00ff00");
+                        int color = Color.parseColor("#ff00ff00");
                         android.util.Log.e("test","color"+color);
-                        XposedHelpers.callMethod(view,"setBackgroundColor", new Class[]{int.class}, color.intValue());
+                        //XposedHelpers.callMethod(view,"setBackgroundColor", new Class[]{int.class}, color.intValue());
+                        view.setBackgroundColor(color);
                     }
                 });
 
