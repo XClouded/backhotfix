@@ -6,6 +6,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Build;
@@ -13,15 +14,13 @@ import android.os.Bundle;
 import android.taobao.atlas.bundleInfo.BundleInfoList;
 import android.taobao.atlas.framework.Atlas;
 import android.taobao.atlas.framework.Framework;
-import android.taobao.atlas.runtime.ClassLoadFromBundle;
-import android.taobao.atlas.runtime.DelegateComponent;
-import android.taobao.atlas.runtime.InstrumentationHook;
-import android.taobao.atlas.runtime.RuntimeVariables;
+import android.taobao.atlas.runtime.*;
 import android.taobao.atlas.util.StringUtils;
 import android.taobao.util.NetWork;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
+import com.taobao.android.dexposed.XC_MethodHook;
 import com.taobao.android.dexposed.XC_MethodReplacement;
 import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.android.dexposed.XposedHelpers;
@@ -37,6 +36,7 @@ import org.osgi.framework.BundleException;
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.zip.ZipEntry;
@@ -55,6 +55,31 @@ public class AtlasBundlePatch implements IPatch {
             // 不是主进程就返回
             return;
         }
+        XposedBridge.findAndHookMethod(PackageLite.class,"parse",File.class,new XC_MethodHook() {
+            @Override
+            protected void afterHookedMethod(MethodHookParam arg0) throws Throwable {
+                PackageLite pl = (PackageLite)arg0.getResult();
+                if(pl!=null || TextUtils.isEmpty(pl.applicationClassName)){
+                    logError(null,"packageLite is null","");
+                    PackageInfo info = context.getPackageManager().getPackageArchiveInfo((String)arg0.args[0], PackageManager.GET_ACTIVITIES);
+                    if(info!=null){
+                        Constructor<PackageLite> constructor = PackageLite.class.getDeclaredConstructor();
+                        pl = constructor.newInstance();
+                        pl.applicationClassName = info.applicationInfo.className;
+                        ActivityInfo[] activityInfos = info.activities;
+                        if(activityInfos!=null){
+                            for(ActivityInfo activityInfo : activityInfos){
+                                pl.components.add(activityInfo.name);
+                            }
+                        }
+                        pl.metaData = info.applicationInfo.metaData;
+                    }
+                }
+                arg0.setResult(pl);
+            }
+        });
+
+
         Class ExecStartActivityCallback = Class.forName("android.taobao.atlas.runtime.InstrumentationHook$ExecStartActivityCallback");
         XposedBridge.findAndHookMethod(InstrumentationHook.class, "execStartActivityInternal", Context.class, Intent.class,ExecStartActivityCallback, new XC_MethodReplacement() {
             // 在这个方法中，实现替换逻辑
@@ -78,11 +103,11 @@ public class AtlasBundlePatch implements IPatch {
                         packageName = resolveInfo.activityInfo.packageName;
                         componentName = resolveInfo.activityInfo.name;
                     }
-                    if(resolveInfo!=null){
-                        try {
-                            Log.e("AtlasBundlePatch", "bundle location = " + resolveInfo.activityInfo.metaData.getString("bundleLocation"));
-                        }catch(Throwable e){}
-                    }
+//                    if(resolveInfo!=null){
+//                        try {
+//                            Log.e("AtlasBundlePatch", "bundle location = " + resolveInfo.activityInfo.metaData.getString("bundleLocation"));
+//                        }catch(Throwable e){}
+//                    }
                 }
 
                 if (componentName == null){
@@ -92,12 +117,12 @@ public class AtlasBundlePatch implements IPatch {
                         //result = callback.execStartActivity();
                         result = (Instrumentation.ActivityResult)XposedHelpers.callMethod(callback,"execStartActivity");
                     } catch (Exception e){
-                        logError(e,"start activity fail","");
+                        //logError(e,"start activity fail","");
                     }
 
                     return result;
                 }
-                Log.d("AtlasBundlePatch","atlas hotpatch begin");
+//                Log.d("AtlasBundlePatch","atlas hotpatch begin");
 
                 installBundle("com.taobao.browser");
                 try{
@@ -132,9 +157,9 @@ public class AtlasBundlePatch implements IPatch {
                         }
                     }
 
-                    if(ClassLoadFromBundle.sInternalBundles==null){
-                        logError(null,"can not find internal bundle",componentName);
-                    }
+//                    if(ClassLoadFromBundle.sInternalBundles==null){
+//                        logError(null,"can not find internal bundle",componentName);
+//                    }
 
                     String bundle = BundleInfoList.getInstance().getBundleNameForComponet(componentName);
                     if(bundle==null){
@@ -172,10 +197,10 @@ public class AtlasBundlePatch implements IPatch {
                         //fallBackToClassNotFoundCallback(context, intent, componentName);
                         return null;
                     }
-
-                    if(DelegateComponent.locateComponent(componentName)!=null){
-                        TBS.Ext.commitEvent(61005, "atlas", "second success", "", "");
-                    }
+//
+//                    if(DelegateComponent.locateComponent(componentName)!=null){
+//                        TBS.Ext.commitEvent(61005, "atlas", "second success", "", "");
+//                    }
                 }
 
                 // Taobao may start a component not exist in com.taobao.taobao package.
@@ -223,9 +248,9 @@ public class AtlasBundlePatch implements IPatch {
             String errorString = sw.toString();
             Map map = new HashMap<String, String>();
             map.put("errorStr", errorString);
-            TBS.Ext.commitEvent(61005, "atlas", errorCode, componentName, map.toString());
+            TBS.Ext.commitEvent(61005, "atlas_107", errorCode, componentName, map.toString());
         }else{
-            TBS.Ext.commitEvent(61005, "atlas", errorCode, componentName, "");
+            TBS.Ext.commitEvent(61005, "atlas_107", errorCode, componentName, "");
         }
             Log.d("AtlasBundlePatch","atlas hotpatch log error for xiaomi");
 
