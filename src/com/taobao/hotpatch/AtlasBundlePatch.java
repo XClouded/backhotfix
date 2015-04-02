@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.os.Build;
+import android.os.Bundle;
+import android.taobao.atlas.bundleInfo.BundleInfoList;
 import android.taobao.atlas.framework.Atlas;
 import android.taobao.atlas.framework.Framework;
 import android.taobao.atlas.runtime.ClassLoadFromBundle;
@@ -63,14 +65,20 @@ public class AtlasBundlePatch implements IPatch {
                 // Get package name and component name
                 String packageName = null;
                 String componentName = null;
+                ResolveInfo resolveInfo = null;
                 if (intent.getComponent() != null) {
                     packageName = intent.getComponent().getPackageName();
                     componentName = intent.getComponent().getClassName();
                 } else {
-                    ResolveInfo resolveInfo = context.getPackageManager().resolveActivity(intent, 0);
+                    resolveInfo = context.getPackageManager().resolveActivity(intent, 0);
                     if (resolveInfo != null && resolveInfo.activityInfo != null) {
                         packageName = resolveInfo.activityInfo.packageName;
                         componentName = resolveInfo.activityInfo.name;
+                    }
+                    if(resolveInfo!=null){
+                        try {
+                            Log.e("AtlasBundlePatch", "bundle location = " + resolveInfo.activityInfo.metaData.getString("bundleLocation"));
+                        }catch(Throwable e){}
                     }
                 }
 
@@ -88,19 +96,7 @@ public class AtlasBundlePatch implements IPatch {
                 }
                 Log.d("AtlasBundlePatch","atlas hotpatch begin");
 
-                try {
-                    if(Atlas.getInstance().getBundle("com.taobao.browser")==null) {
-                        String soName = "com.taobao.browser".replace(".", "_");
-                        soName = "lib".concat(soName).concat(".so");
-                        File libDir = new File(Framework.getProperty("android.taobao.atlas.AppDirectory"), "lib");
-                        File soFile = new File(libDir, soName);
-                        if (soFile.exists()){
-                            Atlas.getInstance().installBundle("com.taobao.browser", soFile);
-                        }
-                    }
-                } catch (Throwable e) {
-
-                }
+                installBundle("com.taobao.browser");
                 try{
                     // Make sure to install the bundle holds component
                     ClassLoadFromBundle.checkInstallBundleIfNeed(componentName);
@@ -113,6 +109,7 @@ public class AtlasBundlePatch implements IPatch {
                 }
 
                 if(DelegateComponent.locateComponent(componentName)==null){
+
                     if(ClassLoadFromBundle.sInternalBundles==null){
                         String prefix = "lib/armeabi/libcom_";
                         String suffix = ".so";
@@ -131,6 +128,27 @@ public class AtlasBundlePatch implements IPatch {
                         } catch (Exception e) {
                             logError(e,"resolve internal bundle fail",componentName);
                         }
+                    }
+
+                    if(ClassLoadFromBundle.sInternalBundles==null){
+                        logError(null,"can not find internal bundle",componentName);
+                    }
+
+                    if(BundleInfoList.getInstance().getBundleNameForComponet(componentName)==null){
+                        logError(null,"bundleinfo list is invalid",componentName);
+                        if(resolveInfo!=null || (resolveInfo=context.getPackageManager().resolveActivity(intent, 0))!=null){
+                            Bundle metaData = resolveInfo.activityInfo.metaData;
+                            if(metaData!=null){
+                                String bundleName = metaData.getString("bundleLocation");
+                                if(bundleName!=null){
+                                    installBundle(bundleName);
+                                }
+                            }
+                        }
+                    }
+
+                    if(DelegateComponent.locateComponent(componentName)!=null){
+                        TBS.Ext.commitEvent(61005, "atlas", "install bundle success from manifest help ", "", "");
                     }
 
                     try{
@@ -187,15 +205,36 @@ public class AtlasBundlePatch implements IPatch {
     public void logError(Exception e,String errorCode,String componentName){
         Log.d("AtlasBundlePatch","atlas hotpatch log error");
  //       if(Build.MANUFACTURER!=null && (Build.MANUFACTURER.contains("Xiaomi") || Build.MANUFACTURER.contains("xiaomi"))) {
+        if(e!=null) {
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
             e.printStackTrace(pw);
             String errorString = sw.toString();
             Map map = new HashMap<String, String>();
             map.put("errorStr", errorString);
-            Log.d("AtlasBundlePatch","atlas hotpatch log error for xiaomi");
             TBS.Ext.commitEvent(61005, "atlas", errorCode, componentName, map.toString());
+        }else{
+            TBS.Ext.commitEvent(61005, "atlas", errorCode, componentName, "");
+        }
+            Log.d("AtlasBundlePatch","atlas hotpatch log error for xiaomi");
+
  //       }
+    }
+
+    private void installBundle(String bundleName){
+        try {
+            if(Atlas.getInstance().getBundle(bundleName)==null) {
+                String soName = bundleName.replace(".", "_");
+                soName = "lib".concat(soName).concat(".so");
+                File libDir = new File(Framework.getProperty("android.taobao.atlas.AppDirectory"), "lib");
+                File soFile = new File(libDir, soName);
+                if (soFile.exists()){
+                    Atlas.getInstance().installBundle(bundleName, soFile);
+                }
+            }
+        } catch (Throwable e) {
+
+        }
     }
 
     public static String getPackageNameFromEntryName(String entryName) {
