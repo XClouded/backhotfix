@@ -186,7 +186,7 @@ public class AtlasBundlePatch implements IPatch {
 
     public void logError(Exception e,String errorCode,String componentName){
         Log.d("AtlasBundlePatch","atlas hotpatch log error");
-        if(Build.MANUFACTURER!=null && (Build.MANUFACTURER.contains("Xiaomi") || Build.MANUFACTURER.contains("xiaomi"))) {
+ //       if(Build.MANUFACTURER!=null && (Build.MANUFACTURER.contains("Xiaomi") || Build.MANUFACTURER.contains("xiaomi"))) {
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
             e.printStackTrace(pw);
@@ -195,7 +195,7 @@ public class AtlasBundlePatch implements IPatch {
             map.put("errorStr", errorString);
             Log.d("AtlasBundlePatch","atlas hotpatch log error for xiaomi");
             TBS.Ext.commitEvent(61005, "atlas", errorCode, componentName, map.toString());
-        }
+ //       }
     }
 
     public static String getPackageNameFromEntryName(String entryName) {
