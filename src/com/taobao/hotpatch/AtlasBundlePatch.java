@@ -61,7 +61,7 @@ public class AtlasBundlePatch implements IPatch {
                 PackageLite pl = (PackageLite)arg0.getResult();
                 if(pl!=null || TextUtils.isEmpty(pl.applicationClassName)){
                     logError(null,"packageLite is null","");
-                    PackageInfo info = context.getPackageManager().getPackageArchiveInfo((String)arg0.args[0], PackageManager.GET_ACTIVITIES);
+                    PackageInfo info = context.getPackageManager().getPackageArchiveInfo(((File)arg0.args[0]).getAbsolutePath(), PackageManager.GET_ACTIVITIES);
                     if(info!=null){
                         Constructor<PackageLite> constructor = PackageLite.class.getDeclaredConstructor();
                         pl = constructor.newInstance();
