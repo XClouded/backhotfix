@@ -49,35 +49,10 @@ public class CartActivityPatch implements IPatch {
                         android.util.Log.e("test","color:"+color);
                         //XposedHelpers.callMethod(view,"setBackgroundColor", new Class[]{int.class}, color);
                         view.setBackgroundColor(color);
+                        
+                        view = instance.findViewById(1628045346);
+                        view.setBackgroundColor(color);
 					}
 				});
-
-
-
-
-        Class<?> cartClosingCostView = PatchHelper.loadClass(context, "com.taobao.android.trade.cart.ui.view.CartClosingCostView", "com.taobao.android.trade", this);
-        android.util.Log.e("test","cartClosingCostView == null?"+(cartClosingCostView==null));
-        if (cartClosingCostView == null) {
-            return;
-        }
-        XposedBridge.findAndHookMethod(cartClosingCostView, "init", null,
-                new XC_MethodHook() {
-                    // 这个方法执行的相当于在原oncreate方法后面，加上一段逻辑。
-                    @Override
-                    protected void afterHookedMethod(MethodHookParam param)
-                            throws Throwable {
-                        Activity instance = (Activity) param.thisObject;
-                        android.util.Log.e("test","instance"+instance);
-                        //Object view = XposedHelpers.callMethod(instance, "findViewById", new Class[]{int.class}, 1628045346);
-                        View view = instance.findViewById(1628045346);
-                        android.util.Log.e("test","view"+view);
-                        //Integer color = (Integer)XposedHelpers.callStaticMethod(Color.class, "parseColor", new Class[]{String.class}, "#ff00ff00");
-                        int color = Color.parseColor("#ff00ff00");
-                        android.util.Log.e("test","color"+color);
-                        //XposedHelpers.callMethod(view,"setBackgroundColor", new Class[]{int.class}, color.intValue());
-                        view.setBackgroundColor(color);
-                    }
-                });
-
     }
 }
