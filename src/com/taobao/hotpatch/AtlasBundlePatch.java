@@ -106,13 +106,12 @@ public class AtlasBundlePatch implements IPatch {
                 } catch (Exception e){
 //                    log.error("Failed to load bundle for " + componentName + e);
                     logError(e,"intall bundle fail first",componentName);
-                    XposedHelpers.callMethod(arg0.thisObject, "fallBackToClassNotFoundCallback", new Class[]{Context.class,Intent.class,String.class},context, intent, componentName);
+                    //XposedHelpers.callMethod(arg0.thisObject, "fallBackToClassNotFoundCallback", new Class[]{Context.class,Intent.class,String.class},context, intent, componentName);
                     //fallBackToClassNotFoundCallback(context, intent, componentName);
 //                    return null;
                 }
 
                 if(DelegateComponent.locateComponent(componentName)==null){
-
                     if(ClassLoadFromBundle.sInternalBundles==null){
                         String prefix = "lib/armeabi/libcom_";
                         String suffix = ".so";
@@ -137,8 +136,13 @@ public class AtlasBundlePatch implements IPatch {
                         logError(null,"can not find internal bundle",componentName);
                     }
 
-                    if(BundleInfoList.getInstance().getBundleNameForComponet(componentName)==null){
+                    String bundle = BundleInfoList.getInstance().getBundleNameForComponet(componentName);
+                    if(bundle==null){
                         logError(null,"bundleinfo list is invalid",componentName);
+                    }else{
+                        if(Atlas.getInstance().getBundle(bundle)!=null){
+                            logError(null,"has installed but parse fail",componentName);
+                        }
                     }
 
                     try {
