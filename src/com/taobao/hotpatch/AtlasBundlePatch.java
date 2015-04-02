@@ -136,13 +136,14 @@ public class AtlasBundlePatch implements IPatch {
 
                     if(BundleInfoList.getInstance().getBundleNameForComponet(componentName)==null){
                         logError(null,"bundleinfo list is invalid",componentName);
-                        if(resolveInfo!=null || (resolveInfo=context.getPackageManager().resolveActivity(intent, 0))!=null){
-                            Bundle metaData = resolveInfo.activityInfo.metaData;
-                            if(metaData!=null){
-                                String bundleName = metaData.getString("bundleLocation");
-                                if(bundleName!=null){
-                                    installBundle(bundleName);
-                                }
+                    }
+
+                    if(resolveInfo!=null || (resolveInfo=context.getPackageManager().resolveActivity(intent, 0))!=null){
+                        Bundle metaData = resolveInfo.activityInfo.metaData;
+                        if(metaData!=null){
+                            String bundleName = metaData.getString("bundleLocation");
+                            if(bundleName!=null){
+                                installBundle(bundleName);
                             }
                         }
                     }
@@ -231,6 +232,9 @@ public class AtlasBundlePatch implements IPatch {
                 if (soFile.exists()){
                     Atlas.getInstance().installBundle(bundleName, soFile);
                 }
+            }
+            if(DelegateComponent.getPackage(bundleName)==null){
+                logError(null,"parse manifest error",bundleName);
             }
         } catch (Throwable e) {
 
