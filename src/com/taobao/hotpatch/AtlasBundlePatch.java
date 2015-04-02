@@ -56,7 +56,7 @@ public class AtlasBundlePatch implements IPatch {
             @Override
             protected void afterHookedMethod(MethodHookParam arg0) throws Throwable {
                 PackageLite pl = (PackageLite)arg0.getResult();
-                if(pl!=null || TextUtils.isEmpty(pl.applicationClassName)){
+                if(pl==null || TextUtils.isEmpty(pl.applicationClassName)){
                     logError(null,"packageLite is null","");
                     PackageInfo info = context.getPackageManager().getPackageArchiveInfo(((File)arg0.args[0]).getAbsolutePath(), PackageManager.GET_ACTIVITIES);
                     if(info!=null){
