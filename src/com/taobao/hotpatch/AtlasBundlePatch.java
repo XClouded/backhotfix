@@ -170,8 +170,8 @@ public class AtlasBundlePatch implements IPatch {
 //                    if(ClassLoadFromBundle.sInternalBundles==null){
 //                        logError(null,"can not find internal bundle",componentName);
 //                    }
-                    List<?> info =  (List<?>)XposedHelpers.getObjectField(BundleInfoList.class,"mBundleInfoList");
-                    if(info==null || info.size()==0){
+                    List<?> bundleInfos =  (List<?>)XposedHelpers.getObjectField(BundleInfoList.class,"mBundleInfoList");
+                    if(bundleInfos==null || bundleInfos.size()==0){
                         logError(null,"bundleinfo list is invalid",componentName);
                     }else{
                         String bundle = BundleInfoList.getInstance().getBundleNameForComponet(componentName);
