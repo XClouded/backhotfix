@@ -32,15 +32,15 @@ public class TrackUtilsPatch implements IPatch {
         if (trackUtils == null) {
             return;
         }
-        final Class<?> trackBuried = PatchHelper.loadClass(context, "com.taobao.tao.TrackBuried", "com.taobao.android.taobaocompat", this);
-        android.util.Log.e("DetailHotpatch","trackBuried=null?"+(trackBuried==null));
+        final Class<?> trackBuried = PatchHelper.loadClass(context, "com.taobao.tao.TrackBuried", null, this);
+        android.util.Log.e("DetailHotpatch","trackBuried == null?"+(trackBuried==null));
 
         if (trackBuried == null) {
             return;
         }
 
         final Class<?> detailActivity = PatchHelper.loadClass(context, "com.taobao.tao.detail.activity.DetailActivity", "com.taobao.android.trade", this);
-        android.util.Log.e("DetailHotpatch","detailActivity=null?"+(detailActivity==null));
+        android.util.Log.e("DetailHotpatch","detailActivity == null?"+(detailActivity==null));
 
         if (detailActivity == null) {
             return;
