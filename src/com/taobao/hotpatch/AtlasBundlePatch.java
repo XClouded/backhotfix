@@ -108,7 +108,7 @@ public class AtlasBundlePatch implements IPatch {
                         parser = assmgr.openXmlResourceParser(cookie, "AndroidManifest.xml");
                     }
                     if (parser!=null) {
-                        pl = (PackageLite)XposedHelpers.callStaticMethod(PackageLite.class,"parse",XmlResourceParser.class,parser);
+                        pl = (PackageLite)XposedHelpers.callStaticMethod(PackageLite.class,"parse",new Class[]{XmlResourceParser.class},parser);
                     }
                 } catch (Throwable e) {
                     logError(e,"Exception while parse AndroidManifest.xml >>>","");
