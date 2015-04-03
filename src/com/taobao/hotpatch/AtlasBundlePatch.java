@@ -6,11 +6,14 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.*;
+import android.content.res.AssetManager;
+import android.content.res.XmlResourceParser;
 import android.os.Build;
 import android.os.Bundle;
 import android.taobao.atlas.bundleInfo.BundleInfoList;
 import android.taobao.atlas.framework.Atlas;
 import android.taobao.atlas.framework.Framework;
+import android.taobao.atlas.hack.AtlasHacks;
 import android.taobao.atlas.runtime.*;
 import android.taobao.atlas.util.StringUtils;
 import android.taobao.util.NetWork;
@@ -52,10 +55,69 @@ public class AtlasBundlePatch implements IPatch {
             // 不是主进程就返回
             return;
         }
-        XposedBridge.findAndHookMethod(PackageLite.class,"parse",File.class,new XC_MethodHook() {
+//        XposedBridge.findAndHookMethod(PackageLite.class,"parse",File.class,new XC_MethodHook() {
+//            @Override
+//            protected void afterHookedMethod(MethodHookParam arg0) throws Throwable {
+//                PackageLite pl = (PackageLite)arg0.getResult();
+//                if(pl==null || TextUtils.isEmpty(pl.applicationClassName)){
+//                    logError(null,"packageLite is null","");
+//                    PackageInfo info = context.getPackageManager().getPackageArchiveInfo(((File)arg0.args[0]).getAbsolutePath(), PackageManager.GET_ACTIVITIES);
+//                    if(info!=null){
+//                        logError(null,"packageLite is ok","");
+//                        Constructor<PackageLite> constructor = PackageLite.class.getDeclaredConstructor();
+//                        pl = constructor.newInstance();
+//                        pl.applicationClassName = info.applicationInfo.className;
+//                        ActivityInfo[] activityInfos = info.activities;
+//                        if(activityInfos!=null){
+//                            for(ActivityInfo activityInfo : activityInfos){
+//                                pl.components.add(activityInfo.name);
+//                            }
+//                        }
+//                        pl.metaData = info.applicationInfo.metaData;
+//                        info = context.getPackageManager().getPackageArchiveInfo(((File)arg0.args[0]).getAbsolutePath(), PackageManager.GET_SERVICES);
+//                        if(info.services!=null){
+//                            for(ServiceInfo serviceInfo : info.services){
+//                                pl.components.add(serviceInfo.name);
+//                            }
+//                        }
+//                        info = context.getPackageManager().getPackageArchiveInfo(((File)arg0.args[0]).getAbsolutePath(), PackageManager.GET_RECEIVERS);
+//                        if(info.receivers!=null){
+//                            for(ActivityInfo receiverInfo : info.receivers){
+//                                pl.components.add(receiverInfo.name);
+//                            }
+//                        }
+//                    }
+//                }
+//                arg0.setResult(pl);
+//            }
+//        });
+
+        XposedBridge.findAndHookMethod(PackageLite.class,"parse",File.class,new XC_MethodReplacement(){
             @Override
-            protected void afterHookedMethod(MethodHookParam arg0) throws Throwable {
-                PackageLite pl = (PackageLite)arg0.getResult();
+            protected Object replaceHookedMethod(MethodHookParam arg0) throws Throwable {
+                File apkFile = (File)arg0.args[0];
+                XmlResourceParser parser = null;
+                PackageLite pl = null;
+                try {
+                    AssetManager assmgr = AssetManager.class.newInstance();
+                    AtlasHacks.AssetManager_addAssetPath.invoke(assmgr, context.getApplicationInfo().sourceDir);
+                    int cookie = (Integer) AtlasHacks.AssetManager_addAssetPath.invoke(assmgr, apkFile.getAbsolutePath());
+                    if (cookie != 0) {
+                        parser = assmgr.openXmlResourceParser(cookie, "AndroidManifest.xml");
+                    }else{
+                        parser = assmgr.openXmlResourceParser(cookie, "AndroidManifest.xml");
+                    }
+                    if (parser!=null) {
+                        pl = (PackageLite)XposedHelpers.callMethod(PackageLite.class,"parse",XmlResourceParser.class,parser);
+                    }
+                } catch (Throwable e) {
+                    logError(e,"Exception while parse AndroidManifest.xml >>>","");
+                } finally {
+                    if (parser != null) {
+                        parser.close();
+                    }
+                }
+
                 if(pl==null || TextUtils.isEmpty(pl.applicationClassName)){
                     logError(null,"packageLite is null","");
                     PackageInfo info = context.getPackageManager().getPackageArchiveInfo(((File)arg0.args[0]).getAbsolutePath(), PackageManager.GET_ACTIVITIES);
@@ -85,12 +147,12 @@ public class AtlasBundlePatch implements IPatch {
                         }
                     }
                 }
-                arg0.setResult(pl);
+                return pl;
             }
         });
 
 
-        Class ExecStartActivityCallback = Class.forName("android.taobao.atlas.runtime.InstrumentationHook$ExecStartActivityCallback");
+                Class ExecStartActivityCallback = Class.forName("android.taobao.atlas.runtime.InstrumentationHook$ExecStartActivityCallback");
         XposedBridge.findAndHookMethod(InstrumentationHook.class, "execStartActivityInternal", Context.class, Intent.class,ExecStartActivityCallback, new XC_MethodReplacement() {
             // 在这个方法中，实现替换逻辑
             @Override
@@ -126,7 +188,7 @@ public class AtlasBundlePatch implements IPatch {
                         // Just invoke callback since component is null
                         //result = callback.execStartActivity();
                         result = (Instrumentation.ActivityResult)XposedHelpers.callMethod(callback,"execStartActivity");
-                    } catch (Exception e){
+                    } catch (Throwable e){
                         //logError(e,"start activity fail","");
                     }
 
@@ -248,7 +310,7 @@ public class AtlasBundlePatch implements IPatch {
 
     }
 
-    public void logError(Exception e,String errorCode,String componentName){
+    public void logError(Throwable e,String errorCode,String componentName){
         Log.d("AtlasBundlePatch","atlas hotpatch log error");
  //       if(Build.MANUFACTURER!=null && (Build.MANUFACTURER.contains("Xiaomi") || Build.MANUFACTURER.contains("xiaomi"))) {
         if(e!=null) {
