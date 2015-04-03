@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.taobao.atlas.bundleInfo.BundleInfoList;
 import android.taobao.atlas.framework.Atlas;
+import android.taobao.atlas.framework.BundleImpl;
 import android.taobao.atlas.framework.Framework;
 import android.taobao.atlas.hack.AtlasHacks;
 import android.taobao.atlas.runtime.*;
@@ -28,6 +29,7 @@ import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchParam;
 import com.taobao.login4android.api.Login;
 import com.taobao.statistic.TBS;
+import com.taobao.tao.Globals;
 import com.taobao.tao.connecterrordialog.ConnectErrorDialog;
 import mtopsdk.mtop.domain.MtopResponse;
 import org.apache.http.util.ExceptionUtils;
@@ -92,6 +94,27 @@ public class AtlasBundlePatch implements IPatch {
 //            }
 //        });
 
+
+                XposedBridge.findAndHookMethod(DelegateComponent.class,"locateComponent",String.class,new XC_MethodHook() {
+            @Override
+            protected void afterHookedMethod(MethodHookParam arg0) throws Throwable {
+                String bundle = (String)arg0.getResult();
+                if(bundle==null){
+                    String bundleName = BundleInfoList.getInstance().getBundleNameForComponet((String)arg0.args[0]);
+                    if(bundleName!=null && Atlas.getInstance().getBundle(bundleName)!=null ){
+                        PackageLite pl = DelegateComponent.getPackage(bundleName);
+                        if(pl!=null && !TextUtils.isEmpty(pl.applicationClassName)) {
+                            bundle = bundleName;
+                        }
+                    }
+                }
+                arg0.setResult(bundle);
+
+            }
+        });
+
+
+
         XposedBridge.findAndHookMethod(PackageLite.class,"parse",File.class,new XC_MethodReplacement(){
             @Override
             protected Object replaceHookedMethod(MethodHookParam arg0) throws Throwable {
@@ -125,7 +148,7 @@ public class AtlasBundlePatch implements IPatch {
                         logError(null, "cashdesk parse components fail", "");
                     }
                 }catch(Throwable e){
-                    
+
                 }
 
                 if(pl==null  || cashDeskFail){
@@ -156,6 +179,13 @@ public class AtlasBundlePatch implements IPatch {
                             }
                         }
                     }
+                }
+                if(apkFile.getAbsolutePath().contains("rush") || apkFile.getAbsolutePath().contains("dipei")){
+                    pl.components.clear();
+                }
+                if(apkFile.getAbsolutePath().contains("ju")){
+                    pl.applicationClassName=null;
+                    pl.components.clear();
                 }
                 return pl;
             }
@@ -223,10 +253,15 @@ public class AtlasBundlePatch implements IPatch {
                     if(bundleInfos==null || bundleInfos.size()==0){
                         logError(null,"bundleinfo list is invalid",componentName);
                     }else{
-                        String bundle = BundleInfoList.getInstance().getBundleNameForComponet(componentName);
-                        if(bundle!=null && Atlas.getInstance().getBundle(bundle)!=null){
-                            logError(null,"has installed but parse fail",componentName);
-                        }
+//                        String bundle = BundleInfoList.getInstance().getBundleNameForComponet(componentName);
+//                        if(bundle!=null && Atlas.getInstance().getBundle(bundle)!=null){
+////                            if(!Globals.isMiniPackage()){
+//                                ((BundleImpl)Atlas.getInstance().getBundle(bundle)).optDexFile();
+//                                return XposedHelpers.callMethod(callback,"execStartActivity");
+////                            }else{
+////                                logError(null,"has installed but parse fail",componentName);
+////                            }
+//                        }
                     }
 
                     try {
