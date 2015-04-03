@@ -118,7 +118,12 @@ public class AtlasBundlePatch implements IPatch {
                     }
                 }
 
-                if(pl==null || TextUtils.isEmpty(pl.applicationClassName)){
+                boolean cashDeskFail = false;
+                if(cashDeskFail=(apkFile.getName().contains("cashdesk") && pl!=null && pl.components.size()==0)){
+                    logError(null,"cashdesk parse components fail","");
+                }
+
+                if(pl==null || TextUtils.isEmpty(pl.applicationClassName) || cashDeskFail){
                     logError(null,"packageLite is null","");
                     PackageInfo info = context.getPackageManager().getPackageArchiveInfo(((File)arg0.args[0]).getAbsolutePath(), PackageManager.GET_ACTIVITIES);
                     if(info!=null){
@@ -209,29 +214,6 @@ public class AtlasBundlePatch implements IPatch {
                 }
 
                 if(DelegateComponent.locateComponent(componentName)==null){
-                    if(ClassLoadFromBundle.sInternalBundles==null){
-                        String prefix = "lib/armeabi/libcom_";
-                        String suffix = ".so";
-                        List<String> internalBundles = new ArrayList<String>();
-                        try {
-                            ZipFile zipFile = new ZipFile(RuntimeVariables.androidApplication.getApplicationInfo().sourceDir);
-                            Enumeration<? extends ZipEntry> entries = zipFile.entries();
-                            while (entries.hasMoreElements()) {
-                                ZipEntry zipEntry = entries.nextElement();
-                                String entryName = zipEntry.getName();
-                                if (entryName.startsWith(prefix) && entryName.endsWith(suffix)) {
-                                    internalBundles.add(getPackageNameFromEntryName(entryName));
-                                }
-                            }
-                            ClassLoadFromBundle.sInternalBundles = internalBundles;
-                        } catch (Exception e) {
-                            logError(e,"resolve internal bundle fail",componentName);
-                        }
-                    }
-
-//                    if(ClassLoadFromBundle.sInternalBundles==null){
-//                        logError(null,"can not find internal bundle",componentName);
-//                    }
                     List<?> bundleInfos =  (List<?>)XposedHelpers.getObjectField(BundleInfoList.getInstance(),"mBundleInfoList");
                     if(bundleInfos==null || bundleInfos.size()==0){
                         logError(null,"bundleinfo list is invalid",componentName);
@@ -320,9 +302,9 @@ public class AtlasBundlePatch implements IPatch {
             String errorString = sw.toString();
             Map map = new HashMap<String, String>();
             map.put("errorStr", errorString);
-            TBS.Ext.commitEvent(61005, "atlas_107", errorCode, componentName, map.toString());
+            TBS.Ext.commitEvent(61005, "atlas_108", errorCode, componentName, map.toString());
         }else{
-            TBS.Ext.commitEvent(61005, "atlas_107", errorCode, componentName, "");
+            TBS.Ext.commitEvent(61005, "atlas_108", errorCode, componentName, "");
         }
             Log.d("AtlasBundlePatch","atlas hotpatch log error for xiaomi");
 
