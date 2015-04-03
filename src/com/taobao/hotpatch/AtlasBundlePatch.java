@@ -117,7 +117,31 @@ public class AtlasBundlePatch implements IPatch {
             }
         });
 
+        XposedBridge.findAndHookMethod(ClassLoadFromBundle.class,"loadFromInstalledBundles",String.class,new XC_MethodHook() {
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                String className = (String)param.args[0];
+                if(param.getThrowable()!=null){
+                    Class<?> clazz = null;
+                    List<org.osgi.framework.Bundle> bundles = Framework.getBundles();
+                    if (bundles != null && !bundles.isEmpty()) {
+                        String bundle = DelegateComponent.locateComponent(className);
+                        BundleImpl impl = (BundleImpl)Atlas.getInstance().getBundle(bundle);
+                        if(impl!=null){
+                            impl.optDexFile();
+                            ClassLoader classloader = impl.getClassLoader();
+                            clazz = classloader.loadClass(className);
+                            if (clazz != null) {
+                                param.setThrowable(null);
+                                param.setResult(clazz);
+                            }
+                        }
 
+                    }
+                }
+
+            }
+        });
 
         XposedBridge.findAndHookMethod(PackageLite.class,"parse",File.class,new XC_MethodReplacement(){
             @Override
