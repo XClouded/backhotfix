@@ -268,22 +268,22 @@ public class AtlasBundlePatch implements IPatch {
 //                        }
                     }
 
-                    try {
-                        if (resolveInfo != null || (resolveInfo = context.getPackageManager().resolveActivity(intent, 0)) != null) {
-                            ActivityInfo info = context.getPackageManager().getActivityInfo(new ComponentName("com.taobao.taobao", componentName), PackageManager.GET_META_DATA);
-                            Bundle metaData = info.metaData;
-                            if (metaData != null) {
-                                String bundleName = metaData.getString("bundleLocation");
-                                if (bundleName != null) {
-                                    installBundle(bundleName);
-                                }
-                            }
-                        }
-                    }catch(Throwable e){}
-
-                    if(DelegateComponent.locateComponent(componentName)!=null){
-                        TBS.Ext.commitEvent(61005, "atlas", "install bundle success from manifest help ", "", "");
-                    }
+//                    try {
+//                        if (resolveInfo != null || (resolveInfo = context.getPackageManager().resolveActivity(intent, 0)) != null) {
+//                            ActivityInfo info = context.getPackageManager().getActivityInfo(new ComponentName("com.taobao.taobao", componentName), PackageManager.GET_META_DATA);
+//                            Bundle metaData = info.metaData;
+//                            if (metaData != null) {
+//                                String bundleName = metaData.getString("bundleLocation");
+//                                if (bundleName != null) {
+//                                    installBundle(bundleName);
+//                                }
+//                            }
+//                        }
+//                    }catch(Throwable e){}
+//
+//                    if(DelegateComponent.locateComponent(componentName)!=null){
+//                        TBS.Ext.commitEvent(61005, "atlas", "install bundle success from manifest help ", "", "");
+//                    }
 
                     try{
                         // Make sure to install the bundle holds component
