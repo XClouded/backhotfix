@@ -80,61 +80,18 @@ public class AtlasBundlePatch implements IPatch {
             }
         });
 
-        XposedBridge.findAndHookMethod(ClassLoadFromBundle.class, "loadFromInstalledBundles", String.class, new XC_MethodReplacement() {
+        XposedBridge.findAndHookMethod(ClassLoadFromBundle.class, "loadFromInstalledBundles", String.class,new XC_MethodHook() {
             @Override
-            protected Object replaceHookedMethod(MethodHookParam methodHookParam) throws Throwable {
-
-                Class<?> clazz = null;
-                String className = (String) methodHookParam.args[0];
-                List<org.osgi.framework.Bundle> bundles = Framework.getBundles();
-                if (bundles != null && !bundles.isEmpty()) {
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                if(param.getResult()==null && param.getThrowable()==null){
+                    String className = (String)param.args[0];
                     String bundleName = DelegateComponent.locateComponent(className);
-                    BundleImpl bundle = (BundleImpl) Atlas.getInstance().getBundle(bundleName);
-                    if (bundle != null) {
-                        /*
-                         * make sure bundle dexopt is done
-                    	 */
-                        bundle.getArchive().optDexFile();
-                        ClassLoader classloader = bundle.getClassLoader();
-                        try {
-                            if (classloader != null) {
-                                clazz = classloader.loadClass(className);
-                                if (clazz != null) {
-                                    return clazz;
-                                }
-                            }
-                        } catch (ClassNotFoundException e) {
-                            throw new ClassNotFoundException("Can't find class " + className + " in BundleClassLoader: " + bundle.getLocation() + " [" + (bundles == null ? 0 : bundles.size()) + "]"
-                                    + "classloader is: " + (classloader == null ? "null" : "not null") + " packageversion " + " exception:" + e.getMessage());
-                        }
-                        throw new ClassNotFoundException("Can't find class " + className + " in BundleClassLoader: " + bundle.getLocation() + " [" + (bundles == null ? 0 : bundles.size()) + "]"
-                                + (classloader == null ? "classloader is null" : "classloader not null") + " packageversion ");
+                    BundleImpl bundle = (BundleImpl)Atlas.getInstance().getBundle(bundleName);
+                    if(bundle!=null){
+                        bundle.optDexFile();
+                        param.setResult(bundle.getClassLoader().loadClass(className));
                     }
                 }
-
-        /*
-         * The layout may uses the designated classes, in this case,
-         * the class not exist in components, we need search all bundles
-         * to find the class.
-         */
-                if (bundles != null && !bundles.isEmpty()) {
-                    for (org.osgi.framework.Bundle b : Framework.getBundles()) {
-                        BundleImpl bundle = (BundleImpl) b;
-                        if (bundle.getArchive().isDexOpted()) {
-                            ClassLoader classloader = bundle.getClassLoader();
-                            try {
-                                if (classloader != null) {
-                                    clazz = classloader.loadClass(className);
-                                    if (clazz != null) {
-                                        return clazz;
-                                    }
-                                }
-                            } catch (ClassNotFoundException e) {
-                            }
-                        }
-                    }
-                }
-                return clazz;
             }
         });
 
