@@ -117,29 +117,61 @@ public class AtlasBundlePatch implements IPatch {
             }
         });
 
-        XposedBridge.findAndHookMethod(ClassLoadFromBundle.class,"loadFromInstalledBundles",String.class,new XC_MethodHook() {
+        XposedBridge.findAndHookMethod(ClassLoadFromBundle.class,"loadFromInstalledBundles",String.class,new XC_MethodReplacement() {
             @Override
-            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                String className = (String)param.args[0];
-                if(param.getThrowable()!=null){
-                    Class<?> clazz = null;
-                    List<org.osgi.framework.Bundle> bundles = Framework.getBundles();
-                    if (bundles != null && !bundles.isEmpty()) {
-                        String bundle = DelegateComponent.locateComponent(className);
-                        BundleImpl impl = (BundleImpl)Atlas.getInstance().getBundle(bundle);
-                        if(impl!=null){
-                            impl.optDexFile();
-                            ClassLoader classloader = impl.getClassLoader();
-                            clazz = classloader.loadClass(className);
-                            if (clazz != null) {
-                                param.setThrowable(null);
-                                param.setResult(clazz);
-                            }
-                        }
+            protected Object replaceHookedMethod(MethodHookParam methodHookParam) throws Throwable {
 
+                Class<?> clazz = null;
+                String className = (String) methodHookParam.args[0];
+                List<org.osgi.framework.Bundle> bundles = Framework.getBundles();
+                if (bundles != null && !bundles.isEmpty()) {
+                    String bundleName = DelegateComponent.locateComponent(className);
+                    BundleImpl bundle = (BundleImpl) Atlas.getInstance().getBundle(bundleName);
+                    if (bundle != null) {
+                        /*
+                    	 * make sure bundle dexopt is done
+                    	 */
+                        bundle.getArchive().optDexFile();
+                        ClassLoader classloader = bundle.getClassLoader();
+                        try {
+                            if (classloader != null) {
+                                clazz = classloader.loadClass(className);
+                                if (clazz != null) {
+                                    return clazz;
+                                }
+                            }
+                        } catch (ClassNotFoundException e) {
+                            throw new ClassNotFoundException("Can't find class " + className + " in BundleClassLoader: " + bundle.getLocation() + " [" + (bundles == null ? 0 : bundles.size()) + "]"
+                                    + "classloader is: " + (classloader == null ? "null" : "not null") + " packageversion " + " exception:" + e.getMessage());
+                        }
+                        throw new ClassNotFoundException("Can't find class " + className + " in BundleClassLoader: " + bundle.getLocation() + " [" + (bundles == null ? 0 : bundles.size()) + "]"
+                                + (classloader == null ? "classloader is null" : "classloader not null") + " packageversion ");
                     }
                 }
 
+        /*
+         * The layout may uses the designated classes, in this case,
+         * the class not exist in components, we need search all bundles
+         * to find the class.
+         */
+                if (bundles != null && !bundles.isEmpty()) {
+                    for (org.osgi.framework.Bundle b : Framework.getBundles()) {
+                        BundleImpl bundle = (BundleImpl) b;
+                        if (bundle.getArchive().isDexOpted()) {
+                            ClassLoader classloader = bundle.getClassLoader();
+                            try {
+                                if (classloader != null) {
+                                    clazz = classloader.loadClass(className);
+                                    if (clazz != null) {
+                                        return clazz;
+                                    }
+                                }
+                            } catch (ClassNotFoundException e) {
+                            }
+                        }
+                    }
+                }
+                return clazz;
             }
         });
 
