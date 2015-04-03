@@ -108,7 +108,7 @@ public class AtlasBundlePatch implements IPatch {
                         parser = assmgr.openXmlResourceParser(cookie, "AndroidManifest.xml");
                     }
                     if (parser!=null) {
-                        pl = (PackageLite)XposedHelpers.callMethod(PackageLite.class,"parse",XmlResourceParser.class,parser);
+                        pl = (PackageLite)XposedHelpers.callStaticMethod(PackageLite.class,"parse",XmlResourceParser.class,parser);
                     }
                 } catch (Throwable e) {
                     logError(e,"Exception while parse AndroidManifest.xml >>>","");
@@ -128,8 +128,8 @@ public class AtlasBundlePatch implements IPatch {
                     
                 }
 
-                if(pl==null || TextUtils.isEmpty(pl.applicationClassName) || cashDeskFail){
-                    logError(null,"packageLite is null","");
+                if(cashDeskFail){
+                        logError(null,"packageLite is null","");
                     PackageInfo info = context.getPackageManager().getPackageArchiveInfo(((File)arg0.args[0]).getAbsolutePath(), PackageManager.GET_ACTIVITIES);
                     if(info!=null){
                         logError(null,"packageLite is ok","");
