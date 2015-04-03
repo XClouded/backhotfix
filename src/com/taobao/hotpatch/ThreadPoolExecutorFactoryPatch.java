@@ -36,13 +36,16 @@ public class ThreadPoolExecutorFactoryPatch implements IPatch {
                 new XC_MethodReplacement() {
                     @Override
                     protected Object replaceHookedMethod(MethodHookParam methodHookParam) throws Throwable {
-                        Log.w("ThreadPoolExecutorFactoryPatch", "replace method getDefaulThreadPoolExecutor");
                         if (executor == null) {
                             synchronized (this.getClass()) {
                                 if (executor == null) {
                                     executor = (ThreadPoolExecutor)XposedHelpers.callStaticMethod(cls, "createExecutor",
                                             new Class[] {int.class, int.class, int.class, int.class, int.class},
                                             new Object[] {Thread.NORM_PRIORITY, 7, 10, 60, 0});
+                                    StringBuilder sb = new StringBuilder("Thread Pool Status. ");
+                                    sb.append("getCorePoolSize=").append(executor.getCorePoolSize()).append(" ")
+                                            .append("getMaximumPoolSize=").append(executor.getMaximumPoolSize()).append(" ");
+                                    Log.d("ThreadPoolExecutorFactoryPatch", sb.toString());
                                 }
                             }
                         }

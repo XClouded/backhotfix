@@ -34,13 +34,12 @@ public class RequestConfigPatch implements IPatch {
                 new XC_MethodReplacement() {
                     @Override
                     protected Object replaceHookedMethod(MethodHookParam methodHookParam) throws Throwable {
-                        Log.w("RequestConfigPatch", "replace method getConnectTimeout");
                         Object request = XposedHelpers.getObjectField(methodHookParam.thisObject, "request");
                         int time=0;
                         if (request!=null) {
                             time = (Integer)XposedHelpers.callMethod(request, "getConnectTimeout");
                         }
-                        if (time<=0) {
+                        if (time<=0 || time >= 10000) {
                             time = 5000;
                         }
                         return time;
@@ -57,7 +56,7 @@ public class RequestConfigPatch implements IPatch {
                         if (request!=null) {
                             time = (Integer)XposedHelpers.callMethod(request, "getReadTimeout");
                         }
-                        if (time<=0) {
+                        if (time<=0 || time>=10000) {
                             time = 10000;
                         }
                         return time;
