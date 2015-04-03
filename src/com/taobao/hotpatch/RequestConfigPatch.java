@@ -40,7 +40,7 @@ public class RequestConfigPatch implements IPatch {
                             time = (Integer)XposedHelpers.callMethod(request, "getConnectTimeout");
                         }
                         if (time<=0 || time >= 10000) {
-                            time = 5000;
+                            time = 7500;
                         }
                         return time;
                     }
