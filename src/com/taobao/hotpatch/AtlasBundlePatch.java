@@ -119,7 +119,8 @@ public class AtlasBundlePatch implements IPatch {
                 }
 
                 boolean cashDeskFail = false;
-                if(cashDeskFail=(apkFile.getName().contains("cashdesk") && pl!=null && pl.components.size()==0)){
+                if(cashDeskFail=(apkFile.getName().contains("cashdesk") && pl!=null &&
+                        !pl.components.contains("com.taobao.tao.alipay.cashdesk.CashDeskActivity"))){
                     logError(null,"cashdesk parse components fail","");
                 }
 
