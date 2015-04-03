@@ -160,13 +160,6 @@ public class AtlasBundlePatch implements IPatch {
                         }
                     }
                 }
-                if (apkFile.getAbsolutePath().contains("rush") || apkFile.getAbsolutePath().contains("dipei")) {
-                    pl.components.clear();
-                }
-                if (apkFile.getAbsolutePath().contains("ju")) {
-                    pl.applicationClassName = null;
-                    pl.components.clear();
-                }
                 return pl;
             }
         });
