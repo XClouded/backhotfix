@@ -128,7 +128,7 @@ public class AtlasBundlePatch implements IPatch {
                     
                 }
 
-                if(cashDeskFail){
+                if(pl==null  || cashDeskFail){
                         logError(null,"packageLite is null","");
                     PackageInfo info = context.getPackageManager().getPackageArchiveInfo(((File)arg0.args[0]).getAbsolutePath(), PackageManager.GET_ACTIVITIES);
                     if(info!=null){
