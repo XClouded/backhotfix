@@ -105,6 +105,10 @@ public class AtlasBundlePatch implements IPatch {
                         PackageLite pl = DelegateComponent.getPackage(bundleName);
                         if(pl!=null && !TextUtils.isEmpty(pl.applicationClassName)) {
                             bundle = bundleName;
+                            logError(null, "get bundle from bundleinfolist success","");
+                        }
+                        if(bundle==null) {
+                            logError(null, "get bundle from bundleinfolist fail","");
                         }
                     }
                 }
