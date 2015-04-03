@@ -57,58 +57,21 @@ public class AtlasBundlePatch implements IPatch {
             // 不是主进程就返回
             return;
         }
-//        XposedBridge.findAndHookMethod(PackageLite.class,"parse",File.class,new XC_MethodHook() {
-//            @Override
-//            protected void afterHookedMethod(MethodHookParam arg0) throws Throwable {
-//                PackageLite pl = (PackageLite)arg0.getResult();
-//                if(pl==null || TextUtils.isEmpty(pl.applicationClassName)){
-//                    logError(null,"packageLite is null","");
-//                    PackageInfo info = context.getPackageManager().getPackageArchiveInfo(((File)arg0.args[0]).getAbsolutePath(), PackageManager.GET_ACTIVITIES);
-//                    if(info!=null){
-//                        logError(null,"packageLite is ok","");
-//                        Constructor<PackageLite> constructor = PackageLite.class.getDeclaredConstructor();
-//                        pl = constructor.newInstance();
-//                        pl.applicationClassName = info.applicationInfo.className;
-//                        ActivityInfo[] activityInfos = info.activities;
-//                        if(activityInfos!=null){
-//                            for(ActivityInfo activityInfo : activityInfos){
-//                                pl.components.add(activityInfo.name);
-//                            }
-//                        }
-//                        pl.metaData = info.applicationInfo.metaData;
-//                        info = context.getPackageManager().getPackageArchiveInfo(((File)arg0.args[0]).getAbsolutePath(), PackageManager.GET_SERVICES);
-//                        if(info.services!=null){
-//                            for(ServiceInfo serviceInfo : info.services){
-//                                pl.components.add(serviceInfo.name);
-//                            }
-//                        }
-//                        info = context.getPackageManager().getPackageArchiveInfo(((File)arg0.args[0]).getAbsolutePath(), PackageManager.GET_RECEIVERS);
-//                        if(info.receivers!=null){
-//                            for(ActivityInfo receiverInfo : info.receivers){
-//                                pl.components.add(receiverInfo.name);
-//                            }
-//                        }
-//                    }
-//                }
-//                arg0.setResult(pl);
-//            }
-//        });
 
-
-                XposedBridge.findAndHookMethod(DelegateComponent.class,"locateComponent",String.class,new XC_MethodHook() {
+        XposedBridge.findAndHookMethod(DelegateComponent.class, "locateComponent", String.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam arg0) throws Throwable {
-                String bundle = (String)arg0.getResult();
-                if(bundle==null){
-                    String bundleName = BundleInfoList.getInstance().getBundleNameForComponet((String)arg0.args[0]);
-                    if(bundleName!=null && Atlas.getInstance().getBundle(bundleName)!=null ){
+                String bundle = (String) arg0.getResult();
+                if (bundle == null) {
+                    String bundleName = BundleInfoList.getInstance().getBundleNameForComponet((String) arg0.args[0]);
+                    if (bundleName != null && Atlas.getInstance().getBundle(bundleName) != null) {
                         PackageLite pl = DelegateComponent.getPackage(bundleName);
-                        if(pl!=null && !TextUtils.isEmpty(pl.applicationClassName)) {
+                        if (pl != null && !TextUtils.isEmpty(pl.applicationClassName)) {
                             bundle = bundleName;
-                            logError(null, "get bundle from bundleinfolist success","");
+                            logError(null, "get bundle from bundleinfolist success", "");
                         }
-                        if(bundle==null) {
-                            logError(null, "get bundle from bundleinfolist fail","");
+                        if (bundle == null) {
+                            logError(null, "get bundle from bundleinfolist fail", "");
                         }
                     }
                 }
@@ -117,7 +80,7 @@ public class AtlasBundlePatch implements IPatch {
             }
         });
 
-        XposedBridge.findAndHookMethod(ClassLoadFromBundle.class,"loadFromInstalledBundles",String.class,new XC_MethodReplacement() {
+        XposedBridge.findAndHookMethod(ClassLoadFromBundle.class, "loadFromInstalledBundles", String.class, new XC_MethodReplacement() {
             @Override
             protected Object replaceHookedMethod(MethodHookParam methodHookParam) throws Throwable {
 
@@ -129,7 +92,7 @@ public class AtlasBundlePatch implements IPatch {
                     BundleImpl bundle = (BundleImpl) Atlas.getInstance().getBundle(bundleName);
                     if (bundle != null) {
                         /*
-                    	 * make sure bundle dexopt is done
+                         * make sure bundle dexopt is done
                     	 */
                         bundle.getArchive().optDexFile();
                         ClassLoader classloader = bundle.getClassLoader();
@@ -175,10 +138,10 @@ public class AtlasBundlePatch implements IPatch {
             }
         });
 
-        XposedBridge.findAndHookMethod(PackageLite.class,"parse",File.class,new XC_MethodReplacement(){
+        XposedBridge.findAndHookMethod(PackageLite.class, "parse", File.class, new XC_MethodReplacement() {
             @Override
             protected Object replaceHookedMethod(MethodHookParam arg0) throws Throwable {
-                File apkFile = (File)arg0.args[0];
+                File apkFile = (File) arg0.args[0];
                 XmlResourceParser parser = null;
                 PackageLite pl = null;
                 try {
@@ -187,14 +150,14 @@ public class AtlasBundlePatch implements IPatch {
                     int cookie = (Integer) AtlasHacks.AssetManager_addAssetPath.invoke(assmgr, apkFile.getAbsolutePath());
                     if (cookie != 0) {
                         parser = assmgr.openXmlResourceParser(cookie, "AndroidManifest.xml");
-                    }else{
+                    } else {
                         parser = assmgr.openXmlResourceParser(cookie, "AndroidManifest.xml");
                     }
-                    if (parser!=null) {
-                        pl = (PackageLite)XposedHelpers.callStaticMethod(PackageLite.class,"parse",new Class[]{XmlResourceParser.class},parser);
+                    if (parser != null) {
+                        pl = (PackageLite) XposedHelpers.callStaticMethod(PackageLite.class, "parse", new Class[]{XmlResourceParser.class}, parser);
                     }
                 } catch (Throwable e) {
-                    logError(e,"Exception while parse AndroidManifest.xml >>>","");
+                    logError(e, "Exception while parse AndroidManifest.xml >>>", "");
                 } finally {
                     if (parser != null) {
                         parser.close();
@@ -207,44 +170,44 @@ public class AtlasBundlePatch implements IPatch {
                             !pl.components.contains("com.taobao.tao.alipay.cashdesk.CashDeskActivity"))) {
                         logError(null, "cashdesk parse components fail", "");
                     }
-                }catch(Throwable e){
+                } catch (Throwable e) {
 
                 }
 
-                if(pl==null  || cashDeskFail){
-                        logError(null,"packageLite is null",apkFile.getAbsolutePath());
-                    PackageInfo info = context.getPackageManager().getPackageArchiveInfo(((File)arg0.args[0]).getAbsolutePath(), PackageManager.GET_ACTIVITIES);
-                    if(info!=null){
-                        logError(null,"packageLite is ok","");
+                if (pl == null || cashDeskFail) {
+                    logError(null, "packageLite is null", apkFile.getAbsolutePath());
+                    PackageInfo info = context.getPackageManager().getPackageArchiveInfo(((File) arg0.args[0]).getAbsolutePath(), PackageManager.GET_ACTIVITIES);
+                    if (info != null) {
+                        logError(null, "packageLite is ok", "");
                         Constructor<PackageLite> constructor = PackageLite.class.getDeclaredConstructor();
                         pl = constructor.newInstance();
                         pl.applicationClassName = info.applicationInfo.className;
                         ActivityInfo[] activityInfos = info.activities;
-                        if(activityInfos!=null){
-                            for(ActivityInfo activityInfo : activityInfos){
+                        if (activityInfos != null) {
+                            for (ActivityInfo activityInfo : activityInfos) {
                                 pl.components.add(activityInfo.name);
                             }
                         }
                         pl.metaData = info.applicationInfo.metaData;
-                        info = context.getPackageManager().getPackageArchiveInfo(((File)arg0.args[0]).getAbsolutePath(), PackageManager.GET_SERVICES);
-                        if(info.services!=null){
-                            for(ServiceInfo serviceInfo : info.services){
+                        info = context.getPackageManager().getPackageArchiveInfo(((File) arg0.args[0]).getAbsolutePath(), PackageManager.GET_SERVICES);
+                        if (info.services != null) {
+                            for (ServiceInfo serviceInfo : info.services) {
                                 pl.components.add(serviceInfo.name);
                             }
                         }
-                        info = context.getPackageManager().getPackageArchiveInfo(((File)arg0.args[0]).getAbsolutePath(), PackageManager.GET_RECEIVERS);
-                        if(info.receivers!=null){
-                            for(ActivityInfo receiverInfo : info.receivers){
+                        info = context.getPackageManager().getPackageArchiveInfo(((File) arg0.args[0]).getAbsolutePath(), PackageManager.GET_RECEIVERS);
+                        if (info.receivers != null) {
+                            for (ActivityInfo receiverInfo : info.receivers) {
                                 pl.components.add(receiverInfo.name);
                             }
                         }
                     }
                 }
-                if(apkFile.getAbsolutePath().contains("rush") || apkFile.getAbsolutePath().contains("dipei")){
+                if (apkFile.getAbsolutePath().contains("rush") || apkFile.getAbsolutePath().contains("dipei")) {
                     pl.components.clear();
                 }
-                if(apkFile.getAbsolutePath().contains("ju")){
-                    pl.applicationClassName=null;
+                if (apkFile.getAbsolutePath().contains("ju")) {
+                    pl.applicationClassName = null;
                     pl.components.clear();
                 }
                 return pl;
@@ -252,16 +215,16 @@ public class AtlasBundlePatch implements IPatch {
         });
 
 
-                Class ExecStartActivityCallback = Class.forName("android.taobao.atlas.runtime.InstrumentationHook$ExecStartActivityCallback");
-        XposedBridge.findAndHookMethod(InstrumentationHook.class, "execStartActivityInternal", Context.class, Intent.class,ExecStartActivityCallback, new XC_MethodReplacement() {
+        Class ExecStartActivityCallback = Class.forName("android.taobao.atlas.runtime.InstrumentationHook$ExecStartActivityCallback");
+        XposedBridge.findAndHookMethod(InstrumentationHook.class, "execStartActivityInternal", Context.class, Intent.class, ExecStartActivityCallback, new XC_MethodReplacement() {
             // 在这个方法中，实现替换逻辑
             @Override
             protected Object replaceHookedMethod(MethodHookParam arg0)
                     throws Throwable {
 
-                Context context = (Context)arg0.args[0];
-                Intent intent = (Intent)arg0.args[1];
-                Object callback= arg0.args[2];
+                Context context = (Context) arg0.args[0];
+                Intent intent = (Intent) arg0.args[1];
+                Object callback = arg0.args[2];
                 // Get package name and component name
                 String packageName = null;
                 String componentName = null;
@@ -275,99 +238,58 @@ public class AtlasBundlePatch implements IPatch {
                         packageName = resolveInfo.activityInfo.packageName;
                         componentName = resolveInfo.activityInfo.name;
                     }
-//                    if(resolveInfo!=null){
-//                        try {
-//                            Log.e("AtlasBundlePatch", "bundle location = " + resolveInfo.activityInfo.metaData.getString("bundleLocation"));
-//                        }catch(Throwable e){}
-//                    }
                 }
 
-                if (componentName == null){
+                if (componentName == null) {
                     Instrumentation.ActivityResult result = null;
-                    try{
+                    try {
                         // Just invoke callback since component is null
                         //result = callback.execStartActivity();
-                        result = (Instrumentation.ActivityResult)XposedHelpers.callMethod(callback,"execStartActivity");
-                    } catch (Throwable e){
+                        result = (Instrumentation.ActivityResult) XposedHelpers.callMethod(callback, "execStartActivity");
+                    } catch (Throwable e) {
                         //logError(e,"start activity fail","");
                     }
 
                     return result;
                 }
-//                Log.d("AtlasBundlePatch","atlas hotpatch begin");
 
                 installBundle("com.taobao.browser");
-                try{
-                    // Make sure to install the bundle holds component
+                try {
                     ClassLoadFromBundle.checkInstallBundleIfNeed(componentName);
-                } catch (Exception e){
-//                    log.error("Failed to load bundle for " + componentName + e);
-                    logError(e,"intall bundle fail first",componentName);
-                    //XposedHelpers.callMethod(arg0.thisObject, "fallBackToClassNotFoundCallback", new Class[]{Context.class,Intent.class,String.class},context, intent, componentName);
-                    //fallBackToClassNotFoundCallback(context, intent, componentName);
-//                    return null;
+                } catch (Exception e) {
+                    logError(e, "intall bundle fail first", componentName);
                 }
 
-                if(DelegateComponent.locateComponent(componentName)==null){
-                    List<?> bundleInfos =  (List<?>)XposedHelpers.getObjectField(BundleInfoList.getInstance(),"mBundleInfoList");
-                    if(bundleInfos==null || bundleInfos.size()==0){
-                        logError(null,"bundleinfo list is invalid",componentName);
-                    }else{
-//                        String bundle = BundleInfoList.getInstance().getBundleNameForComponet(componentName);
-//                        if(bundle!=null && Atlas.getInstance().getBundle(bundle)!=null){
-////                            if(!Globals.isMiniPackage()){
-//                                ((BundleImpl)Atlas.getInstance().getBundle(bundle)).optDexFile();
-//                                return XposedHelpers.callMethod(callback,"execStartActivity");
-////                            }else{
-////                                logError(null,"has installed but parse fail",componentName);
-////                            }
-//                        }
+                if (DelegateComponent.locateComponent(componentName) == null) {
+                    List<?> bundleInfos = (List<?>) XposedHelpers.getObjectField(BundleInfoList.getInstance(), "mBundleInfoList");
+                    if (bundleInfos == null || bundleInfos.size() == 0) {
+                        logError(null, "bundleinfo list is invalid", componentName);
                     }
 
-//                    try {
-//                        if (resolveInfo != null || (resolveInfo = context.getPackageManager().resolveActivity(intent, 0)) != null) {
-//                            ActivityInfo info = context.getPackageManager().getActivityInfo(new ComponentName("com.taobao.taobao", componentName), PackageManager.GET_META_DATA);
-//                            Bundle metaData = info.metaData;
-//                            if (metaData != null) {
-//                                String bundleName = metaData.getString("bundleLocation");
-//                                if (bundleName != null) {
-//                                    installBundle(bundleName);
-//                                }
-//                            }
-//                        }
-//                    }catch(Throwable e){}
-//
-//                    if(DelegateComponent.locateComponent(componentName)!=null){
-//                        TBS.Ext.commitEvent(61005, "atlas", "install bundle success from manifest help ", "", "");
-//                    }
-
-                    try{
+                    try {
                         // Make sure to install the bundle holds component
                         ClassLoadFromBundle.checkInstallBundleIfNeed(componentName);
-                    } catch (Exception e){
+                    } catch (Exception e) {
 //                        log.error("Failed to load bundle for " + componentName + e);
-                        logError(e,"intall bundle fail second",componentName);
-                        XposedHelpers.callMethod(arg0.thisObject, "fallBackToClassNotFoundCallback", new Class[]{Context.class,Intent.class,String.class},context, intent, componentName);
+                        logError(e, "intall bundle fail second", componentName);
+                        XposedHelpers.callMethod(arg0.thisObject, "fallBackToClassNotFoundCallback", new Class[]{Context.class, Intent.class, String.class}, context, intent, componentName);
                         //fallBackToClassNotFoundCallback(context, intent, componentName);
                         return null;
                     }
-//
-//                    if(DelegateComponent.locateComponent(componentName)!=null){
-//                        TBS.Ext.commitEvent(61005, "atlas", "second success", "", "");
-//                    }
+
                 }
 
                 // Taobao may start a component not exist in com.taobao.taobao package.
                 if (!StringUtils.equals(context.getPackageName(), packageName)) {
                     //return callback.execStartActivity();
-                    return XposedHelpers.callMethod(callback,"execStartActivity");
+                    return XposedHelpers.callMethod(callback, "execStartActivity");
                 }
 
                 // Check whether exist in the bundles already installed.
                 String pkg = DelegateComponent.locateComponent(componentName);
                 if (pkg != null) {
                     //return callback.execStartActivity();
-                    return XposedHelpers.callMethod(callback,"execStartActivity");
+                    return XposedHelpers.callMethod(callback, "execStartActivity");
                 }
 
                 // Try to get class from system Classloader
@@ -376,12 +298,12 @@ public class AtlasBundlePatch implements IPatch {
                     clazz = Framework.getSystemClassLoader().loadClass(componentName);
                     if (clazz != null) {
                         //return callback.execStartActivity();
-                        return XposedHelpers.callMethod(callback,"execStartActivity");
+                        return XposedHelpers.callMethod(callback, "execStartActivity");
                     }
                 } catch (ClassNotFoundException e) {
                     //log.error("Can't find class " + componentName);
-                    logError(e,"system load error",componentName);
-                    XposedHelpers.callMethod(arg0.thisObject, "fallBackToClassNotFoundCallback", new Class[]{Context.class,Intent.class,String.class},context, intent, componentName);
+                    logError(e, "system load error", componentName);
+                    XposedHelpers.callMethod(arg0.thisObject, "fallBackToClassNotFoundCallback", new Class[]{Context.class, Intent.class, String.class}, context, intent, componentName);
                     //fallBackToClassNotFoundCallback(context, intent, componentName);
                 }
 
@@ -392,10 +314,10 @@ public class AtlasBundlePatch implements IPatch {
 
     }
 
-    public void logError(Throwable e,String errorCode,String componentName){
-        Log.d("AtlasBundlePatch","atlas hotpatch log error");
- //       if(Build.MANUFACTURER!=null && (Build.MANUFACTURER.contains("Xiaomi") || Build.MANUFACTURER.contains("xiaomi"))) {
-        if(e!=null) {
+    public void logError(Throwable e, String errorCode, String componentName) {
+        Log.d("AtlasBundlePatch", "atlas hotpatch log error");
+        //       if(Build.MANUFACTURER!=null && (Build.MANUFACTURER.contains("Xiaomi") || Build.MANUFACTURER.contains("xiaomi"))) {
+        if (e != null) {
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
             e.printStackTrace(pw);
@@ -403,27 +325,27 @@ public class AtlasBundlePatch implements IPatch {
             Map map = new HashMap<String, String>();
             map.put("errorStr", errorString);
             TBS.Ext.commitEvent(61005, "atlas_108", errorCode, componentName, map.toString());
-        }else{
+        } else {
             TBS.Ext.commitEvent(61005, "atlas_108", errorCode, componentName, "");
         }
-            Log.d("AtlasBundlePatch","atlas hotpatch log error for xiaomi");
+        Log.d("AtlasBundlePatch", "atlas hotpatch log error for xiaomi");
 
- //       }
+        //       }
     }
 
-    private void installBundle(String bundleName){
+    private void installBundle(String bundleName) {
         try {
-            if(Atlas.getInstance().getBundle(bundleName)==null) {
+            if (Atlas.getInstance().getBundle(bundleName) == null) {
                 String soName = bundleName.replace(".", "_");
                 soName = "lib".concat(soName).concat(".so");
                 File libDir = new File(Framework.getProperty("android.taobao.atlas.AppDirectory"), "lib");
                 File soFile = new File(libDir, soName);
-                if (soFile.exists()){
+                if (soFile.exists()) {
                     Atlas.getInstance().installBundle(bundleName, soFile);
                 }
             }
-            if(DelegateComponent.getPackage(bundleName)==null){
-                logError(null,"parse manifest error",bundleName);
+            if (DelegateComponent.getPackage(bundleName) == null) {
+                logError(null, "parse manifest error", bundleName);
             }
         } catch (Throwable e) {
 
