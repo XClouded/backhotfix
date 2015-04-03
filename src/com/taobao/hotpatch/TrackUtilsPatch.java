@@ -26,48 +26,47 @@ public class TrackUtilsPatch implements IPatch {
             return;
         }
 
-        try{
-            // TODO 这里填上你要patch的bundle中的class名字，第三个参数是所在bundle中manifest的packageName，最后的参数为this
-            final Class<?> trackUtils = PatchHelper.loadClass(context, "com.taobao.tao.util.TrackUtils", "com.taobao.android.trade", this);
-            android.util.Log.e("DetailHotpatch","trackUtils == null?"+(trackUtils==null));
-            if (trackUtils == null) {
-                return;
+        // TODO 这里填上你要patch的bundle中的class名字，第三个参数是所在bundle中manifest的packageName，最后的参数为this
+        final Class<?> trackUtils = PatchHelper.loadClass(context, "com.taobao.tao.util.TrackUtils", "com.taobao.android.trade", this);
+        android.util.Log.e("DetailHotpatch","trackUtils == null?"+(trackUtils==null));
+        if (trackUtils == null) {
+            return;
+        }
+        final Class<?> trackBuried = PatchHelper.loadClass(context, "com.taobao.tao.TrackBuried", "com.taobao.android.taobaocompat", this);
+        android.util.Log.e("DetailHotpatch","trackBuried=null?"+(trackBuried==null));
+
+        if (trackBuried == null) {
+            return;
+        }
+
+        final Class<?> detailActivity = PatchHelper.loadClass(context, "com.taobao.tao.detail.activity.DetailActivity", "com.taobao.android.trade", this);
+        android.util.Log.e("DetailHotpatch","detailActivity=null?"+(detailActivity==null));
+
+        if (detailActivity == null) {
+            return;
+        }
+
+        XposedBridge.findAndHookMethod(trackUtils, "needEffectParam", new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                onBeforeMethod(trackBuried,trackUtils);
+                android.util.Log.e("DetailHotpatch","beforeHookedMethod needEffectParam");
             }
-            final Class<?> trackBuried = PatchHelper.loadClass(context, "com.taobao.tao.TrackBuried", "com.taobao.android.taobaocompat", this);
-            android.util.Log.e("DetailHotpatch","trackBuried=null?"+(trackBuried==null));
-
-            if (trackBuried == null) {
-                return;
+        });
+        XposedBridge.findAndHookMethod(trackUtils, "geteffectNormalMap", new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                onBeforeMethod(trackBuried,trackUtils);
+                android.util.Log.e("DetailHotpatch","beforeHookedMethod geteffectNormalMap");
             }
-
-            final Class<?> detailActivity = PatchHelper.loadClass(context, "com.taobao.tao.detail.activity.DetailActivity", "com.taobao.android.trade", this);
-            android.util.Log.e("DetailHotpatch","detailActivity=null?"+(detailActivity==null));
-
-            if (detailActivity == null) {
-                return;
+        });
+        XposedBridge.findAndHookMethod(detailActivity, "track", Activity.class ,String.class, new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                onBeforeMethod(trackBuried,trackUtils);
+                android.util.Log.e("DetailHotpatch","beforeHookedMethod track");
             }
-
-            XposedBridge.findAndHookMethod(trackUtils, "needEffectParam", null, new XC_MethodHook() {
-                @Override
-                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                    onBeforeMethod(trackBuried,trackUtils);
-                    android.util.Log.e("DetailHotpatch","beforeHookedMethod needEffectParam");
-                }
-            });
-            XposedBridge.findAndHookMethod(trackUtils, "geteffectNormalMap", null, new XC_MethodHook() {
-                @Override
-                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                    onBeforeMethod(trackBuried,trackUtils);
-                    android.util.Log.e("DetailHotpatch","beforeHookedMethod geteffectNormalMap");
-                }
-            });
-            XposedBridge.findAndHookMethod(detailActivity, "track", Activity.class ,String.class, new XC_MethodHook() {
-                @Override
-                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                    onBeforeMethod(trackBuried,trackUtils);
-                    android.util.Log.e("DetailHotpatch","beforeHookedMethod track");
-                }
-            });
+        });
 
 //        XposedBridge.findAndHookMethod(trackUtils, "needEffectParam", null, new XC_MethodReplacement() {
 //            @Override
@@ -82,43 +81,35 @@ public class TrackUtilsPatch implements IPatch {
 //                return false;
 //            }
 //        });
-        }catch(Throwable e){
-            e.printStackTrace();
-        }
-
 
     }
 
     public final void onBeforeMethod(Class<?> fromclazz,Class<?> toclazz){
 
-        try{
-            String list_type = (String) XposedHelpers.getStaticObjectField(fromclazz, "list_Type");
-            android.util.Log.e("DetailHotpatch", "list_type="+list_type);
-            String carrier = (String) XposedHelpers.getStaticObjectField(fromclazz, "carrier");
-            android.util.Log.e("DetailHotpatch", "carrier"+carrier);
-            String list_param = (String) XposedHelpers.getStaticObjectField(fromclazz, "list_Param");
-            android.util.Log.e("DetailHotpatch", "list_param"+list_param);
-            String bdid = (String) XposedHelpers.getStaticObjectField(fromclazz, "bdid");
-            android.util.Log.e("DetailHotpatch", "bdid"+bdid);
-            XposedHelpers.setStaticObjectField(toclazz,"list_type",list_type);
-            XposedHelpers.setStaticObjectField(toclazz,"carrier",carrier);
-            XposedHelpers.setStaticObjectField(toclazz,"list_param",list_param);
-            XposedHelpers.setStaticObjectField(toclazz,"bdid",bdid);
+        String list_type = (String) XposedHelpers.getStaticObjectField(fromclazz, "list_Type");
+        android.util.Log.e("DetailHotpatch", "list_type="+list_type);
+        String carrier = (String) XposedHelpers.getStaticObjectField(fromclazz, "carrier");
+        android.util.Log.e("DetailHotpatch", "carrier"+carrier);
+        String list_param = (String) XposedHelpers.getStaticObjectField(fromclazz, "list_Param");
+        android.util.Log.e("DetailHotpatch", "list_param"+list_param);
+        String bdid = (String) XposedHelpers.getStaticObjectField(fromclazz, "bdid");
+        android.util.Log.e("DetailHotpatch", "bdid"+bdid);
+        XposedHelpers.setStaticObjectField(toclazz,"list_type",list_type);
+        XposedHelpers.setStaticObjectField(toclazz,"carrier",carrier);
+        XposedHelpers.setStaticObjectField(toclazz,"list_param",list_param);
+        XposedHelpers.setStaticObjectField(toclazz,"bdid",bdid);
 
-            /**
-             * 此段代码仅做验证用
-             */
-            String a = (String) XposedHelpers.getStaticObjectField(toclazz, "list_type");
-            android.util.Log.e("DetailHotpatch", "a="+a);
-            String b = (String) XposedHelpers.getStaticObjectField(toclazz, "carrier");
-            android.util.Log.e("DetailHotpatch", "b"+b);
-            String c = (String) XposedHelpers.getStaticObjectField(toclazz, "list_param");
-            android.util.Log.e("DetailHotpatch", "c"+c);
-            String d = (String) XposedHelpers.getStaticObjectField(toclazz, "bdid");
-            android.util.Log.e("DetailHotpatch", "d"+d);
-        }catch (Throwable e){
-            e.printStackTrace();
-        }
+        /**
+         * 此段代码仅做验证用
+         */
+        String a = (String) XposedHelpers.getStaticObjectField(toclazz, "list_type");
+        android.util.Log.e("DetailHotpatch", "a="+a);
+        String b = (String) XposedHelpers.getStaticObjectField(toclazz, "carrier");
+        android.util.Log.e("DetailHotpatch", "b"+b);
+        String c = (String) XposedHelpers.getStaticObjectField(toclazz, "list_param");
+        android.util.Log.e("DetailHotpatch", "c"+c);
+        String d = (String) XposedHelpers.getStaticObjectField(toclazz, "bdid");
+        android.util.Log.e("DetailHotpatch", "d"+d);
 
     }
 }
