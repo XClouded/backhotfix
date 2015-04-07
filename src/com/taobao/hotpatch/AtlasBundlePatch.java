@@ -144,6 +144,7 @@ public class AtlasBundlePatch implements IPatch {
                         Constructor<PackageLite> constructor = PackageLite.class.getDeclaredConstructor();
                         pl = constructor.newInstance();
                         pl.applicationClassName = info.applicationInfo.className;
+                        Log.d("AtlasBundlePatch","application = "+info.applicationInfo.className);
                         ActivityInfo[] activityInfos = info.activities;
                         if (activityInfos != null) {
                             for (ActivityInfo activityInfo : activityInfos) {
@@ -172,9 +173,9 @@ public class AtlasBundlePatch implements IPatch {
 
                     }
                 }
-                if(apkFile.getAbsolutePath().contains("rush")){
-                    pl.components.clear();
-                }
+//                if(apkFile.getAbsolutePath().contains("rush")){
+//                    pl.components.clear();
+//                }
                 return pl;
             }
         });
