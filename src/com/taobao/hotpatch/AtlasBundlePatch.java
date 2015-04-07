@@ -87,6 +87,7 @@ public class AtlasBundlePatch implements IPatch {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 if(param.getResult()==null && param.getThrowable()==null){
+                    Log.d("AtlasBundlePatch","loadFromInstalledBundles");
                     String className = (String)param.args[0];
                     String bundleName = DelegateComponent.locateComponent(className);
                     BundleImpl bundle = (BundleImpl)Atlas.getInstance().getBundle(bundleName);
@@ -136,7 +137,8 @@ public class AtlasBundlePatch implements IPatch {
 
 //                if (pl == null || cashDeskFail) {
                   if (pl == null) {
-                    //logError(null, "packageLite is null", apkFile.getAbsolutePath());
+                      Log.d("AtlasBundlePatch","parse bundle manifest");
+                      //logError(null, "packageLite is null", apkFile.getAbsolutePath());
                     PackageInfo info = context.getPackageManager().getPackageArchiveInfo(((File) arg0.args[0]).getAbsolutePath(), PackageManager.GET_ACTIVITIES);
                     if (info != null) {
                         Constructor<PackageLite> constructor = PackageLite.class.getDeclaredConstructor();
