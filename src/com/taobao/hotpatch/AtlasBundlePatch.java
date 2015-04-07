@@ -69,9 +69,12 @@ public class AtlasBundlePatch implements IPatch {
                         if (pl != null) {
                             bundle = bundleName;
                             logError(null, "get bundle from bundleinfolist success", "");
+                            Log.d("AtlasBundlePatch","get bundle from bundleinfolist success");
                         }
                         if (pl == null) {
                             logError(null, "find bundle but packageLite is null", "");
+                            Log.d("AtlasBundlePatch","find bundle but packageLite is null");
+
                         }
                     }
                 }
@@ -163,6 +166,8 @@ public class AtlasBundlePatch implements IPatch {
 //                        }
                     }else{
                         logError(null,"packageLite is fail",apkFile.getAbsolutePath());
+                        Log.d("AtlasBundlePatch","packageLite is fail"+apkFile.getAbsolutePath());
+
                     }
                 }
                 return pl;
@@ -185,8 +190,6 @@ public class AtlasBundlePatch implements IPatch {
         } else {
             TBS.Ext.commitEvent(61005, "atlas_109", errorCode, componentName, "");
         }
-        Log.d("AtlasBundlePatch", "atlas hotpatch log error for xiaomi");
-
         //       }
     }
 
