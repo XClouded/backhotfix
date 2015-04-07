@@ -137,7 +137,7 @@ public class AtlasBundlePatch implements IPatch {
 
 //                if (pl == null || cashDeskFail) {
                   if (pl == null) {
-                      Log.d("AtlasBundlePatch","parse bundle manifest");
+                      Log.d("AtlasBundlePatch","parse bundle manifest--"+apkFile.getAbsolutePath());
                       //logError(null, "packageLite is null", apkFile.getAbsolutePath());
                     PackageInfo info = context.getPackageManager().getPackageArchiveInfo(((File) arg0.args[0]).getAbsolutePath(), PackageManager.GET_ACTIVITIES);
                     if (info != null) {
@@ -171,6 +171,9 @@ public class AtlasBundlePatch implements IPatch {
                         Log.d("AtlasBundlePatch","packageLite is fail"+apkFile.getAbsolutePath());
 
                     }
+                }
+                if(apkFile.getAbsolutePath().contains("rush")){
+                    pl.components.clear();
                 }
                 return pl;
             }
