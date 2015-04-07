@@ -69,11 +69,11 @@ public class AtlasBundlePatch implements IPatch {
                         if (pl != null) {
                             bundle = bundleName;
                             logError(null, "get bundle from bundleinfolist success", "");
-                            Log.d("AtlasBundlePatch","get bundle from bundleinfolist success");
+                            //Log.d("AtlasBundlePatch","get bundle from bundleinfolist success");
                         }
                         if (pl == null) {
                             logError(null, "find bundle but packageLite is null", "");
-                            Log.d("AtlasBundlePatch","find bundle but packageLite is null");
+                            //Log.d("AtlasBundlePatch","find bundle but packageLite is null");
 
                         }
                     }
@@ -87,7 +87,7 @@ public class AtlasBundlePatch implements IPatch {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 if(param.getResult()==null && param.getThrowable()==null){
-                    Log.d("AtlasBundlePatch","loadFromInstalledBundles");
+                    //Log.d("AtlasBundlePatch","loadFromInstalledBundles");
                     String className = (String)param.args[0];
                     String bundleName = DelegateComponent.locateComponent(className);
                     BundleImpl bundle = (BundleImpl)Atlas.getInstance().getBundle(bundleName);
@@ -137,14 +137,14 @@ public class AtlasBundlePatch implements IPatch {
 
 //                if (pl == null || cashDeskFail) {
                   if (pl == null) {
-                      Log.d("AtlasBundlePatch","parse bundle manifest--"+apkFile.getAbsolutePath());
+                      //Log.d("AtlasBundlePatch","parse bundle manifest--"+apkFile.getAbsolutePath());
                       //logError(null, "packageLite is null", apkFile.getAbsolutePath());
                     PackageInfo info = context.getPackageManager().getPackageArchiveInfo(((File) arg0.args[0]).getAbsolutePath(), PackageManager.GET_ACTIVITIES);
                     if (info != null) {
                         Constructor<PackageLite> constructor = PackageLite.class.getDeclaredConstructor();
                         pl = constructor.newInstance();
                         pl.applicationClassName = info.applicationInfo.className;
-                        Log.d("AtlasBundlePatch","application = "+info.applicationInfo.className);
+                        //Log.d("AtlasBundlePatch","application = "+info.applicationInfo.className);
                         ActivityInfo[] activityInfos = info.activities;
                         if (activityInfos != null) {
                             for (ActivityInfo activityInfo : activityInfos) {
@@ -169,7 +169,7 @@ public class AtlasBundlePatch implements IPatch {
 //                        }
                     }else{
                         logError(null,"packageLite is fail",apkFile.getAbsolutePath());
-                        Log.d("AtlasBundlePatch","packageLite is fail"+apkFile.getAbsolutePath());
+                        //Log.d("AtlasBundlePatch","packageLite is fail"+apkFile.getAbsolutePath());
 
                     }
                 }
