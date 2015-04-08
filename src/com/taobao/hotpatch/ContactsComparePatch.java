@@ -18,6 +18,7 @@ public class ContactsComparePatch implements IPatch{
     // handlePatch这个方法，会在应用进程启动的时候被调用，在这里来实现patch的功能
     @Override
     public void handlePatch(PatchParam arg0) throws Throwable {
+        Log.d(TAG, "handlePatch");
         // 从arg0里面，可以得到主客的context供使用
         final Context context = arg0.context;
 
@@ -27,7 +28,7 @@ public class ContactsComparePatch implements IPatch{
             return;
         }
         // TODO 这里填上你要patch的bundle中的class名字，第三个参数是所在bundle中manifest的packageName，最后的参数为this
-        Class<?> contactsRawOprator = PatchHelper.loadClass(context, "com.taobao.contacts.data.a.b", "com.taobao.taobao", this);
+        Class<?> contactsRawOprator = PatchHelper.loadClass(context, "com.taobao.contacts.data.a.b", null, this);
         if (contactsRawOprator == null) {
             return;
         }
@@ -56,7 +57,7 @@ public class ContactsComparePatch implements IPatch{
                     }
                 });
         
-        Class<?> friendOprator = PatchHelper.loadClass(context, "com.taobao.contacts.data.a.d", "com.taobao.taobao", this);
+        Class<?> friendOprator = PatchHelper.loadClass(context, "com.taobao.contacts.data.a.d", null, this);
         if (friendOprator == null) {
             return;
         }
