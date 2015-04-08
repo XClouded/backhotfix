@@ -55,10 +55,10 @@ public class FollowOpratorPatch implements IPatch {
                         	Method[] methods=obj.getClass().getDeclaredMethods();
                         	for(Field field:fields){
                         		field.setAccessible(true);
-                        		Log.e(TAG, "field:"+field.getName()+" : "+field.get(obj).getClass().getName());
+                        		Log.e(TAG, "field:"+field.getName());
                         	}
                         	for(Method method:methods){
-                        		Log.e(TAG, "field:"+method.getName());
+                        		Log.e(TAG, "method:"+method.getName());
                         		if(method.getName().equals("startRequest")){
                         			method.invoke(obj, request,BasicOperationResponse.class);
                         		}
@@ -82,8 +82,20 @@ public class FollowOpratorPatch implements IPatch {
                     	Log.e(TAG, "removeFollow pubAccountId:"+pubAccountId);
                     	Object obj=XposedHelpers.getObjectField(param.thisObject, "b");
                     	 if(null!=obj){
-                    		 Log.e(TAG, "call method removeFollow");
-                    		 XposedHelpers.callMethod(obj, "startRequest", request,BasicOperationResponse.class);
+                    		 Log.e(TAG, "call method removeFollow"+obj.toString());
+                    		 Field[] fields=obj.getClass().getDeclaredFields();
+                         	 Method[] methods=obj.getClass().getDeclaredMethods();
+                    		 for(Field field:fields){
+                         		field.setAccessible(true);
+                         		Log.e(TAG, "field:"+field.getName());
+                         	}
+                         	for(Method method:methods){
+                         		Log.e(TAG, "method:"+method.getName());
+                         		if(method.getName().equals("startRequest")){
+                         			method.invoke(obj, request,BasicOperationResponse.class);
+                         		}
+                         	}
+                    		// XposedHelpers.callMethod(obj, "startRequest", request,BasicOperationResponse.class);
                         }
                         return null;
                     }
