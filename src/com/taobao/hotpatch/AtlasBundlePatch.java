@@ -219,7 +219,6 @@ public class AtlasBundlePatch implements IPatch {
                     return result;
                 }
 
-                installBundle("com.taobao.browser");
                 try {
                     ClassLoadFromBundle.checkInstallBundleIfNeed(componentName);
                 } catch (Exception e) {
@@ -271,9 +270,9 @@ public class AtlasBundlePatch implements IPatch {
             String errorString = sw.toString();
             Map map = new HashMap<String, String>();
             map.put("errorStr", errorString);
-            TBS.Ext.commitEvent(61005, "atlas_109", errorCode, componentName, map.toString());
+            TBS.Ext.commitEvent(61005, "atlas_110", errorCode, componentName, map.toString());
         } else {
-            TBS.Ext.commitEvent(61005, "atlas_109", errorCode, componentName, "");
+            TBS.Ext.commitEvent(61005, "atlas_110", errorCode, componentName, "");
         }
         //       }
     }
