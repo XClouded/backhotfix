@@ -205,7 +205,14 @@
 			<version>1.4</version>
 			<scope>provided</scope>
 		</dependency>
-
+		
+		<dependency>
+			<groupId>com.taobao.android</groupId>
+			<artifactId>taobao_social_sdk</artifactId>
+			<version>0.5.0</version>
+			<scope>provided</scope>
+		</dependency>
+		
 		<dependency>
 			<groupId>com.taobao.android</groupId>
 			<artifactId>taobaocompat</artifactId>
