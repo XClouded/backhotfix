@@ -1,6 +1,6 @@
 package com.taobao.hotpatch;
 
-import java.lang.reflect.Field;
+
 import java.lang.reflect.Method;
 
 import android.content.Context;
@@ -56,7 +56,7 @@ public class FollowOpratorPatch implements IPatch {
                         		Log.e(TAG, "method:"+method.getName());
                         		if(method.getName().equals("startRequest")){
                         			Log.e(TAG, "call method startRequest before:"+request.toString());
-                        			XposedHelpers.callMethod(obj, "startRequest", request,BasicOperationResponse.class);
+                        			XposedHelpers.callMethod(obj, "startRequest",new Class[]{FollowRequestPath.class,BasicOperationResponse.class}, request,BasicOperationResponse.class);
                         			Log.e(TAG, "call method startRequest finished");
                         		}
                         	}
@@ -85,7 +85,7 @@ public class FollowOpratorPatch implements IPatch {
                         		Log.e(TAG, "method:"+method.getName());
                         		if(method.getName().equals("startRequest")){
                         			Log.e(TAG, "call method startRequest before:"+request.toString());
-                        			XposedHelpers.callMethod(obj, "startRequest", request,BasicOperationResponse.class);
+                        			XposedHelpers.callMethod(obj, "startRequest",new Class[]{FollowRequestPath.class,BasicOperationResponse.class},request,BasicOperationResponse.class);
                         			Log.e(TAG, "call method startRequest finished");
                         		}
                         	}
