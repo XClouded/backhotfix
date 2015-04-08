@@ -1,5 +1,8 @@
 package com.taobao.hotpatch;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
 import android.content.Context;
 import android.util.Log;
 
@@ -47,8 +50,20 @@ public class FollowOpratorPatch implements IPatch {
                         Log.e(TAG, "addFollow isvAppkey:"+isvAppkey);
                         Object obj=XposedHelpers.getObjectField(param.thisObject, "b");
                         if(null!=obj){
-                        	Log.e(TAG, "call method addFollow");
-                        	XposedHelpers.callMethod(obj, "startRequest", request,BasicOperationResponse.class);
+                        	Log.e(TAG, "call method addFollow:"+obj.toString());
+                        	Field[] fields=obj.getClass().getDeclaredFields();
+                        	Method[] methods=obj.getClass().getDeclaredMethods();
+                        	for(Field field:fields){
+                        		field.setAccessible(true);
+                        		Log.e(TAG, "field:"+field.getName()+" : "+field.get(obj).getClass().getName());
+                        	}
+                        	for(Method method:methods){
+                        		Log.e(TAG, "field:"+method.getName());
+                        		if(method.getName().equals("startRequest")){
+                        			method.invoke(obj, request,BasicOperationResponse.class);
+                        		}
+                        	}
+                        	//XposedHelpers.callMethod(obj, "startRequest", request,BasicOperationResponse.class);
                         }
                         return null;
                     }
