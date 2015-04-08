@@ -43,7 +43,8 @@ public class FollowOpratorPatch implements IPatch {
                             throws Throwable {
                         long pubAccountId=(Long) param.args[0];
                         String isvAppkey=(String) param.args[1];
-                        FollowRequestPath request=new FollowRequestPath(new SocialParam(""));
+                        SocialParam socialParam=(SocialParam)XposedHelpers.getObjectField(param.thisObject, "a");
+                        FollowRequestPath request=new FollowRequestPath(socialParam);
                         request.setAPI_NAME("mtop.cybertron.follow.add.isv");
                         request.setPubAccountId(pubAccountId);
                         request.setIsvAppkey(isvAppkey);
@@ -52,16 +53,7 @@ public class FollowOpratorPatch implements IPatch {
                         Object obj=XposedHelpers.getObjectField(param.thisObject, "b");
                         if(null!=obj){
                         	Log.e(TAG, "call method addFollow:"+obj.toString());
-                        	Method[] methods=obj.getClass().getDeclaredMethods();
-                        	for(Method method:methods){
-                        		Log.e(TAG, "method:"+method.getName());
-                        		if(method.getName().equals("startRequest")){
-                        			Log.e(TAG, "call method startRequest before:"+request.toString());
-                        			XposedHelpers.callMethod(obj, "startRequest",new Class[]{IMTOPDataObject.class,Class.class}, request,BasicOperationResponse.class);
-                        			Log.e(TAG, "call method startRequest finished");
-                        		}
-                        	}
-                        	//XposedHelpers.callMethod(obj, "startRequest", request,BasicOperationResponse.class);
+                        	XposedHelpers.callMethod(obj, "startRequest",new Class[]{IMTOPDataObject.class,Class.class}, request,BasicOperationResponse.class);
                         }
                         return null;
                     }
@@ -74,23 +66,15 @@ public class FollowOpratorPatch implements IPatch {
                     protected Object replaceHookedMethod(MethodHookParam param)
                             throws Throwable {
                         long pubAccountId=(Long) param.args[0];
-                        FollowRequestPath request=new FollowRequestPath(new SocialParam(""));
+                        SocialParam socialParam=(SocialParam)XposedHelpers.getObjectField(param.thisObject, "a");
+                        FollowRequestPath request=new FollowRequestPath(socialParam);
                         request.setAPI_NAME("mtop.cybertron.follow.remove");
                     	request.setPubAccountId(pubAccountId);
                     	Log.e(TAG, "removeFollow pubAccountId:"+pubAccountId);
                     	Object obj=XposedHelpers.getObjectField(param.thisObject, "b");
                     	 if(null!=obj){
                     		 Log.e(TAG, "call method removeFollow"+obj.toString());
-                         	 Method[] methods=obj.getClass().getDeclaredMethods();
-                         	for(Method method:methods){
-                        		Log.e(TAG, "method:"+method.getName());
-                        		if(method.getName().equals("startRequest")){
-                        			Log.e(TAG, "call method startRequest before:"+request.toString());
-                        			XposedHelpers.callMethod(obj, "startRequest",new Class[]{IMTOPDataObject.class,Class.class},request,BasicOperationResponse.class);
-                        			Log.e(TAG, "call method startRequest finished");
-                        		}
-                        	}
-                    		// XposedHelpers.callMethod(obj, "startRequest", request,BasicOperationResponse.class);
+                    		 XposedHelpers.callMethod(obj, "startRequest",new Class[]{IMTOPDataObject.class,Class.class}, request,BasicOperationResponse.class);
                         }
                         return null;
                     }
