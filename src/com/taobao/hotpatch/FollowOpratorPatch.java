@@ -1,8 +1,6 @@
 package com.taobao.hotpatch;
 
 
-import java.lang.reflect.Method;
-
 import mtopsdk.mtop.domain.IMTOPDataObject;
 import android.content.Context;
 import android.util.Log;
