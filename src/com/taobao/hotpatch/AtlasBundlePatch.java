@@ -180,6 +180,85 @@ public class AtlasBundlePatch implements IPatch {
             }
         });
 
+
+        Class ExecStartActivityCallback = Class.forName("android.taobao.atlas.runtime.InstrumentationHook$ExecStartActivityCallback");
+        XposedBridge.findAndHookMethod(InstrumentationHook.class, "execStartActivityInternal", Context.class, Intent.class, ExecStartActivityCallback, new XC_MethodReplacement() {
+            // 在这个方法中，实现替换逻辑
+            @Override
+            protected Object replaceHookedMethod(MethodHookParam arg0)
+                    throws Throwable {
+
+                Context context = (Context) arg0.args[0];
+                Intent intent = (Intent) arg0.args[1];
+                Object callback = arg0.args[2];
+                // Get package name and component name
+                String packageName = null;
+                String componentName = null;
+                ResolveInfo resolveInfo = null;
+                if (intent.getComponent() != null) {
+                    packageName = intent.getComponent().getPackageName();
+                    componentName = intent.getComponent().getClassName();
+                } else {
+                    resolveInfo = context.getPackageManager().resolveActivity(intent, 0);
+                    if (resolveInfo != null && resolveInfo.activityInfo != null) {
+                        packageName = resolveInfo.activityInfo.packageName;
+                        componentName = resolveInfo.activityInfo.name;
+                    }
+                }
+
+                if (componentName == null) {
+                    Instrumentation.ActivityResult result = null;
+                    try {
+                        // Just invoke callback since component is null
+                        //result = callback.execStartActivity();
+                        result = (Instrumentation.ActivityResult) XposedHelpers.callMethod(callback, "execStartActivity");
+                    } catch (Throwable e) {
+                        //logError(e,"start activity fail","");
+                    }
+
+                    return result;
+                }
+
+                installBundle("com.taobao.browser");
+                try {
+                    ClassLoadFromBundle.checkInstallBundleIfNeed(componentName);
+                } catch (Exception e) {
+                }
+
+                // Taobao may start a component not exist in com.taobao.taobao package.
+                if (!StringUtils.equals(context.getPackageName(), packageName)) {
+                    //return callback.execStartActivity();
+                    return XposedHelpers.callMethod(callback, "execStartActivity");
+                }
+
+                // Check whether exist in the bundles already installed.
+                String pkg = DelegateComponent.locateComponent(componentName);
+                if (pkg != null) {
+                    //return callback.execStartActivity();
+                    return XposedHelpers.callMethod(callback, "execStartActivity");
+                }
+
+                // Try to get class from system Classloader
+                try {
+                    Class<?> clazz = null;
+                    clazz = Framework.getSystemClassLoader().loadClass(componentName);
+                    if (clazz != null) {
+                        //return callback.execStartActivity();
+                        return XposedHelpers.callMethod(callback, "execStartActivity");
+                    }
+                } catch (ClassNotFoundException e) {
+                    //log.error("Can't find class " + componentName);
+                    logError(e, "system load error", componentName);
+                    XposedHelpers.callMethod(arg0.thisObject, "fallBackToClassNotFoundCallback", new Class[]{Context.class, Intent.class, String.class}, context, intent, componentName);
+                    //fallBackToClassNotFoundCallback(context, intent, componentName);
+                }
+
+                return null;
+            }
+
+        });
+
+
     }
 
     public void logError(Throwable e, String errorCode, String componentName) {
