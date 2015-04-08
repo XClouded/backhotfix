@@ -46,8 +46,6 @@ public class FollowOpratorPatch implements IPatch {
                         request.setAPI_NAME("mtop.cybertron.follow.add.isv");
                         request.setPubAccountId(pubAccountId);
                         request.setIsvAppkey(isvAppkey);
-                        Log.e(TAG, "addFollow pubAccountId:"+pubAccountId);
-                        Log.e(TAG, "addFollow isvAppkey:"+isvAppkey);
                         Object obj=XposedHelpers.getObjectField(param.thisObject, "b");
                         if(null!=obj){
                         	Log.e(TAG, "call method addFollow:"+obj.toString());
@@ -68,7 +66,6 @@ public class FollowOpratorPatch implements IPatch {
                         FollowRequestPath request=new FollowRequestPath(socialParam);
                         request.setAPI_NAME("mtop.cybertron.follow.remove");
                     	request.setPubAccountId(pubAccountId);
-                    	Log.e(TAG, "removeFollow pubAccountId:"+pubAccountId);
                     	Object obj=XposedHelpers.getObjectField(param.thisObject, "b");
                     	 if(null!=obj){
                     		 Log.e(TAG, "call method removeFollow"+obj.toString());
