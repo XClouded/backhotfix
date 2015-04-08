@@ -57,7 +57,7 @@ public class FollowOpratorPatch implements IPatch {
                         		Log.e(TAG, "method:"+method.getName());
                         		if(method.getName().equals("startRequest")){
                         			Log.e(TAG, "call method startRequest before:"+request.toString());
-                        			XposedHelpers.callMethod(obj, "startRequest",new Class[]{IMTOPDataObject.class,BasicOperationResponse.class}, request,BasicOperationResponse.class);
+                        			XposedHelpers.callMethod(obj, "startRequest",new Class[]{IMTOPDataObject.class,Class.class}, request,BasicOperationResponse.class);
                         			Log.e(TAG, "call method startRequest finished");
                         		}
                         	}
@@ -86,7 +86,7 @@ public class FollowOpratorPatch implements IPatch {
                         		Log.e(TAG, "method:"+method.getName());
                         		if(method.getName().equals("startRequest")){
                         			Log.e(TAG, "call method startRequest before:"+request.toString());
-                        			XposedHelpers.callMethod(obj, "startRequest",new Class[]{IMTOPDataObject.class,BasicOperationResponse.class},request,BasicOperationResponse.class);
+                        			XposedHelpers.callMethod(obj, "startRequest",new Class[]{IMTOPDataObject.class,Class.class},request,BasicOperationResponse.class);
                         			Log.e(TAG, "call method startRequest finished");
                         		}
                         	}
