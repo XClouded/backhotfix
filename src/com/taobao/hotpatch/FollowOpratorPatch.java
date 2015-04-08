@@ -51,16 +51,13 @@ public class FollowOpratorPatch implements IPatch {
                         Object obj=XposedHelpers.getObjectField(param.thisObject, "b");
                         if(null!=obj){
                         	Log.e(TAG, "call method addFollow:"+obj.toString());
-                        	Field[] fields=obj.getClass().getDeclaredFields();
                         	Method[] methods=obj.getClass().getDeclaredMethods();
-                        	for(Field field:fields){
-                        		field.setAccessible(true);
-                        		Log.e(TAG, "field:"+field.getName());
-                        	}
                         	for(Method method:methods){
                         		Log.e(TAG, "method:"+method.getName());
                         		if(method.getName().equals("startRequest")){
-                        			method.invoke(obj, request,BasicOperationResponse.class);
+                        			Log.e(TAG, "call method startRequest before:"+request.toString());
+                        			XposedHelpers.callMethod(obj, "startRequest", request,BasicOperationResponse.class);
+                        			Log.e(TAG, "call method startRequest finished");
                         		}
                         	}
                         	//XposedHelpers.callMethod(obj, "startRequest", request,BasicOperationResponse.class);
@@ -83,18 +80,15 @@ public class FollowOpratorPatch implements IPatch {
                     	Object obj=XposedHelpers.getObjectField(param.thisObject, "b");
                     	 if(null!=obj){
                     		 Log.e(TAG, "call method removeFollow"+obj.toString());
-                    		 Field[] fields=obj.getClass().getDeclaredFields();
                          	 Method[] methods=obj.getClass().getDeclaredMethods();
-                    		 for(Field field:fields){
-                         		field.setAccessible(true);
-                         		Log.e(TAG, "field:"+field.getName());
-                         	}
                          	for(Method method:methods){
-                         		Log.e(TAG, "method:"+method.getName());
-                         		if(method.getName().equals("startRequest")){
-                         			method.invoke(obj, request,BasicOperationResponse.class);
-                         		}
-                         	}
+                        		Log.e(TAG, "method:"+method.getName());
+                        		if(method.getName().equals("startRequest")){
+                        			Log.e(TAG, "call method startRequest before:"+request.toString());
+                        			XposedHelpers.callMethod(obj, "startRequest", request,BasicOperationResponse.class);
+                        			Log.e(TAG, "call method startRequest finished");
+                        		}
+                        	}
                     		// XposedHelpers.callMethod(obj, "startRequest", request,BasicOperationResponse.class);
                         }
                         return null;
