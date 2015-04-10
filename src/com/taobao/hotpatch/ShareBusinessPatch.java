@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
 import com.taobao.android.dexposed.XC_MethodHook;
@@ -31,6 +32,7 @@ public class ShareBusinessPatch implements IPatch {
         // TODO 这里填上你要patch的bundle中的class名字，第三个参数是所在bundle中manifest的packageName，最后的参数为this
         Class<?> share = PatchHelper.loadClass(context, "com.taobao.share.business.b", "com.ut.share", this);
         if (share == null) {
+        	Log.d("ShareBusinees", "ShareBusiness is null!");
             return;
         }
         
@@ -45,22 +47,29 @@ public class ShareBusinessPatch implements IPatch {
                             throws Throwable {
                     	String link = (String) param.args[1];
                     	HashSet<SharePlatform> diablePlatforms = (HashSet<SharePlatform>) param.getResult();
+                    	Log.d("ShareBusiness", "disablePlatforms");
                     	
                     	/** 测试代码 */
                     	diablePlatforms.remove(SharePlatform.Weixin);
                     	diablePlatforms.remove(SharePlatform.WeixinPengyouquan);
+                    	Log.d("ShareBusiness", "Disable remove weixin and weixinpengyouquan");
+                    	
                     	if (link == null || link.isEmpty() || !link.contains("wxIsAvailable")) {
                 			diablePlatforms.add(SharePlatform.Weixin);
                 			diablePlatforms.add(SharePlatform.WeixinPengyouquan);
+                			
+                			Log.d("ShareBusiness", "wxIsAvailable");
                 		}
                     	/** 测试代码 */
                     	
                     	if(!TextUtils.isEmpty(link) && !link.contains("weixinshare") && link.contains("wxIsAvailable")) {
                 			diablePlatforms.add(SharePlatform.Weixin);
                 			diablePlatforms.add(SharePlatform.WeixinPengyouquan);
+                			Log.d("ShareBusiness", "include wxIsAvailable");
                 		} else if(!TextUtils.isEmpty(link) && link.contains("weixinshare") && !link.contains("wxIsAvailable")) {
                 			diablePlatforms.remove(SharePlatform.Weixin);
                 			diablePlatforms.remove(SharePlatform.WeixinPengyouquan);
+                			Log.d("ShareBusiness", "include weixinshare");
                 		}
                     	param.setResult(diablePlatforms);
                     }
