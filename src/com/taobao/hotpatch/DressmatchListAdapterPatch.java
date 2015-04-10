@@ -33,7 +33,7 @@ public class DressmatchListAdapterPatch implements IPatch {
 		Class<?> followOprator = PatchHelper
 				.loadClass(
 						context,
-						"com.taobao.tao.talent.discovery.dressmatch.ui.DressmatchListAdapter$BannerHolder$1",
+						"com.taobao.tao.talent.discovery.dressmatch.ui.d",
 						"com.taobao.talent", this);
 		if (followOprator == null) {
 			return;
@@ -47,7 +47,7 @@ public class DressmatchListAdapterPatch implements IPatch {
 					@Override
 					protected Object replaceHookedMethod(MethodHookParam param)
 							throws Throwable {
-
+						Log.e(TAG, "replaceHookedMethod com.taobao.tao.talent.discovery.dressmatch.ui.d");
 						List<?> banner = (List) XposedHelpers.getObjectField(
 								param.thisObject, "a");
 						Object bannerItem = banner.get((Integer) param.args[0]);
