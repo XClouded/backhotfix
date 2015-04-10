@@ -46,6 +46,11 @@ public class ShareBusinessPatch implements IPatch {
                     	String link = (String) param.args[1];
                     	HashSet<SharePlatform> diablePlatforms = (HashSet<SharePlatform>) param.getResult();
                     	
+                    	/** 测试代码 */
+                    	diablePlatforms.remove(SharePlatform.Weixin);
+                    	diablePlatforms.remove(SharePlatform.WeixinPengyouquan);
+                    	/** 测试代码 */
+                    	
                     	if(!TextUtils.isEmpty(link) && !link.contains("weixinshare") && link.contains("wxIsAvailable")) {
                 			diablePlatforms.add(SharePlatform.Weixin);
                 			diablePlatforms.add(SharePlatform.WeixinPengyouquan);
