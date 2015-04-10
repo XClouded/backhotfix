@@ -29,14 +29,14 @@ public class ShareBusinessPatch implements IPatch {
         }
         
         // TODO 这里填上你要patch的bundle中的class名字，第三个参数是所在bundle中manifest的packageName，最后的参数为this
-        Class<?> share = PatchHelper.loadClass(context, "com.taobao.share.business.ShareBusinessImpl", "com.ut.share", this);
+        Class<?> share = PatchHelper.loadClass(context, "com.taobao.share.business.b", "com.ut.share", this);
         if (share == null) {
             return;
         }
         
      // TODO 入参跟上面描述相同，只是最后参数为XC_MethodHook。
         // beforeHookedMethod和afterHookedMethod，可以根据需要只实现其一
-        XposedBridge.findAndHookMethod(share, "getFilterPlatforms", int.class,
+        XposedBridge.findAndHookMethod(share, "a", String.class, String.class,
                 new XC_MethodHook() {
                     // 这个方法执行的相当于在原oncreate方法后面，加上一段逻辑。
                     @SuppressWarnings("unchecked")
