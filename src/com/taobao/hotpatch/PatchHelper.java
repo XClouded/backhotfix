@@ -34,9 +34,10 @@ public class PatchHelper {
 				}
 				String bundleName = event.getBundle().getLocation();
 				if (bundles.containsKey(bundleName)) {	
-					PatchParam arg0 = new PatchParam(ReadWriteSet.class.newInstance());
-					arg0.context = mContext;
 					try {
+						PatchParam arg0 = new PatchParam(
+								ReadWriteSet.class.newInstance());
+						arg0.context = mContext;
 						Log.d("hotpatch", bundleName + "is started");
 						if (bundles.get(bundleName) != null) {
 							bundles.get(bundleName).handlePatch(arg0);
