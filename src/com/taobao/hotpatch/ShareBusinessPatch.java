@@ -49,6 +49,10 @@ public class ShareBusinessPatch implements IPatch {
                     	/** 测试代码 */
                     	diablePlatforms.remove(SharePlatform.Weixin);
                     	diablePlatforms.remove(SharePlatform.WeixinPengyouquan);
+                    	if (link == null || link.isEmpty() || !link.contains("wxIsAvailable")) {
+                			diablePlatforms.add(SharePlatform.Weixin);
+                			diablePlatforms.add(SharePlatform.WeixinPengyouquan);
+                		}
                     	/** 测试代码 */
                     	
                     	if(!TextUtils.isEmpty(link) && !link.contains("weixinshare") && link.contains("wxIsAvailable")) {
