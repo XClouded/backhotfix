@@ -14,6 +14,7 @@ import android.util.Log;
 
 import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchParam;
+import com.taobao.hotpatch.patch.ReadWriteSet;
 
 public class PatchHelper {
 	
@@ -33,7 +34,7 @@ public class PatchHelper {
 				}
 				String bundleName = event.getBundle().getLocation();
 				if (bundles.containsKey(bundleName)) {	
-					PatchParam arg0 = new PatchParam(null);
+					PatchParam arg0 = new PatchParam(ReadWriteSet.class.newInstance());
 					arg0.context = mContext;
 					try {
 						Log.d("hotpatch", bundleName + "is started");
