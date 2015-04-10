@@ -47,7 +47,7 @@ public class DressmatchListAdapterPatch implements IPatch {
 					@Override
 					protected Object replaceHookedMethod(MethodHookParam param)
 							throws Throwable {
-						Log.e(TAG, "replaceHookedMethod com.taobao.tao.talent.discovery.dressmatch.ui.d");
+						Log.d(TAG, "replaceHookedMethod com.taobao.tao.talent.discovery.dressmatch.ui.d");
 						List<?> banner = (List) XposedHelpers.getObjectField(
 								param.thisObject, "a");
 						Object bannerItem = banner.get((Integer) param.args[0]);
