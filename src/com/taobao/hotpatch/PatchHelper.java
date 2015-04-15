@@ -44,7 +44,6 @@ public class PatchHelper {
 						}
 					} catch (Throwable e) {
 						Log.e("hotpatch", bundleName + e.getMessage());
-						e.printStackTrace();
 					}
 				}
 			}
