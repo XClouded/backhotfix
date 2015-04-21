@@ -61,7 +61,7 @@ public class ContactsComparePatch implements IPatch{
         if (friendOprator == null) {
             return;
         }
-        XposedBridge.findAndHookMethod(friendOprator, "compareTo", friendOprator,
+        XposedBridge.findAndHookMethod(friendOprator, "compareTo", Object.class,
                 new XC_MethodHook() {
                    
                     @Override
