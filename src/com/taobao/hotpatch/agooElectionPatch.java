@@ -31,7 +31,7 @@ public class agooElectionPatch implements IPatch {
 		}
 		
 		// TODO 这里填上你要patch的class名字，根据mapping得到混淆后的名字，在主dex中的class，最后的两个参数均为null
-		final Class<?> electionService = PatchHelper.loadClass(context, "org.android.agoo.impl.ElectionService.a", null,null);
+		final Class<?> electionService = PatchHelper.loadClass(context, "org.android.agoo.impl.c", null,null);
 		if (electionService == null) {
 			return;
 		}
@@ -56,6 +56,7 @@ public class agooElectionPatch implements IPatch {
 					throws Throwable {
 				// TODO 把原方法直接考入进这个方法里，然后用反射的方式进行翻译
 				// arg0.thisObject是方法被调用的所在的实例
+				Log.d("agooElectionPatch", "replaceHookedMethod,begin.....");
 				Object appInfo = null; 
 				final Context context = (Context)param.args[0];
 				String packageName = (String)param.args[1];
