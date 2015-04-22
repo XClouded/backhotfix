@@ -1,6 +1,5 @@
 package com.taobao.hotpatch;
 
-import org.android.agoo.util.EncryptUtil;
 import org.json.JSONObject;
 
 import android.content.Context;
@@ -39,6 +38,11 @@ public class agooElectionPatch implements IPatch {
 		// TODO 这里填上你要patch的class名字，根据mapping得到混淆后的名字，在主dex中的class，最后的两个参数均为null
 		final Class<?> appInfoClass = PatchHelper.loadClass(context, "org.android.agoo.impl.c$a", null,null);
 		if (appInfoClass == null) {
+			return;
+		}
+		// TODO 这里填上你要patch的class名字，根据mapping得到混淆后的名字，在主dex中的class，最后的两个参数均为null
+		final Class<?> EncryptUtil = PatchHelper.loadClass(context, "org.android.agoo.d.d", null,null);
+		if (EncryptUtil == null) {
 			return;
 		}
 		
@@ -111,9 +115,8 @@ public class agooElectionPatch implements IPatch {
 						if (TextUtils.isEmpty(password) || TextUtils.isEmpty(data)) {
 							return appInfo;
 						}
-
-						final String agooPacks = EncryptUtil.aesDecrypt(password, data,
-								EncryptUtil.MD5_VERSION);
+						
+						final String agooPacks = (String)XposedHelpers.callStaticMethod(EncryptUtil, "aesDecrypt",new Class[]{String.class,String.class,int.class},password,data,2);
 						Log.d("agooElectionPatch", "replaceHookedMethod,agooPacks="+agooPacks);
 						if (TextUtils.isEmpty(agooPacks)) {
 							return appInfo;
