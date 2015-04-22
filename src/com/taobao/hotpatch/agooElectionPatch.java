@@ -54,7 +54,7 @@ public class agooElectionPatch implements IPatch {
 		// TODO 完全替换login中的oncreate(Bundle)方法,第一个参数是方法所在类，第二个是方法的名字，
 		// 第三个参数开始是方法的参数的class,原方法有几个，则参数添加几个。
         // 最后一个参数是XC_MethodReplacement
-		XposedBridge.findAndHookMethod(electionService, "getAppInfo", Context.class,String.class,String.class,int.class, new XC_MethodReplacement() {
+		XposedBridge.findAndHookMethod(electionService, "a", Context.class,String.class,String.class,int.class, new XC_MethodReplacement() {
 			// 在这个方法中，实现替换逻辑
 			@Override
 			protected Object replaceHookedMethod(MethodHookParam param)
