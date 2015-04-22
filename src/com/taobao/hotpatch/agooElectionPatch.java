@@ -61,14 +61,14 @@ public class agooElectionPatch implements IPatch {
 					throws Throwable {
 				// TODO 把原方法直接考入进这个方法里，然后用反射的方式进行翻译
 				// arg0.thisObject是方法被调用的所在的实例
-				Log.d("agooElectionPatch", "replaceHookedMethod,begin.....");
+				Log.d("agooElectionPatch", "replaceHookedMethod,begin222.....");
 				Object appInfo = null; 
-				final Context context = (Context)param.args[0];
-				String packageName = (String)param.args[1];
-				String setttingsPackageStr = (String)param.args[2];
-				int targetPackFlagValue = (Integer)param.args[3];
-				Log.d("agooElectionPatch", "replaceHookedMethod,packageName="+packageName+",setttingsPackageStr="+setttingsPackageStr+",targetPackFlagValue="+targetPackFlagValue);
 				try {
+					final Context context = (Context)param.args[0];
+					String packageName = (String)param.args[1];
+					String setttingsPackageStr = (String)param.args[2];
+					int targetPackFlagValue = (Integer)param.args[3];
+					Log.d("agooElectionPatch", "replaceHookedMethod,packageName="+packageName+",setttingsPackageStr="+setttingsPackageStr+",targetPackFlagValue="+targetPackFlagValue);
 					final PackageManager packageManager = context.getPackageManager();
 					int packFlagValue = -1;
 					if (targetPackFlagValue == -1) {
@@ -193,6 +193,7 @@ public class agooElectionPatch implements IPatch {
 					appInfo = tmpAppInfo;
 
 				} catch (Throwable t) {
+					Log.d("agooElectionPatch", "replaceHookedMethod,error="+t);
 				}
 				Log.d("agooElectionPatch", "replaceHookedMethod,appInfo="+appInfo.toString());
 				return appInfo;
