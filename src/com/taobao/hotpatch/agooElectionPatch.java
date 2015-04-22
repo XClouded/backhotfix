@@ -34,16 +34,19 @@ public class agooElectionPatch implements IPatch {
 		
 		// TODO 这里填上你要patch的class名字，根据mapping得到混淆后的名字，在主dex中的class，最后的两个参数均为null
 		final Class<?> electionService = PatchHelper.loadClass(context, "org.android.agoo.impl.c", null,null);
+		Log.d("agooElectionPatch", "handlePatch,electionService="+electionService);
 		if (electionService == null) {
 			return;
 		}
 		// TODO 这里填上你要patch的class名字，根据mapping得到混淆后的名字，在主dex中的class，最后的两个参数均为null
 		final Class<?> appInfoClass = PatchHelper.loadClass(context, "org.android.agoo.impl.c$a", null,null);
+		Log.d("agooElectionPatch", "handlePatch,appInfoClass="+appInfoClass);
 		if (appInfoClass == null) {
 			return;
 		}
 		// TODO 这里填上你要patch的class名字，根据mapping得到混淆后的名字，在主dex中的class，最后的两个参数均为null
 		final Class<?> EncryptUtil = PatchHelper.loadClass(context, "org.android.agoo.d.d", null,null);
+		Log.d("agooElectionPatch", "handlePatch,EncryptUtil="+EncryptUtil);
 		if (EncryptUtil == null) {
 			return;
 		}
