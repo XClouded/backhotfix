@@ -26,11 +26,6 @@ public class agooElectionPatch implements IPatch {
 		// 从arg0里面，可以得到主客的context供使用
 		final Context context = arg0.context;
 		
-		// 由于patch运行在多进程的环境，如果只是运行在主进程，就要做如下的相应判断		
-		if (!PatchHelper.isRunInMainProcess(context)) {
-			// 不是主进程就返回
-			return;
-		}
 		
 		// TODO 这里填上你要patch的class名字，根据mapping得到混淆后的名字，在主dex中的class，最后的两个参数均为null
 		final Class<?> electionService = PatchHelper.loadClass(context, "org.android.agoo.impl.c", null,null);
