@@ -32,7 +32,7 @@ public class MagicMirrorActivityPatch implements IPatch {
 					@Override
 					protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 						Activity instance = (Activity) param.thisObject;
-						instance.findViewById(0x3f070004).setVisibility(View.GONE);
+//						instance.findViewById(0x3f070004).setVisibility(View.GONE);
 						Log.e("MagicMirrorActivityPatch", "afterHookedMethod");
 					}
 				});
