@@ -32,6 +32,11 @@ public class ShaderFragmentPatch implements IPatch {
 			return;
 		}
 		
+		final Class<?> cameraManager = PatchHelper.loadClass(context, "com.taobao.magicmirror.render.ui.d", "com.taobao.magicmirror", this);
+		if (cameraManager == null) {
+			return;
+		}
+		
 		Log.e("ShaderFragmentPatch", "handlePatch start");
 		
 		// TODO 入参跟上面描述相同，只是最后参数为XC_MethodHook。
@@ -45,15 +50,16 @@ public class ShaderFragmentPatch implements IPatch {
 							return;
 						}
 						Log.e("ShaderFragmentPatch", "afterHookedMethod 0");
-						updataBuffer(context, render, param);
+						updataBuffer(context, cameraManager, render, param);
 						Log.e("ShaderFragmentPatch", "afterHookedMethod 1");
 					}
 				});
 	}
 	
-	private void updataBuffer(Context context, Object render, MethodHookParam param) {
-		Camera camera = CameraManager.getInstance().getCamera();
-		
+	private void updataBuffer(Context context, Class<?> cameraManager, Object render, MethodHookParam param) {
+		Object object = XposedHelpers.callStaticMethod(cameraManager, "getInstance");
+		Camera camera = (Camera) XposedHelpers.callMethod(object, "getCamera");
+		Log.e("ShaderFragmentPatch", "updataBuffer 0-0" + render.getClass());
 		Size size = null;
 		try {
 			size = camera.getParameters().getPreviewSize();
@@ -74,6 +80,8 @@ public class ShaderFragmentPatch implements IPatch {
 			mPreviewWidth = size.width;
 			mPreviewHeight = size.height;
 		}
+		
+		Log.e("ShaderFragmentPatch", "updataBuffer 0 " + render.getClass());
 		
 		XposedHelpers.setIntField(render, "c",  mPreviewWidth);
 		XposedHelpers.setIntField(render, "d", mPreviewHeight);
