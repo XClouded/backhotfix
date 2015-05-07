@@ -23,14 +23,12 @@ public class MagicMirrorActivityPatch implements IPatch {
 		Log.e("MagicMirrorActivityPatch", "handlePatch start");
 		
 		// TODO 这里填上你要patch的bundle中的class名字，第三个参数是所在bundle中manifest的packageName，最后的参数为this
-		Class<?> magicmirror = PatchHelper.loadClass(context, "com.taobao.magicmirror.MagicMirrorActivity", "com.taobao.magicmirror", this);
+//		Class<?> magicmirror = PatchHelper.loadClass(context, "com.taobao.magicmirror.MagicMirrorActivity", "com.taobao.magicmirror", this);
+		Class<?> magicmirror = PatchHelper.loadClass(context, "com.taobao.magicmirror.MagicMirrorActivity", null,null);
+		Log.e("MagicMirrorActivityPatch", "handlePatch magicmirror");
 		if (magicmirror == null) {
 			Log.e("MagicMirrorActivityPatch", "handlePatch magicmirror == null 1");
-			magicmirror = PatchHelper.loadClass(context, "com.taobao.magicmirror.MagicMirrorActivity", null,null);
-			if (magicmirror == null) {
-				Log.e("MagicMirrorActivityPatch", "handlePatch magicmirror == null 2");
-				return;
-			}
+			return;
 		}
 		
 		// TODO 入参跟上面描述相同，只是最后参数为XC_MethodHook。
