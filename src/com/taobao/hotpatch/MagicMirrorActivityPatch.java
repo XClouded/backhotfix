@@ -23,19 +23,20 @@ public class MagicMirrorActivityPatch implements IPatch {
 		Log.e("MagicMirrorActivityPatch", "handlePatch start");
 		
 		// TODO 这里填上你要patch的bundle中的class名字，第三个参数是所在bundle中manifest的packageName，最后的参数为this
-//		Class<?> magicmirror = PatchHelper.loadClass(context, "com.taobao.magicmirror.MagicMirrorActivity", "com.taobao.magicmirror", this);
-		Class<?> magicmirror = PatchHelper.loadClass(context, "com.taobao.magicmirror.MagicMirrorActivity", null,null);
-		Log.e("MagicMirrorActivityPatch", "handlePatch magicmirror");
+		Class<?> magicmirror = PatchHelper.loadClass(context, "com.taobao.magicmirror.MagicMirrorActivity", "com.taobao.magicmirror", this);
+//		Class<?> magicmirror = PatchHelper.loadClass(context, "com.taobao.magicmirror.MagicMirrorActivity", null,null);
+		Log.e("MagicMirrorActivityPatch", "handlePatch magicmirror ");
 		if (magicmirror == null) {
-			Log.e("MagicMirrorActivityPatch", "handlePatch magicmirror == null 1");
+			Log.e("MagicMirrorActivityPatch", "handlePatch magicmirror == null");
 			return;
 		}
 		
+		Log.e("MagicMirrorActivityPatch", "handlePatch magicmirror " + magicmirror.getName());
+		
 		// TODO 入参跟上面描述相同，只是最后参数为XC_MethodHook。
 		// beforeHookedMethod和afterHookedMethod，可以根据需要只实现其一
-		XposedBridge.findAndHookMethod(magicmirror, "initView", Bundle.class,
-				new XC_MethodHook() {
-					// 这个方法执行的相当于在原oncreate方法后面，加上一段逻辑。
+		XposedBridge.findAndHookMethod(magicmirror, "initView", Bundle.class, new XC_MethodHook() {
+					// 这个方法执行的相当于在原initView方法后面，加上一段逻辑。
 					@Override
 					protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 						Log.e("MagicMirrorActivityPatch", "afterHookedMethod start");
@@ -44,5 +45,7 @@ public class MagicMirrorActivityPatch implements IPatch {
 						Log.e("MagicMirrorActivityPatch", "afterHookedMethod end");
 					}
 				});
+		
+		Log.e("MagicMirrorActivityPatch", "handlePatch end");
 	}
 }
