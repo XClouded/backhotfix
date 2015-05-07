@@ -33,6 +33,7 @@
 			<groupId>com.taobao.android</groupId>
 			<artifactId>tb_magic_mirror</artifactId>
 			<version>1.0.1.5</version>
+			<type>awb</type>
 			<scope>provided</scope>
 		</dependency>
 		
