@@ -13,11 +13,6 @@ import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.android.dexposed.XposedHelpers;
 import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchParam;
-import com.taobao.labs.LabDownloaderListener;
-import com.taobao.labs.LabInfo;
-import com.taobao.labs.LabsManager;
-import com.taobao.statistic.CT;
-import com.taobao.statistic.TBS;
 
 public class LabsPatch implements IPatch {
 
@@ -31,17 +26,17 @@ public class LabsPatch implements IPatch {
 		}
 		
 		final Class<?> LabsManager = PatchHelper.loadClass(context, "com.taobao.labs.d", "com.taobao.labsManager", this);
-		if (labsAdapter == null) {
+		if (LabsManager == null) {
 			return;
 		}
 		
 		final Class<?> labsInfo = PatchHelper.loadClass(context, "com.taobao.labs.b", "com.taobao.labsManager", this);
-		if (labsAdapter == null) {
+		if (labsInfo == null) {
 			return;
 		}
 		
 		final Class<?> LabDownloaderListener = PatchHelper.loadClass(context, "com.taobao.labs.a", "com.taobao.labsManager", this);
-		if (labsAdapter == null) {
+		if (LabDownloaderListener == null) {
 			return;
 		}
 		
