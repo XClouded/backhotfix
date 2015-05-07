@@ -37,8 +37,6 @@ public class ShaderFragmentPatch implements IPatch {
 			return;
 		}
 		
-		Log.e("ShaderFragmentPatch", "handlePatch start");
-		
 		// TODO 入参跟上面描述相同，只是最后参数为XC_MethodHook。
 		// beforeHookedMethod和afterHookedMethod，可以根据需要只实现其一
 		XposedBridge.findAndHookMethod(magicmirror, "changeCamera", new XC_MethodHook() {
@@ -49,9 +47,8 @@ public class ShaderFragmentPatch implements IPatch {
 						if (render == null) {
 							return;
 						}
-						Log.e("ShaderFragmentPatch", "afterHookedMethod 0");
 						updataBuffer(context, cameraManager, render, param);
-						Log.e("ShaderFragmentPatch", "afterHookedMethod 1");
+						Log.e("ShaderFragmentPatch", "afterHookedMethod");
 					}
 				});
 	}
@@ -59,7 +56,6 @@ public class ShaderFragmentPatch implements IPatch {
 	private void updataBuffer(Context context, Class<?> cameraManager, Object render, MethodHookParam param) {
 		Object object = XposedHelpers.callStaticMethod(cameraManager, "getInstance");
 		Camera camera = (Camera) XposedHelpers.callMethod(object, "getCamera");
-		Log.e("ShaderFragmentPatch", "updataBuffer 0-0" + render.getClass());
 		Size size = null;
 		try {
 			size = camera.getParameters().getPreviewSize();
@@ -81,12 +77,8 @@ public class ShaderFragmentPatch implements IPatch {
 			mPreviewHeight = size.height;
 		}
 		
-		Log.e("ShaderFragmentPatch", "updataBuffer 0 " + render.getClass());
-		
 		XposedHelpers.setIntField(render, "c",  mPreviewWidth);
 		XposedHelpers.setIntField(render, "d", mPreviewHeight);
-		
-		Log.e("ShaderFragmentPatch", "updataBuffer 1 ");
 		
 		byte[] buffer = (byte[]) XposedHelpers.getObjectField(render, "y");
 		ByteBuffer mYBuffer = (ByteBuffer) XposedHelpers.getObjectField(render, "m");
@@ -98,8 +90,6 @@ public class ShaderFragmentPatch implements IPatch {
 		
 		XposedHelpers.setObjectField(render, "y", buffer);
 		
-		Log.e("ShaderFragmentPatch", "updataBuffer 2 ");
-		
 		if(mYBuffer == null || mYBuffer.array().length != mPreviewWidth * mPreviewHeight) {
 			mYBuffer = (ByteBuffer) ByteBuffer.allocateDirect(mPreviewWidth * mPreviewHeight).order(ByteOrder.nativeOrder()).position(0);
 		} else {
@@ -107,16 +97,12 @@ public class ShaderFragmentPatch implements IPatch {
 		}
 		XposedHelpers.setObjectField(render, "m", mYBuffer);
 		
-		Log.e("ShaderFragmentPatch", "updataBuffer 3 ");
-		
 		if(mUVBuffer == null || mUVBuffer.array().length != mPreviewWidth * mPreviewHeight / 2) {
 			mUVBuffer = (ByteBuffer) ByteBuffer.allocateDirect(mPreviewWidth * mPreviewHeight / 2).order(ByteOrder.nativeOrder()).position(0);
 		} else {
 			mUVBuffer.clear().position(0);
 		}
 		XposedHelpers.setObjectField(render, "n", mUVBuffer);
-		
-		Log.e("ShaderFragmentPatch", "updataBuffer 4 ");
 		
 		final float[] POSITION = {//
 				-(float) mPreviewWidth / mPreviewHeight,  1f,  0, 1,  // Position 0
@@ -129,8 +115,6 @@ public class ShaderFragmentPatch implements IPatch {
 		
 		XposedHelpers.setIntField(render, "x", POSITION.length / 4);
 		
-		Log.e("ShaderFragmentPatch", "updataBuffer 5 ");
-		
 		Buffer mPosBuffer = (Buffer) XposedHelpers.getObjectField(render, "o");
 		if(mPosBuffer == null) {
 			mPosBuffer = ByteBuffer.allocateDirect(POSITION.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer().put(POSITION).position(0);
@@ -138,7 +122,5 @@ public class ShaderFragmentPatch implements IPatch {
 			mPosBuffer.clear().position(0);
 		}
 		XposedHelpers.setObjectField(render, "o", mPosBuffer);
-		
-		Log.e("ShaderFragmentPatch", "updataBuffer 6 ");
 	}
 }
