@@ -35,7 +35,7 @@ public class MagicMirrorActivityPatch implements IPatch {
 		
 		// TODO 入参跟上面描述相同，只是最后参数为XC_MethodHook。
 		// beforeHookedMethod和afterHookedMethod，可以根据需要只实现其一
-		XposedBridge.findAndHookMethod(magicmirror, "initView", Bundle.class, new XC_MethodHook() {
+		XposedBridge.findAndHookMethod(magicmirror, "initView", new XC_MethodHook() {
 					// 这个方法执行的相当于在原initView方法后面，加上一段逻辑。
 					@Override
 					protected void afterHookedMethod(MethodHookParam param) throws Throwable {
