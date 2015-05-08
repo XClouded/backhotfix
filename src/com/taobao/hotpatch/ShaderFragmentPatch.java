@@ -70,8 +70,9 @@ public class ShaderFragmentPatch implements IPatch {
 		int mPreviewHeight = 0;
 		
 		if(size == null) {
-			mPreviewWidth = CameraManager.getInstance().getWidth();
-			mPreviewHeight = CameraManager.getInstance().getHeight();
+			mPreviewWidth  = (Integer) XposedHelpers.callMethod(object, "getWidth");
+			mPreviewHeight = (Integer) XposedHelpers.callMethod(object, "getHeight");
+			
 		} else {
 			mPreviewWidth = size.width;
 			mPreviewHeight = size.height;
