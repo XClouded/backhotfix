@@ -29,8 +29,10 @@ public class UTPatcher implements IPatch {
 		}
 		SharedPreferences lAlvin3SP = aContext.getSharedPreferences("Alvin3", Context.MODE_PRIVATE);
 		SharedPreferences lUTCommonSP = aContext.getSharedPreferences("UTCommon", Context.MODE_PRIVATE);
+		Log.i("UTPatcher","calIMEISI:step1");
 		if(lUTCommonSP == null || lAlvin3SP==null){
 			mCalled = true;
+			Log.i("UTPatcher","calIMEISI:step2");
 			return;
 		}else{
 			String lAlvin3Imei = lAlvin3SP.getString("EI", null);
@@ -39,6 +41,7 @@ public class UTPatcher implements IPatch {
 			Log.i("UTPatcher","lAlvin3Imsi="+lAlvin3Imsi);
 			if(TextUtils.isEmpty(lAlvin3Imei) || TextUtils.isEmpty(lAlvin3Imsi)){
 				mCalled = true;
+				Log.i("UTPatcher","calIMEISI:step3");
 				return ;
 			}
 			String lUTCommonImei = lUTCommonSP.getString("EI", null);
@@ -50,6 +53,7 @@ public class UTPatcher implements IPatch {
 				Editor lEditor = lUTCommonSP.edit();
 				lEditor.putString("EI", lAlvin3Imei);
 				lEditor.commit();
+				Log.i("UTPatcher","calIMEISI:step4");
 				mIsEISINotEquals = true;
 			}
 			
@@ -57,6 +61,7 @@ public class UTPatcher implements IPatch {
 				Editor lEditor = lUTCommonSP.edit();
 				lEditor.putString("SI", lAlvin3Imsi);
 				lEditor.commit();
+				Log.i("UTPatcher","calIMEISI:step5");
 				mIsEISINotEquals = true;
 			}
 			mImei = lAlvin3Imei;
@@ -72,10 +77,11 @@ public class UTPatcher implements IPatch {
 		final Context context = arg0.context;
 		// 由于patch运行在多进程的环境，如果只是运行在主进程，就要做如下的相应判断		
 		if (!PatchHelper.isRunInMainProcess(context)) {
+			Log.i("UTPatcher","isRunInMainProcess return");
 			// 不是主进程就返回
 			return;
 		}
-		
+		Log.i("UTPatcher","ProcessName:"+android.os.Process.myPid());
 		calIMEISI(context);
 
 		// TODO 这里填上你要patch的class名字，根据mapping得到混淆后的名字，在主dex中的class，最后的两个参数均为null
