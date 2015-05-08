@@ -54,7 +54,7 @@ public class UTPatcher implements IPatch {
 			
 			if(!lAlvin3Imsi.equals(lUTCommonImsi)){
 				Editor lEditor = lUTCommonSP.edit();
-				lEditor.putString("SI", lAlvin3Imei);
+				lEditor.putString("SI", lAlvin3Imsi);
 				lEditor.commit();
 				mIsEISINotEquals = true;
 			}
@@ -100,6 +100,7 @@ public class UTPatcher implements IPatch {
 											String lLogContent = lItem.a();
 											if(null != lLogContent){
 												Log.i("UTPatcher","Step6");
+												Log.i("UTPatcher","lLogContent="+lLogContent);
 												Map<String,String> lMap = com.ut.mini.core.d.b.disassemble(lLogContent);
 												if(null != lMap){
 													Log.i("UTPatcher","Step7");
@@ -108,6 +109,7 @@ public class UTPatcher implements IPatch {
 													String lNewLogContent = com.ut.mini.core.d.b.assembleWithFullFields(lMap);
 													if(null != lNewLogContent){
 														Log.i("UTPatcher","Step8");
+														Log.i("UTPatcher","lNewLogContent="+lNewLogContent);
 														lItem.b(lNewLogContent);
 													}
 												}
