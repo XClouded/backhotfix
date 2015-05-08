@@ -114,7 +114,7 @@ public class UTPatcher implements IPatch {
 							if(null != param.getResult()){
 								Log.i("UTPatcher","Step3");
 								Object lResult = param.getResult();
-								Object e = XposedHelpers.callMethod("lResult", "e");
+								Object e = XposedHelpers.callMethod(lResult, "e");
 								if(null != e){
 									Log.i("UTPatcher","Step4");
 									List<?> lCacheLogItemList = (List<?>) e;
