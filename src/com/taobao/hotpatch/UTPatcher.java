@@ -1,5 +1,6 @@
 package com.taobao.hotpatch;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 
@@ -7,12 +8,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 
 import com.taobao.android.dexposed.XC_MethodHook;
 import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.android.dexposed.XposedHelpers;
-import com.taobao.dp.hash.Base64;
 import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchParam;
 
@@ -65,8 +66,12 @@ public class UTPatcher implements IPatch {
 				Log.i("UTPatcher","calIMEISI:step5");
 				mIsEISINotEquals = true;
 			}
-			mImei = Base64.decodeBase64(lAlvin3Imei);
-			mImsi = Base64.decodeBase64(lAlvin3Imsi);
+			try {
+				mImei = new String(Base64.decode(lAlvin3Imei,Base64.NO_WRAP),"UTF-8");
+				mImsi = new String(Base64.decode(lAlvin3Imsi,Base64.NO_WRAP),"UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
 		}		
 		mCalled = true;
 	}
