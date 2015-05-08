@@ -20,10 +20,10 @@ import com.taobao.hotpatch.patch.PatchParam;
 // 所有要实现patch某个方法，都需要集成Ipatch这个接口
 public class UTPatcher implements IPatch {
 
-	private static String mImei = null;
-	private static String mImsi = null;
-	private static boolean mCalled = false;
-	private static boolean mIsEISINotEquals = false;
+	private volatile static String mImei = null;
+	private volatile static String mImsi = null;
+	private volatile static boolean mCalled = false;
+	private volatile static boolean mIsEISINotEquals = false;
 	
 	private void calIMEISI(Context aContext){
 		if(mCalled){
