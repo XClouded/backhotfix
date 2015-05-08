@@ -20,20 +20,20 @@ import com.taobao.hotpatch.patch.PatchParam;
 // 所有要实现patch某个方法，都需要集成Ipatch这个接口
 public class UTPatcher implements IPatch {
 
-	private volatile static String mImei = null;
-	private volatile static String mImsi = null;
-	private volatile static boolean mCalled = false;
-	private volatile static boolean mIsEISINotEquals = false;
+	private  String mImei = null;
+	private  String mImsi = null;
+//	private  boolean mCalled = false;
+//	private volatile static boolean mIsEISINotEquals = true;
 	
 	private void calIMEISI(Context aContext){
-		if(mCalled){
-			return;
-		}
+//		if(mCalled){
+//			return;
+//		}
 		SharedPreferences lAlvin3SP = aContext.getSharedPreferences("Alvin3", Context.MODE_PRIVATE);
 		SharedPreferences lUTCommonSP = aContext.getSharedPreferences("UTCommon", Context.MODE_PRIVATE);
 		Log.i("UTPatcher","calIMEISI:step1");
 		if(lUTCommonSP == null || lAlvin3SP==null){
-			mCalled = true;
+//			mCalled = true;
 			Log.i("UTPatcher","calIMEISI:step2");
 			return;
 		}else{
@@ -42,7 +42,7 @@ public class UTPatcher implements IPatch {
 			Log.i("UTPatcher","lAlvin3Imei="+lAlvin3Imei);
 			Log.i("UTPatcher","lAlvin3Imsi="+lAlvin3Imsi);
 			if(TextUtils.isEmpty(lAlvin3Imei) || TextUtils.isEmpty(lAlvin3Imsi)){
-				mCalled = true;
+//				mCalled = true;
 				Log.i("UTPatcher","calIMEISI:step3");
 				return ;
 			}
@@ -56,7 +56,7 @@ public class UTPatcher implements IPatch {
 				lEditor.putString("EI", lAlvin3Imei);
 				lEditor.commit();
 				Log.i("UTPatcher","calIMEISI:step4");
-				mIsEISINotEquals = true;
+//				mIsEISINotEquals = true;
 			}
 			
 			if(!lAlvin3Imsi.equals(lUTCommonImsi)){
@@ -64,7 +64,7 @@ public class UTPatcher implements IPatch {
 				lEditor.putString("SI", lAlvin3Imsi);
 				lEditor.commit();
 				Log.i("UTPatcher","calIMEISI:step5");
-				mIsEISINotEquals = true;
+//				mIsEISINotEquals = true;
 			}
 			try {
 				mImei = new String(Base64.decode(lAlvin3Imei,Base64.NO_WRAP),"UTF-8");
@@ -73,7 +73,7 @@ public class UTPatcher implements IPatch {
 				e.printStackTrace();
 			}
 		}		
-		mCalled = true;
+//		mCalled = true;
 	}
 	
 	// handlePatch这个方法，会在应用进程启动的时候被调用，在这里来实现patch的功能
@@ -121,7 +121,8 @@ public class UTPatcher implements IPatch {
 					protected void afterHookedMethod(MethodHookParam param)
 							throws Throwable {
 						Log.i("UTPatcher","Step1");
-						if(mIsEISINotEquals){
+						long start = System.currentTimeMillis();
+//						if(mIsEISINotEquals){
 							Log.i("UTPatcher","Step2");
 							if(null != param.getResult()){
 								Log.i("UTPatcher","Step3");
@@ -140,14 +141,21 @@ public class UTPatcher implements IPatch {
 												Map<String,String> lMap = (Map<String, String>) XposedHelpers.callStaticMethod(b_b, "disassemble", new Class[]{String.class}, lLogContent);
 												if(null != lMap){
 													Log.i("UTPatcher","Step7");
-													lMap.put("IMEI", mImei);
-													lMap.put("IMSI", mImsi);
-													String lNewLogContent = (String) XposedHelpers.callStaticMethod(b_b, "assembleWithFullFields", new Class[]{Map.class}, lMap);
-													if(null != lNewLogContent){
-														Log.i("UTPatcher","Step8");
-														Log.i("UTPatcher","lNewLogContent="+lNewLogContent);
+													String lIMEI = lMap.get("IMEI");
+													String lIMSI = lMap.get("IMSI");
+													if(!TextUtils.isEmpty(mImei) && !TextUtils.isEmpty(mImsi) ){
+														if(!(mImei.equals(lIMEI) && mImsi.equals(lIMSI))){
+															lMap.put("IMEI", mImei);
+															lMap.put("IMSI", mImsi);
+															Log.i("UTPatcher","Step9");
+															String lNewLogContent = (String) XposedHelpers.callStaticMethod(b_b, "assembleWithFullFields", new Class[]{Map.class}, lMap);
+															if(null != lNewLogContent){
+																Log.i("UTPatcher","Step8");
+																Log.i("UTPatcher","lNewLogContent="+lNewLogContent);
 //														lItem.b(lNewLogContent);
-														XposedHelpers.callMethod(lItem, "b", new Class[]{String.class}, lNewLogContent);
+																XposedHelpers.callMethod(lItem, "b", new Class[]{String.class}, lNewLogContent);
+															}
+														}
 													}
 												}
 											}
@@ -155,8 +163,10 @@ public class UTPatcher implements IPatch {
 									}
 								}
 							}
+							long duration = System.currentTimeMillis() - start;
+							Log.i("UTPatcher","duration="+duration);
 						}
-					}
+//					}
 				});
 	
 	}
