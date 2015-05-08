@@ -12,6 +12,7 @@ import android.util.Log;
 import com.taobao.android.dexposed.XC_MethodHook;
 import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.android.dexposed.XposedHelpers;
+import com.taobao.dp.hash.Base64;
 import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchParam;
 
@@ -64,8 +65,8 @@ public class UTPatcher implements IPatch {
 				Log.i("UTPatcher","calIMEISI:step5");
 				mIsEISINotEquals = true;
 			}
-			mImei = lAlvin3Imei;
-			mImsi = lAlvin3Imsi;
+			mImei = Base64.decodeBase64(lAlvin3Imei);
+			mImsi = Base64.decodeBase64(lAlvin3Imsi);
 		}		
 		mCalled = true;
 	}
