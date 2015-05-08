@@ -31,31 +31,31 @@ public class UTPatcher implements IPatch {
 //		}
 		SharedPreferences lAlvin3SP = aContext.getSharedPreferences("Alvin3", Context.MODE_PRIVATE);
 		SharedPreferences lUTCommonSP = aContext.getSharedPreferences("UTCommon", Context.MODE_PRIVATE);
-		Log.i("UTPatcher","calIMEISI:step1");
+//		Log.i("UTPatcher","calIMEISI:step1");
 		if(lUTCommonSP == null || lAlvin3SP==null){
 //			mCalled = true;
-			Log.i("UTPatcher","calIMEISI:step2");
+//			Log.i("UTPatcher","calIMEISI:step2");
 			return;
 		}else{
 			String lAlvin3Imei = lAlvin3SP.getString("EI", null);
 			String lAlvin3Imsi = lAlvin3SP.getString("SI", null);
-			Log.i("UTPatcher","lAlvin3Imei="+lAlvin3Imei);
-			Log.i("UTPatcher","lAlvin3Imsi="+lAlvin3Imsi);
+//			Log.i("UTPatcher","lAlvin3Imei="+lAlvin3Imei);
+//			Log.i("UTPatcher","lAlvin3Imsi="+lAlvin3Imsi);
 			if(TextUtils.isEmpty(lAlvin3Imei) || TextUtils.isEmpty(lAlvin3Imsi)){
 //				mCalled = true;
-				Log.i("UTPatcher","calIMEISI:step3");
+//				Log.i("UTPatcher","calIMEISI:step3");
 				return ;
 			}
 			String lUTCommonImei = lUTCommonSP.getString("EI", null);
 			String lUTCommonImsi = lUTCommonSP.getString("SI", null);
-			Log.i("UTPatcher","lUTCommonImei="+lUTCommonImei);
-			Log.i("UTPatcher","lUTCommonImsi="+lUTCommonImsi);
+//			Log.i("UTPatcher","lUTCommonImei="+lUTCommonImei);
+//			Log.i("UTPatcher","lUTCommonImsi="+lUTCommonImsi);
 			
 			if(!lAlvin3Imei.equals(lUTCommonImei)){
 				Editor lEditor = lUTCommonSP.edit();
 				lEditor.putString("EI", lAlvin3Imei);
 				lEditor.commit();
-				Log.i("UTPatcher","calIMEISI:step4");
+//				Log.i("UTPatcher","calIMEISI:step4");
 //				mIsEISINotEquals = true;
 			}
 			
@@ -63,7 +63,7 @@ public class UTPatcher implements IPatch {
 				Editor lEditor = lUTCommonSP.edit();
 				lEditor.putString("SI", lAlvin3Imsi);
 				lEditor.commit();
-				Log.i("UTPatcher","calIMEISI:step5");
+//				Log.i("UTPatcher","calIMEISI:step5");
 //				mIsEISINotEquals = true;
 			}
 			try {
@@ -83,11 +83,11 @@ public class UTPatcher implements IPatch {
 		final Context context = arg0.context;
 		// 由于patch运行在多进程的环境，如果只是运行在主进程，就要做如下的相应判断		
 		if (!PatchHelper.isRunInMainProcess(context)) {
-			Log.i("UTPatcher","isRunInMainProcess return");
+//			Log.i("UTPatcher","isRunInMainProcess return");
 			// 不是主进程就返回
 			return;
 		}
-		Log.i("UTPatcher","ProcessName:"+android.os.Process.myPid());
+//		Log.i("UTPatcher","ProcessName:"+android.os.Process.myPid());
 		calIMEISI(context);
 
 		// TODO 这里填上你要patch的class名字，根据mapping得到混淆后的名字，在主dex中的class，最后的两个参数均为null
@@ -120,38 +120,38 @@ public class UTPatcher implements IPatch {
 					@Override
 					protected void afterHookedMethod(MethodHookParam param)
 							throws Throwable {
-						Log.i("UTPatcher","Step1");
-						long start = System.currentTimeMillis();
+//						Log.i("UTPatcher","Step1");
+//						long start = System.currentTimeMillis();
 //						if(mIsEISINotEquals){
-							Log.i("UTPatcher","Step2");
+//							Log.i("UTPatcher","Step2");
 							if(null != param.getResult()){
-								Log.i("UTPatcher","Step3");
+//								Log.i("UTPatcher","Step3");
 								Object lResult = param.getResult();
 								Object e = XposedHelpers.callMethod(lResult, "e");
 								if(null != e){
-									Log.i("UTPatcher","Step4");
+//									Log.i("UTPatcher","Step4");
 									List<?> lCacheLogItemList = (List<?>) e;
 									if(lCacheLogItemList.size()>0){
-										Log.i("UTPatcher","Step5");
+//										Log.i("UTPatcher","Step5");
 										for(Object lItem: lCacheLogItemList){
 											String lLogContent = (String) XposedHelpers.callMethod(lItem, "a");
 											if(null != lLogContent){
-												Log.i("UTPatcher","Step6");
-												Log.i("UTPatcher","lLogContent="+lLogContent);
+//												Log.i("UTPatcher","Step6");
+//												Log.i("UTPatcher","lLogContent="+lLogContent);
 												Map<String,String> lMap = (Map<String, String>) XposedHelpers.callStaticMethod(b_b, "disassemble", new Class[]{String.class}, lLogContent);
 												if(null != lMap){
-													Log.i("UTPatcher","Step7");
+//													Log.i("UTPatcher","Step7");
 													String lIMEI = lMap.get("IMEI");
 													String lIMSI = lMap.get("IMSI");
 													if(!TextUtils.isEmpty(mImei) && !TextUtils.isEmpty(mImsi) ){
 														if(!(mImei.equals(lIMEI) && mImsi.equals(lIMSI))){
 															lMap.put("IMEI", mImei);
 															lMap.put("IMSI", mImsi);
-															Log.i("UTPatcher","Step9");
+//															Log.i("UTPatcher","Step9");
 															String lNewLogContent = (String) XposedHelpers.callStaticMethod(b_b, "assembleWithFullFields", new Class[]{Map.class}, lMap);
 															if(null != lNewLogContent){
-																Log.i("UTPatcher","Step8");
-																Log.i("UTPatcher","lNewLogContent="+lNewLogContent);
+//																Log.i("UTPatcher","Step8");
+//																Log.i("UTPatcher","lNewLogContent="+lNewLogContent);
 //														lItem.b(lNewLogContent);
 																XposedHelpers.callMethod(lItem, "b", new Class[]{String.class}, lNewLogContent);
 															}
@@ -163,8 +163,8 @@ public class UTPatcher implements IPatch {
 									}
 								}
 							}
-							long duration = System.currentTimeMillis() - start;
-							Log.i("UTPatcher","duration="+duration);
+//							long duration = System.currentTimeMillis() - start;
+//							Log.i("UTPatcher","duration="+duration);
 						}
 //					}
 				});
