@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.taobao.android.dexposed.XC_MethodHook;
 import com.taobao.android.dexposed.XposedBridge;
+import com.taobao.android.dexposed.XposedHelpers;
 import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchParam;
 
@@ -77,9 +78,31 @@ public class UTPatcher implements IPatch {
 		
 		calIMEISI(context);
 
+		// TODO 这里填上你要patch的class名字，根据mapping得到混淆后的名字，在主dex中的class，最后的两个参数均为null
+		Class<?> a = PatchHelper.loadClass(context, "com.ut.mini.core.c.a", null,null);
+		if (a == null) {
+			return;
+		}
+		
+		Class<?> a_a = PatchHelper.loadClass(context, "com.ut.mini.core.c.a$a", null,null);
+		if (a_a == null) {
+			return;
+		}
+		
+		Class<?> a_a_a = PatchHelper.loadClass(context, "com.ut.mini.core.c.a$a$a", null,null);
+		if (a_a_a == null) {
+			return;
+		}
+		
+		final Class<?> b_b= PatchHelper.loadClass(context, "com.ut.mini.core.d.b", null,null);
+		if (b_b == null) {
+			return;
+		}
+		
+		
 		// TODO 入参跟上面描述相同，只是最后参数为XC_MethodHook。
 		// beforeHookedMethod和afterHookedMethod，可以根据需要只实现其一
-		XposedBridge.findAndHookMethod(com.ut.mini.core.c.a.class, "a", int.class,boolean.class,boolean.class,List.class,
+		XposedBridge.findAndHookMethod(a, "a", int.class,boolean.class,boolean.class,List.class,
 				new XC_MethodHook() {
 					// 这个方法执行的相当于在原oncreate方法后面，加上一段逻辑。
 					@Override
@@ -90,27 +113,29 @@ public class UTPatcher implements IPatch {
 							Log.i("UTPatcher","Step2");
 							if(null != param.getResult()){
 								Log.i("UTPatcher","Step3");
-								com.ut.mini.core.c.a.a lResult = (com.ut.mini.core.c.a.a)param.getResult();
-								if(null != lResult.e()){
+								Object lResult = param.getResult();
+								Object e = XposedHelpers.callMethod("lResult", "e");
+								if(null != e){
 									Log.i("UTPatcher","Step4");
-									List<com.ut.mini.core.c.a.a.a> lCacheLogItemList = (List<com.ut.mini.core.c.a.a.a>)lResult.e();
+									List<?> lCacheLogItemList = (List<?>) e;
 									if(lCacheLogItemList.size()>0){
 										Log.i("UTPatcher","Step5");
-										for(com.ut.mini.core.c.a.a.a lItem:lCacheLogItemList){
-											String lLogContent = lItem.a();
+										for(Object lItem: lCacheLogItemList){
+											String lLogContent = (String) XposedHelpers.callMethod(lItem, "a");
 											if(null != lLogContent){
 												Log.i("UTPatcher","Step6");
 												Log.i("UTPatcher","lLogContent="+lLogContent);
-												Map<String,String> lMap = com.ut.mini.core.d.b.disassemble(lLogContent);
+												Map<String,String> lMap = (Map<String, String>) XposedHelpers.callStaticMethod(b_b, "disassemble", new Class[]{String.class}, lLogContent);
 												if(null != lMap){
 													Log.i("UTPatcher","Step7");
 													lMap.put("IMEI", mImei);
 													lMap.put("IMSI", mImsi);
-													String lNewLogContent = com.ut.mini.core.d.b.assembleWithFullFields(lMap);
+													String lNewLogContent = (String) XposedHelpers.callStaticMethod(b_b, "assembleWithFullFields", new Class[]{Map.class}, lMap);
 													if(null != lNewLogContent){
 														Log.i("UTPatcher","Step8");
 														Log.i("UTPatcher","lNewLogContent="+lNewLogContent);
-														lItem.b(lNewLogContent);
+//														lItem.b(lNewLogContent);
+														XposedHelpers.callMethod(lItem, "b", new Class[]{String.class}, lNewLogContent);
 													}
 												}
 											}
