@@ -65,7 +65,7 @@
 		<dependency>
 			<groupId>com.taobao.android</groupId>
 			<artifactId>usertrack</artifactId>
-			<version>3.1.0</version>
+			<version>4.3.3.2</version>
 			<scope>provided</scope>
 		</dependency>
 			<dependency>
