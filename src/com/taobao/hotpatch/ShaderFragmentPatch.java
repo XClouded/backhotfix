@@ -61,8 +61,8 @@ public class ShaderFragmentPatch implements IPatch {
 			size = camera.getParameters().getPreviewSize();
 		} catch (Exception e) {
 			e.printStackTrace();
-			CameraManager.getInstance().closeCameraDriver();
-			CameraManager.getInstance().openCamera();
+			XposedHelpers.callMethod(object, "closeCameraDriver");
+			XposedHelpers.callMethod(object, "openCamera");
 			size = camera.getParameters().getPreviewSize();
 		}
 		
