@@ -37,7 +37,7 @@ public class ShopDataManagerPatch implements IPatch {
 				Map<String, String> dataPool = (Map<String, String>)dataPoolObj;			
 				Map<String, String> pool = new HashMap<String, String>();				
 				pool.putAll(dataPool);
-				pool.put("userId", getSellerId(pool));
+				pool.put("userId", getSellerId(dataPool));
 				return pool;
 			}
 			
