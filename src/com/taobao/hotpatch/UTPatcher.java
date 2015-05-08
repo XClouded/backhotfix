@@ -137,7 +137,7 @@ public class UTPatcher implements IPatch {
 											String lLogContent = (String) XposedHelpers.callMethod(lItem, "a");
 											if(null != lLogContent){
 //												Log.i("UTPatcher","Step6");
-												Log.i("UTPatcher","lLogContent="+lLogContent);
+//												Log.i("UTPatcher","lLogContent="+lLogContent);
 												Map<String,String> lMap = (Map<String, String>) XposedHelpers.callStaticMethod(b_b, "disassemble", new Class[]{String.class}, lLogContent);
 												if(null != lMap){
 //													Log.i("UTPatcher","Step7");
@@ -151,7 +151,7 @@ public class UTPatcher implements IPatch {
 															String lNewLogContent = (String) XposedHelpers.callStaticMethod(b_b, "assembleWithFullFields", new Class[]{Map.class}, lMap);
 															if(null != lNewLogContent){
 																Log.i("UTPatcher","Step8");
-																Log.i("UTPatcher","lNewLogContent="+lNewLogContent);
+//																Log.i("UTPatcher","lNewLogContent="+lNewLogContent);
 //														lItem.b(lNewLogContent);
 																XposedHelpers.callMethod(lItem, "b", new Class[]{String.class}, lNewLogContent);
 															}
