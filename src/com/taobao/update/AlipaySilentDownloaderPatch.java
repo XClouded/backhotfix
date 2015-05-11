@@ -1,5 +1,6 @@
 package com.taobao.update;
 
+import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.util.Log;
@@ -7,11 +8,11 @@ import com.taobao.android.dexposed.XC_MethodHook;
 import com.taobao.android.dexposed.XC_MethodReplacement;
 import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.android.dexposed.XposedHelpers;
+import com.taobao.hotpatch.PatchHelper;
 import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchParam;
 import com.taobao.tao.Globals;
 import com.taobao.tao.homepage.preference.AppPreference;
-import com.taobao.tao.update.alipay.AlipaySilentDownloader;
 
 import java.io.File;
 
@@ -21,13 +22,17 @@ import java.io.File;
 public class AlipaySilentDownloaderPatch implements IPatch{
     @Override
     public void handlePatch(final PatchParam patchParam) throws Throwable {
-        XposedBridge.findAndHookMethod(AlipaySilentDownloader.class,"checkDownload",new XC_MethodReplacement() {
+
+        final Context context = patchParam.context;
+        final Class AlipaySilentDownloaderClass = PatchHelper.loadClass(context, "com.taobao.tao.update.alipay.a", null, null);
+
+        XposedBridge.findAndHookMethod(AlipaySilentDownloaderClass,"checkDownload",new XC_MethodReplacement() {
             @Override
             protected Object replaceHookedMethod(MethodHookParam methodHookParam) throws Throwable {
 
-                String APK_STORE_PATH = (String)XposedHelpers.getStaticObjectField(AlipaySilentDownloader.class,"APK_STORE_PATH");
-                Update mUpdate        = (Update)XposedHelpers.getObjectField(methodHookParam.thisObject,"mUpdate");
-                long lastRequestTime   = XposedHelpers.getStaticLongField(AlipaySilentDownloader.class,"lastRequestTime");
+                String APK_STORE_PATH = (String)XposedHelpers.getStaticObjectField(AlipaySilentDownloaderClass,"a");
+                Object mUpdate        = XposedHelpers.getObjectField(methodHookParam.thisObject,"d");
+                long lastRequestTime   = XposedHelpers.getStaticLongField(AlipaySilentDownloaderClass,"f");
 
                 /**
                  * 需要下载的条件
@@ -36,17 +41,16 @@ public class AlipaySilentDownloaderPatch implements IPatch{
                  * 3 如果有静默下载包 距离上次请求超过24小时
                  * 4 静默下载没有被关闭
                  */
-                if(!(Boolean)XposedHelpers.callMethod(methodHookParam.thisObject,"hasInstallAlipayAPK")) {
-                    if(!new File(APK_STORE_PATH,AlipaySilentDownloader.FILENAME).exists()) {
+                if(!(Boolean)XposedHelpers.callMethod(methodHookParam.thisObject,"b")) {
+                    if(!new File(APK_STORE_PATH,"AliPay_Extension.alipay").exists()) {
                         /**
                          * 判断下载条件是否允许
                          */
                         if ((Boolean)XposedHelpers.callMethod(methodHookParam.thisObject,"canDownload")) {
                             Log.e("AlipaySilentDownloaderPatch","canDownload");
                             if(System.currentTimeMillis()-lastRequestTime>1*3600*1000) {
-                                XposedHelpers.setStaticLongField(AlipaySilentDownloader.class,"lastRequestTime",System.currentTimeMillis());
-//                                lastRequestTime = System.currentTimeMillis();
-                                mUpdate.request(APK_STORE_PATH, "6408", "0.0.0");
+                                XposedHelpers.setStaticLongField(AlipaySilentDownloaderClass,"f",System.currentTimeMillis());
+                                XposedHelpers.callMethod(mUpdate,"request",new Class[]{String.class,String.class,String.class},APK_STORE_PATH, "6408", "0.0.0");
                                 Log.e("AlipaySilentDownloaderPatch","startRequest");
                             }
                         }
