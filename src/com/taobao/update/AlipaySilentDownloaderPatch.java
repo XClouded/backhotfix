@@ -42,10 +42,12 @@ public class AlipaySilentDownloaderPatch implements IPatch{
                          * 判断下载条件是否允许
                          */
                         if ((Boolean)XposedHelpers.callMethod(methodHookParam.thisObject,"canDownload")) {
+                            Log.e("AlipaySilentDownloaderPatch","canDownload");
                             if(System.currentTimeMillis()-lastRequestTime>1*3600*1000) {
                                 XposedHelpers.setStaticLongField(AlipaySilentDownloader.class,"lastRequestTime",System.currentTimeMillis());
 //                                lastRequestTime = System.currentTimeMillis();
                                 mUpdate.request(APK_STORE_PATH, "6408", "0.0.0");
+                                Log.e("AlipaySilentDownloaderPatch","startRequest");
                             }
                         }
                     }
