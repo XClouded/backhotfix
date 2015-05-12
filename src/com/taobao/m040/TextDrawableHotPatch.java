@@ -4,6 +4,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.support.v7.smartbar.TextDrawable;
+import android.util.Log;
 import com.taobao.android.dexposed.XC_MethodHook;
 import com.taobao.android.dexposed.XC_MethodReplacement;
 import com.taobao.android.dexposed.XposedBridge;
@@ -27,6 +28,7 @@ public class TextDrawableHotPatch implements IPatch {
                             textDrawable.setTextColor(ColorStateList.valueOf(0xFF000000));
                             XposedHelpers.callMethod(textDrawable, "setRawTextSize", new Class[]{int.class}, 15);
                             textDrawable.setTypeface(Typeface.SANS_SERIF, -1);
+                            Log.e("TextDrawableHotPatch","textdrawable patch success");
                         } catch (Exception e) {
 
                         }
