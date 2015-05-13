@@ -25,16 +25,17 @@ public class TextDrawableHotPatch implements IPatch {
                 @Override
                 protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                     TextDrawable textDrawable = (TextDrawable) param.thisObject;
-                    if (param.getThrowable() != null) {
+//                    if (param.getThrowable() != null) {
                         try {
                             textDrawable.setTextColor(ColorStateList.valueOf(0xFF000000));
                             XposedHelpers.callMethod(textDrawable, "setRawTextSize", new Class[]{int.class}, 15);
                             textDrawable.setTypeface(Typeface.SANS_SERIF, -1);
                             Log.e("TextDrawableHotPatch","textdrawable patch success");
                         } catch (Exception e) {
+                            Log.e("TextDrawableHotPatch","textdrawable patch error"+e.getMessage());
 
                         }
-                    }
+//                    }
                 }
             });
         }
