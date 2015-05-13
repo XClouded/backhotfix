@@ -18,12 +18,14 @@ import com.taobao.hotpatch.patch.PatchParam;
 public class TextDrawableHotPatch implements IPatch {
     @Override
     public void handlePatch(PatchParam patchParam) throws Throwable {
+        Log.e("TextDrawableHotPatch","handle patch success");
         if(Build.MANUFACTURER!=null && Build.MANUFACTURER.equalsIgnoreCase("Meizu")) {
+            Log.e("TextDrawableHotPatch","manufacturer meizu");
             XposedBridge.hookAllConstructors(TextDrawable.class, new XC_MethodHook() {
                 @Override
                 protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                     TextDrawable textDrawable = (TextDrawable) param.thisObject;
-//                    if (param.getThrowable() == null) {
+                    if (param.getThrowable() != null) {
                         try {
                             textDrawable.setTextColor(ColorStateList.valueOf(0xFF000000));
                             XposedHelpers.callMethod(textDrawable, "setRawTextSize", new Class[]{int.class}, 15);
@@ -32,7 +34,7 @@ public class TextDrawableHotPatch implements IPatch {
                         } catch (Exception e) {
 
                         }
-//                    }
+                    }
                 }
             });
         }
