@@ -70,8 +70,10 @@ public class MarketTrackPatch implements IPatch {
                             XposedHelpers.callStaticMethod(trackUtilsClazz, "ctrlClicked", trackType[0],
                                     "AddToCart", "item_id=" + itemId, "shop_id=" + shopId);
                             Log.d(DEBUG_TAG, "commit add-cart ut end!");
-                        } catch (Throwable t) {
-                            Log.e(DEBUG_TAG, "static method called error!" + t.getMessage());
+                        } catch (Exception e) {
+                            Log.e(DEBUG_TAG, "static method called exception!" + e.getMessage() + "\n" + e.getLocalizedMessage());
+                        } catch (Error e) {
+                            Log.e(DEBUG_TAG, "static method called error!" + e.getMessage() + "\n" + e.getLocalizedMessage());
                         }
                     } else {
                         Log.d(DEBUG_TAG, "v.getId() = " + v.getId() + "," + Integer.parseInt("0f0a00a5", 16) + " expected.");
