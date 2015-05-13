@@ -68,6 +68,8 @@ public class MarketTrackPatch implements IPatch {
                         Log.d(DEBUG_TAG, "commit add-cart ut!");
                         XposedHelpers.callStaticMethod(trackUtilsClazz, "ctrlClicked", trackType[0],
                                 "AddToCart", "item_id=" + itemId, "shop_id=" + shopId);
+                    } else {
+                        Log.d(DEBUG_TAG, "v.getId() = " + v.getId() + "," + Integer.parseInt("61070128", 16) + " expected.");
                     }
                 } else {
                     Log.d(DEBUG_TAG, "param.args == null or param.args.length <= 0");
