@@ -65,9 +65,14 @@ public class MarketTrackPatch implements IPatch {
                 if (param.args != null && param.args.length > 0) {
                     View v = (View) param.args[0];
                     if (v.getId() == Integer.parseInt("0f0a00a5", 16)) {
-                        Log.d(DEBUG_TAG, "commit add-cart ut!");
-                        XposedHelpers.callStaticMethod(trackUtilsClazz, "ctrlClicked", trackType[0],
-                                "AddToCart", "item_id=" + itemId, "shop_id=" + shopId);
+                        Log.d(DEBUG_TAG, "commit add-cart ut start!");
+                        try {
+                            XposedHelpers.callStaticMethod(trackUtilsClazz, "ctrlClicked", trackType[0],
+                                    "AddToCart", "item_id=" + itemId, "shop_id=" + shopId);
+                            Log.d(DEBUG_TAG, "commit add-cart ut end!");
+                        } catch (Throwable t) {
+                            Log.e(DEBUG_TAG, "static method called error!" + t.getMessage());
+                        }
                     } else {
                         Log.d(DEBUG_TAG, "v.getId() = " + v.getId() + "," + Integer.parseInt("0f0a00a5", 16) + " expected.");
                     }
