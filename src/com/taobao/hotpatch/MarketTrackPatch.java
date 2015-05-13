@@ -67,13 +67,19 @@ public class MarketTrackPatch implements IPatch {
                     if (v.getId() == Integer.parseInt("0f0a00a5", 16)) {
                         Log.d(DEBUG_TAG, "commit add-cart ut start!");
                         try {
-                            XposedHelpers.callStaticMethod(trackUtilsClazz, "ctrlClicked", trackType[0],
+                            XposedHelpers.callStaticMethod(trackUtilsClazz, "ctrlClicked", new Class[]{trackTypeClazz, String.class, String.class, String.class}, trackType[0],
                                     "AddToCart", "item_id=" + itemId, "shop_id=" + shopId);
                             Log.d(DEBUG_TAG, "commit add-cart ut end!");
                         } catch (Exception e) {
-                            Log.e(DEBUG_TAG, "static method called exception!" + e.getMessage() + "\n" + e.getLocalizedMessage());
+                            Log.e(DEBUG_TAG, "static method called exception!");
+                            Log.e(DEBUG_TAG, e.getMessage() + "");
+                            Log.e(DEBUG_TAG, e.getLocalizedMessage() + "");
+                            Log.e(DEBUG_TAG, Log.getStackTraceString(e));
                         } catch (Error e) {
-                            Log.e(DEBUG_TAG, "static method called error!" + e.getMessage() + "\n" + e.getLocalizedMessage());
+                            Log.e(DEBUG_TAG, "static method called error!");
+                            Log.e(DEBUG_TAG, e.getMessage() + "");
+                            Log.e(DEBUG_TAG, e.getLocalizedMessage() + "");
+                            Log.e(DEBUG_TAG, Log.getStackTraceString(e));
                         }
                     } else {
                         Log.d(DEBUG_TAG, "v.getId() = " + v.getId() + "," + Integer.parseInt("0f0a00a5", 16) + " expected.");
