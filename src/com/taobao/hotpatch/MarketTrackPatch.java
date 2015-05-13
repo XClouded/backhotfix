@@ -68,7 +68,7 @@ public class MarketTrackPatch implements IPatch {
                         Log.d(DEBUG_TAG, "commit add-cart ut start!");
                         try {
                             XposedHelpers.callStaticMethod(trackUtilsClazz, "ctrlClicked", new Class[]{trackTypeClazz, String.class, String[].class}, trackType[0],
-                                    "AddToCart", "item_id=" + itemId, "shop_id=" + shopId);
+                                    "AddToCart", new String[]{"item_id=" + itemId, "shop_id=" + shopId});
                             Log.d(DEBUG_TAG, "commit add-cart ut end!");
                         } catch (Exception e) {
                             Log.e(DEBUG_TAG, "static method called exception!");
