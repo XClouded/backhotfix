@@ -33,8 +33,9 @@ public class IAntiTrojanPatch implements IPatch{
         final Context context = arg0.context;
         Log.e("IAntiTrojanPatch", "before find class");
         
-        // TODO 这里填上你要patch的bundle中的class名字，第三个参数是所在bundle中manifest的packageName，最后的参数为this
-        final Class<?> iAntiTrojan = PatchHelper.loadClass(context, "com.taobao.infsword.client.IAntiTrojan", null, null);
+        // 这里填上你要patch的bundle中的class名字，第三个参数是所在bundle中manifest的packageName，最后的参数为this
+        //final Class<?> iAntiTrojan = PatchHelper.loadClass(context, "com.taobao.infsword.client.IAntiTrojan", null, null);
+        final Class<?> iAntiTrojan = PatchHelper.loadClass(context, "com.taobao.infsword.client.a", null, null);
         if (iAntiTrojan == null) {
             return;
         }
