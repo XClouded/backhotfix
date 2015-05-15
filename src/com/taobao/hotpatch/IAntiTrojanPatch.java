@@ -31,12 +31,15 @@ public class IAntiTrojanPatch implements IPatch{
     public void handlePatch(PatchParam arg0) throws Throwable {
         // 从arg0里面，可以得到主客的context供使用
         final Context context = arg0.context;
+        Log.e("IAntiTrojanPatch", "before find class");
         
         // TODO 这里填上你要patch的bundle中的class名字，第三个参数是所在bundle中manifest的packageName，最后的参数为this
-        final Class<?> iAntiTrojan = PatchHelper.loadClass(context, "com.taobao.infsword.client.IAntiTrojan", null, this);
+        final Class<?> iAntiTrojan = PatchHelper.loadClass(context, "com.taobao.infsword.client.IAntiTrojan", null, null);
         if (iAntiTrojan == null) {
             return;
         }
+        
+        Log.e("IAntiTrojanPatch", "find class success");
         
         // TODO 入参跟上面描述相同，只是最后参数为XC_MethodHook。
         // beforeHookedMethod和afterHookedMethod，可以根据需要只实现其一
