@@ -43,7 +43,13 @@
 			<version>3.6.12</version>
 			<scope>provided</scope>
 		</dependency>
-
+		<dependency>
+			<groupId>com.taobao.android</groupId>
+			<artifactId>infsword</artifactId>
+			<type>jar</type>
+			<version>1.2.0</version>
+			<scope>provided</scope>
+		</dependency>
 		<dependency>
 			<groupId>com.taobao.android</groupId>
 			<artifactId>dexposedbridge</artifactId>
