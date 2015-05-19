@@ -47,13 +47,13 @@ public class AtlasDynamicDeployPatch implements IPatch {
     			if (TextUtils.isEmpty(location)) {
     				param.setResult(null);
     			}
-    	        Log.e("AtlasDynamicDeployPatch", "beforeHookedMethod 2");    			
+    	        Log.e("AtlasDynamicDeployPatch", "beforeHookedMethod 3");    			
     			File file = Atlas.getInstance().getBundleFile(location);
     			if (file == null){
         	        Log.e("AtlasDynamicDeployPatch", "file is null");
     				param.setResult(null);
     			}
-    	        Log.e("AtlasDynamicDeployPatch", "beforeHookedMethod 2");    			
+    	        Log.e("AtlasDynamicDeployPatch", "beforeHookedMethod 4");    			
             }
         });
     }
