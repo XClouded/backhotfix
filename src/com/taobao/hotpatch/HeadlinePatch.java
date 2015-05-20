@@ -86,6 +86,7 @@ public class HeadlinePatch implements IPatch {
 						} catch (Throwable e) {
 							e.printStackTrace();
 							Log.e("HeadlinePatch" , "headline fragment new exception");
+							return null;
 						}
 					}
 
