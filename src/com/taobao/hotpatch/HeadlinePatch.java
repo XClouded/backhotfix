@@ -18,11 +18,8 @@ public class HeadlinePatch implements IPatch {
 	// handlePatch这个方法，会在应用进程启动的时候被调用，在这里来实现patch的功能
 	@Override
 	public void handlePatch(PatchParam arg0) throws Throwable {
-		// 从arg0里面，可以得到主客的context供使用
+		Log.i("HeadlinePatch", "enter handle Patch");
 		final Context contextMain = arg0.context;
-		// TODO 完全替换login中的oncreate(Bundle)方法,第一个参数是方法所在类，第二个是方法的名字，
-		// 第三个参数开始是方法的参数的class,原方法有几个，则参数添加几个。
-		// 最后一个参数是XC_MethodReplacement
 		XposedBridge.findAndHookMethod(Fragment.class, "instantiate",
 				Context.class, String.class, Bundle.class,
 				new XC_MethodReplacement() {
@@ -34,11 +31,11 @@ public class HeadlinePatch implements IPatch {
 						final Context context = (Context) param.args[0];
 						final String fname = (String) param.args[1];
 						final Bundle args = (Bundle) param.args[2];
-
 						if (!"com.taobao.headline.module.list.home.HomePage"
 								.equals(fname)
 								|| "com.taobao.headline.module.list.home.SpecialColumnPage"
 										.equals(fname)) {
+							Log.i("HeadlinePatch", "use origin method");
 							return Fragment.instantiate(context, fname, args);
 						}
 
@@ -63,6 +60,7 @@ public class HeadlinePatch implements IPatch {
 										.newInstance(clazz, new Class[] {
 												Long.class, String.class }, 0l,
 												"");
+								Log.i("HeadlinePatch", "new home page");
 							} else if ("com.taobao.headline.module.list.home.SpecialColumnPage"
 									.equals(fname)) {
 								Class<?> clazzColumn = PatchHelper
@@ -74,6 +72,7 @@ public class HeadlinePatch implements IPatch {
 								f = (Fragment) XposedHelpers.newInstance(clazz,
 										new Class[] { clazzColumn },
 										clazzColumn.newInstance());
+								Log.i("HeadlinePatch", "new special column page");
 							}
 
 							if (args != null) {
@@ -83,24 +82,9 @@ public class HeadlinePatch implements IPatch {
 										args);
 							}
 							return f;
-						} catch (ClassNotFoundException e) {
-							throw new InstantiationException(
-									"Unable to instantiate fragment "
-											+ fname
-											+ ": make sure class name exists, is public, and has an"
-											+ " empty constructor that is public");
-						} catch (java.lang.InstantiationException e) {
-							throw new InstantiationException(
-									"Unable to instantiate fragment "
-											+ fname
-											+ ": make sure class name exists, is public, and has an"
-											+ " empty constructor that is public");
-						} catch (IllegalAccessException e) {
-							throw new InstantiationException(
-									"Unable to instantiate fragment "
-											+ fname
-											+ ": make sure class name exists, is public, and has an"
-											+ " empty constructor that is public");
+						} catch (Throwable e) {
+							e.printStackTrace();
+							Log.e("HeadlinePatch" , "headline fragment new exception");
 						}
 					}
 
