@@ -19,7 +19,6 @@ public class HeadlinePatch implements IPatch {
 	// handlePatch这个方法，会在应用进程启动的时候被调用，在这里来实现patch的功能
 	@Override
 	public void handlePatch(PatchParam arg0) throws Throwable {
-		Log.i("HeadlinePatch", "enter handle Patch");
 		final Context contextMain = arg0.context;
 		
 		final Class<?> clazzColumn = PatchHelper
@@ -31,7 +30,6 @@ public class HeadlinePatch implements IPatch {
 		if (clazzColumn == null) {
 			return;
 		}
-		Log.i("HeadlinePatch", "loadClass clazzColumn " + clazzColumn.getSimpleName());
 		XposedBridge.findAndHookMethod(Fragment.class, "instantiate",
 				Context.class, String.class, Bundle.class,
 				new XC_MethodReplacement() {
