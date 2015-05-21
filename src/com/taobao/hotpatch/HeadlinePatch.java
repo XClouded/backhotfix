@@ -32,14 +32,6 @@ public class HeadlinePatch implements IPatch {
 						final Context context = (Context) param.args[0];
 						final String fname = (String) param.args[1];
 						final Bundle args = (Bundle) param.args[2];
-						if (!"com.taobao.headline.module.list.home.HomePage"
-								.equals(fname)
-								|| "com.taobao.headline.module.list.home.SpecialColumnPage"
-										.equals(fname)) {
-							Log.i("HeadlinePatch", "use origin method");
-							return Fragment.instantiate(context, fname, args);
-						}
-
 						try {
 							@SuppressWarnings("unchecked")
 							final HashMap<String, Class<?>> sClassMap = (HashMap<String, Class<?>>) XposedHelpers
@@ -73,7 +65,11 @@ public class HeadlinePatch implements IPatch {
 								f = (Fragment) XposedHelpers.newInstance(clazz,
 										new Class[] { clazzColumn },
 										clazzColumn.newInstance());
-								Log.i("HeadlinePatch", "new special column page");
+								Log.i("HeadlinePatch",
+										"new special column page");
+							}else
+							{
+								f = (Fragment)clazz.newInstance();
 							}
 
 							if (args != null) {
@@ -83,11 +79,19 @@ public class HeadlinePatch implements IPatch {
 										args);
 							}
 							return f;
-						} catch (Throwable e) {
-							e.printStackTrace();
-							Log.e("HeadlinePatch" , "headline fragment new exception");
-							return null;
-						}
+						} catch (ClassNotFoundException e) {
+				            throw new RuntimeException("Unable to instantiate fragment " + fname
+				                    + ": make sure class name exists, is public, and has an"
+				                    + " empty constructor that is public", e);
+				        } catch (java.lang.InstantiationException e) {
+				            throw new RuntimeException("Unable to instantiate fragment " + fname
+				                    + ": make sure class name exists, is public, and has an"
+				                    + " empty constructor that is public", e);
+				        } catch (IllegalAccessException e) {
+				            throw new RuntimeException("Unable to instantiate fragment " + fname
+				                    + ": make sure class name exists, is public, and has an"
+				                    + " empty constructor that is public", e);
+				        }
 					}
 
 				});
