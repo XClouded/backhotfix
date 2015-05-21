@@ -44,12 +44,12 @@ public class HeadlinePatch implements IPatch {
 						
 						Log.i("HeadlinePatch", "fname===" + fname.toString());
 						try {
-							
 							@SuppressWarnings("unchecked")
-							final HashMap<String, Class<?>> sClassMap = (HashMap<String, Class<?>>) XposedHelpers
+							final Object sClassMap = XposedHelpers
 									.getStaticObjectField(Fragment.class,
 											"sClassMap");
-							Class<?> clazz = sClassMap.get(fname);
+							// sClassMap.get(fname);
+							Class<?> clazz = (Class<?>) XposedHelpers.callMethod(sClassMap, "get", new Class[] { Object.class }, fname);
 							Log.i("HeadlinePatch", "sClassMap.get(fname):" + clazz.toString() );
 
 							if (clazz == null) {
@@ -59,7 +59,8 @@ public class HeadlinePatch implements IPatch {
 								
 								clazz = context.getClassLoader().loadClass(
 										fname);
-								sClassMap.put(fname, clazz);
+								// sClassMap.put(fname,clazz);
+								XposedHelpers.callMethod(sClassMap, "put", new Class[] { Object.class, Object.class }, fname, clazz);
 							}
 
 							Fragment f = null;
