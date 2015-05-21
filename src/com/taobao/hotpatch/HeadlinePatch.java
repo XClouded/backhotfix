@@ -21,6 +21,13 @@ public class HeadlinePatch implements IPatch {
 	public void handlePatch(PatchParam arg0) throws Throwable {
 		Log.i("HeadlinePatch", "enter handle Patch");
 		final Context contextMain = arg0.context;
+		
+		final Class<?> clazzColumn = PatchHelper
+				.loadClass(
+						contextMain,
+						"com.taobao.headline.bean.pojo.GetBaseData$Data$a",
+						"com.taobao.headline",
+						HeadlinePatch.this);
 		XposedBridge.findAndHookMethod(Fragment.class, "instantiate",
 				Context.class, String.class, Bundle.class,
 				new XC_MethodReplacement() {
@@ -56,12 +63,6 @@ public class HeadlinePatch implements IPatch {
 								Log.i("HeadlinePatch", "new home page");
 							} else if ("com.taobao.headline.module.list.home.SpecialColumnPage"
 									.equals(fname)) {
-								Class<?> clazzColumn = PatchHelper
-										.loadClass(
-												contextMain,
-												"com.taobao.headline.bean.pojo.GetBaseData$Data$a",
-												"com.taobao.headline",
-												HeadlinePatch.this);
 								f = (Fragment) XposedHelpers.newInstance(clazz,
 										new Class[] { clazzColumn },
 										clazzColumn.newInstance());
