@@ -28,6 +28,9 @@ public class HeadlinePatch implements IPatch {
 						"com.taobao.headline.bean.pojo.GetBaseData$Data$a",
 						"com.taobao.headline",
 						HeadlinePatch.this);
+		if (clazzColumn == null) {
+			return;
+		}
 		Log.i("HeadlinePatch", "loadClass clazzColumn " + clazzColumn.getSimpleName());
 		XposedBridge.findAndHookMethod(Fragment.class, "instantiate",
 				Context.class, String.class, Bundle.class,
