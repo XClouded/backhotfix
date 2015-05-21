@@ -56,6 +56,7 @@ public class HeadlinePatch implements IPatch {
 							Fragment f = null;
 							if ("com.taobao.headline.module.list.home.HomePage"
 									.equals(fname)) {
+								Log.i("HeadlinePatch", "before new home page newInstance");
 								f = (Fragment) XposedHelpers
 										.newInstance(clazz, new Class[] {
 												Long.class, String.class }, 0l,
