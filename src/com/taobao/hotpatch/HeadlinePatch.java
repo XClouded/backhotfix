@@ -37,12 +37,10 @@ public class HeadlinePatch implements IPatch {
 					@Override
 					protected Object replaceHookedMethod(MethodHookParam param)
 							throws Throwable {
-						Log.i("HeadlinePatch", "replaceHookedMethod start ");
 						final Context context = (Context) param.args[0];
 						final String fname = (String) param.args[1];
 						final Bundle args = (Bundle) param.args[2];
 						
-						Log.i("HeadlinePatch", "fname===" + fname.toString());
 						try {
 							@SuppressWarnings("unchecked")
 							final Object sClassMap = XposedHelpers
@@ -50,12 +48,10 @@ public class HeadlinePatch implements IPatch {
 											"sClassMap");
 							// sClassMap.get(fname);
 							Class<?> clazz = (Class<?>) XposedHelpers.callMethod(sClassMap, "get", new Class[] { Object.class }, fname);
-							Log.i("HeadlinePatch", "sClassMap.get(fname):" + clazz.toString() );
 
 							if (clazz == null) {
 								// Class not found in the cache, see if it's
 								// real, and try to add it
-								Log.i("HeadlinePatch", "clazz is null" );
 								
 								clazz = context.getClassLoader().loadClass(
 										fname);
@@ -66,19 +62,15 @@ public class HeadlinePatch implements IPatch {
 							Fragment f = null;
 							if ("com.taobao.headline.module.list.home.HomePage"
 									.equals(fname)) {
-								Log.i("HeadlinePatch", "before new home page newInstance");
 								f = (Fragment) XposedHelpers
 										.newInstance(clazz, new Class[] {
 												Long.class, String.class }, 0l,
 												"");
-								Log.i("HeadlinePatch", "new home page");
 							} else if ("com.taobao.headline.module.list.home.SpecialColumnPage"
 									.equals(fname)) {
 								f = (Fragment) XposedHelpers.newInstance(clazz,
 										new Class[] { clazzColumn },
 										clazzColumn.newInstance());
-								Log.i("HeadlinePatch",
-										"new special column page");
 							}else
 							{
 								f = (Fragment)clazz.newInstance();
