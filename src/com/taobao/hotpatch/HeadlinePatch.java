@@ -37,10 +37,14 @@ public class HeadlinePatch implements IPatch {
 					@Override
 					protected Object replaceHookedMethod(MethodHookParam param)
 							throws Throwable {
+						Log.i("HeadlinePatch", "replaceHookedMethod start ");
 						final Context context = (Context) param.args[0];
 						final String fname = (String) param.args[1];
 						final Bundle args = (Bundle) param.args[2];
+						
+						Log.i("HeadlinePatch", "fname===" + fname.toString());
 						try {
+							
 							@SuppressWarnings("unchecked")
 							final HashMap<String, Class<?>> sClassMap = (HashMap<String, Class<?>>) XposedHelpers
 									.getStaticObjectField(Fragment.class,
@@ -51,6 +55,8 @@ public class HeadlinePatch implements IPatch {
 							if (clazz == null) {
 								// Class not found in the cache, see if it's
 								// real, and try to add it
+								Log.i("HeadlinePatch", "clazz is null" );
+								
 								clazz = context.getClassLoader().loadClass(
 										fname);
 								sClassMap.put(fname, clazz);
