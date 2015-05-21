@@ -28,6 +28,7 @@ public class HeadlinePatch implements IPatch {
 						"com.taobao.headline.bean.pojo.GetBaseData$Data$a",
 						"com.taobao.headline",
 						HeadlinePatch.this);
+		Log.i("HeadlinePatch", "loadClass clazzColumn " + clazzColumn.getSimpleName());
 		XposedBridge.findAndHookMethod(Fragment.class, "instantiate",
 				Context.class, String.class, Bundle.class,
 				new XC_MethodReplacement() {
@@ -45,6 +46,8 @@ public class HeadlinePatch implements IPatch {
 									.getStaticObjectField(Fragment.class,
 											"sClassMap");
 							Class<?> clazz = sClassMap.get(fname);
+							Log.i("HeadlinePatch", "sClassMap.get(fname):" + clazz.toString() );
+
 							if (clazz == null) {
 								// Class not found in the cache, see if it's
 								// real, and try to add it
