@@ -31,6 +31,8 @@ public class ShareStartWeixinPatch implements IPatch {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
             	
+            	Log.e("ShareStartWeixinPatch", "OK，进入share");
+            	
             	Context context = (Context)param.args[0];
             	ShareContent content = (ShareContent)param.args[2];
             	if(context != null && content != null && content.activityParams != null && content.activityParams.size() > 0) {
