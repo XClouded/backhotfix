@@ -44,7 +44,7 @@ public class ShareStartWeixinPatch implements IPatch {
             	
             	if(context != null && params != null && params.size() > 0) {
             		String packageName = params.get("packageName") != null ? params.get("packageName").toString() : null;
-            		if(TextUtils.isEmpty(packageName)) {
+            		if(!TextUtils.isEmpty(packageName)) {
             			Log.e("ShareStartWeixinPatch", "start wechat");
                 		startWexin(context, packageName); 
                 		param.setResult(null);
