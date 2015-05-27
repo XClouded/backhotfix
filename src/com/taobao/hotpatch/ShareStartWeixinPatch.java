@@ -57,6 +57,7 @@ public class ShareStartWeixinPatch implements IPatch {
     private boolean startWexin(Context context, String packageName) {
 		if (!installedApp(context, packageName)) {
 			// weixin not installed
+			Log.e("ShareStartWeixinPatch", packageName + " not found");
 			return false;
 		}
 		PackageManager packageManager = context.getPackageManager();
@@ -64,6 +65,7 @@ public class ShareStartWeixinPatch implements IPatch {
 			Intent intent = packageManager
 					.getLaunchIntentForPackage(packageName);
 			if (intent != null) {
+				Log.e("ShareStartWeixinPatch", "start weixin failed");
 				context.startActivity(intent);
 			}
 		} catch (Exception e) {
