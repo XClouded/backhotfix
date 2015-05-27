@@ -1,14 +1,17 @@
 package com.taobao.hotpatch;
 
 import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.taobao.windvane.jsbridge.WVCallBackContext;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.alibaba.fastjson.JSON;
 import com.taobao.android.dexposed.XC_MethodHook;
 import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.hotpatch.patch.IPatch;
@@ -22,7 +25,7 @@ public class ShareStartWeixinPatch implements IPatch {
         // 从arg0里面，可以得到主客的context供使用
         final Context context = arg0.context;
         Log.e("ShareStartWeixinPatch", "beforeHookedMethod 1");
-        final Class<?> shareHandler = PatchHelper.loadClass(context, "com.taobao.share.business.a", null, null);
+        final Class<?> shareHandler = PatchHelper.loadClass(context, "com.ut.share.business.StartShareMenuJsBrige", null, null);
         if (shareHandler == null) {
         	Log.e("ShareStartWeixinPatch", "class没有找到");
             return;
@@ -30,38 +33,22 @@ public class ShareStartWeixinPatch implements IPatch {
         
         Log.e("ShareStartWeixinPatch", "class 找到了");
 
-        XposedBridge.findAndHookMethod(shareHandler, "share", Context.class, String.class, ShareContent.class, new XC_MethodHook() {
+        XposedBridge.findAndHookMethod(shareHandler, "showSharedMenu", WVCallBackContext.class, String.class, new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
             	
             	Log.e("ShareStartWeixinPatch", "OK，进入share");
             	
-            	Context context = (Context)param.args[0];
+            	String jsonStr = (String)param.args[1];
+            	Map params = JSON.parseObject(jsonStr,Map.class);
             	
-            	if(context == null) {
-            		Log.e("ShareStartWeixinPatch", "context 为空");
-            		return;
-            	}
-            	
-            	ShareContent content = (ShareContent)param.args[2];
-            	if(content == null) {
-            		Log.e("ShareStartWeixinPatch", "content 为空");
-            		return;
-            	}
-            	
-            	if(content.activityParams == null) {
-            		Log.e("ShareStartWeixinPatch", "activityParams 为空");
-            		return;
-            	}
-            	
-            	if(context != null && content != null && content.activityParams != null && content.activityParams.size() > 0) {
-            		Log.e("ShareStartWeixinPatch", "activityParams isn't null");
-            		String packageName = content.activityParams.get("packageName") != null ? content.activityParams.get("packageName").toString() : null;
-                	if(!TextUtils.isEmpty(packageName)) {
-                		Log.e("ShareStartWeixinPatch", "start wechat");
+            	if(context != null && params != null && params.size() > 0) {
+            		String packageName = params.get("packageName") != null ? params.get("packageName").toString() : null;
+            		if(TextUtils.isEmpty(packageName)) {
+            			Log.e("ShareStartWeixinPatch", "start wechat");
                 		startWexin(context, packageName); 
                 		param.setResult(null);
-                	}
+            		}
             	}
             }
         });
