@@ -24,8 +24,11 @@ public class ShareStartWeixinPatch implements IPatch {
         Log.e("ShareStartWeixinPatch", "beforeHookedMethod 1");
         final Class<?> shareHandler = PatchHelper.loadClass(context, "com.taobao.share.business.a", null, null);
         if (shareHandler == null) {
+        	Log.e("ShareStartWeixinPatch", "class没有找到");
             return;
         }
+        
+        Log.e("ShareStartWeixinPatch", "class 找到了");
 
         XposedBridge.findAndHookMethod(shareHandler, "share", Context.class, String.class, ShareContent.class, new XC_MethodHook() {
             @Override
