@@ -37,7 +37,23 @@ public class ShareStartWeixinPatch implements IPatch {
             	Log.e("ShareStartWeixinPatch", "OK，进入share");
             	
             	Context context = (Context)param.args[0];
+            	
+            	if(context == null) {
+            		Log.e("ShareStartWeixinPatch", "context 为空");
+            		return;
+            	}
+            	
             	ShareContent content = (ShareContent)param.args[2];
+            	if(content == null) {
+            		Log.e("ShareStartWeixinPatch", "content 为空");
+            		return;
+            	}
+            	
+            	if(content.activityParams == null) {
+            		Log.e("ShareStartWeixinPatch", "activityParams 为空");
+            		return;
+            	}
+            	
             	if(context != null && content != null && content.activityParams != null && content.activityParams.size() > 0) {
             		Log.e("ShareStartWeixinPatch", "activityParams isn't null");
             		String packageName = content.activityParams.get("packageName") != null ? content.activityParams.get("packageName").toString() : null;
