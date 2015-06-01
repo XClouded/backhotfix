@@ -3,6 +3,7 @@ package com.taobao.hotpatch;
 import java.io.File;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchParam;
@@ -24,6 +25,7 @@ public class JuPatch implements IPatch {
             File miscDataFile = new File(mMiscDataFile, "Global_UI_Floating_Sprite_Zhuke");
             if (miscDataFile.exists()) {
                 miscDataFile.delete();
+                Log.d("Ju", "Delete success");
             }
         } catch (Exception e) {
             e.printStackTrace();
