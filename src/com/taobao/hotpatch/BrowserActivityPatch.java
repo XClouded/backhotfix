@@ -26,7 +26,8 @@ public class BrowserActivityPatch implements IPatch{
 		
 		Log.e(TAG, "BrowserActivityPatch init start");
 		
-		// TODO 这里填上你要patch的class名字，根据mapping得到混淆后的名字，在主dex中的class，最后的两个参数均为null
+		
+		// 这里填上你要patch的bundle中的class名字，第三个参数是所在bundle中manifest的packageName，最后的参数为this
 		Class<?> browserActivity = PatchHelper.loadClass(context, "com.taobao.browser.BrowserActivity", "com.taobao.browser", this);
 		if (browserActivity == null) {
 			Log.e(TAG, "browserActivity is null");
