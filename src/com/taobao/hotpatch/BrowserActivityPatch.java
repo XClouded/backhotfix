@@ -24,6 +24,8 @@ public class BrowserActivityPatch implements IPatch{
 		// 从arg0里面，可以得到主客的context供使用
 		final Context context = arg0.context;
 		
+		Log.e(TAG, "BrowserActivityPatch init start");
+		
 		// TODO 这里填上你要patch的class名字，根据mapping得到混淆后的名字，在主dex中的class，最后的两个参数均为null
 		Class<?> browserActivity = PatchHelper.loadClass(context, "com.taobao.browser.BrowserActivity", "com.taobao.browser", this);
 		if (browserActivity == null) {
@@ -79,5 +81,7 @@ public class BrowserActivityPatch implements IPatch{
 				isNeedPreprocessor = false;
 			}
 		});
+		
+		Log.e(TAG, "BrowserActivityPatch init end ");
 	}
 }
