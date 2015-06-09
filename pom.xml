@@ -165,7 +165,7 @@
 		<dependency>
 			<groupId>com.taobao.android</groupId>
 			<artifactId>windvane</artifactId>
-			<version>4.5.1</version>
+			<version>6.2.1</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
