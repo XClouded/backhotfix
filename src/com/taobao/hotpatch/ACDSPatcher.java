@@ -21,13 +21,13 @@ public class ACDSPatcher implements IPatch {
 
         final Context context = arg0.context;
 
-        final Class<?> acdsApp = PatchHelper.loadClass(context, "com.taobao.acds.ACDSApplication", "com.taobao.acds", this);
-        if (acdsApp == null) {
+        final Class<?> application = PatchHelper.loadClass(context, "com.taobao.acds.ACDSApplication", "com.taobao.acds", this);
+        if (application == null) {
             Log.d("acdspatch","-0");
             return;
         }
 
-        final Class<?> crossLifeCycle = PatchHelper.loadClass(context, "com.taobao.acds.ACDSApplication$2", "com.taobao.acds", this);
+        final Class<?> crossLifeCycle = PatchHelper.loadClass(context, "com.taobao.acds.b", "com.taobao.acds", this);
         if (crossLifeCycle == null) {
             Log.d("acdspatch","-1");
             return;
@@ -42,11 +42,6 @@ public class ACDSPatcher implements IPatch {
             }
         });
 
-        final Class<?> application = PatchHelper.loadClass(context, "com.taobao.acds.ACDSApplication", "com.taobao.acds", this);
-        if (application == null) {
-            Log.d("acdspatch","-2");
-            return;
-        }
         final Class<?> acdsLoader = PatchHelper.loadClass(context, "com.taobao.acds.b.a", "com.taobao.acds", this);
         if (acdsLoader == null) {
             Log.d("acdspatch","-3");
