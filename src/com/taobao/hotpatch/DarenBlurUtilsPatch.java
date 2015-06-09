@@ -36,7 +36,7 @@ public class DarenBlurUtilsPatch implements IPatch {
 
 		// TODO 入参跟上面描述相同，只是最后参数为XC_MethodHook。
 		// beforeHookedMethod和afterHookedMethod，可以根据需要只实现其一
-		XposedBridge.findAndHookMethod(followOprator, "a", Context.class, Bitmap.class, float.class,
+		XposedBridge.findAndHookMethod(followOprator, "a", Context.class, Bitmap.class, Float.class,
 				new XC_MethodReplacement() {
 
 					@Override
