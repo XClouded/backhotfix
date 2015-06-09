@@ -56,15 +56,28 @@ public class DarenBlurUtilsPatch implements IPatch {
 						
 						int width = sentBitmap.getWidth();
 				        int height = width * height0 / width0;
-						
-						Bitmap argb8888_bitmap = (Bitmap)XposedHelpers.callStaticMethod(blurutils, "a", sentBitmap, width, height);
-						if(argb8888_bitmap != null){
-							return (Bitmap)XposedHelpers.callStaticMethod(blurutils, "fastblur", context,argb8888_bitmap, radius);
-						}
-						return sentBitmap;
+				        
+				        return fastblur(context, RGB565toARGB888(sentBitmap, width, height), radius);
 					}
 				});
 	}
+	
+	private static Bitmap RGB565toARGB888(Bitmap bitmap, int width, int height) {
+        int numPixels = width * height;
+        int[] pixels = new int[numPixels];
+
+        int x0 = (bitmap.getWidth() - width) / 2;
+        int y0 = (bitmap.getHeight() - height) / 2;
+
+        //Get JPEG pixels.  Each int is the color values for one pixel.
+        bitmap.getPixels(pixels, 0, width, x0, y0, width, height);
+
+        //Create a Bitmap of the appropriate format.
+        Bitmap result = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        //Set RGB pixels.
+        result.setPixels(pixels, 0, width, 0, 0, width, height);
+        return result;
+    }
 	
 	public static Bitmap fastblur(Context context, Bitmap sentBitmap, int radius) {
         Bitmap bitmap = sentBitmap.copy(sentBitmap.getConfig(), true);
