@@ -331,18 +331,18 @@
 	<distributionManagement>
 		<repository>
 			<id>releases</id>
-			<url>http://mvnrepo.taobao.ali.com/mvn/releases</url>
+			<url>http://mvnrepo.alibaba-inc.com/mvn/releases</url>
 		</repository>
 		<snapshotRepository>
 			<id>snapshots</id>
-			<url>http://mvnrepo.taobao.ali.com/mvn/snapshots</url>
+			<url>http://mvnrepo.alibaba-inc.com/mvn/snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
 
 	<repositories>
 		<repository>
 			<id>central</id>
-			<url>http://mvnrepo.taobao.ali.com/mvn/repository</url>
+			<url>http://mvnrepo.alibaba-inc.com/mvn/repository</url>
 			<releases>
 				<enabled>true</enabled>
 			</releases>
@@ -352,7 +352,7 @@
 		</repository>
 		<repository>
 			<id>snapshots</id>
-			<url>http://mvnrepo.taobao.ali.com/mvn/snapshots</url>
+			<url>http://mvnrepo.alibaba-inc.com/mvn/snapshots</url>
 			<releases>
 				<enabled>false</enabled>
 			</releases>
