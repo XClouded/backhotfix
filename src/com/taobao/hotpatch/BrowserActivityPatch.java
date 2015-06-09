@@ -24,20 +24,15 @@ public class BrowserActivityPatch implements IPatch{
 		// 从arg0里面，可以得到主客的context供使用
 		final Context context = arg0.context;
 		
-		Log.e(TAG, "BrowserActivityPatch init start");
-		
-		
 		// 这里填上你要patch的bundle中的class名字，第三个参数是所在bundle中manifest的packageName，最后的参数为this
 		Class<?> browserActivity = PatchHelper.loadClass(context, "com.taobao.browser.BrowserActivity", "com.taobao.browser", this);
 		
 		if (browserActivity == null) {
-			Log.e(TAG, "browserActivity is null");
 			return;
 		}
 		
 		final Class<?> browserUtil = PatchHelper.loadClass(context, "com.taobao.browser.a.c", "com.taobao.browser", this);
 		if (browserUtil == null) {
-			Log.e(TAG, "browserUtil is null");
 			return;
 		}
 
@@ -48,20 +43,17 @@ public class BrowserActivityPatch implements IPatch{
             // 这个方法执行的相当于在原oncreate方法前面，加上一段逻辑。
 			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
 				//param.thisObject是这个类的实例
-				Log.e(TAG, "isNeedPreprocessor = " +  isNeedPreprocessor);
-				
 				if(!isNeedPreprocessor) {
 					return;
 				}
 				 
+				Log.e(TAG, "registerJsbridgePreprocessor patch");
 				WVJsbridgeService.registerJsbridgePreprocessor(new WVJSAPIAuthCheck() {
 					
 					@Override
 					public boolean apiAuthCheck(String url, String obj, String methodname, String params) {
 						
 						Object methodRes = XposedHelpers.callStaticMethod(browserUtil, "checkIsJaeDomain", url);
-						
-						Log.e(TAG, "methodRes = " +  methodRes);
 						
 						boolean isJaeDomain = false;
 						if (methodRes instanceof Boolean) {
@@ -75,7 +67,6 @@ public class BrowserActivityPatch implements IPatch{
 				            return false;
 				        }
 
-						Log.e(TAG, "WVJS_JAE_AuthCheck return  = " +  true);
 				        return true;
 					}
 				});
@@ -83,7 +74,5 @@ public class BrowserActivityPatch implements IPatch{
 				isNeedPreprocessor = false;
 			}
 		});
-		
-		Log.e(TAG, "BrowserActivityPatch init end ");
 	}
 }
