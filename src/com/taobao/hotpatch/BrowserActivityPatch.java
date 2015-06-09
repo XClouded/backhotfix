@@ -59,7 +59,7 @@ public class BrowserActivityPatch implements IPatch{
 					@Override
 					public boolean apiAuthCheck(String url, String obj, String methodname, String params) {
 						
-						Object methodRes = XposedHelpers.callStaticMethod(browserUtil, "checkIsJaeDomain", context.getApplicationContext());
+						Object methodRes = XposedHelpers.callStaticMethod(browserUtil, "checkIsJaeDomain", url);
 						
 						Log.e(TAG, "methodRes = " +  methodRes);
 						
