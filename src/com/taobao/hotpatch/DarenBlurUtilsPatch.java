@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.taobao.android.dexposed.XC_MethodReplacement;
 import com.taobao.android.dexposed.XposedBridge;
+import com.taobao.android.dexposed.XposedHelpers;
 import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchParam;
 
@@ -15,6 +16,8 @@ public class DarenBlurUtilsPatch implements IPatch {
 	// handlePatch这个方法，会在应用进程启动的时候被调用，在这里来实现patch的功能
 	@Override
 	public void handlePatch(PatchParam arg0) throws Throwable {
+		Log.d(TAG, "handlePatch");
+		
 		// 从arg0里面，可以得到主客的context供使用
 		final Context context = arg0.context;
 
@@ -25,28 +28,40 @@ public class DarenBlurUtilsPatch implements IPatch {
 		}*/
 		// TODO
 		// 这里填上你要patch的bundle中的class名字，第三个参数是所在bundle中manifest的packageName，最后的参数为this
-		Class<?> followOprator = PatchHelper
+		final Class<?> blurutils = PatchHelper
 				.loadClass(
 						context,
 						"com.taobao.tao.talent.basic.view.a",
 						"com.taobao.talent", this);
-		if (followOprator == null) {
+		if (blurutils == null) {
+			Log.d(TAG, "no bluritls");
 			return;
 		}
 
 		// TODO 入参跟上面描述相同，只是最后参数为XC_MethodHook。
 		// beforeHookedMethod和afterHookedMethod，可以根据需要只实现其一
-		XposedBridge.findAndHookMethod(followOprator, "a", Context.class, Bitmap.class, Float.class,
+		XposedBridge.findAndHookMethod(blurutils, "blurBitmap", Context.class, Bitmap.class, int.class, int.class, int.class,
 				new XC_MethodReplacement() {
 
 					@Override
 					protected Object replaceHookedMethod(MethodHookParam param)
 							throws Throwable {
+						Log.d(TAG, "blurBitmap");
+						
 						Context context = (Context)param.args[0];
-						Bitmap bitmap = (Bitmap)param.args[1];
-						float r = (Float)param.args[2];
-						Log.i(TAG, "on");
-						return fastblur(context, bitmap, (int)r);
+						Bitmap sentBitmap = (Bitmap)param.args[1];
+						int radius = (Integer)param.args[2];
+						int width0 = (Integer)param.args[3];
+						int height0 = (Integer)param.args[4];
+						
+						int width = sentBitmap.getWidth();
+				        int height = width * height0 / width0;
+						
+						Bitmap argb8888_bitmap = (Bitmap)XposedHelpers.callStaticMethod(blurutils, "a", sentBitmap, width, height);
+						if(argb8888_bitmap != null){
+							return (Bitmap)XposedHelpers.callStaticMethod(blurutils, "fastblur", context,argb8888_bitmap, radius);
+						}
+						return sentBitmap;
 					}
 				});
 	}
