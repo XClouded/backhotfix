@@ -33,6 +33,12 @@ public class BrowserActivityPatch implements IPatch{
 			return;
 		}
 		
+		Class<?> browser1Activity = PatchHelper.loadClass(context, "com.taobao.browser.BrowserActivity", null, null);
+		if (browser1Activity == null) {
+			Log.e(TAG, "browser1Activity is null");
+			return;
+		}
+		
 		final Class<?> browserUtil = PatchHelper.loadClass(context, "com.taobao.browser.a.c", "com.taobao.browser", this);
 		if (browserUtil == null) {
 			Log.e(TAG, "browserUtil is null");
