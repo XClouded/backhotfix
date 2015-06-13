@@ -14,22 +14,24 @@ import com.taobao.hotpatch.patch.PatchParam;
 public class ACDSPatcher implements IPatch {
 
 
+    public static boolean accsDeleage = false;
+
     @Override
     public void handlePatch(PatchParam arg0) throws Throwable {
 
-        Log.d("acdspatch","0");
+        Log.d("acdspatch", "0");
 
         final Context context = arg0.context;
 
         final Class<?> application = PatchHelper.loadClass(context, "com.taobao.acds.ACDSApplication", "com.taobao.acds", this);
         if (application == null) {
-            Log.d("acdspatch","-0");
+            Log.d("acdspatch", "-0");
             return;
         }
 
         final Class<?> crossLifeCycle = PatchHelper.loadClass(context, "com.taobao.acds.b", "com.taobao.acds", this);
         if (crossLifeCycle == null) {
-            Log.d("acdspatch","-1");
+            Log.d("acdspatch", "-1");
             return;
         }
 
@@ -37,14 +39,14 @@ public class ACDSPatcher implements IPatch {
             @Override
             protected Object replaceHookedMethod(MethodHookParam arg0)
                     throws Throwable {
-                Log.d("acdspatch","1");
+                Log.d("acdspatch", "1");
                 return null;
             }
         });
 
         final Class<?> acdsLoader = PatchHelper.loadClass(context, "com.taobao.acds.b.a", "com.taobao.acds", this);
         if (acdsLoader == null) {
-            Log.d("acdspatch","-3");
+            Log.d("acdspatch", "-3");
             return;
         }
 
@@ -60,6 +62,44 @@ public class ACDSPatcher implements IPatch {
                 super.afterHookedMethod(param);
                 Log.d("acdspatch", "2");
                 XposedHelpers.callStaticMethod(acdsLoader, "init", context.getApplicationContext());
+            }
+        });
+
+
+        //accs delegate
+
+        final Class<?> accsCallback = PatchHelper.loadClass(context, "com.taobao.acds.network.d", "com.taobao.acds", this);
+        final Class<?> acdsSwitcher = PatchHelper.loadClass(context, "com.taobao.acds.syncenter.a", "com.taobao.acds", this);
+
+        if (null == accsCallback || null == acdsSwitcher) {
+            Log.d("acdspatch", "-4");
+            return;
+        }
+        XposedBridge.findAndHookMethod(accsCallback, "a", new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                super.beforeHookedMethod(param);
+                Log.d("acdspatch", "4");
+                accsDeleage = true;
+            }
+
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                super.afterHookedMethod(param);
+            }
+        });
+        XposedBridge.findAndHookMethod(acdsSwitcher, "isACCSDegrade", String.class, String.class, new XC_MethodReplacement() {
+            @Override
+            protected Object replaceHookedMethod(MethodHookParam methodHookParam) throws Throwable {
+
+                Log.d("acdspatch", "5");
+                if (accsDeleage) {
+                    Log.d("acdspatch", "6");
+                    return true;
+                }
+
+                return false;
+
             }
         });
 
