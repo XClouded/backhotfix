@@ -166,8 +166,9 @@ public class ACDSPatcher implements IPatch {
                 mtopRequest.setVersion("1.0");
                 mtopRequest.setNeedEcode(false);
                 mtopRequest.setNeedSession(true);
-
                 mtopRequest.setData(XposedHelpers.getObjectField(methodHookParam.args[0], "acdsRequest").toString());
+
+                Log.d("acdspatch", JSON.toJSONString(mtopRequest));
 
                 XposedHelpers.callMethod(methodHookParam.args[0], "setDataId", "1");
 
