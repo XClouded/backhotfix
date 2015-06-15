@@ -180,12 +180,18 @@
 			<version>1.1.40</version>
 			<scope>provided</scope>
 		</dependency>
+        <dependency>
+            <groupId>com.taobao.android</groupId>
+            <artifactId>update</artifactId>
+            <version>1.1.19</version>
+            <scope>provided</scope>
+        </dependency>
 		<dependency>
-			<groupId>com.taobao.android</groupId>
-			<artifactId>mtopsdk_allinone</artifactId>
-			<version>1.5.1.4-OOM-hotfix</version>
-			<scope>provided</scope>
-		</dependency>
+        <groupId>com.taobao.android</groupId>
+        <artifactId>mtopsdk_allinone</artifactId>
+        <version>1.5.1.4-OOM-hotfix</version>
+        <scope>provided</scope>
+    </dependency>
 		<dependency>
 			<groupId>com.taobao.android</groupId>
 			<artifactId>tnet-jni</artifactId>
