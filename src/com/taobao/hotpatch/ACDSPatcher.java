@@ -202,18 +202,18 @@ public class ACDSPatcher implements IPatch {
                                         JSONObject data = jsonObject.getJSONObject("data");
                                         if (data.containsKey("data")) {
                                             String body = data.getString("data");
-                                            Log.d("acdspatch", "succ");
+                                            Log.d("acdspatch", ">>>> succ");
 
                                             Log.d("acdspatch", methodHookParam.args[1].toString());
                                             Log.d("acdspatch", methodHookParam.args.length + "");
 
                                             Log.d("acdspatch", JSON.toJSONString(XposedHelpers.callStaticMethod(ACDSResponseParser, "parse", body)));
 
-                                            Log.d("acdspatch", ">>>");
+                                            Log.d("acdspatch", ">>> 111111");
 
                                             Object result = XposedHelpers.callMethod(methodHookParam.args[1], "onSuccess", new Class[]{ACDSResponse}, XposedHelpers.callStaticMethod(ACDSResponseParser, "parse", body));
 
-                                            Log.d("acdspatch", ">>> " + ( null == result));
+                                            Log.d("acdspatch", ">>> 222222 " + ( null == result));
                                             return;
                                         }
                                     }
