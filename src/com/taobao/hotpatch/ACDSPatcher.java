@@ -25,23 +25,8 @@ import mtopsdk.mtop.intf.MtopBuilder;
 public class ACDSPatcher implements IPatch {
 
 
-    public static boolean accsDeleage = true;
+    public static boolean accsDeleage = false;
     public static int timeoutTimes = 0;
-
-    // 标准的 ACDS 流控错误码
-    public final int acdsStandardFlowControlCode = 4001;
-
-    // mtop 标准流控错误码
-    public final int mtopStandard420 = 420;
-
-    // mtop 标准流控错误码
-    public final int mtopStandard499 = 499;
-
-    // mtop 标准流控错误码
-    public final int mtopStandard599 = 599;
-
-    //mtop 无网络错误码
-    public final int mtopStandardDisconnect = -1;
 
     @Override
     public void handlePatch(PatchParam arg0) throws Throwable {
@@ -127,7 +112,7 @@ public class ACDSPatcher implements IPatch {
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 super.beforeHookedMethod(param);
 
-//                accsDeleage = false;
+                accsDeleage = false;
                 timeoutTimes = 0;
             }
         });
