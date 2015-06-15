@@ -93,7 +93,7 @@ public class ACDSPatcher implements IPatch {
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 super.beforeHookedMethod(param);
                 Log.d("acdspatch", "7");
-                accsDeleage = false;
+//                accsDeleage = false;
                 timeoutTimes = 0;
             }
         });
