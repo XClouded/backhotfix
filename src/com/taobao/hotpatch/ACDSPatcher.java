@@ -200,6 +200,12 @@ public class ACDSPatcher implements IPatch {
                                         if (data.containsKey("data")) {
                                             String body = data.getString("data");
                                             Log.d("acdspatch", "succ");
+
+                                            Log.d("acdspatch", methodHookParam.args[1].toString());
+                                            Log.d("acdspatch", methodHookParam.args.length + "");
+
+                                            Log.d("acdspatch", JSON.toJSONString(XposedHelpers.callStaticMethod(ACDSResponseParser, body)));
+
                                             XposedHelpers.callMethod(methodHookParam.args[1], "onSuccess", XposedHelpers.callStaticMethod(ACDSResponseParser, body));
                                             return;
                                         }
