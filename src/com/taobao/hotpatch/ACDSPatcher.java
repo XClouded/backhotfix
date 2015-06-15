@@ -15,6 +15,7 @@ public class ACDSPatcher implements IPatch {
 
 
     public static boolean accsDeleage = false;
+    public static int timeoutTimes = 0;
 
     @Override
     public void handlePatch(PatchParam arg0) throws Throwable {
@@ -67,9 +68,9 @@ public class ACDSPatcher implements IPatch {
 
 
         //accs delegate
-
         final Class<?> accsCallback = PatchHelper.loadClass(context, "com.taobao.acds.network.d", "com.taobao.acds", this);
         final Class<?> acdsSwitcher = PatchHelper.loadClass(context, "com.taobao.acds.syncenter.a", "com.taobao.acds", this);
+        final Class<?> acdsResponse = PatchHelper.loadClass(context, "com.taobao.acds.protocol.down.ACDSResponse", "com.taobao.acds", this);
 
         if (null == accsCallback || null == acdsSwitcher) {
             Log.d("acdspatch", "-4");
@@ -80,14 +81,22 @@ public class ACDSPatcher implements IPatch {
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 super.beforeHookedMethod(param);
                 Log.d("acdspatch", "4");
-                accsDeleage = true;
+                if(timeoutTimes++ >= 2) {
+                    accsDeleage = true;
+                }
             }
 
+        });
+        XposedBridge.findAndHookMethod(accsCallback, "onSuccess", acdsResponse, new XC_MethodHook() {
             @Override
-            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                super.afterHookedMethod(param);
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                super.beforeHookedMethod(param);
+                Log.d("acdspatch", "7");
+                accsDeleage = false;
+                timeoutTimes = 0;
             }
         });
+
         XposedBridge.findAndHookMethod(acdsSwitcher, "isACCSDegrade", String.class, String.class, new XC_MethodReplacement() {
             @Override
             protected Object replaceHookedMethod(MethodHookParam methodHookParam) throws Throwable {
@@ -102,6 +111,7 @@ public class ACDSPatcher implements IPatch {
 
             }
         });
+
 
     }
 }
