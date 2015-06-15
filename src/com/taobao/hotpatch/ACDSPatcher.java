@@ -224,10 +224,15 @@ public class ACDSPatcher implements IPatch {
                                 Log.d("acdspatch",JSON.toJSONString(XposedHelpers.newInstance(ACDSError, response.getResponseCode(),
                                         response.getRetCode(), response.getRetMsg())));
 
-                                Log.d("acdspatch", ">>>");
+                                Log.d("acdspatch", ">>> 1111" + ACDSError);
+                                Object acdsError = XposedHelpers.newInstance(ACDSError, response.getResponseCode(),
+                                        response.getRetCode(), response.getRetMsg());
+                                Log.d("acdspatch",JSON.toJSONString(acdsError));
 
-                                XposedHelpers.callMethod(methodHookParam.args[1], "onError", new Class[]{ACDSError}, XposedHelpers.newInstance(ACDSError, response.getResponseCode(),
-                                        response.getRetCode(), response.getRetMsg()));
+                                Object result = XposedHelpers.callMethod(methodHookParam.args[1], "onError", new Class[]{ACDSError}, acdsError);
+
+                                Log.d("acdspatch", ">>> 222222 " + ( null == result));
+
                             } catch (Throwable e) {
                                 Log.e("acdspatch", e.getLocalizedMessage());
                             }
