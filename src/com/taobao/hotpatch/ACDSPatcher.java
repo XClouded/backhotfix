@@ -192,32 +192,32 @@ public class ACDSPatcher implements IPatch {
                             try {
                                 MtopResponse response = mtopFinishEvent.getMtopResponse();
 
-                                if (response.isApiSuccess()) {
-
-                                    Log.d("acdspatch", "999");
-                                    // 请求成功
-                                    JSONObject jsonObject = JSON.parseObject(new String(response.getBytedata()));
-                                    if (null != jsonObject && jsonObject.containsKey("data")) {
-                                        JSONObject data = jsonObject.getJSONObject("data");
-                                        if (data.containsKey("data")) {
-                                            String body = data.getString("data");
-                                            Log.d("acdspatch", ">>>> succ");
-
-                                            Log.d("acdspatch", methodHookParam.args[1].toString());
-                                            Log.d("acdspatch", methodHookParam.args.length + "");
-
-                                            Log.d("acdspatch", JSON.toJSONString(XposedHelpers.callStaticMethod(ACDSResponseParser, "parse", body)));
-
-                                            Log.d("acdspatch", ">>> 111111");
-
-                                            Object result = XposedHelpers.callMethod(methodHookParam.args[1], "onSuccess", new Class[]{ACDSResponse}, XposedHelpers.callStaticMethod(ACDSResponseParser, "parse", body));
-
-                                            Log.d("acdspatch", ">>> 222222 " + ( null == result));
-                                            return;
-                                        }
-                                    }
-
-                                }
+//                                if (response.isApiSuccess()) {
+//
+//                                    Log.d("acdspatch", "999");
+//                                    // 请求成功
+//                                    JSONObject jsonObject = JSON.parseObject(new String(response.getBytedata()));
+//                                    if (null != jsonObject && jsonObject.containsKey("data")) {
+//                                        JSONObject data = jsonObject.getJSONObject("data");
+//                                        if (data.containsKey("data")) {
+//                                            String body = data.getString("data");
+//                                            Log.d("acdspatch", ">>>> succ");
+//
+//                                            Log.d("acdspatch", methodHookParam.args[1].toString());
+//                                            Log.d("acdspatch", methodHookParam.args.length + "");
+//
+//                                            Log.d("acdspatch", JSON.toJSONString(XposedHelpers.callStaticMethod(ACDSResponseParser, "parse", body)));
+//
+//                                            Log.d("acdspatch", ">>> 111111");
+//
+//                                            Object result = XposedHelpers.callMethod(methodHookParam.args[1], "onSuccess", new Class[]{ACDSResponse}, XposedHelpers.callStaticMethod(ACDSResponseParser, "parse", body));
+//
+//                                            Log.d("acdspatch", ">>> 222222 " + ( null == result));
+//                                            return;
+//                                        }
+//                                    }
+//
+//                                }
 
                                 Log.d("acdspatch", "fail");
 
