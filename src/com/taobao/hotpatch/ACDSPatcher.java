@@ -104,13 +104,13 @@ public class ACDSPatcher implements IPatch {
         final Class<?> AcdsCallback = PatchHelper.loadClass(context, "com.taobao.acds.network.ACDSCallback", "com.taobao.acds", this);
         final Class<?> ACDSResponseParser = PatchHelper.loadClass(context, "com.taobao.acds.protocol.down.a", "com.taobao.acds", this);
         final Class<?> ACDSResponse = PatchHelper.loadClass(context, "com.taobao.acds.protocol.down.ACDSResponse", "com.taobao.acds", this);
-        final Class<?> ACDSError = PatchHelper.loadClass(context, "com.taobao.acds.provider.aidl.ACDSError", "com.taobao.taobaocompat", this);
+        final Class<?> ACDSError = PatchHelper.loadClass(context, "com.taobao.acds.provider.aidl.ACDSError", null, this);
 
 
         Log.d("acdspatch", "9");
         if (null == accsCallback || null == acdsSwitcher || null == mtopSender || null == mtopCallback || null == ACCSRequestWrapper
                 || null == AcdsCallback || null == ACDSResponseParser || null == ACDSResponse || null == ACDSError) {
-            Log.d("acdspatch", "start parser -4");
+            Log.d("acdspatch", "start parser 111 -4");
             Log.d("acdspatch", AcdsCallback == null ? " \n" : "true");
             Log.d("acdspatch", ACDSResponseParser == null ? " \n" : "true");
             Log.d("acdspatch", ACDSResponse == null ? " \n" : "true");
