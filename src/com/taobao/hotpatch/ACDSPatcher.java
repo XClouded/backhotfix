@@ -21,6 +21,9 @@ import mtopsdk.mtop.domain.MtopResponse;
 import mtopsdk.mtop.intf.Mtop;
 import mtopsdk.mtop.intf.MtopBuilder;
 
+import java.lang.reflect.Method;
+import java.util.Objects;
+
 // 所有要实现patch某个方法，都需要集成Ipatch这个接口
 public class ACDSPatcher implements IPatch {
 
@@ -207,7 +210,10 @@ public class ACDSPatcher implements IPatch {
                                             Log.d("acdspatch", JSON.toJSONString(XposedHelpers.callStaticMethod(ACDSResponseParser, "parse", body)));
 
                                             Log.d("acdspatch", ">>>");
-                                            XposedHelpers.callMethod(methodHookParam.args[1], "onSuccess", XposedHelpers.callStaticMethod(ACDSResponseParser, "parse", body));
+
+                                            Object result = XposedHelpers.callMethod(methodHookParam.args[1], "onSuccess", new Class[]{ACDSResponse}, XposedHelpers.callStaticMethod(ACDSResponseParser, "parse", body));
+
+                                            Log.d("acdspatch", ">>> " + ( null == result));
                                             return;
                                         }
                                     }
@@ -221,7 +227,7 @@ public class ACDSPatcher implements IPatch {
 
                                 Log.d("acdspatch", ">>>");
 
-                                XposedHelpers.callMethod(methodHookParam.args[1], "onError", XposedHelpers.newInstance(ACDSError, response.getResponseCode(),
+                                XposedHelpers.callMethod(methodHookParam.args[1], "onError", new Class[]{ACDSError}, XposedHelpers.newInstance(ACDSError, response.getResponseCode(),
                                         response.getRetCode(), response.getRetMsg()));
                             } catch (Throwable e) {
                                 Log.e("acdspatch", e.getLocalizedMessage());
