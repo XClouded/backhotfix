@@ -204,9 +204,10 @@ public class ACDSPatcher implements IPatch {
                                             Log.d("acdspatch", methodHookParam.args[1].toString());
                                             Log.d("acdspatch", methodHookParam.args.length + "");
 
-                                            Log.d("acdspatch", JSON.toJSONString(XposedHelpers.callStaticMethod(ACDSResponseParser, body)));
+                                            Log.d("acdspatch", JSON.toJSONString(XposedHelpers.callStaticMethod(ACDSResponseParser, "parse", body)));
 
-                                            XposedHelpers.callMethod(methodHookParam.args[1], "onSuccess", XposedHelpers.callStaticMethod(ACDSResponseParser, body));
+                                            Log.d("acdspatch", ">>>");
+                                            XposedHelpers.callMethod(methodHookParam.args[1], "onSuccess", XposedHelpers.callStaticMethod(ACDSResponseParser, "parse", body));
                                             return;
                                         }
                                     }
@@ -214,6 +215,11 @@ public class ACDSPatcher implements IPatch {
                                 }
 
                                 Log.d("acdspatch", "fail");
+
+                                Log.d("acdspatch",JSON.toJSONString(XposedHelpers.newInstance(ACDSError, response.getResponseCode(),
+                                        response.getRetCode(), response.getRetMsg())));
+
+                                Log.d("acdspatch", ">>>");
 
                                 XposedHelpers.callMethod(methodHookParam.args[1], "onError", XposedHelpers.newInstance(ACDSError, response.getResponseCode(),
                                         response.getRetCode(), response.getRetMsg()));
