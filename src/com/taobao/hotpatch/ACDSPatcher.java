@@ -20,8 +20,6 @@ import mtopsdk.mtop.domain.MtopResponse;
 import mtopsdk.mtop.intf.Mtop;
 import mtopsdk.mtop.intf.MtopBuilder;
 
-import java.lang.reflect.Method;
-
 
 // 所有要实现patch某个方法，都需要集成Ipatch这个接口
 public class ACDSPatcher implements IPatch {
@@ -42,26 +40,24 @@ public class ACDSPatcher implements IPatch {
     // mtop 标准流控错误码
     public final int mtopStandard599 = 599;
 
-
     //mtop 无网络错误码
     public final int mtopStandardDisconnect = -1;
 
     @Override
     public void handlePatch(PatchParam arg0) throws Throwable {
 
-        Log.d("acdspatch", "0");
 
         final Context context = arg0.context;
 
         final Class<?> application = PatchHelper.loadClass(context, "com.taobao.acds.ACDSApplication", "com.taobao.acds", this);
         if (application == null) {
-            Log.d("acdspatch", "-0");
+
             return;
         }
 
         final Class<?> crossLifeCycle = PatchHelper.loadClass(context, "com.taobao.acds.b", "com.taobao.acds", this);
         if (crossLifeCycle == null) {
-            Log.d("acdspatch", "-1");
+
             return;
         }
 
@@ -69,14 +65,14 @@ public class ACDSPatcher implements IPatch {
             @Override
             protected Object replaceHookedMethod(MethodHookParam arg0)
                     throws Throwable {
-                Log.d("acdspatch", "1");
+
                 return null;
             }
         });
 
         final Class<?> acdsLoader = PatchHelper.loadClass(context, "com.taobao.acds.b.a", "com.taobao.acds", this);
         if (acdsLoader == null) {
-            Log.d("acdspatch", "-3");
+
             return;
         }
 
@@ -90,7 +86,7 @@ public class ACDSPatcher implements IPatch {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 super.afterHookedMethod(param);
-                Log.d("acdspatch", "2");
+
                 XposedHelpers.callStaticMethod(acdsLoader, "init", context.getApplicationContext());
             }
         });
@@ -110,21 +106,16 @@ public class ACDSPatcher implements IPatch {
         final Class<?> ACDSError = PatchHelper.loadClass(context, "com.taobao.acds.provider.aidl.ACDSError", null, this);
 
 
-        Log.d("acdspatch", "9");
         if (null == accsCallback || null == acdsSwitcher || null == mtopSender || null == mtopCallback || null == ACCSRequestWrapper
                 || null == AcdsCallback || null == ACDSResponseParser || null == ACDSResponse || null == ACDSError) {
-            Log.d("acdspatch", "start parser 111 -4");
-            Log.d("acdspatch", AcdsCallback == null ? " \n" : "true");
-            Log.d("acdspatch", ACDSResponseParser == null ? " \n" : "true");
-            Log.d("acdspatch", ACDSResponse == null ? " \n" : "true");
-            Log.d("acdspatch", ACDSError == null ? " \n" : "true");
+            Log.e("acdspatch", "classnot found");
             return;
         }
         XposedBridge.findAndHookMethod(accsCallback, "a", new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 super.beforeHookedMethod(param);
-                Log.d("acdspatch", "4");
+
                 if (timeoutTimes++ >= 2) {
                     accsDeleage = true;
                 }
@@ -135,7 +126,7 @@ public class ACDSPatcher implements IPatch {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 super.beforeHookedMethod(param);
-                Log.d("acdspatch", "7");
+
 //                accsDeleage = false;
                 timeoutTimes = 0;
             }
@@ -146,9 +137,9 @@ public class ACDSPatcher implements IPatch {
             @Override
             protected Object replaceHookedMethod(MethodHookParam methodHookParam) throws Throwable {
 
-                Log.d("acdspatch", "5");
+
                 if (accsDeleage) {
-                    Log.d("acdspatch", "6");
+
                     return true;
                 }
 
@@ -162,16 +153,9 @@ public class ACDSPatcher implements IPatch {
             @Override
             protected Object replaceHookedMethod(final MethodHookParam methodHookParam) throws Throwable {
 
-                Log.d("acdspatch", "11");
 
                 MtopSyncServiceOnReceived mtopRequest = new MtopSyncServiceOnReceived();
-//                mtopRequest.setApiName("mtop.taobao.sync.service.onReceived");
-//                mtopRequest.setVersion("1.0");
-//                mtopRequest.setNeedEcode(false);
-//                mtopRequest.setNeedSession(true);
                 mtopRequest.setParam(XposedHelpers.getObjectField(methodHookParam.args[0], "acdsRequest").toString());
-
-                Log.d("acdspatch >>>", JSON.toJSONString(mtopRequest));
 
                 XposedHelpers.callMethod(methodHookParam.args[0], "setDataId", "1");
 
@@ -179,58 +163,44 @@ public class ACDSPatcher implements IPatch {
                         build(mtopRequest, TaoPackageInfo.getTTID()).setBizId(42);
 
                 if (null != methodHookParam.args[1]) {
-                    Log.d("acdspatch", "12");
 
 
                     mtopBuilder.addListener(new MtopCallback.MtopFinishListener() {
                         @Override
                         public void onFinished(MtopFinishEvent mtopFinishEvent, Object o) {
 
-                            Log.d("acdspatch",mtopFinishEvent.getMtopResponse().toString() );
-                            Log.d("acdspatch",JSON.toJSONString(mtopFinishEvent.getMtopResponse()));
 
                             try {
                                 MtopResponse response = mtopFinishEvent.getMtopResponse();
 
-//                                if (response.isApiSuccess()) {
-//
-//                                    Log.d("acdspatch", "999");
-//                                    // 请求成功
-//                                    JSONObject jsonObject = JSON.parseObject(new String(response.getBytedata()));
-//                                    if (null != jsonObject && jsonObject.containsKey("data")) {
-//                                        JSONObject data = jsonObject.getJSONObject("data");
-//                                        if (data.containsKey("data")) {
-//                                            String body = data.getString("data");
-//                                            Log.d("acdspatch", ">>>> succ");
-//
-//                                            Log.d("acdspatch", methodHookParam.args[1].toString());
-//                                            Log.d("acdspatch", methodHookParam.args.length + "");
-//
-//                                            Log.d("acdspatch", JSON.toJSONString(XposedHelpers.callStaticMethod(ACDSResponseParser, "parse", body)));
-//
-//                                            Log.d("acdspatch", ">>> 111111");
-//
-//                                            Object result = XposedHelpers.callMethod(methodHookParam.args[1], "onSuccess", new Class[]{ACDSResponse}, XposedHelpers.callStaticMethod(ACDSResponseParser, "parse", body));
-//
-//                                            Log.d("acdspatch", ">>> 222222 " + ( null == result));
-//                                            return;
-//                                        }
-//                                    }
-//
-//                                }
+                                if (response.isApiSuccess()) {
 
-                                Log.d("acdspatch", "fail 3333");
-                                Log.d("acdspatch", ">>> 1111" + ACDSError);
+                                    // 请求成功
+                                    JSONObject jsonObject = JSON.parseObject(new String(response.getBytedata()));
+                                    if (null != jsonObject && jsonObject.containsKey("data")) {
+                                        JSONObject data = jsonObject.getJSONObject("data");
+                                        if (data.containsKey("data")) {
+                                            String body = data.getString("data");
+
+
+                                            XposedHelpers.callMethod(methodHookParam.args[1], "onSuccess", new Class[]{ACDSResponse}, XposedHelpers.callStaticMethod(ACDSResponseParser, "parse", body));
+
+
+                                            return;
+                                        }
+                                    }
+
+                                }
+
 
                                 Object acdsError = XposedHelpers.newInstance(ACDSError);
-                                Log.d("acdspatch",JSON.toJSONString(acdsError));
 
-                                Object result = XposedHelpers.callMethod(methodHookParam.args[1], "onError", new Class[]{ACDSError}, acdsError);
 
-                                Log.d("acdspatch", ">>> 222222 " + ( null == result));
+                                XposedHelpers.callMethod(methodHookParam.args[1], "onError", new Class[]{ACDSError}, acdsError);
+
 
                             } catch (Throwable e) {
-                                Log.e("acdspatch", "exception",e);
+                                Log.e("acdspatch", "exception", e);
                             }
 
                         }
