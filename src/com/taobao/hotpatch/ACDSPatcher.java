@@ -16,13 +16,12 @@ import com.taobao.tao.TaoPackageInfo;
 import mtopsdk.mtop.common.MtopCallback;
 import mtopsdk.mtop.common.MtopFinishEvent;
 import mtopsdk.mtop.domain.IMTOPDataObject;
-import mtopsdk.mtop.domain.MtopRequest;
 import mtopsdk.mtop.domain.MtopResponse;
 import mtopsdk.mtop.intf.Mtop;
 import mtopsdk.mtop.intf.MtopBuilder;
 
 import java.lang.reflect.Method;
-import java.util.Objects;
+
 
 // 所有要实现patch某个方法，都需要集成Ipatch这个接口
 public class ACDSPatcher implements IPatch {
