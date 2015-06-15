@@ -88,9 +88,9 @@ public class ACDSPatcher implements IPatch {
         Log.d("acdspatch", "9");
         if (null == accsCallback || null == acdsSwitcher || null == mtopSender || null == mtopCallback || null == ACCSRequestWrapper || null == AcdsCallback) {
             Log.d("acdspatch", "-4");
-            Log.d("acdspatch", "mtopCallback");
-            Log.d("acdspatch", "ACCSRequestWrapper");
-            Log.d("acdspatch", "AcdsCallback");
+            Log.d("acdspatch", mtopCallback == null ? "" : "true");
+            Log.d("acdspatch", ACCSRequestWrapper == null ? "" : "true");
+            Log.d("acdspatch", AcdsCallback == null ? "" : "true");
             return;
         }
         XposedBridge.findAndHookMethod(accsCallback, "a", new XC_MethodHook() {
