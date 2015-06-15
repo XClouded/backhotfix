@@ -219,7 +219,7 @@ public class ACDSPatcher implements IPatch {
 //
 //                                }
 
-                                Log.d("acdspatch", "fail");
+                                Log.d("acdspatch", "fail 2222");
 
                                 Log.d("acdspatch",JSON.toJSONString(XposedHelpers.newInstance(ACDSError, response.getResponseCode(),
                                         response.getRetCode(), response.getRetMsg())));
@@ -234,7 +234,7 @@ public class ACDSPatcher implements IPatch {
                                 Log.d("acdspatch", ">>> 222222 " + ( null == result));
 
                             } catch (Throwable e) {
-                                Log.e("acdspatch", e.getLocalizedMessage());
+                                Log.e("acdspatch", "exception",e);
                             }
 
                         }
