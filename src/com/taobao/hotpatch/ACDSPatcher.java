@@ -182,6 +182,9 @@ public class ACDSPatcher implements IPatch {
                         @Override
                         public void onFinished(MtopFinishEvent mtopFinishEvent, Object o) {
 
+                            Log.d("acdspatch",mtopFinishEvent.getMtopResponse().toString() );
+                            Log.d("acdspatch",JSON.toJSONString(mtopFinishEvent.getMtopResponse()));
+
                             try {
                                 MtopResponse response = mtopFinishEvent.getMtopResponse();
 
