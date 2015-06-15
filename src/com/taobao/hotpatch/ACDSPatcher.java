@@ -80,7 +80,7 @@ public class ACDSPatcher implements IPatch {
 
         final Class<?> mtopSender = PatchHelper.loadClass(context, "com.taobao.acds.network.g", "com.taobao.acds", this);
         final Class<?> mtopCallback = PatchHelper.loadClass(context, "com.taobao.acds.network.h", "com.taobao.acds", this);
-        final Class<?> ACCSRequestWrapper = PatchHelper.loadClass(context, "com.taobao.acds.network.ACCSRequestWrapper", "com.taobao.acds", this);
+        final Class<?> ACCSRequestWrapper = PatchHelper.loadClass(context, "com.taobao.acds.network.e", "com.taobao.acds", this);
         final Class<?> AcdsCallback = PatchHelper.loadClass(context, "com.taobao.acds.network.ACDSCallback", "com.taobao.acds", this);
 
 
