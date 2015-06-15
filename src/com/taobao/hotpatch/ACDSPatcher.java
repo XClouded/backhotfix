@@ -15,6 +15,7 @@ import com.taobao.tao.Globals;
 import com.taobao.tao.TaoPackageInfo;
 import mtopsdk.mtop.common.MtopCallback;
 import mtopsdk.mtop.common.MtopFinishEvent;
+import mtopsdk.mtop.domain.IMTOPDataObject;
 import mtopsdk.mtop.domain.MtopRequest;
 import mtopsdk.mtop.domain.MtopResponse;
 import mtopsdk.mtop.intf.Mtop;
@@ -161,14 +162,14 @@ public class ACDSPatcher implements IPatch {
 
                 Log.d("acdspatch", "11");
 
-                MtopRequest mtopRequest = new MtopRequest();
-                mtopRequest.setApiName("mtop.taobao.sync.service.onReceived");
-                mtopRequest.setVersion("1.0");
-                mtopRequest.setNeedEcode(false);
-                mtopRequest.setNeedSession(true);
-                mtopRequest.setData(XposedHelpers.getObjectField(methodHookParam.args[0], "acdsRequest").toString());
+                MtopSyncServiceOnReceived mtopRequest = new MtopSyncServiceOnReceived();
+//                mtopRequest.setApiName("mtop.taobao.sync.service.onReceived");
+//                mtopRequest.setVersion("1.0");
+//                mtopRequest.setNeedEcode(false);
+//                mtopRequest.setNeedSession(true);
+                mtopRequest.setParam(XposedHelpers.getObjectField(methodHookParam.args[0], "acdsRequest").toString());
 
-                Log.d("acdspatch", JSON.toJSONString(mtopRequest));
+                Log.d("acdspatch >>>", JSON.toJSONString(mtopRequest));
 
                 XposedHelpers.callMethod(methodHookParam.args[0], "setDataId", "1");
 
@@ -226,5 +227,72 @@ public class ACDSPatcher implements IPatch {
         });
 
 
+    }
+
+    public static class MtopSyncServiceOnReceived implements IMTOPDataObject {
+        private String API_NAME = "mtop.taobao.sync.service.onReceived";
+        private String VERSION = "1.0";
+        private boolean NEED_ECODE = false;
+        private boolean NEED_SESSION = true;
+        private String param;
+
+
+        /**
+         * api名
+         */
+        public String getAPI_NAME() {
+            return API_NAME;
+        }
+
+        public void setAPI_NAME(String API_NAME) {
+            this.API_NAME = API_NAME;
+        }
+
+        /**
+         * API的版本号
+         * (Required)
+         */
+        public String getVERSION() {
+            return VERSION;
+        }
+
+        public void setVERSION(String VERSION) {
+            this.VERSION = VERSION;
+        }
+
+        /**
+         * API的签名方式
+         * (Required)
+         */
+        public boolean isNEED_ECODE() {
+            return NEED_ECODE;
+        }
+
+        public void setNEED_ECODE(boolean NEED_ECODE) {
+            this.NEED_ECODE = NEED_ECODE;
+        }
+
+        /**
+         * 淘宝无线用户会话ID
+         * (Required)
+         */
+        public boolean isNEED_SESSION() {
+            return NEED_SESSION;
+        }
+
+        public void setNEED_SESSION(boolean NEED_SESSION) {
+            this.NEED_SESSION = NEED_SESSION;
+        }
+
+        /**
+         * Acds协议参数
+         */
+        public String getParam() {
+            return param;
+        }
+
+        public void setParam(String param) {
+            this.param = param;
+        }
     }
 }
