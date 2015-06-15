@@ -183,7 +183,7 @@
 		<dependency>
 			<groupId>com.taobao.android</groupId>
 			<artifactId>mtopsdk_allinone</artifactId>
-			<version>1.4.2.3</version>
+			<version>1.5.1.4-OOM-hotfix</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
