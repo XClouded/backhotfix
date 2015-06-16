@@ -18,14 +18,42 @@ import com.taobao.tao.Globals;
 public class StorageStatusReceiverPatch  implements IPatch {
     @Override
     public void handlePatch(PatchParam patchParam) throws Throwable {
-        XposedBridge.findAndHookMethod(StorageStatusReceiver.class,"onReceive",Context.class,
+    	final Context context = patchParam.context;
+    	
+    	final Class<?> StorageStatusReceiver = PatchHelper
+				.loadClass(
+						context,
+						"com.taobao.storagespace.StorageStatusReceiver",
+						null, this);
+    	if (StorageStatusReceiver == null) {
+    		return;
+    	}
+    	
+    	final Class<?> StorageManager = PatchHelper
+				.loadClass(
+						context,
+						"com.taobao.storagespace.StorageManager",
+						null, this);
+    	if (StorageManager == null) {
+    		return;
+    	}
+    	
+        XposedBridge.findAndHookMethod(StorageStatusReceiver,"onReceive",Context.class,
                 Intent.class,new XC_MethodReplacement(){
                     @Override
                     protected Object replaceHookedMethod(MethodHookParam methodHookParam) throws Throwable {
                         Intent intent = (Intent)methodHookParam.args[1];
                         try {
                             if (intent.getAction().equals(Intent.ACTION_DEVICE_STORAGE_LOW)) {
-                                StorageManager.getInstance(Globals.getApplication()).freeSpace();
+//                                StorageManager.getInstance(Globals.getApplication()).freeSpace();
+								Object StorageManagerI = XposedHelpers
+										.callStaticMethod(
+												StorageManager,
+												"getInstance",
+												new Class[] { android.app.Application
+												.class },
+												Globals.getApplication());
+								XposedHelpers.callMethod(StorageManagerI, "freeSpace");
                             }
                         }catch(Throwable e){
 
