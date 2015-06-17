@@ -47,12 +47,13 @@ public class BrowserActivityPatch implements IPatch{
 					return;
 				}
 				 
-				Log.e(TAG, "registerJsbridgePreprocessor patch");
 				WVJsbridgeService.registerJsbridgePreprocessor(new WVJSAPIAuthCheck() {
 					
 					@Override
 					public boolean apiAuthCheck(String url, String obj, String methodname, String params) {
 						
+						Log.e(TAG, "registerJsbridgePreprocessor patch obj = " + obj + "methodname = " + methodname);
+
 						Object methodRes = XposedHelpers.callStaticMethod(browserUtil, "checkIsJaeDomain", url);
 						
 						boolean isJaeDomain = false;
@@ -62,8 +63,11 @@ public class BrowserActivityPatch implements IPatch{
 							isJaeDomain = "true".equals((String) methodRes) ? true : false;
 						}
 						
+						if(TextUtils.equals("WVTBUserTrack", obj) && TextUtils.equals("toUT", methodname)) {
+				    		return true;
+				    	}
+						
 						if (isJaeDomain && !TextUtils.equals("JAEJSGateway", obj) && !TextUtils.equals("wopc", obj)) {
-							Log.e(TAG, "WVJS_JAE_AuthCheck return  = " +  false);
 				            return false;
 				        }
 
