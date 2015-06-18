@@ -50,11 +50,10 @@ public class DetailPagePatch  implements IPatch{
 				//param.thisObject是这个类的实例
 				WVWebView 	webView=(WVWebView)XposedHelpers.getObjectField(param.thisObject, "mWebView");
 				
-			
-				Object activity	=XposedHelpers.findMethodBestMatch(	param.thisObject.getClass().getSuperclass(),"getFrame");
+				Object 	mFrament=XposedHelpers.getObjectField(param.thisObject, "frame");
 						
-				Object jsBrige=XposedHelpers.newInstance(startShareMenuJsBrige,activity);
-				Log.e(TAG, activity+"y");
+				Object jsBrige=XposedHelpers.newInstance(startShareMenuJsBrige,mFrament);
+				Log.e(TAG, mFrament+"y");
 			    webView.addJsObject("TBSharedModule", jsBrige);
 			   
 			    Log.e(TAG, "initWebView");
