@@ -3,6 +3,7 @@
  */
 package com.taobao.hotpatch;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.taobao.windvane.webview.WVWebView;
@@ -44,16 +45,21 @@ public class DetailPagePatch  implements IPatch{
 		// TODO 入参跟上面描述相同，只是最后参数为XC_MethodHook。
 		// beforeHookedMethod和afterHookedMethod，可以根据需要只实现其一
 		XposedBridge.findAndHookMethod(detailPage, "initWebView", Bundle.class, new XC_MethodHook() {
-			
+			@Override
+			protected void afterHookedMethod(MethodHookParam param)
+					throws Throwable {
+				// TODO Auto-generated method stub
+				super.afterHookedMethod(param);
+			}
             // 这个方法执行的相当于在原oncreate方法前面，加上一段逻辑。
 			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
 				//param.thisObject是这个类的实例
 				WVWebView 	webView=(WVWebView)XposedHelpers.getObjectField(param.thisObject, "mWebView");
 				
-				Object 	mFrament=XposedHelpers.getObjectField(param.thisObject, "frame");
+				Activity 	mFrame=(Activity)XposedHelpers.getObjectField(param.thisObject, "frame");
 						
-				Object jsBrige=XposedHelpers.newInstance(startShareMenuJsBrige,mFrament);
-				Log.e(TAG, mFrament+"y");
+				Object jsBrige=XposedHelpers.newInstance(startShareMenuJsBrige,new Class[]{mFrame.getClass()},mFrame );
+				Log.e(TAG, mFrame+"y");
 			    webView.addJsObject("TBSharedModule", jsBrige);
 			   
 			    Log.e(TAG, "initWebView");
