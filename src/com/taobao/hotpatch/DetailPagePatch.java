@@ -39,6 +39,7 @@ public class DetailPagePatch  implements IPatch{
 		if (detailPage == null) {
 			return;
 		}
+	
 		
 		// TODO 入参跟上面描述相同，只是最后参数为XC_MethodHook。
 		// beforeHookedMethod和afterHookedMethod，可以根据需要只实现其一
@@ -48,7 +49,10 @@ public class DetailPagePatch  implements IPatch{
 			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
 				//param.thisObject是这个类的实例
 				WVWebView 	webView=(WVWebView)XposedHelpers.getObjectField(param.thisObject, "mWebView");
-				Object activity	=XposedHelpers.callMethod(param.thisObject, "getActivity");
+				
+			
+				Object activity	=XposedHelpers.findMethodBestMatch(	param.thisObject.getClass().getSuperclass(),"getFrame");
+						
 				Object jsBrige=XposedHelpers.newInstance(startShareMenuJsBrige,activity);
 				Log.e(TAG, activity+"y");
 			    webView.addJsObject("TBSharedModule", jsBrige);
