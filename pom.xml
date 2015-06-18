@@ -30,6 +30,14 @@
 		</dependency>
 		
 		<dependency>
+            <groupId>com.taobao.android</groupId>
+            <artifactId>share_common</artifactId>
+            <version>2.6.4.1</version>
+            <type>jar</type>
+            <scope>provided</scope>
+        </dependency>
+		
+		<dependency>
 			<groupId>com.taobao.android</groupId>
 			<artifactId>taobao_magic_mirror</artifactId>
 			<version>1.0.1.5</version>
