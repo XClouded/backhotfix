@@ -14,7 +14,6 @@ import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.android.dexposed.XposedHelpers;
 import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchParam;
-import com.ut.share.business.StartShareMenuJsBrige;
 
 /**
  * @author shiqing
