@@ -30,17 +30,17 @@ public class DetailPagePatch  implements IPatch{
 		final Context context = arg0.context;
 		
 		// 这里填上你要patch的bundle中的class名字，第三个参数是所在bundle中manifest的packageName，最后的参数为this
-		final Class<?> startShareMenuJsBrige = PatchHelper.loadClass(context, "com.ut.share.business.StartShareMenuJsBrige", "com.taobao.browser", this);
-		Log.e(TAG, "handlePatch");
+		final Class<?> startShareMenuJsBrige = PatchHelper.loadClass(context, "com.taobao.browser.jsbridge.StartShareMenuJsBrige", "com.taobao.browser", this);
+		Log.e(TAG, "startShareMenuJsBrige:"+startShareMenuJsBrige);
 		if (startShareMenuJsBrige == null) {
 			return;
 		}
-		
+	
 		final Class<?> detailPage = PatchHelper.loadClass(context, "com.taobao.headline.module.detail.pages.DetailPage", "com.taobao.headline", this);
 		if (detailPage == null) {
 			return;
 		}
-	
+		Log.e(TAG, "detailPage:"+detailPage);
 		
 		// TODO 入参跟上面描述相同，只是最后参数为XC_MethodHook。
 		// beforeHookedMethod和afterHookedMethod，可以根据需要只实现其一
