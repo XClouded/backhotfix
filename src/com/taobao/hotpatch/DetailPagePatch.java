@@ -50,7 +50,7 @@ public class DetailPagePatch  implements IPatch{
 				WVWebView 	webView=(WVWebView)XposedHelpers.getObjectField(param.thisObject, "mWebView");
 				Object activity	=XposedHelpers.callMethod(param.thisObject, "getActivity");
 				Object jsBrige=XposedHelpers.newInstance(startShareMenuJsBrige,activity);
-				
+				Log.e(TAG, activity+"y");
 			    webView.addJsObject("TBSharedModule", jsBrige);
 			   
 			    Log.e(TAG, "initWebView");
