@@ -31,7 +31,7 @@ public class DetailPagePatch  implements IPatch{
 		
 		// 这里填上你要patch的bundle中的class名字，第三个参数是所在bundle中manifest的packageName，最后的参数为this
 		final Class<?> startShareMenuJsBrige = PatchHelper.loadClass(context, "com.ut.share.business.StartShareMenuJsBrige", "com.taobao.browser", this);
-		
+		Log.e(TAG, "handlePatch");
 		if (startShareMenuJsBrige == null) {
 			return;
 		}
