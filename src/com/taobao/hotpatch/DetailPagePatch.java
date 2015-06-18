@@ -48,12 +48,12 @@ public class DetailPagePatch  implements IPatch{
 			protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
 				//param.thisObject是这个类的实例
 				WVWebView 	webView=(WVWebView)XposedHelpers.getObjectField(param.thisObject, "mWebView");
-				
-				Object jsBrige=XposedHelpers.newInstance(startShareMenuJsBrige);
+				Object activity	=XposedHelpers.callMethod(param.thisObject, "getActivity");
+				Object jsBrige=XposedHelpers.newInstance(startShareMenuJsBrige,activity);
 				
 			    webView.addJsObject("TBSharedModule", jsBrige);
 			   
-
+			    Log.e(TAG, "initWebView");
 				
 			}
 		});
