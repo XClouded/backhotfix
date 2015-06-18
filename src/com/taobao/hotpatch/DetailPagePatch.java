@@ -34,7 +34,7 @@ public class DetailPagePatch implements IPatch
 		
 		Log.e(TAG, "context:" + context);
 
-		final Class<?> detailPage = PatchHelper.loadClass(context, "com.taobao.headline.module.detail.pages.DetailPage", "com.taobao.headline", this);
+		Class<?> detailPage = PatchHelper.loadClass(context, "com.taobao.headline.module.detail.pages.DetailPage", "com.taobao.headline", this);
 		Log.e(TAG, "detailPage:" + detailPage);
 		if (detailPage == null)
 		{
