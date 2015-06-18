@@ -27,10 +27,12 @@ public class DetailPagePatch implements IPatch
 
 	// handlePatch这个方法，会在应用进程启动的时候被调用，在这里来实现patch的功能
 	@Override
-	public void handlePatch(PatchParam arg0) throws Throwable
+	public void handlePatch(PatchParam patchParam) throws Throwable
 	{
 		// 从arg0里面，可以得到主客的context供使用
-		final Context context = arg0.context;
+		final Context context = patchParam.context;
+		
+		Log.e(TAG, "context:" + context);
 
 		final Class<?> detailPage = PatchHelper.loadClass(context, "com.taobao.headline.module.detail.pages.DetailPage", "com.taobao.headline", this);
 		Log.e(TAG, "detailPage:" + detailPage);
@@ -38,9 +40,7 @@ public class DetailPagePatch implements IPatch
 		{
 			return;
 		}
-		// Log.e(TAG, "detailPage:"+detailPage);
-
-		// TODO 入参跟上面描述相同，只是最后参数为XC_MethodHook。
+		
 		// beforeHookedMethod和afterHookedMethod，可以根据需要只实现其一
 		XposedBridge.findAndHookMethod(detailPage, "initWebView", Bundle.class, new XC_MethodHook()
 		{
