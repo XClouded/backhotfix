@@ -14,6 +14,7 @@ import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.android.dexposed.XposedHelpers;
 import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchParam;
+import com.ut.share.business.StartShareMenuJsBrige;
 
 /**
  * @author shiqing
@@ -30,7 +31,7 @@ public class DetailPagePatch  implements IPatch{
 		final Context context = arg0.context;
 		
 		// 这里填上你要patch的bundle中的class名字，第三个参数是所在bundle中manifest的packageName，最后的参数为this
-		final Class<?> startShareMenuJsBrige = PatchHelper.loadClass(context, "com.taobao.browser.jsbridge.StartShareMenuJsBrige", "com.taobao.browser", this);
+		final Class<?> startShareMenuJsBrige = PatchHelper.loadClass(context, "com.ut.share.business.StartShareMenuJsBrige", "com.taobao.taobaocompat", this);
 		Log.e(TAG, "startShareMenuJsBrige:"+startShareMenuJsBrige);
 		if (startShareMenuJsBrige == null) {
 			return;
