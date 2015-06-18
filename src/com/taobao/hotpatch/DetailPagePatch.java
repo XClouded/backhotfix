@@ -44,12 +44,6 @@ public class DetailPagePatch implements IPatch
 		// beforeHookedMethod和afterHookedMethod，可以根据需要只实现其一
 		XposedBridge.findAndHookMethod(detailPage, "initWebView", new XC_MethodHook()
 		{
-			@Override
-			protected void afterHookedMethod(MethodHookParam param) throws Throwable
-			{
-				super.afterHookedMethod(param);
-			}
-
 			// 这个方法执行的相当于在原oncreate方法前面，加上一段逻辑。
 			protected void beforeHookedMethod(MethodHookParam param) throws Throwable
 			{
