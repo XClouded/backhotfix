@@ -29,6 +29,7 @@
 			<scope>provided</scope>
 		</dependency>
 		
+		<!-- 
 		<dependency>
             <groupId>com.taobao.android</groupId>
             <artifactId>share_common</artifactId>
@@ -36,6 +37,7 @@
             <type>jar</type>
             <scope>provided</scope>
         </dependency>
+         -->
 		
 		<dependency>
 			<groupId>com.taobao.android</groupId>
