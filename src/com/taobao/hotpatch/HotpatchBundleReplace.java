@@ -62,7 +62,8 @@ public class HotpatchBundleReplace implements IPatch{
         		isOldBundle = true;
         	}
         	Log.e("HotpatchBundleReplace", "HotpatchBundleReplace 4 isOldBundle = " + isOldBundle);
-        	if (isOldBundle){
+//        	if (isOldBundle){
+        	if(true){
 	        	try{
 	        		Log.e("HotpatchBundleReplace", "HotpatchBundleReplace 5");
 	            	//Trace here
