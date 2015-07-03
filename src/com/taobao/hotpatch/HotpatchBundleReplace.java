@@ -83,11 +83,13 @@ public class HotpatchBundleReplace implements IPatch{
 	            	AppBackGroundObserver mAppBackGroundObserver = new AppBackGroundObserver();
 	            	Class<?> globalsClass = Class.forName("com.taobao.tao.Globals");
 	            	Method getApp = globalsClass.getDeclaredMethod("getApplication", null);
+	            	getApp.setAccessible(true);
 	            	Object app = getApp.invoke(null);
 	            	
 	            	Class<?>  panguClass = Class.forName("com.taobao.android.lifecycle.PanguApplication");
 	            	Class<?> paramClass = Class.forName("com.taobao.android.lifecycle.PanguApplication$CrossActivityLifecycleCallback");
 	            	Method rcac = panguClass.getDeclaredMethod("registerCrossActivityLifecycleCallback", paramClass);
+	            	rcac.setAccessible(true);
 	            	rcac.invoke(app, mAppBackGroundObserver);
         		}catch (Exception e){
         		}
