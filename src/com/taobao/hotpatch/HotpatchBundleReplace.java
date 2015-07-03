@@ -9,11 +9,12 @@ import java.lang.reflect.Method;
 
 import org.osgi.framework.BundleException;
 
+import com.taobao.android.dexposed.XC_MethodHook;
+import com.taobao.android.dexposed.XposedBridge;
+import com.taobao.hotpatch.patch.IPatch;
+import com.taobao.hotpatch.patch.PatchParam;
 import com.taobao.statistic.TBS;
-import com.taobao.tao.Globals;
-import com.taobao.tao.atlaswrapper.PanguApplication;
 
-import android.content.Context;
 import android.taobao.atlas.framework.Atlas;
 import android.taobao.atlas.framework.BundleImpl;
 import android.util.Log;
