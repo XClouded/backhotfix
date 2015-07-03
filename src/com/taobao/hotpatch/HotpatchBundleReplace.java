@@ -18,8 +18,6 @@ import com.taobao.hotpatch.patch.PatchParam;
 import com.taobao.statistic.TBS;
 
 import android.content.Context;
-import android.taobao.atlas.framework.Atlas;
-import android.taobao.atlas.framework.BundleImpl;
 import android.util.Log;
 
 public class HotpatchBundleReplace implements IPatch{
