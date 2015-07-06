@@ -19,13 +19,13 @@ public class ShopTabControllerPatch implements IPatch{
 					.loadClass(
 							context,
 							"com.taobao.tao.shop.homepage.controller.ShopTabController",
-							null, this);
+							"com.taobao.shop", this);
 	    
 	    final Class<?> eventType = PatchHelper
 				.loadClass(
 						context,
 						"com.taobao.tao.shop.homepage.event.EventType",
-						null, this);
+						"com.taobao.shop", this);
 	    Log.d("ShopTabControllerPatch", "shopTabController");
 	  	if (shopTabController == null) {
 	  		Log.d("ShopTabControllerPatch", "shopTabController null");
