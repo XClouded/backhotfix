@@ -50,7 +50,7 @@ public class ShopTabControllerPatch implements IPatch{
 					throws Throwable {
 				super.beforeHookedMethod(param);
 				Log.d("ShopTabControllerPatch", "beforeHookedMethod");
-				Object mActivity = XposedHelpers.getObjectField(param.thisObject, "a");
+				Object mActivity = XposedHelpers.getObjectField(param.thisObject, "mActivity");
 				if (null != mActivity) {
 					Log.d("ShopTabControllerPatch", "null != mActivity");
 					Object[] enmu = eventType.getEnumConstants();
