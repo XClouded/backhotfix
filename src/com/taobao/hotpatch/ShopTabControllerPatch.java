@@ -34,12 +34,10 @@ public class ShopTabControllerPatch implements IPatch{
 						"com.taobao.shop", this);
 	    Log.d("ShopTabControllerPatch", "shopTabController");
 	  	if (shopTabController == null) {
-	  		Log.d("ShopTabControllerPatch", "shopTabController null");
 	  		return;
 	  	}
 	  	
 	  	if (eventType == null) {
-	  		Log.d("ShopTabControllerPatch", "eventType null");
 	  		return;
 	  	}
 	  	
@@ -52,19 +50,7 @@ public class ShopTabControllerPatch implements IPatch{
 				Log.d("ShopTabControllerPatch", "beforeHookedMethod");
 				Object mActivity = XposedHelpers.getObjectField(param.thisObject, "mActivity");
 				if (null != mActivity) {
-					Log.d("ShopTabControllerPatch", "null != mActivity");
-					Object[] enmu = eventType.getEnumConstants();
-					if(enmu == null) {
-						Log.d("ShopTabControllerPatch", "the enum is null");
-					}
-					for(Object j : enmu) {
-						Log.d("ShopTabControllerPatch", j.toString());
-					}
-					Log.d("ShopTabControllerPatch", "adsadadadsadsa");
-//					Log.d("ShopTabControllerPatch", XposedHelpers.callMethod(eventType.getEnumConstants()[4], "name").toString());
-					Log.d("ShopTabControllerPatch","the enum is OK");
 					XposedHelpers.callMethod(mActivity, "registerSubscriber", new Class<?>[]{eventType, ISubscriberListener}, eventType.getEnumConstants()[4], param.thisObject);					
-					Log.d("ShopTabControllerPatch", "callMethod");
 				}				
 			}
 	  		
