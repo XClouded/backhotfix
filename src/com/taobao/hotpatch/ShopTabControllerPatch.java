@@ -28,6 +28,12 @@ public class ShopTabControllerPatch implements IPatch{
 						null, this);
 	    Log.d("ShopTabControllerPatch", "shopTabController");
 	  	if (shopTabController == null) {
+	  		Log.d("ShopTabControllerPatch", "shopTabController null");
+	  		return;
+	  	}
+	  	
+	  	if (eventType == null) {
+	  		Log.d("ShopTabControllerPatch", "eventType null");
 	  		return;
 	  	}
 	  	
