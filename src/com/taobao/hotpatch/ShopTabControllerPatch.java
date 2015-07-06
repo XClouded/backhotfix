@@ -26,6 +26,12 @@ public class ShopTabControllerPatch implements IPatch{
 						context,
 						"com.taobao.tao.shop.homepage.event.EventType",
 						"com.taobao.shop", this);
+	    
+	    final Class<?> ISubscriberListener = PatchHelper
+				.loadClass(
+						context,
+						"com.taobao.tao.shop.homepage.event.ISubscriberListener",
+						"com.taobao.shop", this);
 	    Log.d("ShopTabControllerPatch", "shopTabController");
 	  	if (shopTabController == null) {
 	  		Log.d("ShopTabControllerPatch", "shopTabController null");
@@ -57,7 +63,7 @@ public class ShopTabControllerPatch implements IPatch{
 					Log.d("ShopTabControllerPatch", "adsadadadsadsa");
 //					Log.d("ShopTabControllerPatch", XposedHelpers.callMethod(eventType.getEnumConstants()[4], "name").toString());
 					Log.d("ShopTabControllerPatch","the enum is OK");
-					XposedHelpers.callMethod(mActivity, "registerSubscriber", eventType.getEnumConstants()[4], param.thisObject);					
+					XposedHelpers.callMethod(mActivity, "registerSubscriber", new Class<?>[]{eventType, ISubscriberListener}, eventType.getEnumConstants()[4], param.thisObject);					
 					Log.d("ShopTabControllerPatch", "callMethod");
 				}				
 			}
