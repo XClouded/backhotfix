@@ -47,12 +47,15 @@ public class ShopTabControllerPatch implements IPatch{
 				Object mActivity = XposedHelpers.getObjectField(param.thisObject, "a");
 				if (null != mActivity) {
 					Log.d("ShopTabControllerPatch", "null != mActivity");
-					Object enmu = eventType.getEnumConstants()[4];
+					Object[] enmu = eventType.getEnumConstants();
 					if(enmu == null) {
 						Log.d("ShopTabControllerPatch", "the enum is null");
 					}
+					for(Object j : enmu) {
+						Log.d("ShopTabControllerPatch", j.toString());
+					}
 					Log.d("ShopTabControllerPatch", "adsadadadsadsa");
-					Log.d("ShopTabControllerPatch", XposedHelpers.callMethod(eventType.getEnumConstants()[4], "name").toString());
+//					Log.d("ShopTabControllerPatch", XposedHelpers.callMethod(eventType.getEnumConstants()[4], "name").toString());
 					Log.d("ShopTabControllerPatch","the enum is OK");
 					XposedHelpers.callMethod(mActivity, "registerSubscriber", eventType.getEnumConstants()[4], param.thisObject);					
 					Log.d("ShopTabControllerPatch", "callMethod");
