@@ -21,6 +21,9 @@ public class ImageUtilPatch implements IPatch
 			return;
 		}
 
+		/**
+		 * 替换原来的方法
+		 */
 		XposedBridge.findAndHookMethod(imageUtilClass, "processImageUrl", boolean.class, String.class, Context.class, new XC_MethodReplacement()
 		{
 			@Override
