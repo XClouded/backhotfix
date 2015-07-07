@@ -20,7 +20,7 @@ public class ImageUtilPatch implements IPatch
 		{
 			return;
 		}
-		
+
 		XposedBridge.findAndHookMethod(imageUtilClass, "processImageUrl", boolean.class, String.class, Context.class, new XC_MethodReplacement()
 		{
 			@Override
@@ -29,12 +29,12 @@ public class ImageUtilPatch implements IPatch
 				boolean isBanner = (Boolean) methodHookParam.args[0];
 				String originUrl = (String) methodHookParam.args[1];
 				Context context = (Context) methodHookParam.args[2];
-				
+
 				if ("".equals(originUrl))
 					return "";
-				
+
 				String url = originUrl;
-				
+
 				if (NetWork.CONN_TYPE_WIFI.equals(NetWork.getNetConnType(context)))
 				{
 					// 如果是wifi情况下的话，是什么url就返回什么，因为默认的url就是质量最高的url
@@ -59,29 +59,17 @@ public class ImageUtilPatch implements IPatch
 			}
 		});
 	}
-	
-	public enum PatchImageSize {
 
-	    JPG_80X80("_80x80.jpg"),
-	    JPG_100X100("_100x100.jpg"),
-	    JPG_130X130("_130x130.jpg"),
-	    JPG_150X150("_150x150.jpg"),
-	    JPG_170X170("_170x170.jpg"),
-	    JPG_200X200("_200x200.jpg"),
-	    JPG_300X300("_300x300.jpg"),
-	    JPG_360X360("_360x360.jpg"),
-	    JPG_400X400("_400x400.jpg"),
-	    JPG_480X480("_480x480.jpg"),
-	    JPG_540X540("_540x540.jpg"),
-	    JPG_600X600("_600x600.jpg"),
-	    JPG_640X640("_640x640.jpg"),
-	    JPG_720X720("_720x720.jpg");
+	public enum PatchImageSize
+	{
+		JPG_300X300("_300x300.jpg");
 
-	    public final String size;
+		public final String	size;
 
-	    PatchImageSize(String size) {
-	        this.size = size;
-	    }
+		PatchImageSize(String size)
+		{
+			this.size = size;
+		}
 	}
 
 }
