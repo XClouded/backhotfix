@@ -1,7 +1,6 @@
 package com.taobao.hotpatch;
 
 import android.content.Context;
-import android.taobao.util.NetWork;
 import android.text.TextUtils;
 
 import com.taobao.android.dexposed.XC_MethodReplacement;
