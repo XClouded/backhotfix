@@ -30,7 +30,7 @@ public class ImageUtilPatch implements IPatch
 
 				if (TextUtils.isEmpty(originUrl))
 					return "";
-
+				
 				return originUrl;
 			}
 		});
