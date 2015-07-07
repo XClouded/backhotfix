@@ -2,7 +2,6 @@ package com.taobao.hotpatch;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.taobao.android.dexposed.XC_MethodReplacement;
 import com.taobao.android.dexposed.XposedBridge;
@@ -11,7 +10,7 @@ import com.taobao.hotpatch.patch.PatchParam;
 
 public class ImageUtilPatch implements IPatch
 {
-	private static final String TAG = "ImageUtilPatch";
+	/*private static final String TAG = "ImageUtilPatch";*/
 	
 	@Override
 	public void handlePatch(PatchParam patchParam) throws Throwable
@@ -20,7 +19,7 @@ public class ImageUtilPatch implements IPatch
 
 		Class<?> imageUtilClass = PatchHelper.loadClass(context, "com.taobao.headline.utils.d", "com.taobao.headline", this);
 		
-		Log.i(TAG, "imageUtilClass=" + imageUtilClass);
+		/*Log.i(TAG, "imageUtilClass=" + imageUtilClass);*/
 		
 		if (imageUtilClass == null)
 		{
@@ -37,7 +36,7 @@ public class ImageUtilPatch implements IPatch
 			{
 				String originUrl = (String) methodHookParam.args[1];
 
-				Log.i(TAG, "原始的图片URL: " + originUrl);
+				/*Log.i(TAG, "原始的图片URL: " + originUrl);*/
 				
 				if (TextUtils.isEmpty(originUrl))
 					return "";
