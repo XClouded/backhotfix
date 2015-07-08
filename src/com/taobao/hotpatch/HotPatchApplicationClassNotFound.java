@@ -39,6 +39,7 @@ public class HotPatchApplicationClassNotFound implements IPatch{
 	                    	Application app = (Application)XposedHelpers.callStaticMethod(
 	                    			clsBundleLifeCycleHandler, "newApplication", new Class[]{String.class, java.lang.ClassLoader.class}, appClassName, bundleClassLoader);
 	                        app.onCreate();
+	                        log.e("HotPatchApplicationClassNotFound"，applicationClassName);
 	                    } catch (Throwable e) {
 	                    	if (b.getArchive().isDexOpted() == true){
 	                    		throw new RuntimeException("atlas-2.3.59 dexopt success", e);   
