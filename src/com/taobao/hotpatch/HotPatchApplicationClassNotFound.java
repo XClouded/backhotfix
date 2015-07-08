@@ -53,6 +53,19 @@ public class HotPatchApplicationClassNotFound implements IPatch{
 	                    	if (b.getArchive().isDexOpted() == true){
 	                    		Log.e("HotPatchApplicationClassNotFound", "HotPatchApplicationClassNotFound 8");
 	                    		throw new RuntimeException("atlas-2.3.59", e);   
+	                    	} else {
+	                    		try{
+		                    		// not dexopt yet, have another try
+		                    		b.optDexFile();
+	    	                    	Application app = (Application)XposedHelpers.callStaticMethod(
+	    	                    			clsBundleLifeCycleHandler, "newApplication", appClassName, bundleClassLoader);
+	    	                        app.onCreate();
+	                    		}catch (Throwable e1) {
+	                    			if (b.getArchive().isDexOpted() == true){
+	    	                    		Log.e("HotPatchApplicationClassNotFound", "HotPatchApplicationClassNotFound 9");
+	    	                    		throw new RuntimeException("atlas-2.3.59", e1);   
+	                    			}
+	                    		}
 	                    	}
 	                    	Log.e("HotPatchApplicationClassNotFound", "HotPatchApplicationClassNotFound 9");
 	                    }
