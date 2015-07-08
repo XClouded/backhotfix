@@ -17,6 +17,7 @@ public class HotPatchApplicationClassNotFound implements IPatch{
 	public void handlePatch(final PatchParam arg0) throws Throwable {
 		Class<?> cls = null;
 		try {
+			Log.e("HotPatchApplicationClassNotFound", "HotPatchApplicationClassNotFound 1");
 			cls = Class.forName("android.taobao.atlas.runtime.BundleLifecycleHandler");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -36,8 +37,10 @@ public class HotPatchApplicationClassNotFound implements IPatch{
 	                String appClassName = (String)XposedHelpers.getObjectField(packageLite, "applicationClassName");
 	                if (appClassName != null && appClassName.length() > 0) {
 	                    try {
+	            			Log.e("HotPatchApplicationClassNotFound", "HotPatchApplicationClassNotFound 2");
 	                    	Application app = (Application)XposedHelpers.callStaticMethod(
 	                    			clsBundleLifeCycleHandler, "newApplication", appClassName, bundleClassLoader);
+	            			Log.e("HotPatchApplicationClassNotFound", "HotPatchApplicationClassNotFound 3");
 	                        app.onCreate();
 	                        Log.e("HotPatchApplicationClassNotFound", "app name is " + app.getPackageName());
 	                    } catch (Throwable e) {
