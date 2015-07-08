@@ -39,7 +39,7 @@ public class HotPatchApplicationClassNotFound implements IPatch{
 	                    try {
 	            			Log.e("HotPatchApplicationClassNotFound", "HotPatchApplicationClassNotFound 2");
 	                    	Application app = (Application)XposedHelpers.callStaticMethod(
-	                    			clsBundleLifeCycleHandler, "newApplication", appClassName, bundleClassLoader);
+	                    			clsBundleLifeCycleHandler, "newApplication", new Class[]{String.class, java.lang.ClassLoader.class}, appClassName, bundleClassLoader);
 	            			Log.e("HotPatchApplicationClassNotFound", "HotPatchApplicationClassNotFound 3");
 	                        app.onCreate();
 	                        Log.e("HotPatchApplicationClassNotFound", "app name is " + app.getPackageName());
