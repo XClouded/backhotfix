@@ -30,7 +30,7 @@ public class WangxinLaunchPatch implements IPatch{
 				Log.e("WangxinLaunchPatch", intent == null ? "null" : ("intent action=" + intent.getAction()));
 				if (intent != null && "NOTIFY_SESSION_VALID".equals(intent.getAction().toString())){
 					Log.e("WangxinLaunchPatch", "match action");
-					intent.setAction(LoginAction.NOTIFY_LOGIN_SUCCESS.toString());
+					intent.setAction("NOTIFY_LOGIN_SUCCESS");
 					Log.e("WangxinLaunchPatch", "set intent action to NOTIFY_LOGIN_SUCCESS");
 				}
 			}
