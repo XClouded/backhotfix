@@ -94,7 +94,7 @@
 		<dependency>
 			<groupId>com.taobao.android</groupId>
 			<artifactId>hotpatch</artifactId>
-			<version>2.2.1</version>
+			<version>2.5.0.1</version>
 			<type>jar</type>
 			<scope>provided</scope>
 		</dependency>

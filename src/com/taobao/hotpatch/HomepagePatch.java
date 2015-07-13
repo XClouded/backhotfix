@@ -9,6 +9,8 @@ import com.taobao.android.dexposed.XposedHelpers;
 import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchParam;
 
+import java.lang.reflect.Method;
+
 public class HomepagePatch implements IPatch{
 
 	@Override
@@ -28,9 +30,14 @@ public class HomepagePatch implements IPatch{
             protected Object replaceHookedMethod(MethodHookParam methodHookParam) throws Throwable {
 
                 Log.e("HomepagePatch", "hock method.");
-                XposedHelpers.callStaticMethod(Class.forName("com.taobao.tao.watchdog.a"), "stop");
 
-                return true;
+                Method method = XposedHelpers.findMethodBestMatch(Class.forName("com.taobao.baseactivity.CustomBaseActivity"), "dispatchTouchEvent", MotionEvent.class);
+                Boolean handled = (Boolean) XposedBridge.invokeNonVirtual(methodHookParam.thisObject, method, methodHookParam.args[0]);
+                if(handled) {
+                    XposedHelpers.callStaticMethod(Class.forName("com.taobao.tao.watchdog.a"), "stop");
+                }
+
+                return handled;
             }
 		});
 	}
