@@ -27,7 +27,7 @@ public class WangxinLaunchPatch implements IPatch{
 			protected void beforeHookedMethod(MethodHookParam param)
 					throws Throwable {
 				Intent intent = (Intent)param.args[1];
-				if (intent != null && "NOTIFY_SESSION_VAILD".equals(intent.getAction().toString())){
+				if (intent != null && "NOTIFY_SESSION_VALID".equals(intent.getAction().toString())){
 					intent.setAction(LoginAction.NOTIFY_LOGIN_SUCCESS.toString());
 					Log.e("WangxinLaunchPatch", "set intent action to NOTIFY_LOGIN_SUCCESS");
 				}
