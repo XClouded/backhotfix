@@ -32,10 +32,15 @@ public class HomepagePatch implements IPatch{
 
                 Log.e("HomepagePatch", "hock method.");
 
-                Method method = XposedHelpers.findMethodBestMatch(Activity.class, "dispatchTouchEvent", MotionEvent.class);
-                Boolean handled = (Boolean) XposedBridge.invokeNonVirtual(methodHookParam.thisObject, method, methodHookParam.args[0]);
-                if(handled) {
-                    XposedHelpers.callStaticMethod(Class.forName("com.taobao.tao.watchdog.a"), "stop");
+                boolean handled = true;
+                try {
+                    Method method = XposedHelpers.findMethodBestMatch(Activity.class, "dispatchTouchEvent", MotionEvent.class);
+                    handled = (Boolean) XposedBridge.invokeNonVirtual(methodHookParam.thisObject, method, methodHookParam.args[0]);
+                    if (handled) {
+                        XposedHelpers.callStaticMethod(Class.forName("com.taobao.tao.watchdog.a"), "stop");
+                    }
+                }catch(Exception e){
+                    Log.e("HomepagePatch", "hotpatch throw exception: " + e.getMessage());
                 }
 
                 return handled;
