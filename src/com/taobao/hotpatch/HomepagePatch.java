@@ -1,5 +1,6 @@
 package com.taobao.hotpatch;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -31,7 +32,7 @@ public class HomepagePatch implements IPatch{
 
                 Log.e("HomepagePatch", "hock method.");
 
-                Method method = XposedHelpers.findMethodBestMatch(Class.forName("com.taobao.baseactivity.CustomBaseActivity"), "dispatchTouchEvent", MotionEvent.class);
+                Method method = XposedHelpers.findMethodBestMatch(Activity.class, "dispatchTouchEvent", MotionEvent.class);
                 Boolean handled = (Boolean) XposedBridge.invokeNonVirtual(methodHookParam.thisObject, method, methodHookParam.args[0]);
                 if(handled) {
                     XposedHelpers.callStaticMethod(Class.forName("com.taobao.tao.watchdog.a"), "stop");
