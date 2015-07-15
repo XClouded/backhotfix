@@ -1,10 +1,8 @@
 package com.taobao.hotpatch;
 
-import android.app.Activity;
 import android.content.Context;
 import android.net.Proxy;
 import android.util.Log;
-import android.view.MotionEvent;
 import anetwork.channel.entity.RequestConfig;
 import anetwork.channel.http.NetworkStatusHelper;
 import com.taobao.android.dexposed.XC_MethodReplacement;
@@ -13,7 +11,6 @@ import com.taobao.android.dexposed.XposedHelpers;
 import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchParam;
 
-import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.URL;
@@ -24,14 +21,20 @@ public class ConnectionHelperPatch implements IPatch{
 	public void handlePatch(PatchParam arg0) throws Throwable {
 
 		final Context context = arg0.context;
-		Log.e("ConnectionHelperPatch", "beforeHookedMethod 1");
+		Log.e("ConnectionHelperPatch", "beforeHookedMethod");
 		final Class<?> connectionHelperCls = PatchHelper.loadClass(context, "anetwork.channel.http.ConnectionHelper", null, this);
 		if (connectionHelperCls == null){
 			Log.e("connectionHelperCls", "Cannot load ConnectionHelper class");
 			return;
 		}
+
+        final Class<?> RequestConfigCls = PatchHelper.loadClass(context, "anetwork.channel.entity.RequestConfig", null, this);
+        if (connectionHelperCls == null){
+            Log.e("connectionHelperCls", "Cannot load RequestConfig class");
+            return;
+        }
 		
-		XposedBridge.findAndHookMethod(connectionHelperCls, "getConnection", RequestConfig.class, URL.class, String.class, new XC_MethodReplacement() {
+		XposedBridge.findAndHookMethod(connectionHelperCls, "getConnection", RequestConfigCls, URL.class, String.class, new XC_MethodReplacement() {
 
             @Override
             protected Object replaceHookedMethod(MethodHookParam methodHookParam) throws Throwable {
