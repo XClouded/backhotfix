@@ -5,6 +5,7 @@ import android.net.Proxy;
 import android.util.Log;
 import anetwork.channel.entity.RequestConfig;
 import anetwork.channel.http.NetworkStatusHelper;
+import com.taobao.android.dexposed.XC_MethodHook;
 import com.taobao.android.dexposed.XC_MethodReplacement;
 import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.android.dexposed.XposedHelpers;
@@ -22,24 +23,24 @@ public class ConnectionHelperPatch implements IPatch{
 
 		final Context context = arg0.context;
 		Log.e("ConnectionHelperPatch", "beforeHookedMethod");
-		final Class<?> connectionHelperCls = PatchHelper.loadClass(context, "anetwork.channel.http.ConnectionHelper", null, this);
+		final Class<?> connectionHelperCls = PatchHelper.loadClass(context, "anetwork.channel.http.a", null, this);
 		if (connectionHelperCls == null){
 			Log.e("connectionHelperCls", "Cannot load ConnectionHelper class");
 			return;
 		}
 
-        final Class<?> RequestConfigCls = PatchHelper.loadClass(context, "anetwork.channel.entity.RequestConfig", null, this);
-        if (connectionHelperCls == null){
+        final Class<?> RequestConfigCls = PatchHelper.loadClass(context, "anetwork.channel.entity.g", null, this);
+        if (RequestConfigCls == null){
             Log.e("connectionHelperCls", "Cannot load RequestConfig class");
             return;
         }
-		
-		XposedBridge.findAndHookMethod(connectionHelperCls, "getConnection", RequestConfigCls, URL.class, String.class, new XC_MethodReplacement() {
+
+        XposedBridge.findAndHookMethod(connectionHelperCls, "getConnection", RequestConfigCls, URL.class, String.class, new XC_MethodReplacement() {
 
             @Override
             protected Object replaceHookedMethod(MethodHookParam methodHookParam) throws Throwable {
 
-                Log.e("ConnectionHelperPatch", "hook method.");
+                Log.e("ConnectionHelperPatch", "hook getConnection.");
 
                 try {
                     Object config = methodHookParam.args[0];
@@ -47,11 +48,13 @@ public class ConnectionHelperPatch implements IPatch{
                     Object seqNum = methodHookParam.args[2];
 
                     java.net.Proxy p=null;
+                    Log.e("ConnectionHelperPatch", "before get status");
                     if (Proxy.getDefaultHost() != null && NetworkStatusHelper.getStatus() == NetworkStatusHelper.NetworkStatus.WIFI) {
                         p = new java.net.Proxy(java.net.Proxy.Type.HTTP, new InetSocketAddress(Proxy.getDefaultHost(), Proxy.getDefaultPort()));
                     }
+                    Log.e("ConnectionHelperPatch", "end get status");
 
-                    Integer retryTimes = (Integer)XposedHelpers.callMethod(config, "getCurrentRetryTimes");
+                    Integer retryTimes = (Integer)XposedHelpers.callMethod(config, "getCurrentRedirectTimes");
 
                     HttpURLConnection conn = null;
                     if (p != null && retryTimes == 0) {
@@ -62,12 +65,12 @@ public class ConnectionHelperPatch implements IPatch{
 
                     String protocol = (String)XposedHelpers.callMethod(url, "getProtocol");
                     if ("https".equalsIgnoreCase(protocol)) {
-                        XposedHelpers.callStaticMethod(connectionHelperCls, "supportHttps",
-                                new Class[]{HttpURLConnection.class, RequestConfig.class, String.class},
+                        XposedHelpers.callStaticMethod(connectionHelperCls, "b",
+                                new Class[]{HttpURLConnection.class, RequestConfigCls, String.class},
                                 conn, config, seqNum);
                     }
-                    XposedHelpers.callStaticMethod(connectionHelperCls, "setConnectionProp",
-                            new Class[]{HttpURLConnection.class, RequestConfig.class, String.class},
+                    XposedHelpers.callStaticMethod(connectionHelperCls, "c",
+                            new Class[]{HttpURLConnection.class, RequestConfigCls, String.class},
                             conn, config, seqNum);
                 }catch(Exception e){
                     Log.e("ConnectionHelperPatch", "hotpatch throw exception.", e);
@@ -76,5 +79,6 @@ public class ConnectionHelperPatch implements IPatch{
                 return null;
             }
 		});
+        Log.e("ConnectionHelperPatch", "end HookedMethod.");
 	}
 }
