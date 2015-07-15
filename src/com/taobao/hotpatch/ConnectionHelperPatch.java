@@ -41,6 +41,7 @@ public class ConnectionHelperPatch implements IPatch{
             protected Object replaceHookedMethod(MethodHookParam methodHookParam) throws Throwable {
 
                 Log.e("ConnectionHelperPatch", "hook getConnection.");
+                HttpURLConnection conn = null;
 
                 try {
                     Object config = methodHookParam.args[0];
@@ -57,7 +58,7 @@ public class ConnectionHelperPatch implements IPatch{
                     Integer retryTimes = (Integer)XposedHelpers.callMethod(config, "getCurrentRedirectTimes");
                     Log.e("ConnectionHelperPatch", "retryTimes: " + retryTimes);
 
-                    HttpURLConnection conn = null;
+
                     if (p != null && retryTimes == 0) {
                         conn = (HttpURLConnection)XposedHelpers.callMethod(url, "openConnection", new Class[] {Proxy.class}, p);
                     } else {
@@ -73,6 +74,7 @@ public class ConnectionHelperPatch implements IPatch{
                     XposedHelpers.callStaticMethod(connectionHelperCls, "c",
                             new Class[]{HttpURLConnection.class, RequestConfigCls, String.class},
                             conn, config, seqNum);
+
                 }catch(Exception e){
                     Log.e("ConnectionHelperPatch", "hotpatch throw exception.", e);
                 }
