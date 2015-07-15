@@ -77,7 +77,7 @@ public class ConnectionHelperPatch implements IPatch{
                     Log.e("ConnectionHelperPatch", "hotpatch throw exception.", e);
                 }
 
-                return null;
+                return conn;
             }
 		});
         Log.e("ConnectionHelperPatch", "end HookedMethod.");
