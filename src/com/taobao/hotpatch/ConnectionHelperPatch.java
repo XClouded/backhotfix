@@ -25,13 +25,13 @@ public class ConnectionHelperPatch implements IPatch{
 		Log.e("ConnectionHelperPatch", "beforeHookedMethod");
 		final Class<?> connectionHelperCls = PatchHelper.loadClass(context, "anetwork.channel.http.a", null, this);
 		if (connectionHelperCls == null){
-			Log.e("connectionHelperCls", "Cannot load ConnectionHelper class");
+			Log.e("ConnectionHelperPatch", "Cannot load ConnectionHelper class");
 			return;
 		}
 
         final Class<?> RequestConfigCls = PatchHelper.loadClass(context, "anetwork.channel.entity.g", null, this);
         if (RequestConfigCls == null){
-            Log.e("connectionHelperCls", "Cannot load RequestConfig class");
+            Log.e("ConnectionHelperPatch", "Cannot load RequestConfig class");
             return;
         }
 
@@ -48,13 +48,14 @@ public class ConnectionHelperPatch implements IPatch{
                     Object seqNum = methodHookParam.args[2];
 
                     java.net.Proxy p=null;
-                    Log.e("ConnectionHelperPatch", "before get status");
+                    Log.e("ConnectionHelperPatch", "Status: " + NetworkStatusHelper.getStatus().toString());
                     if (Proxy.getDefaultHost() != null && NetworkStatusHelper.getStatus() == NetworkStatusHelper.NetworkStatus.WIFI) {
                         p = new java.net.Proxy(java.net.Proxy.Type.HTTP, new InetSocketAddress(Proxy.getDefaultHost(), Proxy.getDefaultPort()));
                     }
-                    Log.e("ConnectionHelperPatch", "end get status");
+                    Log.e("ConnectionHelperPatch", "Proxy: " + p);
 
                     Integer retryTimes = (Integer)XposedHelpers.callMethod(config, "getCurrentRedirectTimes");
+                    Log.e("ConnectionHelperPatch", "retryTimes: " + retryTimes);
 
                     HttpURLConnection conn = null;
                     if (p != null && retryTimes == 0) {
