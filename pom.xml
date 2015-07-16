@@ -251,6 +251,14 @@
 			<version>0.0.7</version>
 			<scope>provided</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>com.google.android</groupId>
+			<artifactId>support-v4</artifactId>
+			<type>jar</type>
+			<version>21.0.2-s5</version>
+			<scope>provided</scope>
+		</dependency>
 		
 		<dependency>
 			<groupId>com.taobao.android</groupId>
