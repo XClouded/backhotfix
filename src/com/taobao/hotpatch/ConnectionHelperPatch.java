@@ -40,7 +40,6 @@ public class ConnectionHelperPatch implements IPatch{
             @Override
             protected Object replaceHookedMethod(MethodHookParam methodHookParam) throws Throwable {
 
-                Log.e("ConnectionHelperPatch", "hook getConnection.");
                 HttpURLConnection conn = null;
 
                 try {
@@ -49,15 +48,11 @@ public class ConnectionHelperPatch implements IPatch{
                     Object seqNum = methodHookParam.args[2];
 
                     java.net.Proxy p=null;
-                    Log.e("ConnectionHelperPatch", "Status: " + NetworkStatusHelper.getStatus().toString());
                     if (Proxy.getDefaultHost() != null && NetworkStatusHelper.getStatus() == NetworkStatusHelper.NetworkStatus.WIFI) {
                         p = new java.net.Proxy(java.net.Proxy.Type.HTTP, new InetSocketAddress(Proxy.getDefaultHost(), Proxy.getDefaultPort()));
                     }
-                    Log.e("ConnectionHelperPatch", "Proxy: " + p);
 
                     Integer retryTimes = (Integer)XposedHelpers.callMethod(config, "getCurrentRedirectTimes");
-                    Log.e("ConnectionHelperPatch", "retryTimes: " + retryTimes);
-
 
                     if (p != null && retryTimes == 0) {
                         conn = (HttpURLConnection)XposedHelpers.callMethod(url, "openConnection", new Class[] {Proxy.class}, p);
