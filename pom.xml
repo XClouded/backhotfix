@@ -305,6 +305,7 @@
 					<addJarResources>true</addJarResources>
 					<secprocess>true</secprocess>
 					<signOnline>true</signOnline>
+					<buildAp>false</buildAp>
 					<jarsign>
 						<skip>true</skip>
 						<archiveDirectory />
