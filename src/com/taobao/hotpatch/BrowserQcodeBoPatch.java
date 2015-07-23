@@ -33,7 +33,7 @@ public class BrowserQcodeBoPatch implements IPatch{
 			return;
 		}
 		
-		final Method getTargetUrl = qcodeParserApiOutDataCls.getDeclaredMethod("getTargetUrl", Void.class);
+		final Method getTargetUrl = qcodeParserApiOutDataCls.getDeclaredMethod("getTargetUrl");
 		if(getTargetUrl == null){
 			Log.e("BrowserQcodeBoPatch", "Cannot load getTargetUrl method");
 			return;
@@ -46,7 +46,7 @@ public class BrowserQcodeBoPatch implements IPatch{
 
                 try {
                     Activity activity = (Activity)XposedHelpers.getObjectField(methodHookParam.thisObject, "mActivity");
-                	String url = (String)getTargetUrl.invoke(XposedHelpers.getObjectField(methodHookParam.thisObject, "mParserData"), Void.class);
+                    String url = (String)getTargetUrl.invoke(XposedHelpers.getObjectField(methodHookParam.thisObject, "mParserData"));
             		Log.e("BrowserQcodeBoPatch", "url begin:" + url);
             		if(url.indexOf("hybrid=true") == -1){
                     	if(url.indexOf("#") > 0){
@@ -71,12 +71,12 @@ public class BrowserQcodeBoPatch implements IPatch{
                     activity.finish();
             		Log.e("BrowserQcodeBoPatch", "findAndHookMethod success");
                 }catch(Exception e){
-                    Log.e("ConnectionHelperPatch", "hotpatch throw exception.", e);
+                    Log.e("BrowserQcodeBoPatch", "hotpatch throw exception.", e);
                 }
 
                 return true;
             }
 		});
-        Log.e("ConnectionHelperPatch", "end HookedMethod.");
+        Log.e("BrowserQcodeBoPatch", "end HookedMethod.");
 	}
 }
