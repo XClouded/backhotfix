@@ -8,6 +8,7 @@ import android.util.Log;
 import com.taobao.android.dexposed.XC_MethodReplacement;
 import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.android.dexposed.XposedHelpers;
+import com.taobao.android.nav.Nav;
 import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchParam;
 
@@ -23,11 +24,6 @@ public class BrowserQcodeBoPatch implements IPatch{
 		final Class<?> browserQcodeBoCls = PatchHelper.loadClass(context, "com.taobao.ecoupon.a.a.a", BUNDLE_NAME, this);
 		if (browserQcodeBoCls == null){
 			Log.e("BrowserQcodeBoPatch", "Cannot load BrowserQcodeBo class");
-			return;
-		}
-		final Class<?> browserActivityCls = PatchHelper.loadClass(context, "com.taobao.ecoupon.webview.BrowserActivity", BUNDLE_NAME, this);
-		if (browserActivityCls == null){
-			Log.e("BrowserQcodeBoPatch", "Cannot load BrowserActivity class");
 			return;
 		}
 		
@@ -50,7 +46,6 @@ public class BrowserQcodeBoPatch implements IPatch{
 
                 try {
                     Activity activity = (Activity)XposedHelpers.getObjectField(methodHookParam.thisObject, "mActivity");
-                	Intent intent = new Intent(activity, browserActivityCls);
                 	String url = (String)getTargetUrl.invoke(XposedHelpers.getObjectField(methodHookParam.thisObject, "mParserData"), Void.class);
             		Log.e("BrowserQcodeBoPatch", "url begin:" + url);
             		if(url.indexOf("hybrid=true") == -1){
@@ -72,9 +67,7 @@ public class BrowserQcodeBoPatch implements IPatch{
                     	}
             		}
             		Log.e("BrowserQcodeBoPatch", "url after:" + url);
-                 	intent.putExtra("BROWSER_INIT_URL", url);
-                	intent.putExtra("RECOMMEND_EXTRA_TITLE", "淘点点");
-                    activity.startActivity(intent);
+            		Nav.from(activity).toUri(url);
                     activity.finish();
             		Log.e("BrowserQcodeBoPatch", "findAndHookMethod success");
                 }catch(Exception e){
