@@ -1,3 +1,5 @@
 bin/
 gen/
 target/
+.idea/
+taobao-android-hotpatch-main.iml
