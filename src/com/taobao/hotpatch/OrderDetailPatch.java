@@ -37,6 +37,7 @@ public class OrderDetailPatch implements IPatch {
 				} else {
 					Log.i(TAG, "the mStorageComponent is not null!");
 					Object subCatIds = XposedHelpers.callMethod(mStorageComponent,"getSubAuctionIds");
+					Log.i(TAG,"subCatIds is:"+ subCatIds.toString());
 					Object result = XposedHelpers.callStaticMethod(orderDetailTools, "a", List.class, subCatIds);
 					Log.i(TAG,"result is : " + result.toString());
 					return (String)result;
