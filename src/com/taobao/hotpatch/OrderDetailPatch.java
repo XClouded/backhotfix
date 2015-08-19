@@ -2,8 +2,6 @@ package com.taobao.hotpatch;
 
 import android.content.Context;
 import android.util.Log;
-import android.view.View;
-import com.taobao.android.dexposed.XC_MethodHook;
 import com.taobao.android.dexposed.XC_MethodReplacement;
 import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.android.dexposed.XposedHelpers;
@@ -11,7 +9,6 @@ import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchParam;
 
 import java.util.List;
-import java.util.Objects;
 
 public class OrderDetailPatch implements IPatch {
 
