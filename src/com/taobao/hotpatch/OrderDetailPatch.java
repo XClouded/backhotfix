@@ -25,7 +25,7 @@ public class OrderDetailPatch implements IPatch {
 		final Class<?> storageComponent = PatchHelper.loadClass(context, "com.taobao.order.component.b.o","com.taobao.trade.order",this);
 		Log.i(TAG,"patch invoke");
 		if (orderDetailTools == null || storageComponent == null) {
-			Log.e("orderDetailToolsPatch", "orderDetailTools is null");
+			Log.i(TAG, "orderDetailTools is null");
 			return;
 		}
 
