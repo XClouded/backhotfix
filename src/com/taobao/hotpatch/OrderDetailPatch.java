@@ -20,9 +20,9 @@ public class OrderDetailPatch implements IPatch {
 		final Class<?> orderDetailTools = PatchHelper.loadClass(context, "com.taobao.order.common.helper.l", "com.taobao.trade.order",
 				this);
 		final Class<?> storageComponent = PatchHelper.loadClass(context, "com.taobao.order.component.b.o","com.taobao.trade.order",this);
-		Log.i(TAG,"patch invoke");
+//		Log.i(TAG,"patch invoke");
 		if (orderDetailTools == null || storageComponent == null) {
-			Log.i(TAG, "orderDetailTools is null");
+//			Log.i(TAG, "orderDetailTools is null");
 			return;
 		}
 
@@ -32,14 +32,14 @@ public class OrderDetailPatch implements IPatch {
 				Object mStorageComponent = methodHookParam.args[0];
 
 				if(mStorageComponent == null) {
-					Log.i(TAG, "the mStorageComponent is null");
+//					Log.i(TAG, "the mStorageComponent is null");
 					return null;
 				} else {
-					Log.i(TAG, "the mStorageComponent is not null!");
+//					Log.i(TAG, "the mStorageComponent is not null!");
 					Object subCatIds = XposedHelpers.callMethod(mStorageComponent,"getSubAuctionIds");
-					Log.i(TAG,"subCatIds is:"+ subCatIds.toString());
+//					Log.i(TAG,"subCatIds is:"+ subCatIds.toString());
 					Object result = XposedHelpers.callStaticMethod(orderDetailTools, "a", new Class[]{List.class}, subCatIds);
-					Log.i(TAG,"result is : " + result.toString());
+//					Log.i(TAG,"result is : " + result.toString());
 					return (String)result;
 				}
 
