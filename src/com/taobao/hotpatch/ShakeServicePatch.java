@@ -10,6 +10,7 @@ import com.taobao.hotpatch.patch.PatchParam;
 public class ShakeServicePatch implements IPatch {
 
     private static final String TAG = OrderDetailPatch.class.getSimpleName();
+
     @Override
     public void handlePatch(PatchParam arg0) throws Throwable {
 
@@ -25,14 +26,14 @@ public class ShakeServicePatch implements IPatch {
         XposedBridge.findAndHookMethod(shakeService, "registerService", shakeDelegate, new XC_MethodReplacement() {
             @Override
             protected Object replaceHookedMethod(MethodHookParam methodHookParam) throws Throwable {
-
-                try{
-                    XposedBridge.invokeOriginalMethod(methodHookParam.method,methodHookParam.thisObject,methodHookParam.args);
-                }catch(Throwable e){
-                    Log.e(TAG , e.toString());
+                Object object = null;
+                try {
+                    object = XposedBridge.invokeOriginalMethod(methodHookParam.method, methodHookParam.thisObject, methodHookParam.args);
+                } catch (Throwable e) {
+                    Log.e(TAG, e.toString());
                 }
-                return null;
-
+                Log.e(TAG, object.toString());
+                return object;
             }
         });
     }
