@@ -32,7 +32,7 @@ public class ShakeServicePatch implements IPatch {
                 } catch (Throwable e) {
                     Log.e(TAG, e.toString());
                 }
-
+                Log.e(TAG , "hook ok");
                 return true;
             }
         });
