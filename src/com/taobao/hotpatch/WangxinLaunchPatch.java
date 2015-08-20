@@ -9,29 +9,29 @@ import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchParam;
 
-public class WangxinLaunchPatch implements IPatch{
+public class WangxinLaunchPatch implements IPatch {
 
-	@Override
-	public void handlePatch(PatchParam arg0) throws Throwable {
-		final Context context = arg0.context;
-		Log.e("WangxinLaunchPatch", "beforeHookedMethod 1");
-		final Class<?> wxBundleLaunchReceiver = PatchHelper.loadClass(context, "com.taobao.tao.msgcenter.BundleLaunchReceiver", "com.taobao.wangxin", this);
-		if (wxBundleLaunchReceiver == null){
-			Log.e("WangxinLaunchPatch", "class is null");
-			return;
-		}
-		
-		XposedBridge.findAndHookMethod(wxBundleLaunchReceiver, "onReceive", Context.class, Intent.class, new XC_MethodHook() {
-			@Override
-			protected void beforeHookedMethod(MethodHookParam param)
-					throws Throwable {
-				Intent intent = (Intent)param.args[1];
-				Log.e("WangxinLaunchPatch", intent == null ? "null" : ("intent action=" + intent.getAction()));
-				if (intent != null && "NOTIFY_SESSION_VALID".equals(intent.getAction().toString())){
-					param.setResult(null);
-				}
-			}
-		});
-	}
+    @Override
+    public void handlePatch(PatchParam arg0) throws Throwable {
+        final Context context = arg0.context;
+        Log.e("WangxinLaunchPatch", "beforeHookedMethod 1");
+        final Class<?> wxBundleLaunchReceiver = PatchHelper.loadClass(context, "com.taobao.tao.msgcenter.BundleLaunchReceiver", "com.taobao.wangxin", this);
+        if (wxBundleLaunchReceiver == null) {
+            Log.e("WangxinLaunchPatch", "class is null");
+            return;
+        }
+
+        XposedBridge.findAndHookMethod(wxBundleLaunchReceiver, "onReceive", Context.class, Intent.class, new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param)
+                    throws Throwable {
+                Intent intent = (Intent) param.args[1];
+                Log.e("WangxinLaunchPatch", intent == null ? "null" : ("intent action=" + intent.getAction()));
+                if (intent != null && "NOTIFY_SESSION_VALID".equals(intent.getAction().toString())) {
+                    param.setResult(null);
+                }
+            }
+        });
+    }
 
 }

@@ -32,12 +32,8 @@ public class ShakeServicePatch implements IPatch {
                 } catch (Throwable e) {
                     Log.e(TAG, e.toString());
                 }
-                if (object != null) {
-                    Log.e(TAG, object.toString());
-                } else {
-                    Log.e(TAG, "object == null");
-                }
-                return object;
+
+                return true;
             }
         });
     }
