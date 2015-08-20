@@ -18,6 +18,7 @@ public class LoginSessionValidPatch implements IPatch{
 	
 	@Override
 	public void handlePatch(PatchParam arg0) throws Throwable {
+		Log.d(TAG, "handlePatch start");
 		final Context context = arg0.context;
 		final Class<?> sessionManagerClazz = PatchHelper.loadClass(context, "com.taobao.login4android.session.SessionManager", null,
 				this);
