@@ -22,7 +22,7 @@ public class LoginSessionValidPatch implements IPatch{
 		final Context context = arg0.context;
 		final Class<?> sessionManagerClazz = PatchHelper.loadClass(context, "com.taobao.login4android.session.SessionManager", null,
 				this);
-		final Class<?> sessionManagerThreadClazz = PatchHelper.loadClass(context, "com.taobao.login4android.session.SessionManager.a", null,
+		final Class<?> sessionManagerThreadClazz = PatchHelper.loadClass(context, "com.taobao.login4android.session.a", null,
 				this);
 		final Class<?> loginStatusClazz = PatchHelper.loadClass(context, "com.taobao.login4android.constants.LoginStatus", null,
 				this);
