@@ -50,7 +50,7 @@ public class LoginSessionValidPatch implements IPatch{
 			@Override
 			protected Object replaceHookedMethod(final MethodHookParam arg0)
 					throws Throwable {
-				Log.d(TAG, "replaceHookedMethod start");
+				Log.e(TAG, "replaceHookedMethod start");
 				BroadcastReceiver receiver = new BroadcastReceiver() {
                     public void onReceive(Context context, android.content.Intent intent) {
                         if (intent != null && TextUtils.equals(intent.getAction(), "NOTIFY_CLEAR_SESSION")) {
@@ -72,6 +72,7 @@ public class LoginSessionValidPatch implements IPatch{
 			}
 			
 		});
+		Log.e(TAG, "replaceHookedMethod end");
 	}
 
 }
