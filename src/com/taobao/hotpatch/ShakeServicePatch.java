@@ -1,0 +1,37 @@
+package com.taobao.hotpatch;
+
+import android.util.Log;
+import com.taobao.android.dexposed.XC_MethodReplacement;
+import com.taobao.android.dexposed.XposedBridge;
+import com.taobao.hotpatch.patch.IPatch;
+import com.taobao.hotpatch.patch.PatchParam;
+
+public class ShakeServicePatch implements IPatch {
+
+    private static final String TAG = OrderDetailPatch.class.getSimpleName();
+    @Override
+    public void handlePatch(PatchParam arg0) throws Throwable {
+
+        final Class<?> shakeService = PatchHelper.loadClass(context, "com.taobao.android.shake.api.b", null,
+                this);
+        final Class<?> shakeDelegate = PatchHelper.loadClass(context, "com.taobao.android.shake.ui.ShakeHomePageTipViewDelegate", null,
+                this);
+        if (shakeService == null || shakeDelegate == null) {
+            return;
+        }
+
+        XposedBridge.findAndHookMethod(shakeService, "registerService", shakeDelegate, new XC_MethodReplacement() {
+            @Override
+            protected Object replaceHookedMethod(MethodHookParam methodHookParam) throws Throwable {
+
+                try{
+                    XposedBridge.invokeOriginalMethod(methodHookParam.method,methodHookParam.thisObject,methodHookParam.args);
+                }catch(Throwable e){
+                    Log.e(TAG , e.toString());
+                }
+                return null;
+
+            }
+        });
+    }
+}
