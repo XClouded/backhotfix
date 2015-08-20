@@ -9,7 +9,7 @@ import com.taobao.hotpatch.patch.PatchParam;
 
 public class ShakeServicePatch implements IPatch {
 
-    private static final String TAG = OrderDetailPatch.class.getSimpleName();
+    private static final String TAG = ShakeServicePatch.class.getSimpleName();
 
     @Override
     public void handlePatch(PatchParam arg0) throws Throwable {
@@ -32,7 +32,11 @@ public class ShakeServicePatch implements IPatch {
                 } catch (Throwable e) {
                     Log.e(TAG, e.toString());
                 }
-                Log.e(TAG, object.toString());
+                if (object != null) {
+                    Log.e(TAG, object.toString());
+                } else {
+                    Log.e(TAG, "object == null");
+                }
                 return object;
             }
         });
