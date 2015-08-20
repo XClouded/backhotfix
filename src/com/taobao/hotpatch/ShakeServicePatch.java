@@ -1,5 +1,6 @@
 package com.taobao.hotpatch;
 
+import android.content.Context;
 import android.util.Log;
 import com.taobao.android.dexposed.XC_MethodReplacement;
 import com.taobao.android.dexposed.XposedBridge;
@@ -12,6 +13,7 @@ public class ShakeServicePatch implements IPatch {
     @Override
     public void handlePatch(PatchParam arg0) throws Throwable {
 
+        final Context context = arg0.context;
         final Class<?> shakeService = PatchHelper.loadClass(context, "com.taobao.android.shake.api.b", null,
                 this);
         final Class<?> shakeDelegate = PatchHelper.loadClass(context, "com.taobao.android.shake.ui.ShakeHomePageTipViewDelegate", null,
