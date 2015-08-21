@@ -30,9 +30,9 @@ public class ShakeServicePatch implements IPatch {
                 try {
                     object = XposedBridge.invokeOriginalMethod(methodHookParam.method, methodHookParam.thisObject, methodHookParam.args);
                 } catch (Throwable e) {
-                    Log.e(TAG, e.toString());
+                    Log.e(TAG, "invoke origin method" + e.toString());
                 }
-                Log.e(TAG , "hook ok");
+                Log.e(TAG, "hook ok");
                 return true;
             }
         });
