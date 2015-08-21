@@ -32,9 +32,13 @@ public class ShakeServicePatch implements IPatch {
                 } catch (Throwable e) {
                     Log.e(TAG, "invoke origin method" + e.toString());
                 }
-                Log.e(TAG , "hook ok");
-//                methodHookParam.setResult(object);
-                return object;
+                Log.e(TAG, "hook ok");
+                if (object == null) {
+                    Log.e(TAG, "object == null");
+                    return false;
+                } else {
+                    return object;
+                }
             }
         });
     }
