@@ -20,10 +20,11 @@ public class WangxinLaunchPatch implements IPatch{
 			return;
 		}
 		
-		XposedBridge.findAndHookMethod(msgCenterServiceClazz, "wxLogin", Boolean.class, new XC_MethodHook() {
+		XposedBridge.findAndHookMethod(msgCenterServiceClazz, "wxLogin", boolean.class, new XC_MethodHook() {
 			@Override
 			protected void beforeHookedMethod(MethodHookParam param)
 					throws Throwable {
+				Log.e("WangxinLaunchPatch", "beforeHookedMethod 2");
 				boolean isOnResume = (Boolean)param.args[0];
 				Log.e("WangxinLaunchPatch", "isOnResume=" + isOnResume);
 				if (!isOnResume){
