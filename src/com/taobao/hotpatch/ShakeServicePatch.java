@@ -31,18 +31,18 @@ public class ShakeServicePatch implements IPatch {
                 Object object = null;
                 try {
                     object = XposedBridge.invokeOriginalMethod(methodHookParam.method, methodHookParam.thisObject, methodHookParam.args);
-                    Log.e(TAG, "invoke normal!");
+                    //Log.e(TAG, "invoke normal!");
                 } catch (Throwable e) {
                     if(e instanceof InvocationTargetException) {
                         InvocationTargetException exception = (InvocationTargetException)e;
                         Throwable w = exception.getTargetException();
-                        Log.e(TAG, "InvocationTargetException : " + w.toString());
+                        //Log.e(TAG, "InvocationTargetException : " + w.toString());
                     }
-                    Log.e(TAG, "invoke origin method" + e.toString());
+                    //Log.e(TAG, "invoke origin method" + e.toString());
                 }
-                Log.e(TAG, "hook ok");
+                //Log.e(TAG, "hook ok");
                 if (object == null) {
-                    Log.e(TAG, "object == null");
+                    //Log.e(TAG, "object == null");
                     return false;
                 } else {
                     return object;
