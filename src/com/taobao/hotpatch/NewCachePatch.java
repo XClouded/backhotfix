@@ -13,7 +13,7 @@ public class NewCachePatch implements IPatch {
 	private static final String TAG = NewCachePatch.class.getSimpleName();
 	@Override
 	public void handlePatch(PatchParam arg0) throws Throwable {
-/*
+
 		final Context context = arg0.context;
 		
 		final Class<?> MultiNBCacheClass = PatchHelper.loadClass(context, "com.taobao.nbcache.f", null,
@@ -43,6 +43,6 @@ public class NewCachePatch implements IPatch {
 				param.setResult(false);
 			}
 		});
-		*/
+		
 	}
 }
