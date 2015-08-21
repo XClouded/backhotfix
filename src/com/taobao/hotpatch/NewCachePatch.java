@@ -15,6 +15,7 @@ public class NewCachePatch implements IPatch {
 	public void handlePatch(PatchParam arg0) throws Throwable {
 
 		final Context context = arg0.context;
+		/*
 		final Class<?> MultiNBCacheClass = PatchHelper.loadClass(context, "com.taobao.nbcache.f", null,
 				this);
 		if (MultiNBCacheClass == null) {
@@ -28,7 +29,7 @@ public class NewCachePatch implements IPatch {
 				param.setResult(false);
 			}
 		});
-
+        */
 		final Class<?> PhenixNewCacheClass = PatchHelper.loadClass(context, "com.taobao.phenix.impl.e", null,
 				this);
 		if (PhenixNewCacheClass == null) {
