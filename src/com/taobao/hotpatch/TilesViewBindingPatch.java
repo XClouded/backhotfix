@@ -19,16 +19,17 @@ public class TilesViewBindingPatch implements IPatch{
 	@Override
 	public void handlePatch(PatchParam param) throws Throwable {
 		
-		Class<?> feedDongtaiViewBindingClass=PatchHelper.loadClass(param.context, 
-				"com.taobao.tao.allspark.dongtai.c.i", "com.taobao.allspark", this);//FeedDongtaiViewBinding
-		replaceViewBindingContext(feedDongtaiViewBindingClass);
+		Class<?> tilesViewBinding=PatchHelper.loadClass(param.context, 
+				"com.taobao.tao.allspark.dongtai.c.p", "com.taobao.allspark", this);//TilesViewBinding
+		replaceViewBindingContext(tilesViewBinding);
 		
-		Class<?> feedImageViewBindingClass=PatchHelper.loadClass(param.context, 
-				"com.taobao.tao.allspark.dongtai.c.j", "com.taobao.allspark", this);//FeedImageViewBinding
-		replaceViewBindingContext(feedImageViewBindingClass);
+		Class<?> bannerImageViewBinding=PatchHelper.loadClass(param.context, 
+				"com.taobao.tao.allspark.dongtai.c.a", "com.taobao.allspark", this);//BannerImageViewBinding
+		replaceViewBindingContext(bannerImageViewBinding);
 		
 		Class<?> viewBingClass=PatchHelper.loadClass(param.context, 
 				"com.taobao.allspark.card.viewbinding.c", "com.taobao.allspark", this);
+		
 		XposedBridge.findAndHookMethod(viewBingClass, "setImage", //对ViewBinding的setImage进行拦截，修改TileViewBinding子类setImage的图片参数
 				ImageView.class,String.class,int.class,int.class,new XC_MethodReplacement() {
 					
@@ -75,8 +76,8 @@ public class TilesViewBindingPatch implements IPatch{
 				Class<?> WTGlobalClass=XposedHelpers.findClass("com.taobao.allspark.c", //WTGlobals
 						param.thisObject.getClass().getClassLoader());
 				Context wtContext=(Context) XposedHelpers.callStaticMethod(WTGlobalClass, "getApplication");
-				XposedHelpers.setObjectField(param.thisObject, "mContext", wtContext);
-				Log.e(TAG, "replace context for "+className);
+				XposedHelpers.setObjectField(param.thisObject, "mContext", wtContext); //替换上下文
+				Log.e(TAG, "replace context for "+className+" context="+wtContext);
 			}
 		});
 	}
