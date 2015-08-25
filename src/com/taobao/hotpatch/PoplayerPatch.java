@@ -30,8 +30,9 @@ public class PoplayerPatch implements IPatch {
 			// 这个方法执行的相当于在原oncreate方法后面，加上一段逻辑。
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-				View instance = (View) param.thisObject;
+				final View instance = (View) param.thisObject;
 				instance.setBackgroundColor(0x00000001);
+				Log.i("poplayer-hotpatch", "backgroud.changed");
 			}
 		});
 	}
