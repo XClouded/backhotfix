@@ -31,7 +31,9 @@ public class OpenMarketPatch implements IPatch {
 					throws Throwable {
 				Log.i(TAG, "beforeHookedMethod");
 				Object obj = XposedHelpers.getSurroundingThis(param.thisObject);
+				Log.i(TAG, "getSurroundingThis invoke");
 				Object safeHandler = XposedHelpers.getObjectField(obj, "mSafeHandler");
+				Log.i(TAG, "getObjectField invoke");
 				if(null == safeHandler) {
 					Log.i(TAG, "safeHandler is null");
 					param.setResult(null);
