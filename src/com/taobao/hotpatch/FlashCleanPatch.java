@@ -105,7 +105,11 @@ public class FlashCleanPatch implements IPatch {
 				    		Log.e("FlashCleanPatch", "FlashCleanPatch 8");
 				    		// Original  ConfigStorage.putStringVal("wv_main_config", "package", String.valueOf(Long.MAX_VALUE));  
 				    		XposedHelpers.callStaticMethod(clsConfigStorage, "putStringVal", "wv_main_config", "package", String.valueOf(Long.MAX_VALUE));
-				    		Log.e("FlashCleanPatch", "FlashCleanPatch 9");
+				    		String val = (String)XposedHelpers.callStaticMethod(clsConfigStorage, "getStringVal",  "wv_main_config", "package");
+				    		if (val.equalsIgnoreCase(String.valueOf(Long.MAX_VALUE))){
+				    			Log.e("FlashCleanPatch", "FlashCleanPatch 8.5 " + val);
+				    		}
+				    		Log.e("FlashCleanPatch", "FlashCleanPatch 9 " + val);
 				    	}catch(Throwable e){
 				    		Log.e("FlashCleanPatch", "FlashCleanPatch 10 " + e);
 				    	}
