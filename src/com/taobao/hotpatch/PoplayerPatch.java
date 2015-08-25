@@ -16,7 +16,7 @@ public class PoplayerPatch implements IPatch {
 
 	@Override
 	public void handlePatch(PatchParam arg0) throws Throwable {
-
+		Log.i("poplayer-hotpatch", "handlePatch.enter");
 		final Context context = arg0.context;
 		final Class<?> penetrateWebViewClazz = PatchHelper.loadClass(context, "com.taobao.tbpoplayer.PenetrateWebView", null,
 				null);
