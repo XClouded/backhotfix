@@ -18,9 +18,9 @@ public class OpenMarketPatch implements IPatch {
 		final Class<?> openMarketFragment = PatchHelper.loadClass(context, "com.taobao.openmarket.ui.e", "com.taobao.openmarket",
 				this);
 		final Class<?> phenixEventClass = PatchHelper.loadClass(context, "com.taobao.phenix.intf.event.c", null, this); 
-		Log.i(TAG,"patch invoke");
+	//	Log.i(TAG,"patch invoke");
 		if (openMarketFragment == null) {
-			Log.i(TAG, "openMarketFragment is null");
+	//		Log.i(TAG, "openMarketFragment is null");
 			return;
 		}
 		
@@ -29,18 +29,16 @@ public class OpenMarketPatch implements IPatch {
 			@Override
 			protected void beforeHookedMethod(MethodHookParam param)
 					throws Throwable {
-				Log.i(TAG, "beforeHookedMethod");
+	//			Log.i(TAG, "beforeHookedMethod");
 				Object obj = XposedHelpers.getObjectField(param.thisObject, "b");
-				Log.i(TAG, "getSurroundingThis invoke");
+	//			Log.i(TAG, "getSurroundingThis invoke");
 				Object safeHandler = XposedHelpers.getObjectField(obj, "mSafeHandler");
-				Log.i(TAG, "getObjectField invoke");
+	//			Log.i(TAG, "getObjectField invoke");
 				if(null == safeHandler) {
-					Log.i(TAG, "safeHandler is null");
+	//				Log.i(TAG, "safeHandler is null");
 					param.setResult(true);
 					return;
-				} else {
-					Log.i(TAG, "safeHandler is not null");
-				}
+				} 
 			}
 			
 		});
