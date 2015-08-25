@@ -8,6 +8,7 @@ import android.os.StatFs;
 
 import com.taobao.android.dexposed.XC_MethodHook;
 import com.taobao.android.dexposed.XposedBridge;
+import com.taobao.android.dexposed.XposedHelpers;
 import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchParam;
 
@@ -17,7 +18,8 @@ public class FlashCleanPatch implements IPatch {
 	@Override
 	public void handlePatch(PatchParam arg0) throws Throwable {
 		final Context context = arg0.context;
-		
+		final String GlobalConfigClassName = "android.taobao.windvane.config.a"; //Original android.taobao.windvane.config.GlobalConfig
+		final String ConfigStorageClassName = "android.taobao.windvane.util.c"; // Original android.taobao.windvane.util.ConfigStorage 
 		if (!PatchHelper.isRunInMainProcess(context)) {
 			return;
 		}
@@ -32,6 +34,9 @@ public class FlashCleanPatch implements IPatch {
 					protected void beforeHookedMethod(MethodHookParam param){
 						// Return once >100M
 						if (validateDiskSize(THRESHOLD) ){
+							if (validateDiskSize(THRESHOLD*2)){
+								rollbackPackageApk();
+							}
 							return;
 						}
 						
@@ -67,7 +72,18 @@ public class FlashCleanPatch implements IPatch {
 						return true;
 				    }
 				    
-				    // Need redo on 5.3.2
+				    private void rollbackPackageApk(){
+				    	try{
+				    		Class<?> clsGlobalConfig = PatchHelper.loadClass(context, GlobalConfigClassName, null,null);
+					    	XposedHelpers.setStaticObjectField(clsGlobalConfig, "context", context);
+				    		Class<?> clsConfigStorage = PatchHelper.loadClass(context, ConfigStorageClassName, null,null);
+				    		
+				    		// Original  ConfigStorage.putStringVal("wv_main_config", "package", String.valueOf(Long.MAX_VALUE));  
+				    		XposedHelpers.callStaticMethod(clsConfigStorage, "putStringVal", "wv_main_config", "package", "0");
+				    	}catch(Throwable e){
+				    	}
+				    }
+				    
 				    private void cleanPackageApk(){
 				    	try{				    		
 				    		// delete /data/data/com.taobao.taobao/files/wvapp 
@@ -75,6 +91,13 @@ public class FlashCleanPatch implements IPatch {
 				    		if (wvappDir.exists()){
 				    			deleteDirectory(wvappDir);
 				    		}
+				    		
+				    		Class<?> clsGlobalConfig = PatchHelper.loadClass(context, GlobalConfigClassName, null,null);
+					    	XposedHelpers.setStaticObjectField(clsGlobalConfig, "context", context);
+				    		Class<?> clsConfigStorage = PatchHelper.loadClass(context, ConfigStorageClassName, null,null);
+				    		
+				    		// Original  ConfigStorage.putStringVal("wv_main_config", "package", String.valueOf(Long.MAX_VALUE));  
+				    		XposedHelpers.callStaticMethod(clsConfigStorage, "putStringVal", "wv_main_config", "package", String.valueOf(Long.MAX_VALUE));
 				    	}catch(Throwable e){
 				    	}
 				    }
