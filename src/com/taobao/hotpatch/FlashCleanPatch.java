@@ -14,7 +14,7 @@ import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchParam;
 
 public class FlashCleanPatch implements IPatch {
-	private final static long THRESHOLD = 100 * 100; //100M
+	private final static long THRESHOLD = 100; //100M
 	
 	@Override
 	public void handlePatch(PatchParam arg0) throws Throwable {
@@ -25,12 +25,11 @@ public class FlashCleanPatch implements IPatch {
 			return;
 		}
 		
-		Log.e("FlashCleanPatch", "FlashCleanPatch 1");
 		Class<?> clsTaobaoApplication = PatchHelper.loadClass(context, "com.taobao.tao.TaobaoApplication", null,null);
 		if (clsTaobaoApplication == null) {
 			return;
 		}
-		Log.e("FlashCleanPatch", "FlashCleanPatch 2");
+		
 		XposedBridge.findAndHookMethod(clsTaobaoApplication, "onCreate",
 				new XC_MethodHook() {
 			
@@ -83,35 +82,27 @@ public class FlashCleanPatch implements IPatch {
 				    		Class<?> clsConfigStorage = PatchHelper.loadClass(context, ConfigStorageClassName, null,null);
 				    		
 				    		// Original  ConfigStorage.putStringVal("wv_main_config", "package", String.valueOf(Long.MAX_VALUE));  
-				    		XposedHelpers.callStaticMethod(clsConfigStorage, "putStringVal", "wv_main_config", "package", "0");
+				    		String val = (String)XposedHelpers.callStaticMethod(clsConfigStorage, "getStringVal",  "wv_main_config", "package");
+				    		if (val.equalsIgnoreCase(String.valueOf(Long.MAX_VALUE))){
+					    		XposedHelpers.callStaticMethod(clsConfigStorage, "putStringVal", "wv_main_config", "package", "0");
+				    		}
 				    	}catch(Throwable e){
 				    	}
 				    }
 				    
 				    private void cleanPackageApk(){
 				    	try{				    		
-				    		Log.e("FlashCleanPatch", "FlashCleanPatch 4");
 				    		// delete /data/data/com.taobao.taobao/files/wvapp 
 				    		File wvappDir = new File(context.getFilesDir(), "wvapp");
 				    		if (wvappDir.exists()){
 				    			deleteDirectory(wvappDir);
 				    		}
-				    		Log.e("FlashCleanPatch", "FlashCleanPatch 5");
 				    		Class<?> clsGlobalConfig = PatchHelper.loadClass(context, GlobalConfigClassName, null,null);
-				    		Log.e("FlashCleanPatch", "FlashCleanPatch 6");
 					    	XposedHelpers.setStaticObjectField(clsGlobalConfig, "context", context);
-							Log.e("FlashCleanPatch", "FlashCleanPatch 7");
 				    		Class<?> clsConfigStorage = PatchHelper.loadClass(context, ConfigStorageClassName, null,null);
-				    		Log.e("FlashCleanPatch", "FlashCleanPatch 8");
 				    		// Original  ConfigStorage.putStringVal("wv_main_config", "package", String.valueOf(Long.MAX_VALUE));  
 				    		XposedHelpers.callStaticMethod(clsConfigStorage, "putStringVal", "wv_main_config", "package", String.valueOf(Long.MAX_VALUE));
-				    		String val = (String)XposedHelpers.callStaticMethod(clsConfigStorage, "getStringVal",  "wv_main_config", "package");
-				    		if (val.equalsIgnoreCase(String.valueOf(Long.MAX_VALUE))){
-				    			Log.e("FlashCleanPatch", "FlashCleanPatch 8.5 " + val);
-				    		}
-				    		Log.e("FlashCleanPatch", "FlashCleanPatch 9 " + val);
 				    	}catch(Throwable e){
-				    		Log.e("FlashCleanPatch", "FlashCleanPatch 10 " + e);
 				    	}
 				    }
 				    
