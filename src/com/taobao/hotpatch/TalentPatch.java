@@ -19,9 +19,8 @@ public class TalentPatch implements IPatch {
 		final Context context = arg0.context;
 		final Class<?> feedDetailActivity = PatchHelper.loadClass(context, "com.taobao.tao.talent.feed.FeedDetailActivity", "com.taobao.talent",
 				this);
-	//	Log.i(TAG,"patch invoke");
+		Log.i(TAG,"patch loaded");
 		if (feedDetailActivity == null) {
-	//		Log.i(TAG, "openMarketFragment is null");
 			return;
 		}
 		
