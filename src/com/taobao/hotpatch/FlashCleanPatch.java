@@ -12,6 +12,7 @@ import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.android.dexposed.XposedHelpers;
 import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchParam;
+import com.taobao.statistic.TBS;
 
 public class FlashCleanPatch implements IPatch {
 	private final static long THRESHOLD = 100; //100M
@@ -42,7 +43,7 @@ public class FlashCleanPatch implements IPatch {
 							}
 							return;
 						}
-						
+						logAvailableDiskSize("Will do clean");					
 						// Clean updated apk
 						cleanUpdatedApk();
 						if (validateDiskSize(THRESHOLD)){
@@ -57,6 +58,20 @@ public class FlashCleanPatch implements IPatch {
 						
 						// Clean windwine packageapk
 						cleanPackageApk();
+						
+						logAvailableDiskSize("after clean");
+					}
+					
+					private void logAvailableDiskSize(String msg){
+						try {
+			                File path = Environment.getDataDirectory();
+			                StatFs stat = new StatFs(path.getPath());
+			                long availableBlocks = stat.getAvailableBlocks();
+			                long blockSize = stat.getBlockSize();
+			                TBS.Ext.commitEvent(61005, -41, "availabe size " + (availableBlocks * blockSize),  msg);
+			                Log.e("FlashCleanPatch", "availabe size " + (availableBlocks * blockSize) + " " + msg);
+						} catch(Exception e){
+				        }
 					}
 										
 				    private boolean validateDiskSize(long millSize){
