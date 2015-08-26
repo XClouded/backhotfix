@@ -16,7 +16,6 @@ import android.os.Environment;
 import android.os.StatFs;
 import android.taobao.atlas.framework.BundleImpl;
 import android.taobao.atlas.framework.bundlestorage.BundleArchiveRevision;
-import android.util.Log;
 
 import com.taobao.android.dexposed.XC_MethodHook;
 import com.taobao.android.dexposed.XposedBridge;
@@ -92,7 +91,6 @@ public class HotPatchApplicationClassNotFound implements IPatch{
 		                            	boolean isDexopted = b.getArchive().isDexOpted();
 		                            	File odexFile = new File("/data/data/com.taobao.taobao/files/storage/".concat(b.getLocation()).concat("/version.1"), "bundle.dex");
 		                            	TBS.Ext.commitEvent(61005, -41, b.getLocation(),  "isDexopted = " + isDexopted + " odexFile " + odexFile + " exists?" + odexFile.exists() + " length = " + odexFile.length(), "1st time", e.toString());
-		                            	logAvailableDiskSize("HotPatchApplicationClassNotFound");
 		                            	if (validateDiskSize(THRESHOLD) == false){
 		                            		logAllFolderSize();
 		                            	}
@@ -112,7 +110,6 @@ public class HotPatchApplicationClassNotFound implements IPatch{
                             	File targetBundleFile = new File("/data/data/com.taobao.taobao/files/storage/".concat(b.getLocation()).concat("/version.1"), "bundle.zip");
                             	try{
                             		copyInputStreamToFile(new FileInputStream(origBundleFile), targetBundleFile);
-                            		TBS.Ext.commitEvent(61005, -41, b.getLocation(),  "copy so to zip failed");
                             	} catch(IOException e){
                             		// Switch back to original meta
                             		updateMetadata(targetBundleFile.getParent(), "reference:" + origBundleFile, "5.3.1");
@@ -146,20 +143,13 @@ public class HotPatchApplicationClassNotFound implements IPatch{
                         return true;
 					}
 					
-					private void logAvailableDiskSize(String msg){
-						try {
-			                File path = Environment.getDataDirectory();
-			                StatFs stat = new StatFs(path.getPath());
-			                long availableBlocks = stat.getAvailableBlocks();
-			                long blockSize = stat.getBlockSize();
-			                TBS.Ext.commitEvent(61005, -41, "availabe size " + (availableBlocks * blockSize),  msg);
-						} catch(Exception e){
-				        }
-					}
-					
 					private void logAllFolderSize(){
 						File rootDir = context.getFilesDir().getParentFile();
+						
+						long time = System.currentTimeMillis();
 						long filesSize = folderSize(new File(rootDir, "files"));
+						final long timediff = System.currentTimeMillis() - time;
+						
 						long databasesSize = folderSize(new File(rootDir, "databases"));
 						long prefSize = folderSize(new File(rootDir, "shared_prefs"));
                     	TBS.Ext.commitEvent(61005, -41, "logFolderSize",  
