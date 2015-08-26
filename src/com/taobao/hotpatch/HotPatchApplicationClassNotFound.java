@@ -27,14 +27,17 @@ import com.taobao.hotpatch.patch.PatchParam;
 import com.taobao.statistic.TBS;
 
 public class HotPatchApplicationClassNotFound implements IPatch{
-	private final static long THRESHOLD = 100 * 100; //100M
+	private final static long THRESHOLD = 100; //100M
 	
 	@Override
 	public void handlePatch(final PatchParam arg0) throws Throwable {
 		final Context context = arg0.context;
+		if (!PatchHelper.isRunInMainProcess(context)) {
+			return;
+		}
+		Log.e("HotPatchApplicationClassNotFound", "in main process.");
 		final String DelegateComponentClassName = "android.taobao.atlas.runtime.i"; //android.taobao.atlas.runtime.DelegateComponent
 		
-		Log.e("HotPatchApplicationClassNotFound", "HotPatchApplicationClassNotFound 1");
         TBS.Ext.commitEvent(61005, -41, "",  "HotPatchApplicationClassNotFound donwload success");
 		Class<?> cls = null;
 		try {
@@ -42,11 +45,10 @@ public class HotPatchApplicationClassNotFound implements IPatch{
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-		Log.e("HotPatchApplicationClassNotFound", "HotPatchApplicationClassNotFound 2");
+		
 		XposedBridge.findAndHookMethod(cls, "started", org.osgi.framework.Bundle.class, new XC_MethodHook() {
 					protected void beforeHookedMethod(MethodHookParam param)
 							throws Throwable {
-						Log.e("HotPatchApplicationClassNotFound", "HotPatchApplicationClassNotFound 3");
 						boolean ret = false;
 						try{
 							ret = tryToStartBundle(param);
@@ -68,7 +70,6 @@ public class HotPatchApplicationClassNotFound implements IPatch{
 			        } // End of beforeHookedMethod()
 
 					private boolean tryToStartBundle(MethodHookParam param) throws Throwable {
-						Log.e("HotPatchApplicationClassNotFound", "HotPatchApplicationClassNotFound 3");
 						// load application from AndroidManifest.xml
 						BundleImpl b = (BundleImpl)param.args[0];
 						String location = b.getLocation();
@@ -77,30 +78,23 @@ public class HotPatchApplicationClassNotFound implements IPatch{
 		            	Class<?> clsBundleLifeCycleHandler = Class.forName("android.taobao.atlas.runtime.BundleLifecycleHandler");
 						Object packageLite = XposedHelpers.callStaticMethod(clsDelegateComponent, "getPackage", location);
 						Boolean needAnotherTry = false;
-						Log.e("HotPatchApplicationClassNotFound", "HotPatchApplicationClassNotFound 4");
 						if (packageLite == null){
 							return false;
 						}
-						Log.e("HotPatchApplicationClassNotFound", "HotPatchApplicationClassNotFound 5");
 		                String appClassName = (String)XposedHelpers.getObjectField(packageLite, "applicationClassName");
 		                if (appClassName != null && appClassName.length() > 0) {
 		                    try {
-		                    	Log.e("HotPatchApplicationClassNotFound", "HotPatchApplicationClassNotFound 6");
 		                    	Application app = (Application)XposedHelpers.callStaticMethod(
 		                    			clsBundleLifeCycleHandler, "newApplication", new Class[]{String.class, java.lang.ClassLoader.class}, appClassName, bundleClassLoader);
 		                        app.onCreate();
-		                        Log.e("HotPatchApplicationClassNotFound", "HotPatchApplicationClassNotFound 7");
 	                            } catch (Throwable e) {
-	                            	Log.e("HotPatchApplicationClassNotFound", "HotPatchApplicationClassNotFound 8");
 									if (e.toString().contains("ClassNotFoundException")){
-										Log.e("HotPatchApplicationClassNotFound", "HotPatchApplicationClassNotFound 9");
 		                            	needAnotherTry = true;
 			                    		// Monitor
 		                            	boolean isDexopted = b.getArchive().isDexOpted();
 		                            	File odexFile = new File("/data/data/com.taobao.taobao/files/storage/".concat(b.getLocation()).concat("/version.1"), "bundle.dex");
 		                            	TBS.Ext.commitEvent(61005, -41, b.getLocation(),  "isDexopted = " + isDexopted + " odexFile " + odexFile + " exists?" + odexFile.exists() + " length = " + odexFile.length(), "1st time", e.toString());
 		                            	if (validateDiskSize(THRESHOLD) == false){
-		                            		Log.e("HotPatchApplicationClassNotFound", "HotPatchApplicationClassNotFound 10");
 		                            		logAllFolderSize();
 		                            	}
 									} else {
@@ -111,7 +105,6 @@ public class HotPatchApplicationClassNotFound implements IPatch{
 			                   
                         if (needAnotherTry == true){
                     		try{
-                    			Log.e("HotPatchApplicationClassNotFound", "HotPatchApplicationClassNotFound 11");
 	                    		// not dexopt yet, have another try
                             	File odexFile = new File("/data/data/com.taobao.taobao/files/storage/".concat(b.getLocation()).concat("/version.1"), "bundle.dex");
                             	odexFile.delete();
@@ -119,7 +112,6 @@ public class HotPatchApplicationClassNotFound implements IPatch{
                             	File origBundleFile = b.getArchive().getArchiveFile();
                             	File targetBundleFile = new File("/data/data/com.taobao.taobao/files/storage/".concat(b.getLocation()).concat("/version.1"), "bundle.zip");
                             	try{
-                            		Log.e("HotPatchApplicationClassNotFound", "HotPatchApplicationClassNotFound 12");
                             		copyInputStreamToFile(new FileInputStream(origBundleFile), targetBundleFile);
                             	} catch(IOException e){
                             		// Switch back to original meta
@@ -127,7 +119,6 @@ public class HotPatchApplicationClassNotFound implements IPatch{
                             		return false;
                             	}
                             	
-                            	Log.e("HotPatchApplicationClassNotFound", "HotPatchApplicationClassNotFound 13");
                             	//Hack bundleFile
                             	BundleArchiveRevision archive = b.getArchive().getCurrentRevision();
                         		XposedHelpers.setObjectField(archive, "f", targetBundleFile);
@@ -137,12 +128,10 @@ public class HotPatchApplicationClassNotFound implements IPatch{
 		                    	Application app = (Application)XposedHelpers.callStaticMethod(
 		                    			clsBundleLifeCycleHandler, "newApplication", new Class[]{String.class, java.lang.ClassLoader.class}, appClassName, bundleClassLoader);
     	                        app.onCreate();
-    	                        Log.e("HotPatchApplicationClassNotFound", "HotPatchApplicationClassNotFound 14");
     	                        // Monitor
                             	TBS.Ext.commitEvent(61005, -41, b.getLocation(),  "dexopt success ", "2nd time");	
                     		}catch (Throwable e1) {
 								if (e1.toString().contains("ClassNotFoundException")){
-									Log.e("HotPatchApplicationClassNotFound", "HotPatchApplicationClassNotFound 15");
 		                    		// Monitor
 	                            	boolean isDexopted = b.getArchive().isDexOpted();
 	                            	File odexFile = new File("/data/data/com.taobao.taobao/files/storage/".concat(b.getLocation()).concat("/version.1"), "bundle.dex");
@@ -163,13 +152,10 @@ public class HotPatchApplicationClassNotFound implements IPatch{
 						long time = System.currentTimeMillis();
 						long filesSize = folderSize(new File(rootDir, "files"));
 						final long timediff = System.currentTimeMillis() - time;
-						Log.e("HotPatchApplicationClassNotFound caculate files folder size cost ", timediff + " milliseconds");
 						
 						long databasesSize = folderSize(new File(rootDir, "databases"));
 						long prefSize = folderSize(new File(rootDir, "shared_prefs"));
                     	TBS.Ext.commitEvent(61005, -41, "logFolderSize",  
-                    			"filesSize = " + filesSize + " databasesSize =  " + databasesSize + " prefSize =" + prefSize);
-                    	Log.e("HotPatchApplicationClassNotFound caculate files folder size cost ",
                     			"filesSize = " + filesSize + " databasesSize =  " + databasesSize + " prefSize =" + prefSize);
 					}
 					
