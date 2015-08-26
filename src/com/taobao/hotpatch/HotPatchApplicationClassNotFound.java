@@ -12,12 +12,10 @@ import java.nio.channels.FileChannel;
 
 import android.app.Application;
 import android.content.Context;
-import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
 import android.taobao.atlas.framework.BundleImpl;
 import android.taobao.atlas.framework.bundlestorage.BundleArchiveRevision;
-import android.util.Log;
 
 import com.taobao.android.dexposed.XC_MethodHook;
 import com.taobao.android.dexposed.XposedBridge;
@@ -35,7 +33,6 @@ public class HotPatchApplicationClassNotFound implements IPatch{
 		if (!PatchHelper.isRunInMainProcess(context)) {
 			return;
 		}
-		Log.e("HotPatchApplicationClassNotFound", "in main process.");
 		final String DelegateComponentClassName = "android.taobao.atlas.runtime.i"; //android.taobao.atlas.runtime.DelegateComponent
 		
         TBS.Ext.commitEvent(61005, -41, "",  "HotPatchApplicationClassNotFound donwload success");
