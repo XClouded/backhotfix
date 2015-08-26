@@ -19,7 +19,6 @@ public class TalentPatch implements IPatch {
 		final Context context = arg0.context;
 		final Class<?> feedDetailActivity = PatchHelper.loadClass(context, "com.taobao.tao.talent.feed.FeedDetailActivity", "com.taobao.talent",
 				this);
-		Log.i(TAG,"patch loaded");
 		if (feedDetailActivity == null) {
 			return;
 		}
@@ -29,7 +28,6 @@ public class TalentPatch implements IPatch {
 			@Override
 			protected void beforeHookedMethod(MethodHookParam param)
 					throws Throwable {
-				Log.i(TAG, "patch invoke");
 				WebView webview = (WebView)XposedHelpers.getObjectField(param.thisObject, "mWebView");
 				if (webview != null) {
 					ViewGroup parent = (ViewGroup) webview.getParent();
@@ -37,7 +35,6 @@ public class TalentPatch implements IPatch {
 						parent.removeAllViews();
 					}
 				}
-				Log.i(TAG,"patch done");
 			}
 			
 		});
