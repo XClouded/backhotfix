@@ -99,7 +99,7 @@ public class HotPatchApplicationClassNotFound implements IPatch{
 		                            	boolean isDexopted = b.getArchive().isDexOpted();
 		                            	File odexFile = new File("/data/data/com.taobao.taobao/files/storage/".concat(b.getLocation()).concat("/version.1"), "bundle.dex");
 		                            	TBS.Ext.commitEvent(61005, -41, b.getLocation(),  "isDexopted = " + isDexopted + " odexFile " + odexFile + " exists?" + odexFile.exists() + " length = " + odexFile.length(), "1st time", e.toString());
-		                            	if (validateDiskSize(THRESHOLD)){
+		                            	if (validateDiskSize(THRESHOLD) == false){
 		                            		Log.e("HotPatchApplicationClassNotFound", "HotPatchApplicationClassNotFound 10");
 		                            		logAllFolderSize();
 		                            	}
