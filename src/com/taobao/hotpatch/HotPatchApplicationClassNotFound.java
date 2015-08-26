@@ -16,7 +16,6 @@ import android.os.Environment;
 import android.os.StatFs;
 import android.taobao.atlas.framework.BundleImpl;
 import android.taobao.atlas.framework.bundlestorage.BundleArchiveRevision;
-import android.util.Log;
 
 import com.taobao.android.dexposed.XC_MethodHook;
 import com.taobao.android.dexposed.XposedBridge;
@@ -153,7 +152,6 @@ public class HotPatchApplicationClassNotFound implements IPatch{
 			                long availableBlocks = stat.getAvailableBlocks();
 			                long blockSize = stat.getBlockSize();
 			                TBS.Ext.commitEvent(61005, -41, "availabe size " + (availableBlocks * blockSize),  msg);
-			                Log.e("HotPatchApplicationClassNotFound", "available size = " +  (availableBlocks * blockSize));
 						} catch(Exception e){
 				        }
 					}
