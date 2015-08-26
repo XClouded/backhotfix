@@ -169,6 +169,8 @@ public class HotPatchApplicationClassNotFound implements IPatch{
 						long prefSize = folderSize(new File(rootDir, "shared_prefs"));
                     	TBS.Ext.commitEvent(61005, -41, "logFolderSize",  
                     			"filesSize = " + filesSize + " databasesSize =  " + databasesSize + " prefSize =" + prefSize);
+                    	Log.e("HotPatchApplicationClassNotFound caculate files folder size cost ",
+                    			"filesSize = " + filesSize + " databasesSize =  " + databasesSize + " prefSize =" + prefSize);
 					}
 					
 					private long folderSize(File directory) {
