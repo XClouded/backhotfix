@@ -15,7 +15,7 @@ import com.taobao.hotpatch.patch.PatchParam;
 import com.taobao.statistic.TBS;
 
 public class FlashCleanPatch implements IPatch {
-	private final static long THRESHOLD = 100 * 100; //100M
+	private final static long THRESHOLD = 100; //100M
 	
 	@Override
 	public void handlePatch(PatchParam arg0) throws Throwable {
@@ -60,6 +60,7 @@ public class FlashCleanPatch implements IPatch {
 						cleanPackageApk();
 						
 						logAvailableDiskSize("after clean");
+						
 					}
 					
 					private void logAvailableDiskSize(String msg){
