@@ -153,7 +153,6 @@ public class HotPatchApplicationClassNotFound implements IPatch{
 			                long availableBlocks = stat.getAvailableBlocks();
 			                long blockSize = stat.getBlockSize();
 			                TBS.Ext.commitEvent(61005, -41, "availabe size " + (availableBlocks * blockSize),  msg);
-			                Log.e("HotPatchApplicationClassNotFound", "available size = " +  (availableBlocks * blockSize));
 						} catch(Exception e){
 				        }
 					}
