@@ -30,18 +30,21 @@ public class ScancodeBrowserActivity implements IPatch {
             return;
         }
 
+        Log.e("ScancodePatch", "scancodeBaseBrowserActivityWebViewClient is not null");
+
         XposedBridge.findAndHookMethod(scancodeBaseBrowserActivityWebViewClient, "shouldOverrideUrlLoading", WebView.class, String.class, new XC_MethodReplacement() {
 
                     @Override
                     protected Object replaceHookedMethod(MethodHookParam methodHookParam) throws Throwable {
                         boolean result = false;
+                        Log.e("ScancodePatch", "begin method");
                         try {
                             WebView webView = (WebView) methodHookParam.args[0];
                             String url = (String) methodHookParam.args[1];
                             Context theContext = webView.getContext().getApplicationContext();
                             result = Nav.from(theContext).toUri(url);
                         } catch (Throwable e) {
-
+                            Log.e("ScancodePatch", e.getLocalizedMessage());
                         }
                         return result;
                     }
