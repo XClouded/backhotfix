@@ -21,7 +21,7 @@ import android.taobao.windvane.webview.WVWebViewClient;
 /**
  * Created by hansonglhs on 15/8/27.
  */
-public class ScancodeBrowserActivity implements IPatch {
+public class ScancodeBrowserActivityPatch implements IPatch {
 
     @Override
     public void handlePatch(PatchParam arg0) throws Throwable {
@@ -47,16 +47,19 @@ public class ScancodeBrowserActivity implements IPatch {
                                 @Override
                                 public void onPageFinished(WebView view, String url) {
                                     super.onPageFinished(view, url);
-                                    if (bgView.isShown()) {
+                                    if (bgView != null && bgView.isShown()) {
                                         bgView.setVisibility(View.GONE);
                                     }
-                                    if (progress.isShown()) {
+                                    if (progress != null && progress.isShown()) {
                                         progress.setVisibility(View.INVISIBLE);
                                     }
                                 }
 
                                 @Override
                                 public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                                    if (theContext == null) {
+                                        return super.shouldOverrideUrlLoading(view, url);
+                                    }
                                     if(Nav.from(theContext.getApplicationContext()).toUri(url)) {
                                         return true;
                                     }
@@ -66,7 +69,7 @@ public class ScancodeBrowserActivity implements IPatch {
                                 @Override
                                 public void onPageStarted(WebView view, String url, Bitmap favicon) {
                                     super.onPageStarted(view, url, favicon);
-                                    if (!progress.isShown()) {
+                                    if (progress != null && !progress.isShown()) {
                                         progress.setVisibility(View.VISIBLE);
                                     }
                                 }
