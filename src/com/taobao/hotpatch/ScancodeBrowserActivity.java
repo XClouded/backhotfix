@@ -27,6 +27,7 @@ public class ScancodeBrowserActivity implements IPatch {
         final Class<?> scancodeBaseBrowserActivityWebViewClient = PatchHelper.loadClass(context, "com.taobao.taobao.scancode.barcode.util.ScancodeBaseBrowserActivity$1", "com.taobao.android.scancode",
                 this);
         if (scancodeBaseBrowserActivityWebViewClient == null) {
+            Log.e("ScancodePatch", "scancodeBaseBrowserActivityWebViewClient is null");
             return;
         }
 
