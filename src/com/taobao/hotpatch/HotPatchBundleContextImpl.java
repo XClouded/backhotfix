@@ -7,9 +7,10 @@ import android.util.Log;
 
 import com.taobao.android.dexposed.XC_MethodHook;
 import com.taobao.android.dexposed.XposedBridge;
+import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchParam;
 
-public class HotPatchBundleContextImpl {
+public class HotPatchBundleContextImpl implements IPatch {
 
 	public void handlePatch(PatchParam arg0) throws Throwable {
         Log.e("HotPatchBundleContextImpl", "HotPatchBundleContextImpl 1");
