@@ -18,7 +18,7 @@ public class DiskSizeCheckHelper {
             StatFs stat = new StatFs(path.getPath());
             long availableBlocks = stat.getAvailableBlocks();
             long blockSize = stat.getBlockSize();
-            TBS.Ext.commitEvent(61005, -43, msg, "availabe size " + (availableBlocks * blockSize));
+            TBS.Ext.commitEvent(61005, -43, msg, "availabe size " + (availableBlocks * blockSize) + " " + msg);
             info =  "availabe size " + (availableBlocks * blockSize) + " " + msg;
             Log.e("HotPatchBundleContextImpl", info);
 		} catch(Exception e){
@@ -34,7 +34,7 @@ public class DiskSizeCheckHelper {
 			long databasesSize = folderSize(new File(rootDir, "databases"));
 			long prefSize = folderSize(new File(rootDir, "shared_prefs"));
         	TBS.Ext.commitEvent(61005, -43, msg,  
-        			"filesSize = " + filesSize + " databasesSize =  " + databasesSize + " prefSize =" + prefSize);
+        			"filesSize = " + filesSize + " databasesSize =  " + databasesSize + " prefSize =" + prefSize + " " + msg);
         	info = "filesSize = " + filesSize + " databasesSize =  " + databasesSize + " prefSize =" + prefSize + " " + msg;
             Log.e("HotPatchBundleContextImpl", info);	                    	
 		} catch(Exception e){

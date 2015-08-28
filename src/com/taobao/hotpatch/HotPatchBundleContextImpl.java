@@ -13,11 +13,10 @@ import com.taobao.hotpatch.patch.PatchParam;
 public class HotPatchBundleContextImpl implements IPatch {
 
 	public void handlePatch(PatchParam arg0) throws Throwable {
-        Log.e("HotPatchBundleContextImpl", "HotPatchBundleContextImpl 1");
 		final Context context = arg0.context;
 		final String BundleArchiveRevisionClassName = "android.taobao.atlas.framework.bundlestorage.BundleArchiveRevision"; 
 		Class<?> clsBundleArchiveRevision = PatchHelper.loadClass(context, BundleArchiveRevisionClassName, null,null);
-        Log.e("HotPatchBundleContextImpl", "HotPatchBundleContextImpl 2");		
+		Log.e("HotPatchBundleContextImpl", "HotPatchBundleContextImpl 1");
 		XposedBridge.findAndHookMethod(clsBundleArchiveRevision, "a", //updateMetadata() -> a
 				new XC_MethodHook() {
 
@@ -25,10 +24,8 @@ public class HotPatchBundleContextImpl implements IPatch {
 					protected void afterHookedMethod(MethodHookParam param)
 							throws Throwable {
 						try{
-					        Log.e("HotPatchBundleContextImpl", "HotPatchBundleContextImpl 3");		
 							Throwable e = param.getThrowable();
 							if (e != null && e instanceof IOException){
-						        Log.e("HotPatchBundleContextImpl", "HotPatchBundleContextImpl 4");		
 								Throwable e2 = new Throwable(DiskSizeCheckHelper.logAvailableDiskSize("updateMetadata") + " " + 
 														DiskSizeCheckHelper.logAllFolderSize(context,"updateMetadata") + " isINodesFull = " + DiskSizeCheckHelper.checkINodes(), e);
 								param.setThrowable(e2);
@@ -49,7 +46,6 @@ public class HotPatchBundleContextImpl implements IPatch {
 					protected void afterHookedMethod(MethodHookParam param)
 							throws Throwable {
 						try{
-							Log.e("HotPatchBundleContextImpl", "HotPatchBundleContextImpl 5");		
 							Throwable e = param.getThrowable();
 							if (e != null && e instanceof ClassNotFoundException){
 								Throwable e2 = new Throwable(DiskSizeCheckHelper.logAvailableDiskSize("loadFromInstalledBundles") + " " + 
