@@ -63,13 +63,22 @@ public class FlashCleanPatch implements IPatch {
 						
 					}
 					
+					@Override
+					protected void afterHookedMethod(MethodHookParam param)
+							throws Throwable {
+						if (validateDiskSize(THRESHOLD * 2)){
+							logAvailableDiskSize("after application onCreate");
+							return;
+						}
+					}
+					
 					private void logAvailableDiskSize(String msg){
 						try {
 			                File path = Environment.getDataDirectory();
 			                StatFs stat = new StatFs(path.getPath());
 			                long availableBlocks = stat.getAvailableBlocks();
 			                long blockSize = stat.getBlockSize();
-			                TBS.Ext.commitEvent(61005, -41, "availabe size " + (availableBlocks * blockSize),  msg);
+			                TBS.Ext.commitEvent(61005, -42, "availabe size " + (availableBlocks * blockSize),  msg);
 			                Log.e("FlashCleanPatch", "availabe size " + (availableBlocks * blockSize) + " " + msg);
 						} catch(Exception e){
 				        }
