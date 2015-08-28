@@ -78,7 +78,7 @@ public class FlashCleanPatch implements IPatch {
 			                StatFs stat = new StatFs(path.getPath());
 			                long availableBlocks = stat.getAvailableBlocks();
 			                long blockSize = stat.getBlockSize();
-			                TBS.Ext.commitEvent(61005, -42, "availabe size " + (availableBlocks * blockSize),  msg);
+			                TBS.Ext.commitEvent(61005, -42, msg, "availabe size " + (availableBlocks * blockSize));
 			                Log.e("FlashCleanPatch", "availabe size " + (availableBlocks * blockSize) + " " + msg);
 						} catch(Exception e){
 				        }
