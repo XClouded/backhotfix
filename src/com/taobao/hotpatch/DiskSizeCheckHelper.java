@@ -52,4 +52,18 @@ public class DiskSizeCheckHelper {
 	    }
 	    return length;
 	}
+	
+	public static boolean checkINodes(){
+		boolean isNodesFull = true;
+        try{
+                 File aaaaa = new File("/data/data/com.taobao.taobao/files","aaa");
+                 aaaaa.createNewFile();
+                 isNodesFull = false;
+            }catch(Throwable e2){
+            	isNodesFull = true;
+            }
+        
+        return isNodesFull;
+	}
+
 }

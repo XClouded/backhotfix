@@ -29,7 +29,7 @@ public class HotPatchBundleContextImpl implements IPatch {
 						if (e != null && e instanceof IOException){
 					        Log.e("HotPatchBundleContextImpl", "HotPatchBundleContextImpl 4");		
 							Throwable e2 = new Throwable(DiskSizeCheckHelper.logAvailableDiskSize("updateMetadata") + " " + 
-													DiskSizeCheckHelper.logAllFolderSize(context,"updateMetadata"), e);
+													DiskSizeCheckHelper.logAllFolderSize(context,"updateMetadata") + " isINodesFull = " + DiskSizeCheckHelper.checkINodes(), e);
 							param.setThrowable(e2);
 						}
 					}
@@ -49,7 +49,7 @@ public class HotPatchBundleContextImpl implements IPatch {
 						Throwable e = param.getThrowable();
 						if (e != null && e instanceof ClassNotFoundException){
 							Throwable e2 = new Throwable(DiskSizeCheckHelper.logAvailableDiskSize("loadFromInstalledBundles") + " " + 
-													DiskSizeCheckHelper.logAllFolderSize(context, "loadFromInstalledBundles"), e);
+													DiskSizeCheckHelper.logAllFolderSize(context, "loadFromInstalledBundles") + " isINodesFull = " + DiskSizeCheckHelper.checkINodes(), e);
 							param.setThrowable(e2);
 						}
 					}
