@@ -24,13 +24,16 @@ public class HotPatchBundleContextImpl implements IPatch {
 					@Override
 					protected void afterHookedMethod(MethodHookParam param)
 							throws Throwable {
-				        Log.e("HotPatchBundleContextImpl", "HotPatchBundleContextImpl 3");		
-						Throwable e = param.getThrowable();
-						if (e != null && e instanceof IOException){
-					        Log.e("HotPatchBundleContextImpl", "HotPatchBundleContextImpl 4");		
-							Throwable e2 = new Throwable(DiskSizeCheckHelper.logAvailableDiskSize("updateMetadata") + " " + 
-													DiskSizeCheckHelper.logAllFolderSize(context,"updateMetadata") + " isINodesFull = " + DiskSizeCheckHelper.checkINodes(), e);
-							param.setThrowable(e2);
+						try{
+					        Log.e("HotPatchBundleContextImpl", "HotPatchBundleContextImpl 3");		
+							Throwable e = param.getThrowable();
+							if (e != null && e instanceof IOException){
+						        Log.e("HotPatchBundleContextImpl", "HotPatchBundleContextImpl 4");		
+								Throwable e2 = new Throwable(DiskSizeCheckHelper.logAvailableDiskSize("updateMetadata") + " " + 
+														DiskSizeCheckHelper.logAllFolderSize(context,"updateMetadata") + " isINodesFull = " + DiskSizeCheckHelper.checkINodes(), e);
+								param.setThrowable(e2);
+							}
+						}catch (Throwable e){
 						}
 					}
 					
@@ -45,12 +48,15 @@ public class HotPatchBundleContextImpl implements IPatch {
 					@Override
 					protected void afterHookedMethod(MethodHookParam param)
 							throws Throwable {
-						Log.e("HotPatchBundleContextImpl", "HotPatchBundleContextImpl 5");		
-						Throwable e = param.getThrowable();
-						if (e != null && e instanceof ClassNotFoundException){
-							Throwable e2 = new Throwable(DiskSizeCheckHelper.logAvailableDiskSize("loadFromInstalledBundles") + " " + 
-													DiskSizeCheckHelper.logAllFolderSize(context, "loadFromInstalledBundles") + " isINodesFull = " + DiskSizeCheckHelper.checkINodes(), e);
-							param.setThrowable(e2);
+						try{
+							Log.e("HotPatchBundleContextImpl", "HotPatchBundleContextImpl 5");		
+							Throwable e = param.getThrowable();
+							if (e != null && e instanceof ClassNotFoundException){
+								Throwable e2 = new Throwable(DiskSizeCheckHelper.logAvailableDiskSize("loadFromInstalledBundles") + " " + 
+														DiskSizeCheckHelper.logAllFolderSize(context, "loadFromInstalledBundles") + " isINodesFull = " + DiskSizeCheckHelper.checkINodes(), e);
+								param.setThrowable(e2);
+							}
+						}catch (Throwable e){
 						}
 					}
 					
