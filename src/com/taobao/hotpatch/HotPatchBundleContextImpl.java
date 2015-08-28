@@ -18,7 +18,7 @@ public class HotPatchBundleContextImpl implements IPatch {
 		final String BundleArchiveRevisionClassName = "android.taobao.atlas.framework.bundlestorage.BundleArchiveRevision"; 
 		Class<?> clsBundleArchiveRevision = PatchHelper.loadClass(context, BundleArchiveRevisionClassName, null,null);
         Log.e("HotPatchBundleContextImpl", "HotPatchBundleContextImpl 2");		
-		XposedBridge.findAndHookMethod(clsBundleArchiveRevision, "updateMetadata",
+		XposedBridge.findAndHookMethod(clsBundleArchiveRevision, "a", //updateMetadata() -> a
 				new XC_MethodHook() {
 
 					@Override
@@ -39,7 +39,7 @@ public class HotPatchBundleContextImpl implements IPatch {
 					
 				});
 	
-		final String ClassLoadFromBundleClassName = "android.taobao.atlas.runtime.ClassLoadFromBundle";  //android.taobao.atlas.runtime.ClassLoadFromBundle
+		final String ClassLoadFromBundleClassName = "android.taobao.atlas.runtime.e";  //android.taobao.atlas.runtime.ClassLoadFromBundle
 		Class<?> clsClassLoadFromBundleClassName = PatchHelper.loadClass(context, ClassLoadFromBundleClassName, null,null);
 		
 		XposedBridge.findAndHookMethod(clsClassLoadFromBundleClassName, "loadFromInstalledBundles", //loadFromInstalledBundles
