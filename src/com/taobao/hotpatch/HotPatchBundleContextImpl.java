@@ -42,7 +42,7 @@ public class HotPatchBundleContextImpl implements IPatch {
 		final String ClassLoadFromBundleClassName = "android.taobao.atlas.runtime.e";  //android.taobao.atlas.runtime.ClassLoadFromBundle
 		Class<?> clsClassLoadFromBundleClassName = PatchHelper.loadClass(context, ClassLoadFromBundleClassName, null,null);
 		
-		XposedBridge.findAndHookMethod(clsClassLoadFromBundleClassName, "loadFromInstalledBundles", //loadFromInstalledBundles
+		XposedBridge.findAndHookMethod(clsClassLoadFromBundleClassName, "a", //loadFromInstalledBundles
 				String.class, new XC_MethodHook() {
 
 					@Override
