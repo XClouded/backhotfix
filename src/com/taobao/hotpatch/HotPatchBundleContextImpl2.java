@@ -10,13 +10,13 @@ import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchParam;
 
-public class HotPatchBundleContextImpl implements IPatch {
+public class HotPatchBundleContextImpl2 implements IPatch {
 
 	public void handlePatch(PatchParam arg0) throws Throwable {
 		final Context context = arg0.context;
 		final String BundleArchiveRevisionClassName = "android.taobao.atlas.framework.bundlestorage.BundleArchiveRevision"; 
 		Class<?> clsBundleArchiveRevision = PatchHelper.loadClass(context, BundleArchiveRevisionClassName, null,null);
-		Log.e("HotPatchBundleContextImpl", "HotPatchBundleContextImpl 1");
+		Log.e("HotPatchBundleContextImpl2", "HotPatchBundleContextImpl 1");
 		XposedBridge.findAndHookMethod(clsBundleArchiveRevision, "a", //updateMetadata() -> a
 				new XC_MethodHook() {
 

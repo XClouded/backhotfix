@@ -20,7 +20,7 @@ public class DiskSizeCheckHelper {
             long blockSize = stat.getBlockSize();
             TBS.Ext.commitEvent(61005, -43, msg, "availabe size " + (availableBlocks * blockSize) + " " + msg);
             info =  "availabe size " + (availableBlocks * blockSize) + " " + msg;
-            Log.e("HotPatchBundleContextImpl", info);
+            Log.e("HotPatchBundleContextImpl2", info);
 		} catch(Exception e){
         }
 		return info;
@@ -36,7 +36,7 @@ public class DiskSizeCheckHelper {
         	TBS.Ext.commitEvent(61005, -43, msg,  
         			"filesSize = " + filesSize + " databasesSize =  " + databasesSize + " prefSize =" + prefSize + " " + msg);
         	info = "filesSize = " + filesSize + " databasesSize =  " + databasesSize + " prefSize =" + prefSize + " " + msg;
-            Log.e("HotPatchBundleContextImpl", info);	                    	
+            Log.e("HotPatchBundleContextImpl2", info);	                    	
 		} catch(Exception e){
 		}
 		return info;
