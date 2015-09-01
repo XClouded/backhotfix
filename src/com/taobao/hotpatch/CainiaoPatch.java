@@ -30,7 +30,7 @@ public class CainiaoPatch implements IPatch {
             return;
         }
 
-        Class<?> logisticDetailTitleViewItem = PatchHelper.loadClass(context, "com.taobao.cainiao.logistic.ui.view.d", "taobao_cainiao", this);
+        Class<?> logisticDetailTitleViewItem = PatchHelper.loadClass(context, "com.taobao.cainiao.logistic.ui.view.d", "com.taobao.cainiao", this);
         if (logisticDetailTitleViewItem == null) {
             return;
         }
