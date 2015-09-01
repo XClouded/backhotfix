@@ -8,8 +8,8 @@ import android.util.Log;
 import com.taobao.android.dexposed.XC_MethodHook;
 import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.android.dexposed.XposedHelpers;
-import com.taobao.updatecenter.hotpatch.IPatch;
-import com.taobao.updatecenter.hotpatch.PatchCallback;
+import com.taobao.hotpatch.patch.IPatch;
+import com.taobao.hotpatch.patch.PatchParam;
 
 /**
  * Created by wenchao on 15/9/1.
@@ -19,7 +19,7 @@ public class CainiaoPatch implements IPatch {
     private static final String TAG = CainiaoPatch.class.getSimpleName();
 
     @Override
-    public void handlePatch(PatchCallback.PatchParam patchParam) throws Throwable {
+    public void handlePatch(PatchParam patchParam) throws Throwable {
         Log.i(TAG, "handlePatch");
 
         final Context context = patchParam.context;
