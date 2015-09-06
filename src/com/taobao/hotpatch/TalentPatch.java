@@ -20,14 +20,18 @@ public class TalentPatch implements IPatch {
 		final Class<?> feedDetailActivity = PatchHelper.loadClass(context, "com.taobao.tao.talent.feed.FeedDetailActivity", "com.taobao.talent",
 				this);
 		if (feedDetailActivity == null) {
+			Log.d(TAG, "talent hook !! feedDetailActivity Not found!!");
 			return;
 		}
+		Log.d(TAG, "talent hook !! feedDetailActivity found!!");
+
 		
 		XposedBridge.findAndHookMethod(feedDetailActivity, "onDestroy", new XC_MethodHook() {
 
 			@Override
 			protected void beforeHookedMethod(MethodHookParam param)
 					throws Throwable {
+				Log.d(TAG, "start talent hook !!");
 				WebView webview = (WebView)XposedHelpers.getObjectField(param.thisObject, "mWebView");
 				if (webview != null) {
 					ViewGroup parent = (ViewGroup) webview.getParent();
