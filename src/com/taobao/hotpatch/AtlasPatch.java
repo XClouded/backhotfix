@@ -27,11 +27,14 @@ public class AtlasPatch implements IPatch {
         if (FrameworkCls == null) {
             return;
         }
+        Log.e("AtlasPatch","1");
         final List<String> writeAheads = (ArrayList<String>)XposedHelpers.getStaticObjectField(FrameworkCls,"w");
 
         XposedBridge.findAndHookMethod(FrameworkCls,"a", File.class,File.class,new XC_MethodReplacement() {
             @Override
             protected Object replaceHookedMethod(MethodHookParam methodHookParam) throws Throwable {
+                Log.e("AtlasPatch","1.5");
+
                 File walsDir = (File)methodHookParam.args[0];
                 File storageDir = (File)methodHookParam.args[1];
                 if (writeAheads != null && writeAheads.size() > 0) {
@@ -56,6 +59,8 @@ public class AtlasPatch implements IPatch {
                                                 File bundleDir = new File(storageDir, walBundleDir.getName());
 
                                                 if (bundleDir.exists()) {
+                                                    Log.e("AtlasPatch","2");
+
                                                     deleteDirectory(bundleDir);
                                                 }
                                                 // move bundle to storage
@@ -72,6 +77,8 @@ public class AtlasPatch implements IPatch {
                     }
                 }
                 if (walsDir.exists()) {
+                    Log.e("AtlasPatch","3");
+
                     deleteDirectory(walsDir);
                 }
                 return null;
