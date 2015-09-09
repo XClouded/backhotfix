@@ -65,8 +65,10 @@ public class AtlasPatch implements IPatch {
                                                     return filename.startsWith(BundleArchive.REVISION_DIRECTORY);
                                                 }
                                             });
-                                            if (revisions != null) {
+                                            if (revisions != null && revisions.length>0) {
                                                 File bundleDir = new File(storageDir, walBundleDir.getName());
+                                                Log.e("AtlasPatch","111 " + bundleDir.getAbsolutePath());
+                                                Log.e("AtlasPatch","222 " + walBundleDir.getAbsolutePath());
 
                                                 if (bundleDir.exists()) {
                                                     Log.e("AtlasPatch","2");
