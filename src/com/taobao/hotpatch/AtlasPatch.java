@@ -47,12 +47,20 @@ public class AtlasPatch implements IPatch {
                                 if (walBundleDirs != null) {
                                     for (File walBundleDir : walBundleDirs) {
                                         if (walBundleDir.isDirectory()) {
-                                            File bundleDir = new File(storageDir, walBundleDir.getName());
-                                            if (bundleDir.exists()) {
-                                                deleteDirectory(bundleDir);
+                                            File[] revisions = walBundleDir.listFiles(new FilenameFilter() {
+                                                public boolean accept(File dir, String filename) {
+                                                    return filename.startsWith(BundleArchive.REVISION_DIRECTORY);
+                                                }
+                                            });
+                                            if (revisions != null) {
+                                                File bundleDir = new File(storageDir, walBundleDir.getName());
+
+                                                if (bundleDir.exists()) {
+                                                    deleteDirectory(bundleDir);
+                                                }
+                                                // move bundle to storage
+                                                walBundleDir.renameTo(bundleDir);
                                             }
-                                            // move bundle to storage
-                                            walBundleDir.renameTo(bundleDir);
                                         }
                                     }
                                 }
