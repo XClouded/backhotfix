@@ -37,12 +37,21 @@ public class AtlasPatch implements IPatch {
 
                 File walsDir = (File)methodHookParam.args[0];
                 File storageDir = (File)methodHookParam.args[1];
-                if (writeAheads != null && writeAheads.size() > 0) {
-                    for (int i = 0; i < writeAheads.size(); i++) {
-                        if (writeAheads.get(i) == null) {
+                if(!walsDir.exists()){
+                    return null;
+                }
+                File[] dirs = walsDir.listFiles();
+                if (dirs != null && dirs.length > 0) {
+                    for (int i = 0; i < dirs.length; i++) {
+                        if (!dirs[i].isDirectory()) {
                             continue;
                         }
-                        File walDir = new File(walsDir, writeAheads.get(i));
+                        try {
+                            Long.parseLong(dirs[i].getName());
+                        }catch(Throwable e ){
+                            continue;
+                        }
+                        File walDir = dirs[i];
                         try {
                             if (walDir != null && walDir.exists()) {
                                 // merge wal dir to storage
@@ -50,6 +59,7 @@ public class AtlasPatch implements IPatch {
                                 if (walBundleDirs != null) {
                                     for (File walBundleDir : walBundleDirs) {
                                         if (walBundleDir.isDirectory()) {
+                                            //find bundle and move revision file to storage
                                             File[] revisions = walBundleDir.listFiles(new FilenameFilter() {
                                                 public boolean accept(File dir, String filename) {
                                                     return filename.startsWith(BundleArchive.REVISION_DIRECTORY);
