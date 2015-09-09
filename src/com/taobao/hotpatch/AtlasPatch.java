@@ -27,7 +27,7 @@ public class AtlasPatch implements IPatch {
         if (FrameworkCls == null) {
             return;
         }
-        final List<String> writeAheads = (ArrayList<String>)XposedHelpers.getStaticObjectField(FrameworkCls,"writeAheads");
+        final List<String> writeAheads = (ArrayList<String>)XposedHelpers.getStaticObjectField(FrameworkCls,"w");
 
         XposedBridge.findAndHookMethod(FrameworkCls,"a", File.class,File.class,new XC_MethodReplacement() {
             @Override
