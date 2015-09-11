@@ -36,7 +36,7 @@ public class StartXiaoMiPatch implements IPatch{
 			return;
 		}
 		
-		if(patchCount > 0){
+		if(patchCount > 1){
 			return;
 		}
 		
