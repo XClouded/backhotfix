@@ -59,18 +59,21 @@ public class StartXiaoMiPatch implements IPatch{
 							
 							@Override
 							public void run() {
-								patchCount++;
-								Atlas.getInstance().installBundleWithDependency("com.taobao.xiaomi");
-								BundleImpl bundle = (BundleImpl)Atlas.getInstance().getBundle("com.taobao.xiaomi");
-								if (bundle != null) {
-									try {
-										bundle.startBundle();
-									} catch (BundleException e) {
-										e.printStackTrace();
+								try {
+									patchCount++;
+									Atlas.getInstance().installBundleWithDependency("com.taobao.xiaomi");
+									BundleImpl bundle = (BundleImpl)Atlas.getInstance().getBundle("com.taobao.xiaomi");
+									if (bundle != null) {
+										try {
+											bundle.startBundle();
+										} catch (BundleException e) {
+											e.printStackTrace();
+										}
 									}
-								}
 
-								
+								} catch (Throwable e) {
+									Log.e("StartXiaoMiPatch", "startBundle is error,e="+e);
+								}
 							}
 						}, 20000);
 						
