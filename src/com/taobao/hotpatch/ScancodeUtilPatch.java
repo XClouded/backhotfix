@@ -20,16 +20,12 @@ public class ScancodeUtilPatch implements IPatch {
         final Class<?> scancodeUtil = PatchHelper.loadClass(context, "com.taobao.taobao.scancode.common.b.a", "com.taobao.android.scancode",
                 this);
         if (scancodeUtil == null) {
-            Log.e("ScancodeUtil", "scancode util is null");
             return;
         }
-
-        Log.e("ScancodeUtil", "scancode util is not null");
 
         XposedBridge.findAndHookMethod(scancodeUtil, "browser", Nav.class, String.class, new XC_MethodReplacement() {
             @Override
             protected Object replaceHookedMethod(MethodHookParam methodHookParam) throws Throwable {
-                Log.e("ScancodeUtil", "begin nav");
                 try {
                     Nav nav = (Nav) methodHookParam.args[0];
                     String targetUrl = (String) methodHookParam.args[1];
