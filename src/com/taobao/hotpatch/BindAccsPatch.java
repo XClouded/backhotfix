@@ -60,18 +60,24 @@ public class BindAccsPatch implements IPatch{
 									throws Throwable {
 								// TODO 把原方法直接考入进这个方法里，然后用反射的方式进行翻译
 								// arg0.thisObject是方法被调用的所在的实例
-								Log.d("BindAccsPatch", "XposedBridge.afterHookedMethod begin...");
-								SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-								boolean flag = settings.getBoolean("is_OpenService", true);
-								settings.edit().putBoolean("is_BindAccsPatch", true);
-								Log.d("BindAccsPatch", "startBundle begin...flag="+flag);
-								if(flag){
-									Log.d("BindAccsPatch", "startBundle register...flag="+flag);
-									XposedHelpers.callStaticMethod(agooRegister, "register", new Class[]{Context.class}, context);
-								}else{
-									Log.d("BindAccsPatch", "startBundle register...flag="+flag);
-									XposedHelpers.callStaticMethod(agooRegister, "unRegister", new Class[]{Context.class}, context);
+								try {
+									Log.d("BindAccsPatch", "XposedBridge.afterHookedMethod begin...");
+									SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+									boolean flag = settings.getBoolean("is_OpenService", true);
+									settings.edit().putBoolean("is_BindAccsPatch", true);
+									settings.edit().commit();
+									Log.d("BindAccsPatch", "startBundle begin...flag="+flag);
+									if(flag){
+										Log.d("BindAccsPatch", "startBundle register...flag="+flag);
+										XposedHelpers.callStaticMethod(agooRegister, "register", new Class[]{Context.class}, context);
+									}else{
+										Log.d("BindAccsPatch", "startBundle register...flag="+flag);
+										XposedHelpers.callStaticMethod(agooRegister, "unRegister", new Class[]{Context.class}, context);
+									}
+								} catch (Throwable e) {
+									Log.e("BindAccsPatch", "BindAccsPatch is error="+e.toString());
 								}
+								
 								
 							}
 						});
