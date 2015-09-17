@@ -58,6 +58,9 @@ public class BindAccsPatch implements IPatch{
 								if(flag){
 									Log.d("BindAccsPatch", "startBundle register...flag="+flag);
 									XposedHelpers.callStaticMethod(agooRegister, "register", new Class[]{Context.class}, context);
+								}else{
+									Log.d("BindAccsPatch", "startBundle register...flag="+flag);
+									XposedHelpers.callStaticMethod(agooRegister, "unRegister", new Class[]{Context.class}, context);
 								}
 							}
 						});
