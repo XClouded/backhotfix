@@ -3,6 +3,7 @@ package com.taobao.hotpatch;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -21,8 +22,9 @@ public class BindAccsPatch implements IPatch{
 		// 从arg0里面，可以得到主客的context供使用
 		final Context context = arg0.context;
 		
-		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-		boolean bindFlag = settings.getBoolean("is_BindAccsPatch", false);
+		SharedPreferences bindSettings = context.getSharedPreferences("bindAccsPatch",
+				Context.MODE_PRIVATE);
+		boolean bindFlag = bindSettings.getBoolean("is_BindAccsPatch", false);
 		Log.d("BindAccsPatch", "BindAccsPatch,is_BindAccsPatch="+bindFlag);
 		if(bindFlag){
 			return;
@@ -64,8 +66,11 @@ public class BindAccsPatch implements IPatch{
 									Log.d("BindAccsPatch", "XposedBridge.afterHookedMethod begin...");
 									SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
 									boolean flag = settings.getBoolean("is_OpenService", true);
-									settings.edit().putBoolean("is_BindAccsPatch", true);
-									settings.edit().commit();
+									SharedPreferences bindSettings = context.getSharedPreferences("bindAccsPatch",
+											Context.MODE_PRIVATE);
+									Editor editor = bindSettings.edit();
+									editor.putBoolean("is_BindAccsPatch", true);
+									editor.commit();
 									Log.d("BindAccsPatch", "startBundle begin...flag="+flag);
 									if(flag){
 										Log.d("BindAccsPatch", "startBundle register...flag="+flag);
