@@ -33,7 +33,7 @@ public class WxLoginProgressPatch implements IPatch{
 				Log.e("WxLoginProgressPatch", "isInProgress = " + isInProgress);
 				if (!isInProgress){
 					wxLoginStartTime = System.currentTimeMillis();
-					Log.e("WxLoginProgressPatch", "start patch login");
+					Log.e("WxLoginProgressPatch", "start record time of patching wxlogin");
 				}else {
 					long timeGap = System.currentTimeMillis() - wxLoginStartTime;
 					Log.e("WxLoginProgressPatch", "wxLoginStartTime=" + wxLoginStartTime + ", timeGap=" + timeGap);
