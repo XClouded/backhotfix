@@ -34,9 +34,13 @@ public class WxLoginProgressPatch implements IPatch{
 				if (!isInProgress){
 					wxLoginStartTime = System.currentTimeMillis();
 					Log.e("WxLoginProgressPatch", "start patch login");
-				}else if (System.currentTimeMillis() - wxLoginStartTime > 5*1000){
-					XposedHelpers.setStaticBooleanField(wxLoginControlClazz, "isWxLoginInProgress", false);
-					Log.e("WxLoginProgressPatch", "isInProgress status timeout, force set false");
+				}else {
+					long timeGap = System.currentTimeMillis() - wxLoginStartTime;
+					Log.e("WxLoginProgressPatch", "wxLoginStartTime=" + wxLoginStartTime + ", timeGap=" + timeGap);
+					if (timeGap > 5*1000){
+						XposedHelpers.setStaticBooleanField(wxLoginControlClazz, "isWxLoginInProgress", false);
+						Log.e("WxLoginProgressPatch", "isInProgress status timeout, force set false");
+					}
 				}
 			}
 		});
