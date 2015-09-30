@@ -22,8 +22,9 @@ public class WxLoginProgressPatch implements IPatch{
 			Log.e("WxLoginProgressPatch", "wxLoginControlClazz is null");
 			return;
 		}
+		Log.e("WxLoginProgressPatch", "find wxLoginControlClazz");
 		
-		XposedBridge.findAndHookMethod(wxLoginControlClazz, "b", String.class, new XC_MethodHook() {
+		XposedBridge.findAndHookMethod(wxLoginControlClazz, "b", new XC_MethodHook() {
 			@Override
 			protected void beforeHookedMethod(MethodHookParam param)
 					throws Throwable {
