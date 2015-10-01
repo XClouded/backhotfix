@@ -27,7 +27,7 @@ public class PoplayerPatch implements IPatch {
             return;
         }
 
-        XposedBridge.findAndHookMethod(PopLayerWVPlugin, "registerService", WVCallBackContext, new XC_MethodReplacement() {
+        XposedBridge.findAndHookMethod(PopLayerWVPlugin, "jsInfo", WVCallBackContext, new XC_MethodReplacement() {
                     @Override
                     protected Object replaceHookedMethod(MethodHookParam methodHookParam)
                             throws Throwable {
