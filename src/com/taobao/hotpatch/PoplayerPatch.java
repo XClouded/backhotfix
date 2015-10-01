@@ -45,6 +45,7 @@ public class PoplayerPatch implements IPatch {
                                 result);
                         return true;
                     } catch (Throwable e) {
+                        Log.e("hotpatch", e.getLocalizedMessage());
                         return false;
                     }
                 }
