@@ -41,7 +41,8 @@ public class PoplayerPatch implements IPatch {
                             jsonObj.put("model", Build.MODEL);
                             final String result = jsonObj.toString();
                             Object wvCallBackContext = methodHookParam.args[0];
-                            XposedHelpers.callMethod(wvCallBackContext, "b", String.class, result);
+                            Class[] paramTypes = {String.class};
+                            XposedHelpers.callMethod(wvCallBackContext, "b", paramTypes, result);
                             return true;
                         } catch (Throwable e) {
                             return false;
