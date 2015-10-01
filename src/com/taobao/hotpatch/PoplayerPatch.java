@@ -5,6 +5,7 @@ import android.os.Build;
 import android.util.Log;
 import com.taobao.android.dexposed.XC_MethodReplacement;
 import com.taobao.android.dexposed.XposedBridge;
+import com.taobao.android.dexposed.XposedHelpers;
 import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchParam;
 import org.json.JSONObject;
@@ -39,11 +40,8 @@ public class PoplayerPatch implements IPatch {
                             final JSONObject jsonObj = new JSONObject();
                             jsonObj.put("model", Build.MODEL);
                             final String result = jsonObj.toString();
-                            String[] params = {result};
                             Object wvCallBackContext = methodHookParam.args[0];
-                            XposedBridge.invokeOriginalMethod(
-                                    wvCallBackContext.getClass().getDeclaredMethod(
-                                            "b", String.class), wvCallBackContext, params);
+                            XposedHelpers.callMethod(wvCallBackContext, "b", String.class, result);
                             return true;
                         } catch (Throwable e) {
                             return false;
