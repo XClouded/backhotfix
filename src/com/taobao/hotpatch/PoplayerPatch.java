@@ -20,39 +20,36 @@ public class PoplayerPatch implements IPatch {
     @Override
     public void handlePatch(PatchParam arg0) throws Throwable {
 
-
-
         final Context context = arg0.context;
-        final Class<?> PopLayerWVPlugin = PatchHelper.loadClass(context, "com.alibaba.poplayer.PopLayer$PopLayerWVPlugin", null, this);
-        final Class<?> WVCallBackContext = PatchHelper.loadClass(context, "android.taobao.windvane.jsbridge.c", null, this);
+        final Class<?> PopLayerWVPlugin = PatchHelper.loadClass(context,
+                "com.alibaba.poplayer.PopLayer$PopLayerWVPlugin", null, this);
+        final Class<?> WVCallBackContext = PatchHelper.loadClass(context,
+                "android.taobao.windvane.jsbridge.c", null, this);
 
         if (PopLayerWVPlugin == null || WVCallBackContext == null) {
             return;
         }
 
-        try {
-            XposedBridge.findAndHookMethod(PopLayerWVPlugin, "jsInfo", WVCallBackContext, new XC_MethodReplacement() {
-                @Override
-                protected Object replaceHookedMethod(MethodHookParam methodHookParam)
-                        throws Throwable {
-                    try {
-                        final JSONObject jsonObj = new JSONObject();
-                        jsonObj.put("model", Build.MODEL);
-                        final String result = jsonObj.toString();
-                        Object wvCallBackContext = methodHookParam.args[0];
-                        XposedBridge.invokeNonVirtual(wvCallBackContext,
-                                wvCallBackContext.getClass().getDeclaredMethod("b", String.class),
-                                result);
-                        return true;
-                    } catch (Throwable e) {
-                        Log.e("hotpatch", e.getLocalizedMessage());
-                        return false;
+        XposedBridge.findAndHookMethod(PopLayerWVPlugin, "jsInfo", WVCallBackContext,
+                new XC_MethodReplacement() {
+                    @Override
+                    protected Object replaceHookedMethod(MethodHookParam methodHookParam)
+                            throws Throwable {
+                        try {
+                            final JSONObject jsonObj = new JSONObject();
+                            jsonObj.put("model", Build.MODEL);
+                            final String result = jsonObj.toString();
+                            String[] params = {result};
+                            Object wvCallBackContext = methodHookParam.args[0];
+                            XposedBridge.invokeOriginalMethod(
+                                    wvCallBackContext.getClass().getDeclaredMethod(
+                                            "b", String.class), wvCallBackContext, params);
+                            return true;
+                        } catch (Throwable e) {
+                            return false;
+                        }
                     }
-                }
-            });
-        } catch (Throwable e) {
-            Log.e("hotpatch", e.getLocalizedMessage());
-        }
+                });
 
     }
 }
