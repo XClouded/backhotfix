@@ -2,6 +2,7 @@ package com.taobao.hotpatch;
 
 import android.content.Context;
 import android.os.Build;
+import android.util.Log;
 import com.taobao.android.dexposed.XC_MethodReplacement;
 import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.hotpatch.patch.IPatch;
@@ -29,23 +30,28 @@ public class PoplayerPatch implements IPatch {
             return;
         }
 
-        XposedBridge.findAndHookMethod(PopLayerWVPlugin, "jsInfo", WVCallBackContext, boolean.class, new XC_MethodReplacement() {
-                    @Override
-                    protected Object replaceHookedMethod(MethodHookParam methodHookParam)
-                            throws Throwable {
-                        try {
-                            final JSONObject jsonObj = new JSONObject();
-                            jsonObj.put("model", Build.MODEL);
-                            final String result = jsonObj.toString();
-                            Object wvCallBackContext = methodHookParam.args[0];
-                            XposedBridge.invokeNonVirtual(wvCallBackContext,
-                                    wvCallBackContext.getClass().getDeclaredMethod("b", String.class),
-                                    result);
-                            return true;
-                        } catch (Throwable e) {
-                            return false;
-                        }
+        try {
+            XposedBridge.findAndHookMethod(PopLayerWVPlugin, "jsInfo", WVCallBackContext, new XC_MethodReplacement() {
+                @Override
+                protected Object replaceHookedMethod(MethodHookParam methodHookParam)
+                        throws Throwable {
+                    try {
+                        final JSONObject jsonObj = new JSONObject();
+                        jsonObj.put("model", Build.MODEL);
+                        final String result = jsonObj.toString();
+                        Object wvCallBackContext = methodHookParam.args[0];
+                        XposedBridge.invokeNonVirtual(wvCallBackContext,
+                                wvCallBackContext.getClass().getDeclaredMethod("b", String.class),
+                                result);
+                        return true;
+                    } catch (Throwable e) {
+                        return false;
                     }
-                });
+                }
+            });
+        } catch (Throwable e) {
+            Log.e("hotpatch", e.getLocalizedMessage());
+        }
+
     }
 }
