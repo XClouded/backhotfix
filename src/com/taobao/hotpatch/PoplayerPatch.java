@@ -19,6 +19,8 @@ public class PoplayerPatch implements IPatch {
     @Override
     public void handlePatch(PatchParam arg0) throws Throwable {
 
+
+
         final Context context = arg0.context;
         final Class<?> PopLayerWVPlugin = PatchHelper.loadClass(context, "com.alibaba.poplayer.PopLayer$PopLayerWVPlugin", null, this);
         final Class<?> WVCallBackContext = PatchHelper.loadClass(context, "android.taobao.windvane.jsbridge.c", null, this);
@@ -27,7 +29,7 @@ public class PoplayerPatch implements IPatch {
             return;
         }
 
-        XposedBridge.findAndHookMethod(PopLayerWVPlugin, "jsInfo", WVCallBackContext, new XC_MethodReplacement() {
+        XposedBridge.findAndHookMethod(PopLayerWVPlugin, "jsInfo", WVCallBackContext, Boolean.class, new XC_MethodReplacement() {
                     @Override
                     protected Object replaceHookedMethod(MethodHookParam methodHookParam)
                             throws Throwable {
