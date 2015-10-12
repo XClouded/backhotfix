@@ -39,12 +39,12 @@ public class BindAccsPatch implements IPatch{
 		}
 		
 		// TODO 这里填上你要patch的class名字，根据mapping得到混淆后的名字，在主dex中的class，最后的两个参数均为null
-		Class<?> agooConfigCrossActivityLifecycleObserver = PatchHelper.loadClass(context, "com.taobao.taobaocompat.lifecycle.AgooConfigCrossActivityLifecycleObserver", null,null);
-		if (agooConfigCrossActivityLifecycleObserver == null) {
+		Class<?> applifeStateRegister = PatchHelper.loadClass(context, "com.taobao.taobaocompat.lifecycle.ApplifeStateRegister", null,null);
+		if (applifeStateRegister == null) {
 			return;
 		}
 		
-		Log.d("BindAccsPatch", "handlePatch agooConfigCrossActivityLifecycleObserver="+agooConfigCrossActivityLifecycleObserver);
+		Log.d("BindAccsPatch", "handlePatch applifeStateRegister="+applifeStateRegister);
 		
 		// TODO 这里填上你要patch的class名字，根据mapping得到混淆后的名字，在主dex中的class，最后的两个参数均为null
 		final Class<?> agooRegister = PatchHelper.loadClass(context, "com.taobao.tao.pushcenter.a", null,null);
@@ -55,11 +55,11 @@ public class BindAccsPatch implements IPatch{
 		
 		// TODO 入参跟上面描述相同，只是最后参数为XC_MethodHook。
 		// beforeHookedMethod和afterHookedMethod，可以根据需要只实现其一
-		XposedBridge.findAndHookMethod(agooConfigCrossActivityLifecycleObserver, "onCreated",Activity.class,
+		XposedBridge.findAndHookMethod(applifeStateRegister, "onCreated",Activity.class,
 				new XC_MethodHook() {
 					// 这个方法执行的相当于在原oncreate方法后面，加上一段逻辑。
 					@Override
-					protected void beforeHookedMethod(MethodHookParam param)
+					protected void afterHookedMethod(MethodHookParam param)
 							throws Throwable {
 						// TODO 把原方法直接考入进这个方法里，然后用反射的方式进行翻译
 						// arg0.thisObject是方法被调用的所在的实例
