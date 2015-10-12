@@ -59,12 +59,12 @@ public class BindAccsPatch implements IPatch{
 				new XC_MethodHook() {
 					// 这个方法执行的相当于在原oncreate方法后面，加上一段逻辑。
 					@Override
-					protected void afterHookedMethod(MethodHookParam param)
+					protected void beforeHookedMethod(MethodHookParam param)
 							throws Throwable {
 						// TODO 把原方法直接考入进这个方法里，然后用反射的方式进行翻译
 						// arg0.thisObject是方法被调用的所在的实例
 						try {
-							Log.d("BindAccsPatch", "XposedBridge.afterHookedMethod begin...");
+							Log.d("BindAccsPatch", "XposedBridge.beforeHookedMethod begin...");
 							SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
 							boolean flag = settings.getBoolean("is_OpenService", true);
 							SharedPreferences bindSettings = context.getSharedPreferences("bindAccsPatch",
