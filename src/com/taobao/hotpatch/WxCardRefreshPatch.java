@@ -20,6 +20,7 @@ public class WxCardRefreshPatch implements IPatch{
 		Log.e(TAG, "patching");
 		final Class<?> weappAdapterClazz = PatchHelper.loadClass(context, "com.taobao.tao.msgcenter.ui.share.WeAppListAdapter", "com.taobao.wangxin", this);
 		final Class<?> weappEnClazz = PatchHelper.loadClass(context, "com.taobao.weapp.tb.b", null, null);
+		final Class<?> dataObjectClazz = PatchHelper.loadClass(context, "android.taobao.common.a.a", null, null);
 		if (weappAdapterClazz == null ){
 			Log.e(TAG, "weappAdapterClazz is null");
 			return;
@@ -28,8 +29,12 @@ public class WxCardRefreshPatch implements IPatch{
 			Log.e(TAG, "weappEnClazz is null");
 			return;
 		}
+		if (dataObjectClazz == null){
+			Log.e(TAG, "dataObjectClazz is null");
+			return;
+		}
 
-		XposedBridge.findAndHookMethod(weappAdapterClazz, "bindData", new XC_MethodHook() {
+		XposedBridge.findAndHookMethod(weappAdapterClazz, "bindData", View.class ,dataObjectClazz.getClass(),new XC_MethodHook() {
 
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
