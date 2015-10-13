@@ -19,9 +19,13 @@ public class WxCardRefreshPatch implements IPatch{
 		final Context context = arg0.context;
 		Log.e(TAG, "patching");
 		final Class<?> weappAdapterClazz = PatchHelper.loadClass(context, "com.taobao.tao.msgcenter.ui.share.WeAppListAdapter", "com.taobao.wangxin", this);
-		final Class<?> weappEnClazz = PatchHelper.loadClass(context, "com.taobao.weapp.tb.b", "com.weapp.taobao.adapter", this);
-		if (weappAdapterClazz == null || weappEnClazz == null){
-			Log.e(TAG, "Clazz is null");
+		final Class<?> weappEnClazz = PatchHelper.loadClass(context, "com.taobao.weapp.tb.b", null, null);
+		if (weappAdapterClazz == null ){
+			Log.e(TAG, "weappAdapterClazz is null");
+			return;
+		}
+		if (weappEnClazz == null){
+			Log.e(TAG, "weappEnClazz is null");
 			return;
 		}
 
