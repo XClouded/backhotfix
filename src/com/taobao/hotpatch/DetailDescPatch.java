@@ -15,18 +15,13 @@ import java.util.List;
  */
 public class DetailDescPatch implements IPatch {
 
-    private String TAG = "DetailMonitorPatch";
+    private String TAG = "DetailDescPatch";
 
     @Override
     public void handlePatch(PatchParam patchParam) throws Throwable {
 
         final Context context = patchParam.context;
 
-        // 由于patch运行在多进程的环境，如果只是运行在主进程，就要做如下的相应判断
-        if (!PatchHelper.isRunInMainProcess(context)) {
-            // 不是主进程就返回
-            return;
-        }
 
         Class<?> DescBottomPage$listener = PatchHelper.loadClass(
                 context, "com.taobao.tao.detail.page.fulldesc.b", "com.taobao.android.newtrade", this);
@@ -59,6 +54,8 @@ public class DetailDescPatch implements IPatch {
             Log.d(TAG, "未找到相应class Response");
             return;
         }
+
+        Log.d(TAG, "DetailDesPatch invoke");
 
         XposedBridge.findAndHookMethod(DescBottomPage$listener,
                 "onLayoutSuccess", DetailDescStructure, new XC_MethodHook() {
