@@ -121,7 +121,7 @@ public class HotPatchDetailAdvertHelp implements IPatch {
                                 Log.e(TAG, "iLoginAdapter is null");
                                 return null;
                             }
-                            String sid = (String) XposedHelpers.callMethod(iLoginAdapter,"getSid",null);
+                            String sid = (String) XposedHelpers.callMethod(iLoginAdapter,"getSid");
 
                             Log.e(TAG,"sid:"+sid);
 
