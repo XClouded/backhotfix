@@ -40,7 +40,6 @@ public class HotPatchDetailAdvertHelp implements IPatch {
         final Class<?> commonUtilsClass = PatchHelper.loadClass(context,"com.taobao.tao.detail.util.b","com.taobao.android.newtrade",this);
         final Class<?> locationStoreClass = PatchHelper.loadClass(context,"com.taobao.tao.detail.activity.help.c","com.taobao.android.newtrade",this);
         final Class<?> munionClass = PatchHelper.loadClass(context,"com.taobao.muniontaobaosdk.Munion",null,null);
-        final Class<?> iLoginAdapterClass = PatchHelper.loadClass(context,"com.alibaba.taodetail.base.adapter.core.ILoginAdapter","com.taobao.android.newtrade",this);
         final Class<?> trackUtilsClass = PatchHelper.loadClass(context,"com.taobao.tao.detail.util.z","com.taobao.android.newtrade",this);
 
         if(null == detailAdvertHelpClass){
@@ -60,11 +59,6 @@ public class HotPatchDetailAdvertHelp implements IPatch {
 
         if(null == munionClass){
             Log.e(TAG, "munionClass not found");
-            return;
-        }
-
-        if(null == iLoginAdapterClass){
-            Log.e(TAG, "iLoginAdapterClass not found");
             return;
         }
         
@@ -123,6 +117,10 @@ public class HotPatchDetailAdvertHelp implements IPatch {
                             }
 
                             Object iLoginAdapter = XposedHelpers.callStaticMethod(commonUtilsClass,"getLogin");
+                            if(null == iLoginAdapter){
+                                Log.e(TAG, "iLoginAdapter is null");
+                                return null;
+                            }
                             String sid = (String) XposedHelpers.callMethod(iLoginAdapter,"getSid",null);
 
                             Log.e(TAG,"sid:"+sid);
