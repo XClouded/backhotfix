@@ -282,6 +282,34 @@
 			</exclusions>
 		</dependency>
 
+        <dependency>
+            <groupId>com.taobao.android</groupId>
+            <artifactId>tao_detail</artifactId>
+            <version>2.2.2.6</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.taobao.android</groupId>
+            <artifactId>tao_detail_core</artifactId>
+            <version>1.4.2.11</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.taobao.munion.sdk.p4p</groupId>
+            <artifactId>MunionSdk-common</artifactId>
+            <version>2.1.13</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.taobao.munion.sdk.p4p</groupId>
+            <artifactId>MunionSdk-taobao</artifactId>
+            <version>2.1.13</version>
+            <scope>provided</scope>
+        </dependency>
+
 	</dependencies>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
