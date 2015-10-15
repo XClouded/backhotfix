@@ -96,7 +96,7 @@ public class DetailDescPatch implements IPatch {
                     itemId = XposedHelpers.callMethod(mainNodeBundle, "h");
                 }
                 commitDescFail(itemId, response, MonitorUtils);
-                Log.d(TAG, "hook onLayoutFailure fail");
+
             }
         });
 
@@ -113,7 +113,6 @@ public class DetailDescPatch implements IPatch {
                     itemId = XposedHelpers.callMethod(mainNodeBundle, "h");
                 }
                 commitDescFail(itemId, response, MonitorUtils);
-                Log.d(TAG, "hook onDataFailure fail");
             }
         });
     }
@@ -128,10 +127,12 @@ public class DetailDescPatch implements IPatch {
     }
 
     private void commitDescFail(Object itemId, Object response, Class<?> MonitorUtilsClazz) {
+        Log.d(TAG, "开始执行 commitDescFail");
         String errorMsg = "";
         if (response == null) {
             errorMsg = "0 ";
         } else {
+            Log.d(TAG, "开始获取错误信息");
             Object errorDesc = XposedHelpers.callMethod(response, "getDesc");
             if (errorDesc != null) {
                 errorMsg = errorDesc.toString() + " 0 ";
@@ -141,7 +142,7 @@ public class DetailDescPatch implements IPatch {
         if (itemId != null) {
             errorMsg += "itemid=" + itemId.toString();
         }
-
+        Log.d(TAG, "开始反射调用 commitFail");
         XposedHelpers.callStaticMethod(MonitorUtilsClazz, "commitFail",
                 new Class[]{String.class, String.class, String.class}, "LoadDesc", "80005", errorMsg);
         Log.d(TAG, "hook 成功 errorMsg=" + errorMsg);
