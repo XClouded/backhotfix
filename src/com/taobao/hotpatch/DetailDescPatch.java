@@ -30,12 +30,12 @@ public class DetailDescPatch implements IPatch {
                 context, "com.taobao.tao.detail.structure.a", "com.taobao.android.newtrade", this);
 
         if (DescBottomPage$listener == null) {
-            Log.d(TAG, "未找到相应class DescBottomPage$listener");
+            Log.e(TAG, "未找到相应class DescBottomPage$listener");
             return;
         }
 
         if (DetailDescStructure == null) {
-            Log.d(TAG, "未找到相应class DetailDescStructure");
+            Log.e(TAG, "未找到相应class DetailDescStructure");
             return;
         }
 
@@ -43,7 +43,7 @@ public class DetailDescPatch implements IPatch {
                 context, "com.taobao.tao.util.MonitorUtils", "com.taobao.android.newtrade", this);
 
         if (MonitorUtils == null) {
-            Log.d(TAG, "未找到相应class MonitorUtils");
+            Log.e(TAG, "未找到相应class MonitorUtils");
             return;
         }
 
@@ -51,17 +51,17 @@ public class DetailDescPatch implements IPatch {
                 context, "anetwork.channel.Response", null, this);
 
         if (Response == null) {
-            Log.d(TAG, "未找到相应class Response");
+            Log.e(TAG, "未找到相应class Response");
             return;
         }
 
-        Log.d(TAG, "DetailDesPatch invoke");
+        Log.e(TAG, "DetailDesPatch invoke");
 
         XposedBridge.findAndHookMethod(DescBottomPage$listener,
                 "onLayoutSuccess", DetailDescStructure, new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                Log.d(TAG, "开始hook onLayoutSuccess");
+                Log.e(TAG, "开始hook onLayoutSuccess");
 
                 Object thisObject = param.thisObject;
                 Object response = param.args[0];
@@ -79,7 +79,7 @@ public class DetailDescPatch implements IPatch {
                     commitDescNull(itemId, MonitorUtils);
                     return;
                 }
-                Log.d(TAG, "hook onLayoutSuccess fail");
+                Log.e(TAG, "hook onLayoutSuccess fail");
             }
         });
 
@@ -87,7 +87,7 @@ public class DetailDescPatch implements IPatch {
                 "onLayoutFailure", Response, new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                Log.d(TAG, "开始hook onLayoutFailure");
+                Log.e(TAG, "开始hook onLayoutFailure");
                 Object thisObject = param.thisObject;
                 Object response = param.args[0];
                 Object mainNodeBundle = XposedHelpers.getObjectField(thisObject, "mainNodeBundle");
@@ -104,7 +104,7 @@ public class DetailDescPatch implements IPatch {
                 "onDataFailure", Response, new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                Log.d(TAG, "开始hook onDataFailure");
+                Log.e(TAG, "开始hook onDataFailure");
                 Object thisObject = param.thisObject;
                 Object response = param.args[0];
                 Object mainNodeBundle = XposedHelpers.getObjectField(thisObject, "mainNodeBundle");
@@ -123,16 +123,16 @@ public class DetailDescPatch implements IPatch {
             errorMsg += "itemid=" + itemId.toString();
         }
         XposedHelpers.callStaticMethod(MonitorUtilsClazz, "commitFail", new Class[]{String.class, String.class, String.class}, "LoadDesc", "80005", errorMsg);
-        Log.d(TAG, "hook 成功 errorMsg=" + errorMsg);
+        Log.e(TAG, "hook 成功 errorMsg=" + errorMsg);
     }
 
     private void commitDescFail(Object itemId, Object response, Class<?> MonitorUtilsClazz) {
-        Log.d(TAG, "开始执行 commitDescFail");
+        Log.e(TAG, "开始执行 commitDescFail");
         String errorMsg = "";
         if (response == null) {
             errorMsg = "0 ";
         } else {
-            Log.d(TAG, "开始获取错误信息");
+            Log.e(TAG, "开始获取错误信息");
             Object errorDesc = XposedHelpers.callMethod(response, "getDesc");
             if (errorDesc != null) {
                 errorMsg = errorDesc.toString() + " 0 ";
@@ -142,9 +142,9 @@ public class DetailDescPatch implements IPatch {
         if (itemId != null) {
             errorMsg += "itemid=" + itemId.toString();
         }
-        Log.d(TAG, "开始反射调用 commitFail");
+        Log.e(TAG, "开始反射调用 commitFail");
         XposedHelpers.callStaticMethod(MonitorUtilsClazz, "commitFail",
                 new Class[]{String.class, String.class, String.class}, "LoadDesc", "80005", errorMsg);
-        Log.d(TAG, "hook 成功 errorMsg=" + errorMsg);
+        Log.e(TAG, "hook 成功 errorMsg=" + errorMsg);
     }
 }

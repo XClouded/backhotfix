@@ -48,7 +48,7 @@ public class DetailPluginPatch implements IPatch {
                     @Override
                     protected void afterHookedMethod(MethodHookParam param)
                             throws Throwable {
-                        Log.d(TAG, "after PageDetailPlugin execute method hook.");
+                        Log.e(TAG, "after PageDetailPlugin execute method hook.");
                         String action = (String) param.args[0];
                         String params = (String) param.args[1];
                         if ("addAppmonitor".equals(action)) {
@@ -58,13 +58,13 @@ public class DetailPluginPatch implements IPatch {
                             }
                             if (json.containsKey("h5error")) {
                                 String h5error = json.getString("h5error");
-                                Log.d("DetailPatch", "has h5error.");
+                                Log.e("DetailPatch", "has h5error.");
                                 try {
                                     if ("0".equals(h5error)) {
-                                        Log.d(TAG, "h5 error equals 0.");
+                                        Log.e(TAG, "h5 error equals 0.");
                                         if (json.containsKey("errMsg")) {
                                             String errMsg = json.getString("errMsg");
-                                            Log.d(TAG, "errorMsg: " + errMsg);
+                                            Log.e(TAG, "errorMsg: " + errMsg);
                                             XposedHelpers.callStaticMethod(
                                                     monitorUtilsClazz,
                                                     "commitFail",
@@ -78,11 +78,11 @@ public class DetailPluginPatch implements IPatch {
                                                     new Class[]{String.class, String.class, String.class},
                                                     "LoadDesc",
                                                     "80005", "1");
-                                            Log.d(TAG, "errorMsg: 1");
+                                            Log.e(TAG, "errorMsg: 1");
                                         }
                                     }
                                 } catch (Exception ignored) {
-                                    Log.d(TAG, "Exception Catched");
+                                    Log.e(TAG, "Exception Catched");
                                 }
                             }
                         }
