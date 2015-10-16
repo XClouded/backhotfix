@@ -22,7 +22,7 @@ import java.util.Random;
  */
 public class ARMarkerPatch implements IPatch {
 
-    private static final String TAG = PoplayerPatch.class.getSimpleName();
+    private static final String TAG = ARMarkerPatch.class.getSimpleName();
 
     @Override
     public void handlePatch(PatchParam arg0) throws Throwable {
