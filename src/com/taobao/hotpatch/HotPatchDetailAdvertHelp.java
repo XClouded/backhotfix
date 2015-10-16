@@ -138,7 +138,7 @@ public class HotPatchDetailAdvertHelp implements IPatch {
                                         Log.e(TAG, e.toString());
                                     }
 
-                                    Log.e(TAG, "sid:" + sid);
+                                    Log.e(TAG, "get sid");
 
                                     Bundle bundle = new Bundle();
                                     if (viewW >= 0)
@@ -252,6 +252,7 @@ public class HotPatchDetailAdvertHelp implements IPatch {
                                         try {
                                             XposedHelpers.callMethod(munion, "inVoke",
                                                     new Class[] { String.class }, eUrl);
+                                            Log.e(TAG, "invoke");
                                         } catch (Exception e) {
                                             Log.e(TAG, e.toString());
                                         }
@@ -263,6 +264,8 @@ public class HotPatchDetailAdvertHelp implements IPatch {
                                                             long.class, long.class, String.class,
                                                             int.class }, eUrl, seller_Id, 0, itemId,
                                                     sid, tmall);
+
+                                    Log.e(TAG, "commit event");
 
                                     if (!TextUtils.isEmpty(clickId)) {
                                         // 新的userTrack日志，为了区分，废除原有常量，主要是为了降低对主客户端代码过多的依赖，防止因为常量修改导致广告日志错误。
@@ -280,11 +283,13 @@ public class HotPatchDetailAdvertHelp implements IPatch {
                                                                 Properties.class }, activity,
                                                         "com.taobao.tao.detail.activity.DetailActivity",
                                                         p);
+
+                                        Log.e(TAG, "track utils");
                                     }
                                     // ===================== END =====================
 
                                 } catch (Exception e) {
-                                    e.printStackTrace();
+                                    Log.e(TAG,e.toString());
                                 }
                                 return null;
                             }
