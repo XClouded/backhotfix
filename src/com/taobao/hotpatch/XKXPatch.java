@@ -33,7 +33,12 @@ public class XKXPatch implements IPatch {
         final Class<?> mKaVideoRecordActivity = PatchHelper.loadClass(context,
                 "com.taobao.taobao.ka.activity.KaVideoRecordActivity", null, this);
 
-        final Class<?> mAudioClass = PatchHelper.loadClass(context, "com.taobao.taobao.ka.a.a", null, this);
+        Class<?> audioCls = PatchHelper.loadClass(context, "com.taobao.taobao.ka.a.a", null, this);
+        if(null == audioCls){
+            audioCls = PatchHelper.loadClass(context, "com.taobao.taobao.ka.entity.Audio", null, this);
+        }
+
+        final Class<?> mAudioClass = audioCls;
         if(null == mKaVideoRecordActivity || null == mAudioClass){
             return;
         }
@@ -110,7 +115,12 @@ public class XKXPatch implements IPatch {
         final Class<?> mKaVideoEditActivity = PatchHelper.loadClass(context, "com.taobao.taobao.ka.activity.KaVideoEditActivity"
                 , null, this);
 
-        final Class<?> shareEntityClass = PatchHelper.loadClass(context, "com.taobao.taobao.ka.a.b", null, this);
+        Class<?> shareCls = PatchHelper.loadClass(context, "com.taobao.taobao.ka.a.b", null, this);
+        if(null == shareCls){
+            shareCls = PatchHelper.loadClass(context, "com.taobao.taobao.ka.entity.ShareEntity", null, this);
+        }
+
+        final Class<?> shareEntityClass = shareCls;
 
         if(mKaVideoEditActivity == null || shareEntityClass == null){
             return;
