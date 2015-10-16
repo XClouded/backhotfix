@@ -1,5 +1,7 @@
 package com.taobao.hotpatch;
 
+import java.lang.reflect.Method;
+
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
@@ -34,17 +36,26 @@ public class WxCardRefreshPatch implements IPatch{
 			return;
 		}
 
-		XposedBridge.findAndHookMethod(weappAdapterClazz, "bindData", View.class ,dataObjectClazz.getClass(),new XC_MethodHook() {
+		XposedBridge.findAndHookMethod(weappAdapterClazz, "bindData", View.class ,dataObjectClazz,new XC_MethodHook() {
 
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 				Log.e(TAG, "afterHookedMethod bindData");
 				Object tag = ((View)param.args[0]).getTag();
+				Log.e(TAG, "tag=" + tag);
 				if(tag == null) return;
-				Class paramTypes[] = new Class[1];
-				paramTypes[0] = weappEnClazz.getClass();
-				XposedHelpers.callMethod(tag,"refresh",paramTypes);
-				Log.e(TAG, "call refresh");
+				try {
+					Method method = weappEnClazz.getMethod("refresh");
+					Log.e(TAG, "method=" + method);
+					if (method != null){
+						method.invoke(tag);
+						Log.e(TAG, "call refresh");
+					}
+				} catch (Exception e) {
+					Log.e(TAG, "get method error:" + e.getMessage());
+				}
+//				XposedHelpers.callMethod(tag,"refresh");
+				
 			}
 		});
 	}
