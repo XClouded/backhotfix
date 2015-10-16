@@ -115,7 +115,7 @@ public class XKXPatch implements IPatch {
 
 
         final Class<?> mKaVideoEditActivity = PatchHelper.loadClass(context, "com.taobao.taobao.ka.activity.KaVideoEditActivity"
-                , null, this);
+                , PACKAGE_NAME, this);
 
         Class<?> shareCls = PatchHelper.loadClass(context, "com.taobao.taobao.ka.a.b", PACKAGE_NAME, this);
         if(null == shareCls){
@@ -232,14 +232,12 @@ public class XKXPatch implements IPatch {
             sharetitleField.setAccessible(true);
             String sharetitle = (String)sharetitleField.get(obj);
             if(TextUtils.isEmpty(sharetitle)){
-                obj = null;
                 return false;
             }
         }catch (Exception e){
             e.printStackTrace();
             Log.i(TAG, "isValidShareObj " + e);
 
-            obj = null;
             return false;
         }
 
