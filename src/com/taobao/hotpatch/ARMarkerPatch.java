@@ -113,10 +113,9 @@ public class ARMarkerPatch implements IPatch {
                                 }
                             });
 
-                            return true;
                         } catch (Throwable e) {
-                            return false;
                         }
+                        return ret;
                     }
                 });
 
