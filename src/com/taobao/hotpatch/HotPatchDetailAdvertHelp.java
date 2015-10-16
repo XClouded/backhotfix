@@ -43,7 +43,7 @@ public class HotPatchDetailAdvertHelp implements IPatch {
         final Class<?> munionClass = PatchHelper
                 .loadClass(context, "com.taobao.muniontaobaosdk.Munion", null, null);
         final Class<?> trackUtilsClass = PatchHelper
-                .loadClass(context, "com.taobao.tao.detail.util.z", "com.taobao.android.newtrade",
+                .loadClass(context, "com.taobao.tao.detail.util.ab", "com.taobao.android.newtrade",
                         this);
 
         if (null == detailAdvertHelpClass) {
@@ -288,8 +288,8 @@ public class HotPatchDetailAdvertHelp implements IPatch {
                                     }
                                     // ===================== END =====================
 
-                                } catch (Exception e) {
-                                    Log.e(TAG,e.toString());
+                                } catch (Throwable e) {
+                                    Log.e(TAG, e.toString());
                                 }
                                 return null;
                             }
