@@ -18,7 +18,7 @@ public class WxLoginDemotePatch implements IPatch{
 	public void handlePatch(PatchParam arg0) throws Throwable {
 		final Context context = arg0.context;
 		Log.e("WxLoginDemotePatch", "beforeHookedMethod 1");
-		final Class<?> wxLoginControlClazz = PatchHelper.loadClass(context, "com.taobao.chat.g", "com.taobao.wangxin", this);
+		final Class<?> wxLoginControlClazz = PatchHelper.loadClass(context, "com.taobao.chat.j", "com.taobao.wangxin", this);
 		final Class<?> configCenterClazz = PatchHelper.loadClass(context, "com.taobao.tao.amp.utils.ConfigCenterManager", "com.taobao.wangxin", this);
 		if (wxLoginControlClazz == null){
 			Log.e("WxLoginDemotePatch", "wxLoginControlClazz is null");
