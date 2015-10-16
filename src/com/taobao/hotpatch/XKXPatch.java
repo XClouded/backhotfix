@@ -26,16 +26,18 @@ import java.util.List;
 public class XKXPatch implements IPatch {
     private static final String TAG = XKXPatch.class.getSimpleName();
 
+    private static final String PACKAGE_NAME = "com.duanqu.qupai.recorder";
+
     @Override
     public void handlePatch(PatchParam patchParam) throws Throwable {
         Context context = patchParam.context;
 
         final Class<?> mKaVideoRecordActivity = PatchHelper.loadClass(context,
-                "com.taobao.taobao.ka.activity.KaVideoRecordActivity", null, this);
+                "com.taobao.taobao.ka.activity.KaVideoRecordActivity", PACKAGE_NAME, this);
 
-        Class<?> audioCls = PatchHelper.loadClass(context, "com.taobao.taobao.ka.a.a", null, this);
+        Class<?> audioCls = PatchHelper.loadClass(context, "com.taobao.taobao.ka.a.a", PACKAGE_NAME, this);
         if(null == audioCls){
-            audioCls = PatchHelper.loadClass(context, "com.taobao.taobao.ka.entity.Audio", null, this);
+            audioCls = PatchHelper.loadClass(context, "com.taobao.taobao.ka.entity.Audio", PACKAGE_NAME, this);
         }
 
         final Class<?> mAudioClass = audioCls;
@@ -115,9 +117,9 @@ public class XKXPatch implements IPatch {
         final Class<?> mKaVideoEditActivity = PatchHelper.loadClass(context, "com.taobao.taobao.ka.activity.KaVideoEditActivity"
                 , null, this);
 
-        Class<?> shareCls = PatchHelper.loadClass(context, "com.taobao.taobao.ka.a.b", null, this);
+        Class<?> shareCls = PatchHelper.loadClass(context, "com.taobao.taobao.ka.a.b", PACKAGE_NAME, this);
         if(null == shareCls){
-            shareCls = PatchHelper.loadClass(context, "com.taobao.taobao.ka.entity.ShareEntity", null, this);
+            shareCls = PatchHelper.loadClass(context, "com.taobao.taobao.ka.entity.ShareEntity", PACKAGE_NAME, this);
         }
 
         final Class<?> shareEntityClass = shareCls;
