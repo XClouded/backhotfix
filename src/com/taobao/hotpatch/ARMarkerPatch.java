@@ -38,7 +38,7 @@ public class ARMarkerPatch implements IPatch {
         final Class<?> MarkerAR = PatchHelper.loadClass(context,
                 "com.taobao.t3d.ar.MarkerAR", null, this);
 
-        if (ARMarkerActivity == null || OnPrepareResourceListener == null || ARResource == null) {
+        if (ARMarkerActivity == null || OnPrepareResourceListener == null || ARResource == null || MarkerAR == null) {
             return;
         }
 
@@ -114,6 +114,7 @@ public class ARMarkerPatch implements IPatch {
                             });
 
                         } catch (Throwable e) {
+                            Log.e(TAG, e.getLocalizedMessage());
                         }
                         return ret;
                     }
