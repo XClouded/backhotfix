@@ -49,8 +49,8 @@ public class ARMarkerPatch implements IPatch {
                             throws Throwable {
                         Object ret = new Object();
                         try {
-                            final Activity wrapper = (Activity) XposedHelpers.findField(OnPrepareResourceListener, "this$0")
-                                    .get(this);
+                            final Activity wrapper = (Activity) XposedHelpers.findField(OnPrepareResourceListener, "a")
+                                    .get(methodHookParam.thisObject);
                             if (wrapper.isFinishing()) {
                                 return ret;
                             }
@@ -115,6 +115,7 @@ public class ARMarkerPatch implements IPatch {
 
                         } catch (Throwable e) {
                             Log.e(TAG, e.getLocalizedMessage());
+                            XposedBridge.invokeOriginalMethod(methodHookParam.method, methodHookParam.thisObject, methodHookParam.args);
                         }
                         return ret;
                     }
