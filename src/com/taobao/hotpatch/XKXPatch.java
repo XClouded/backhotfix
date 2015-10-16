@@ -51,7 +51,7 @@ public class XKXPatch implements IPatch {
             protected Object replaceHookedMethod(MethodHookParam methodHookParam) throws Throwable {
                 List mAudioList = new ArrayList();
 
-                Log.i(TAG, "Hook ParseMusicConfig Success");
+                Log.i(TAG, "Hook ParseMusicConfig Success!!!!");
 
                 try {
                     mAudioList = (List) XposedBridge.invokeOriginalMethod(methodHookParam.method, methodHookParam.thisObject, methodHookParam.args);
