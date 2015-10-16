@@ -59,18 +59,18 @@ public class ARMarkerPatch implements IPatch {
                             List<String> mBins = (List<String>) XposedHelpers.callMethod(resource, "a");
                             int binSize = mBins.size();
                             int randomInt;
-                            Random mRandom = (Random) XposedHelpers.findField(ARMarkerActivity, "mRandom").get(wrapper);
-                            int mCurIndex = XposedHelpers.getStaticIntField(ARMarkerActivity, "mCurIndex");
+                            Random mRandom = (Random) XposedHelpers.getObjectField(wrapper, "mRandom");
+                            int mCurIndex = XposedHelpers.getIntField(wrapper, "mCurIndex");
                             do {
                                 randomInt = mRandom.nextInt(binSize);
                             } while (mCurIndex == randomInt);
 
-                            XposedHelpers.setStaticIntField(ARMarkerActivity, "mCurIndex", randomInt);
+                            XposedHelpers.setIntField(wrapper, "mCurIndex", randomInt);
 
-                            mCurIndex = XposedHelpers.getStaticIntField(ARMarkerActivity, "mCurIndex");
+                            mCurIndex = XposedHelpers.getIntField(wrapper, "mCurIndex");
                             XposedHelpers.setObjectField(wrapper, "mCurBinPath", mBins.get(mCurIndex));
 
-                            String mCurBinPath = (String) XposedHelpers.findField(ARMarkerActivity, "mCurBinPath").get(wrapper);
+                            String mCurBinPath = (String) XposedHelpers.getObjectField(wrapper, "mCurBinPath");
 
                             // hook MarkerAR.nativeLoadScene(mCurBinPath);
                             final Class nativeLoadSceneParamTypes[] = {String.class};
@@ -91,7 +91,7 @@ public class ARMarkerPatch implements IPatch {
                                 public void run() {
                                     // mT3dGLSurfaceView = mMarkerAR.getView();
                                     final Object mMarkerAR = XposedHelpers.getObjectField(wrapper, "mMarkerAR");
-                                    Object mT3dGLSurfaceView = (View) XposedHelpers.callMethod(mMarkerAR, "getView");
+                                    Object mT3dGLSurfaceView = XposedHelpers.callMethod(mMarkerAR, "getView");
                                     ViewGroup mMainContainer = (ViewGroup) XposedHelpers.getObjectField(wrapper, "mMainContainer");
                                     mMainContainer.addView((View) mT3dGLSurfaceView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                                             ViewGroup.LayoutParams.MATCH_PARENT));
