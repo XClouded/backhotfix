@@ -80,7 +80,7 @@ public class ARMarkerPatch implements IPatch {
 
                     Object mARCameraManager = XposedHelpers.callStaticMethod(mARCameraManagerCls, "getInstance");
 
-                    mHasSurface = false;
+                    mHasSurface = true;
 
                     if (mHasSurface) {
                         Class openCameraParamTypes[] = {SurfaceHolder.class, Camera.PreviewCallback.class, Context.class};
@@ -121,6 +121,7 @@ public class ARMarkerPatch implements IPatch {
                         }else{
                             Toast.makeText(instance, OPEN_CAMERA_ERROR, Toast.LENGTH_SHORT).show();
                             instance.finish();
+                            return null;
                         }
 
                         Log.i(TAG, "hook runOnGLThread ");
