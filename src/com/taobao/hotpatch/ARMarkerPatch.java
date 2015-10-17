@@ -44,7 +44,7 @@ public class ARMarkerPatch implements IPatch {
                 "com.taobao.armarker.download.ARMarkerResource$a",
                 "com.taobao.cloakroom", this);
         final Class<?> MarkerAR = PatchHelper.loadClass(context,
-                "com.taobao.t3d.ar.MarkerAR", BUNDLE_NAME, this);
+                "com.taobao.t3d.ar.MarkerAR", null, this);
 
         final Class<?> mARCameraManagerCls = PatchHelper.loadClass(context, "com.taobao.armarker.a.c", BUNDLE_NAME, this);
 
@@ -79,8 +79,13 @@ public class ARMarkerPatch implements IPatch {
                     boolean mHasSurface = XposedHelpers.getBooleanField(instance, "mHasSurface");
 
                     Object mARCameraManager = XposedHelpers.callStaticMethod(mARCameraManagerCls, "getInstance");
+
+                    mHasSurface = false;
+
                     if (mHasSurface) {
-                        final Boolean openResult = (Boolean)XposedHelpers.callMethod(mARCameraManager, "a", holder, instance, instance);
+                        Class openCameraParamTypes[] = {SurfaceHolder.class, Camera.PreviewCallback.class, Context.class};
+                        final Boolean openResult = (Boolean)XposedHelpers.callMethod(mARCameraManager, "a", openCameraParamTypes,
+                                holder, instance, instance);
                         Log.i(TAG, "openCamera result = " + openResult);
 
                         if (!openResult) {
@@ -95,7 +100,6 @@ public class ARMarkerPatch implements IPatch {
 
                     Log.i(TAG, "hook T3dGLSurfaceView.onResume");
                     Object mT3dGLSurfaceView = XposedHelpers.findField(ARMarkerActivity, "mT3dGLSurfaceView").get(instance);
-                    Log.i(TAG, "mT3dGLSurfaceView = " + mT3dGLSurfaceView);
                     if(null != mT3dGLSurfaceView){
                         XposedHelpers.callMethod(mT3dGLSurfaceView, "onResume");
                     }
@@ -106,7 +110,10 @@ public class ARMarkerPatch implements IPatch {
 
                     if(!TextUtils.isEmpty(mCameraParaConfig)){
                         Camera.Size size = (Camera.Size) XposedHelpers.callMethod(mARCameraManager, "b");
-                        Log.i(TAG, "SIZE = " + size);
+
+                        size = null;
+
+
                         if(null != size){
                             Class nativeVideoInitParamTypes[] = {int.class, int.class, int.class, boolean.class};
                             XposedHelpers.callStaticMethod(MarkerAR, "nativeVideoInit", nativeVideoInitParamTypes,
@@ -127,9 +134,6 @@ public class ARMarkerPatch implements IPatch {
                                     }
                                 });
                     }
-
-
-
 
                 }catch (Throwable e){
                     e.printStackTrace();
