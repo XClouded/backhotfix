@@ -76,7 +76,7 @@ public class ARMarkerPatch implements IPatch {
                     SurfaceView surfaceView = (SurfaceView) XposedHelpers.findField(ARMarkerActivity, "mSurfaceView").get(instance);
                     SurfaceHolder holder = surfaceView.getHolder();
 
-                    boolean mHasSurface = XposedHelpers.getBooleanField(ARMarkerActivity, "mHasSurface");
+                    boolean mHasSurface = XposedHelpers.getBooleanField(instance, "mHasSurface");
 
                     Object mARCameraManager = null;
                     if (mHasSurface) {
