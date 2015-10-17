@@ -76,7 +76,7 @@ public class ARMarkerPatch implements IPatch {
                     SurfaceView surfaceView = (SurfaceView) XposedHelpers.findField(ARMarkerActivity, "mSurfaceView").get(instance);
                     SurfaceHolder holder = surfaceView.getHolder();
 
-                    Boolean mHasSurface = XposedHelpers.getBooleanField(ARMarkerActivity, "mHasSurface");
+                    boolean mHasSurface = XposedHelpers.getBooleanField(ARMarkerActivity, "mHasSurface");
 
                     Object mARCameraManager = null;
                     if (mHasSurface) {
@@ -130,6 +130,7 @@ public class ARMarkerPatch implements IPatch {
 
                 }catch (Throwable e){
                     e.printStackTrace();
+                    XposedBridge.invokeOriginalMethod(methodHookParam.method, methodHookParam.thisObject, methodHookParam.args);
                 }
 
                 return null;
