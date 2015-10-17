@@ -69,7 +69,6 @@ public class ARMarkerPatch implements IPatch {
 
 
                     // 调用父类中的super.onResume方法。
-                    Log.i(TAG, "Hook super.onResume");
                     XposedBridge.invokeNonVirtual(instance, superClass.getDeclaredMethod("onResume"));
 
 
@@ -79,9 +78,6 @@ public class ARMarkerPatch implements IPatch {
                     boolean mHasSurface = XposedHelpers.getBooleanField(instance, "mHasSurface");
 
                     Object mARCameraManager = XposedHelpers.callStaticMethod(mARCameraManagerCls, "getInstance");
-
-                    mHasSurface = true;
-
                     if (mHasSurface) {
                         Class openCameraParamTypes[] = {SurfaceHolder.class, Camera.PreviewCallback.class, Context.class};
                         final Boolean openResult = (Boolean)XposedHelpers.callMethod(mARCameraManager, "a", openCameraParamTypes,
@@ -98,9 +94,9 @@ public class ARMarkerPatch implements IPatch {
                     }
 
 
-                    Log.i(TAG, "hook T3dGLSurfaceView.onResume");
                     Object mT3dGLSurfaceView = XposedHelpers.findField(ARMarkerActivity, "mT3dGLSurfaceView").get(instance);
                     if(null != mT3dGLSurfaceView){
+                        Log.i(TAG, "hook T3dGLSurfaceView.onResume");
                         XposedHelpers.callMethod(mT3dGLSurfaceView, "onResume");
                     }
 
@@ -110,10 +106,6 @@ public class ARMarkerPatch implements IPatch {
 
                     if(!TextUtils.isEmpty(mCameraParaConfig)){
                         Camera.Size size = (Camera.Size) XposedHelpers.callMethod(mARCameraManager, "b");
-
-                        size = null;
-
-
                         if(null != size){
                             Class nativeVideoInitParamTypes[] = {int.class, int.class, int.class, boolean.class};
                             XposedHelpers.callStaticMethod(MarkerAR, "nativeVideoInit", nativeVideoInitParamTypes,
