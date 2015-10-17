@@ -78,7 +78,7 @@ public class ARMarkerPatch implements IPatch {
 
                     boolean mHasSurface = XposedHelpers.getBooleanField(instance, "mHasSurface");
 
-                    Object mARCameraManager = XposedHelpers.callStaticMethod(mARCameraManagerCls, "getInstance");;
+                    Object mARCameraManager = XposedHelpers.callStaticMethod(mARCameraManagerCls, "getInstance");
                     if (mHasSurface) {
                         final Boolean openResult = (Boolean)XposedHelpers.callMethod(mARCameraManager, "a", holder, instance, instance);
                         Log.i(TAG, "openCamera result = " + openResult);
@@ -95,13 +95,14 @@ public class ARMarkerPatch implements IPatch {
 
                     Log.i(TAG, "hook T3dGLSurfaceView.onResume");
                     Object mT3dGLSurfaceView = XposedHelpers.findField(ARMarkerActivity, "mT3dGLSurfaceView").get(instance);
+                    Log.i(TAG, "mT3dGLSurfaceView = " + mT3dGLSurfaceView);
                     if(null != mT3dGLSurfaceView){
                         XposedHelpers.callMethod(mT3dGLSurfaceView, "onResume");
                     }
 
 
                     final String mCameraParaConfig = (String)XposedHelpers.findField(ARMarkerActivity, "mCameraParaConfig").get(instance);
-                    Log.i(TAG , "mCameraParaConfig = " + mCameraParaConfig);
+                    Log.i(TAG, "mCameraParaConfig = " + mCameraParaConfig);
 
                     if(!TextUtils.isEmpty(mCameraParaConfig)){
                         Camera.Size size = (Camera.Size) XposedHelpers.callMethod(mARCameraManager, "b");
@@ -111,19 +112,20 @@ public class ARMarkerPatch implements IPatch {
                             Toast.makeText(instance, OPEN_CAMERA_ERROR, Toast.LENGTH_SHORT).show();
                             instance.finish();
                         }
+
+                        Log.i(TAG, "hook runOnGLThread ");
+                        Class runOnGLThreadParamTypes[] = {Runnable.class};
+                        XposedHelpers.callMethod(mT3dGLSurfaceView, "runOnGLThread",
+                                runOnGLThreadParamTypes, new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Class nativeStartParamTypes[] = {String.class};
+                                        XposedHelpers.callStaticMethod(MarkerAR, "nativeStart", nativeStartParamTypes, mCameraParaConfig);
+                                    }
+                                });
                     }
 
 
-                    Log.i(TAG, "hook runOnGLThread ");
-                    Class runOnGLThreadParamTypes[] = {Runnable.class};
-                    XposedHelpers.callMethod(mT3dGLSurfaceView, "runOnGLThread",
-                            runOnGLThreadParamTypes, new Runnable() {
-                                @Override
-                                public void run() {
-                                    Class nativeStartParamTypes[] = {String.class};
-                                    XposedHelpers.callStaticMethod(MarkerAR, "nativeStart", nativeStartParamTypes, mCameraParaConfig);
-                                }
-                            });
 
 
                 }catch (Throwable e){
