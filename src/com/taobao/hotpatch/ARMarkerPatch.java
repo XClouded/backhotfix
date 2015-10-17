@@ -78,11 +78,9 @@ public class ARMarkerPatch implements IPatch {
 
                     boolean mHasSurface = XposedHelpers.getBooleanField(instance, "mHasSurface");
 
-                    Object mARCameraManager = null;
+                    Object mARCameraManager = XposedHelpers.callStaticMethod(mARCameraManagerCls, "getInstance");;
                     if (mHasSurface) {
-                        mARCameraManager = XposedHelpers.callStaticMethod(mARCameraManagerCls, "getInstance");
                         final Boolean openResult = (Boolean)XposedHelpers.callMethod(mARCameraManager, "a", holder, instance, instance);
-
                         Log.i(TAG, "openCamera result = " + openResult);
 
                         if (!openResult) {
@@ -130,6 +128,7 @@ public class ARMarkerPatch implements IPatch {
 
                 }catch (Throwable e){
                     e.printStackTrace();
+                    Log.i(TAG, e.toString());
                     XposedBridge.invokeOriginalMethod(methodHookParam.method, methodHookParam.thisObject, methodHookParam.args);
                 }
 
