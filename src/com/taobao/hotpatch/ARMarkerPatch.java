@@ -187,6 +187,8 @@ public class ARMarkerPatch implements IPatch {
                                     // mT3dGLSurfaceView = mMarkerAR.getView();
                                     final Object mMarkerAR = XposedHelpers.getObjectField(wrapper, "mMarkerAR");
                                     Object mT3dGLSurfaceView = XposedHelpers.callMethod(mMarkerAR, "getView");
+                                    XposedHelpers.setObjectField(wrapper, "mT3dGLSurfaceView", mT3dGLSurfaceView);
+
                                     ViewGroup mMainContainer = (ViewGroup) XposedHelpers.getObjectField(wrapper, "mMainContainer");
                                     mMainContainer.addView((View) mT3dGLSurfaceView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                                             ViewGroup.LayoutParams.MATCH_PARENT));
