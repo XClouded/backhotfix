@@ -44,7 +44,7 @@ public class ARMarkerPatch implements IPatch {
                 "com.taobao.armarker.download.ARMarkerResource$a",
                 "com.taobao.cloakroom", this);
         final Class<?> MarkerAR = PatchHelper.loadClass(context,
-                "com.taobao.t3d.ar.MarkerAR", null, this);
+                "com.taobao.t3d.ar.MarkerAR", null, null);
 
         final Class<?> mARCameraManagerCls = PatchHelper.loadClass(context, "com.taobao.armarker.a.c", BUNDLE_NAME, this);
 
@@ -107,7 +107,9 @@ public class ARMarkerPatch implements IPatch {
                     if(!TextUtils.isEmpty(mCameraParaConfig)){
                         Camera.Size size = (Camera.Size) XposedHelpers.callMethod(mARCameraManager, "b");
                         if(null != size){
-                            XposedHelpers.callStaticMethod(MarkerAR, "nativeVideoInit", size.width, size.height, 0, false);
+                            Class nativeVideoInitParamTypes[] = {Integer.class, Integer.class, Integer.class, Boolean.class};
+                            XposedHelpers.callStaticMethod(MarkerAR, "nativeVideoInit", nativeVideoInitParamTypes,
+                                    size.width, size.height, 0, false);
                         }else{
                             Toast.makeText(instance, OPEN_CAMERA_ERROR, Toast.LENGTH_SHORT).show();
                             instance.finish();
