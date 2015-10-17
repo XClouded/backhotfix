@@ -108,7 +108,7 @@ public class ARMarkerPatch implements IPatch {
                         Camera.Size size = (Camera.Size) XposedHelpers.callMethod(mARCameraManager, "b");
                         Log.i(TAG, "SIZE = " + size);
                         if(null != size){
-                            Class nativeVideoInitParamTypes[] = {Integer.class, Integer.class, Integer.class, Boolean.class};
+                            Class nativeVideoInitParamTypes[] = {int.class, int.class, int.class, boolean.class};
                             XposedHelpers.callStaticMethod(MarkerAR, "nativeVideoInit", nativeVideoInitParamTypes,
                                     size.width, size.height, 0, false);
                         }else{
