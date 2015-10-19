@@ -38,7 +38,7 @@ public class WxLoginDemotePatch implements IPatch{
 				Log.e("WxLoginDemotePatch", "beforeHookedMethod 2");
 				Message message = (Message) param.args[0];
 				Log.e("WxLoginDemotePatch", "msg.what = " + message.what);
-				if(message.what==1){
+				if(message.what==1 || message.what==0){
 					String wangwangLoginDemote = (String)XposedHelpers.callStaticMethod(configCenterClazz, "getConfig", new Class[]{String.class, String.class, String.class},
 							"android_messagebox", "isWangwangLoginDemote", "0");
 					Log.e("WxLoginDemotePatch", "wangwangLoginDemote=" + wangwangLoginDemote);
