@@ -37,7 +37,7 @@ public class DetailRatePatch implements IPatch {
                 if(msg instanceof String){
                     if(listView != null){
                     	Log.e(TAG, "invoke setDefaultTip method with " + (String)msg);
-                    	XposedHelpers.callMethod(listView, "setDefaultTip", new Class[]{String.class}, (String)msg);
+                    	XposedHelpers.callMethod(listView, "setDefaultTip", new Class[]{CharSequence.class}, (String)msg);
                     }else {
                         Log.e(TAG,"listView is null");
     				}
