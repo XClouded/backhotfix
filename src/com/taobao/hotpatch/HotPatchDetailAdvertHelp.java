@@ -59,10 +59,11 @@ public class HotPatchDetailAdvertHelp implements IPatch {
                     	try {
                         	Method setDefault = listView.getClass().getDeclaredMethod("setDefaultTip", CharSequence.class);
                         	setDefault.setAccessible(true);
-                        	setDefault.invoke(listView, msg);							
+                        	setDefault.invoke(listView, (CharSequence)msg);							
 						} catch (Exception e) {
-							Log.e(TAG, e.getMessage());
+							e.printStackTrace();
 						}
+                    	
 
                     	
                     }else {
