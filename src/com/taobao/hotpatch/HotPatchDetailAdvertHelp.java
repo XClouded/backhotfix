@@ -17,6 +17,7 @@ import com.taobao.android.dexposed.XC_MethodHook.MethodHookParam;
 import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchParam;
 
+import java.lang.reflect.Method;
 import java.net.URLEncoder;
 import java.util.Map;
 import java.util.Properties;
@@ -54,7 +55,16 @@ public class HotPatchDetailAdvertHelp implements IPatch {
                 if(msg instanceof String){
                     if(listView != null){
                     	Log.e(TAG, "invoke setDefaultTip method with " + (String)msg);
-                    	XposedHelpers.callMethod(listView, "setDefaultTip", new Class[]{CharSequence.class}, msg);
+//                    	XposedHelpers.callMethod(listView, "setDefaultTip", new Class[]{CharSequence.class}, msg);
+                    	try {
+                        	Method setDefault = listView.getClass().getDeclaredMethod("setDefaultTip", CharSequence.class);
+                        	setDefault.setAccessible(true);
+                        	setDefault.invoke(listView, msg);							
+						} catch (Exception e) {
+							Log.e(TAG, e.getMessage());
+						}
+
+                    	
                     }else {
                         Log.e(TAG,"listView is null");
     				}
