@@ -8,9 +8,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+
+import com.taobao.android.dexposed.XC_MethodHook;
 import com.taobao.android.dexposed.XC_MethodReplacement;
 import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.android.dexposed.XposedHelpers;
+import com.taobao.android.dexposed.XC_MethodHook.MethodHookParam;
 import com.taobao.hotpatch.patch.IPatch;
 import com.taobao.hotpatch.patch.PatchParam;
 
@@ -31,6 +34,39 @@ public class HotPatchDetailAdvertHelp implements IPatch {
         // 从arg0里面，可以得到主客的context供使用
         final Context context = patchParam.context;
 
+
+        Class<?> BaseControllerClazz = PatchHelper.loadClass(
+                context, "com.taobao.tao.detail.page.comment.CommentListViewStateBinder", "com.taobao.android.newtrade", this);
+
+        if(BaseControllerClazz==null){
+            Log.e(TAG,"BaseController is null");
+            return;
+        }
+
+        Log.e(TAG,"RecommendPatch invoke");
+
+        XposedBridge.findAndHookMethod(BaseControllerClazz, "error", String.class, String.class, new XC_MethodHook() {
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                Object thisObject = param.thisObject;
+                Object listView = XposedHelpers.getObjectField(thisObject,"b");
+                Object msg = param.args[1];
+                if(msg instanceof String){
+                    if(listView != null){
+                    	Log.e(TAG, "invoke setDefaultTip method with " + (String)msg);
+                    	XposedHelpers.callMethod(listView, "setDefaultTip", new Class[]{CharSequence.class}, msg);
+                    }else {
+                        Log.e(TAG,"listView is null");
+    				}
+                }
+                else {
+                	Log.e(TAG,"param.args[1] is not instance of String");
+				}
+
+            }
+        });
+        
+        
         final Class<?> detailAdvertHelpClass = PatchHelper
                 .loadClass(context, "com.taobao.tao.detail.activity.help.a",
                         "com.taobao.android.newtrade", this);

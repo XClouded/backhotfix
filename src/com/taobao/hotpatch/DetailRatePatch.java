@@ -16,38 +16,38 @@ public class DetailRatePatch implements IPatch {
 
 	@Override
 	public void handlePatch(PatchParam patchParam) throws Throwable {
-        final Context context = patchParam.context;
-
-        Class<?> BaseControllerClazz = PatchHelper.loadClass(
-                context, "com.taobao.tao.detail.page.comment.CommentListViewStateBinder", "com.taobao.android.newtrade", this);
-
-        if(BaseControllerClazz==null){
-            Log.e(TAG,"BaseController is null");
-            return;
-        }
-
-        Log.e(TAG,"RecommendPatch invoke");
-
-        XposedBridge.findAndHookMethod(BaseControllerClazz, "error", String.class, String.class, new XC_MethodHook() {
-            @Override
-            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                Object thisObject = param.thisObject;
-                Object listView = XposedHelpers.getObjectField(thisObject,"b");
-                Object msg = param.args[1];
-                if(msg instanceof String){
-                    if(listView != null){
-                    	Log.e(TAG, "invoke setDefaultTip method with " + (String)msg);
-                    	XposedHelpers.callMethod(listView, "setDefaultTip", new Class[]{CharSequence.class}, (String)msg);
-                    }else {
-                        Log.e(TAG,"listView is null");
-    				}
-                }
-                else {
-                	Log.e(TAG,"param.args[1] is not instance of String");
-				}
-
-            }
-        });
+//        final Context context = patchParam.context;
+//
+//        Class<?> BaseControllerClazz = PatchHelper.loadClass(
+//                context, "com.taobao.tao.detail.page.comment.CommentListViewStateBinder", "com.taobao.android.newtrade", this);
+//
+//        if(BaseControllerClazz==null){
+//            Log.e(TAG,"BaseController is null");
+//            return;
+//        }
+//
+//        Log.e(TAG,"RecommendPatch invoke");
+//
+//        XposedBridge.findAndHookMethod(BaseControllerClazz, "error", String.class, String.class, new XC_MethodHook() {
+//            @Override
+//            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+//                Object thisObject = param.thisObject;
+//                Object listView = XposedHelpers.getObjectField(thisObject,"b");
+//                Object msg = param.args[1];
+//                if(msg instanceof String){
+//                    if(listView != null){
+//                    	Log.e(TAG, "invoke setDefaultTip method with " + (String)msg);
+//                    	XposedHelpers.callMethod(listView, "setDefaultTip", new Class[]{CharSequence.class}, msg);
+//                    }else {
+//                        Log.e(TAG,"listView is null");
+//    				}
+//                }
+//                else {
+//                	Log.e(TAG,"param.args[1] is not instance of String");
+//				}
+//
+//            }
+//        });
 	}
 
 }
