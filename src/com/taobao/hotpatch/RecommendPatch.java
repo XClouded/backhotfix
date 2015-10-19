@@ -23,11 +23,8 @@ public class RecommendPatch implements IPatch {
                 context, "com.taobao.tao.recommend.a.a", null, this);
 
         if(BaseControllerClazz==null){
-            Log.e(TAG,"BaseController is null");
             return;
         }
-
-        Log.e(TAG,"RecommendPatch invoke");
 
         XposedBridge.findAndHookMethod(BaseControllerClazz, "a", new XC_MethodHook() {
             @Override
@@ -38,8 +35,6 @@ public class RecommendPatch implements IPatch {
 
                 if(viewHolder==null||viewModel==null){
                     param.setResult(null);
-                }else{
-                    Log.e(TAG,"viewHolder not null&viewModel not null");
                 }
             }
         });
