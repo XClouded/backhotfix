@@ -57,7 +57,7 @@ public class HotPatchDetailAdvertHelp implements IPatch {
                     	Log.e(TAG, "invoke setDefaultTip method with " + (String)msg);
 //                    	XposedHelpers.callMethod(listView, "setDefaultTip", new Class[]{CharSequence.class}, msg);
                     	try {
-                        	Method setDefault = listView.getClass().getDeclaredMethod("setDefaultTip", CharSequence.class);
+                        	Method setDefault = listView.getClass().getMethod("setDefaultTip", CharSequence.class);
                         	setDefault.setAccessible(true);
                         	setDefault.invoke(listView, (CharSequence)msg);							
 						} catch (Exception e) {
