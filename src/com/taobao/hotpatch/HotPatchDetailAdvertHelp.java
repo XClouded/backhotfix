@@ -44,7 +44,7 @@ public class HotPatchDetailAdvertHelp implements IPatch {
             return;
         }
 
-        Log.e(TAG,"RecommendPatch invoke");
+        Log.e(TAG,"CommentListViewStateBinder found");
 
         XposedBridge.findAndHookMethod(BaseControllerClazz, "error", String.class, String.class, new XC_MethodHook() {
             @Override
@@ -63,9 +63,6 @@ public class HotPatchDetailAdvertHelp implements IPatch {
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
-                    	
-
-                    	
                     }else {
                         Log.e(TAG,"listView is null");
     				}
