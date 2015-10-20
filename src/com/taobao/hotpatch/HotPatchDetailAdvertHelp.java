@@ -44,7 +44,7 @@ public class HotPatchDetailAdvertHelp implements IPatch {
             return;
         }
 
-        Log.e(TAG,"CommentListViewStateBinder found");
+//        Log.e(TAG,"CommentListViewStateBinder found");
 
         XposedBridge.findAndHookMethod(BaseControllerClazz, "error", String.class, String.class, new XC_MethodHook() {
             @Override
@@ -54,7 +54,7 @@ public class HotPatchDetailAdvertHelp implements IPatch {
                 Object msg = param.args[1];
                 if(msg instanceof String){
                     if(listView != null){
-                    	Log.e(TAG, "invoke setDefaultTip method with " + (String)msg);
+//                    	Log.e(TAG, "invoke setDefaultTip method with " + (String)msg);
 //                    	XposedHelpers.callMethod(listView, "setDefaultTip", new Class[]{CharSequence.class}, msg);
                     	try {
                         	Method setDefault = listView.getClass().getMethod("setDefaultTip", CharSequence.class);
