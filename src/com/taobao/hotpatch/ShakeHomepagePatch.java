@@ -19,25 +19,26 @@ public class ShakeHomepagePatch implements IPatch {
     public void handlePatch(PatchParam arg0) throws Throwable {
 
         final Context context = arg0.context;
-        final Class<?> shakeHomepageService = PatchHelper.loadClass(context, "com.taobao.android.shake.api.ShakeHomePageService", null,
+        final Class<?> shakeHomepageServiceCls = PatchHelper.loadClass(context, "com.taobao.android.shake.api.ShakeHomePageService", null,
                 this);
-        final Class<?> homepageBarConfigVO = PatchHelper.loadClass(context, "com.taobao.android.shake.api.ShakeHomePageService$HomepageBarConfigVO", null,
+        final Class<?> homepageBarConfigVOCls = PatchHelper.loadClass(context, "com.taobao.android.shake.api.ShakeHomePageService$HomepageBarConfigVO", null,
                 this);
-        if (shakeHomepageService == null || homepageBarConfigVO == null) {
+        if (shakeHomepageServiceCls == null || homepageBarConfigVOCls == null) {
             Log.e(TAG, "class not found");
             return;
         }
-
-        XposedBridge.findAndHookMethod(shakeHomepageService, "e", new XC_MethodReplacement() {
+        Log.e(TAG, "shake homepage patch load class  ok");
+        XposedBridge.findAndHookMethod(shakeHomepageServiceCls, "e", new XC_MethodReplacement() {
             @Override
             protected Object replaceHookedMethod(MethodHookParam methodHookParam) throws Throwable {
+                Log.e(TAG, "shake homepage patch hook method  getHomepageBarConfig ok");
                 Object object;
                 try {
                     object = XposedBridge.invokeOriginalMethod(methodHookParam.method, methodHookParam.thisObject, methodHookParam.args);
-
+                    Log.e(TAG, "shake homepage patch getHomepageBarConfig invoke ok");
                 } catch (Throwable e) {
                     Log.e(TAG, "catch exp , create a new getHomepageBarConfig instance");
-                    return homepageBarConfigVO.newInstance();
+                    return homepageBarConfigVOCls.newInstance();
                 }
 
                 if (object == null) {
@@ -48,12 +49,14 @@ public class ShakeHomepagePatch implements IPatch {
                 }
             }
         });
-        XposedBridge.findAndHookMethod(shakeHomepageService, "h", new XC_MethodReplacement() {
+        XposedBridge.findAndHookMethod(shakeHomepageServiceCls, "h", new XC_MethodReplacement() {
             @Override
             protected Object replaceHookedMethod(MethodHookParam methodHookParam) throws Throwable {
                 Object object = null;
+                Log.e(TAG, "shake homepage patch hook method  getTrafficLimitConfig ok");
                 try {
                     object = XposedBridge.invokeOriginalMethod(methodHookParam.method, methodHookParam.thisObject, methodHookParam.args);
+                    Log.e(TAG, "shake homepage patch  getTrafficLimitConfig invoke ok");
 
                 } catch (Throwable e) {
                     Log.e(TAG, "catch exp , getTrafficLimitConfig");
