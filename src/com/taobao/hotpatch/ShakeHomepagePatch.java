@@ -5,7 +5,6 @@ package com.taobao.hotpatch;
  */
 
 import android.content.Context;
-import android.util.Log;
 import com.taobao.android.dexposed.XC_MethodReplacement;
 import com.taobao.android.dexposed.XposedBridge;
 import com.taobao.hotpatch.patch.IPatch;
@@ -24,20 +23,17 @@ public class ShakeHomepagePatch implements IPatch {
         final Class<?> homepageBarConfigVOCls = PatchHelper.loadClass(context, "com.taobao.android.shake.api.ShakeHomePageService$HomepageBarConfigVO", null,
                 this);
         if (shakeHomepageServiceCls == null || homepageBarConfigVOCls == null) {
-            Log.e(TAG, "class not found");
+
             return;
         }
-        Log.e(TAG, "shake homepage patch load class  ok");
+
         XposedBridge.findAndHookMethod(shakeHomepageServiceCls, "e", new XC_MethodReplacement() {
             @Override
             protected Object replaceHookedMethod(MethodHookParam methodHookParam) throws Throwable {
-                Log.e(TAG, "shake homepage patch hook method  getHomepageBarConfig ok");
                 Object object;
                 try {
                     object = XposedBridge.invokeOriginalMethod(methodHookParam.method, methodHookParam.thisObject, methodHookParam.args);
-                    Log.e(TAG, "shake homepage patch getHomepageBarConfig invoke ok");
                 } catch (Throwable e) {
-                    Log.e(TAG, "catch exp , create a new getHomepageBarConfig instance");
                     return homepageBarConfigVOCls.newInstance();
                 }
 
@@ -53,13 +49,10 @@ public class ShakeHomepagePatch implements IPatch {
             @Override
             protected Object replaceHookedMethod(MethodHookParam methodHookParam) throws Throwable {
                 Object object = null;
-                Log.e(TAG, "shake homepage patch hook method  getTrafficLimitConfig ok");
                 try {
                     object = XposedBridge.invokeOriginalMethod(methodHookParam.method, methodHookParam.thisObject, methodHookParam.args);
-                    Log.e(TAG, "shake homepage patch  getTrafficLimitConfig invoke ok");
 
                 } catch (Throwable e) {
-                    Log.e(TAG, "catch exp , getTrafficLimitConfig");
                 }
 
                 if (object == null) {
