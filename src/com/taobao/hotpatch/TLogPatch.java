@@ -18,9 +18,12 @@ public class TLogPatch implements IPatch {
     public void handlePatch(PatchParam lpparam) throws Throwable {
 
         Context context = lpparam.context;
-
+        Log.i(TAG, "the patch run");
         Class<?> LogCache = PatchHelper.loadClass(context, "com.taobao.tao.log.b.a", null, this);
-
+        if(LogCache == null) {
+            return;
+        }
+        Log.i(TAG, "to hook the method");
         XposedBridge.findAndHookMethod(LogCache, "a", int.class, new XC_MethodReplacement() {
             @Override
             protected Object replaceHookedMethod(MethodHookParam methodHookParam) throws Throwable {
